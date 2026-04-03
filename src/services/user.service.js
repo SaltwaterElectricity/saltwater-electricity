@@ -25,7 +25,8 @@ const DB_ERRORS = Object.freeze({
   UPDATE_FAILED: "Server Error: Could not update status."
 });
 
-const SUPER_ADMIN_EMAIL = import.meta.env.VITE_SUPER_ADMIN_EMAIL;
+const adminString = import.meta.env.VITE_SUPER_ADMIN_EMAILS || "";
+const adminList = adminString.split(",").map(email => email.trim().toLowerCase());
 
 const sanitizeUserData = (data) => {
   const cleanEmail = data.email?.toLowerCase().trim() || "";
@@ -58,7 +59,7 @@ export const provisionUserSystem = async (uid, formData) => {
 
   // Security Guard: Verify if the requested role is actually allowed for this email
   const inputEmail = formData.email?.toLowerCase().trim();
-  const isActualSuperAdmin = formData.role === "superAdmin" && inputEmail === SUPER_ADMIN_EMAIL;
+  const isActualSuperAdmin = formData.role === "superAdmin" && adminList.includes(inputEmail);
   const finalRole = isActualSuperAdmin ? "superAdmin" : (formData.role || "user");
 
   const cleanProfile = sanitizeUserData(formData);
