@@ -7,7 +7,7 @@ import {
   signOut,
   onAuthStateChanged,
   setPersistence, 
-  browserSessionPersistence,
+  browserLocalPersistence,
   getAuth,
   updatePassword 
 } from "firebase/auth";
@@ -18,7 +18,7 @@ import { sendOnboardingEmail } from "./email.service"
 /**
  * ERROR MAPPER: Centralized for all auth actions.
  */
-const AUTH_ERROR_MESSAGES = Object.freeze({
+export const AUTH_ERROR_MESSAGES = Object.freeze({
   "auth/email-already-in-use": "This email is already registered in the system.",
   "auth/invalid-email": "The email address format is not valid.",
   "auth/weak-password": "Security Check: Password must be at least 8 characters and include numbers/symbols.",
@@ -60,36 +60,42 @@ export const validatePassword = (password) => {
  * FINALIZED: Updates password for the current user.
  */
 
-export const PasswordReset = async (newPassword) => {
+export const changeUserPassword = async (newPassword, currentPassword = null, isForceReset = false) => {
+  const auth = getAuth();
   const user = auth.currentUser;
 
-  if (!user) {
-    throw new Error("Session expired. Please log in again.");
-  }
+  if (!user) throw new Error("Session expired. Please log in again.");
+
+  validatePassword(newPassword);
 
   try {
-    // Local check para sa password complexity
-    validatePassword(newPassword); 
-    
-    // Baguhin ang password sa Firebase Authentication
+    // 🛡️ SECURITY CHECK: Kung hindi force reset, kailangan ng re-authentication
+    if (!isForceReset) {
+      if (!currentPassword) throw new Error("Current password is required for profile updates.");
+      const credential = EmailAuthProvider.credential(user.email, currentPassword);
+      await reauthenticateWithCredential(user, credential);
+    }
+
+    // 🔑 Magpalit ng Password
     await updatePassword(user, newPassword);
 
-    //I-update ang flags gamit ang destructured UID
-    const { uid } = user; 
+    // 📊 I-update ang Realtime Database Flags
+    const { uid } = user;
     const updates = {};
-    
     updates[`/accounts/${uid}/requiresPasswordChange`] = false;
     updates[`/accounts/${uid}/updatedAt`] = serverTimestamp();
 
     await update(ref(db), updates);
 
-    // Alisin ang pansamantalang security flags sa browser storage
-    sessionStorage.removeItem('is_verified');
-    
-    return { success: true };
+    sessionStorage.removeItem("is_verified");
 
+    return { success: true };
   } catch (error) {
-    throw new Error("Password update failed. For security reasons, please try logging out and in again.");
+    // 🔍 Pro-tip: Mas maganda kung itatapon mo ang native Firebase code para mahuli ng AUTH_ERROR_MESSAGES object mo sa UI.
+    throw {
+      code: error.code || "default",
+      message: error.message || "Security system encountered an error updating credentials."
+    };
   }
 };
 
@@ -155,30 +161,35 @@ export const loginUser = async (email, password) => {
     //SANITIZATION
     const cleanEmail = email?.toLowerCase().trim();
     
-    if (!cleanEmail || !password) {
-      throw { code: "auth/missing-credentials" }; 
-    }
+    if (!cleanEmail || !password) { throw { code: "auth/missing-credentials" }; }
 
     //PERSISTENCE
-    await setPersistence(auth, browserSessionPersistence);
-    
-    //AUTHENTICATION
+    await setPersistence(auth, browserLocalPersistence);
     const userCredential = await signInWithEmailAndPassword(auth, cleanEmail, password);
+    const uid = userCredential.user.uid;
+
+    // Verify system status before allowing the session to continue
+    const userData = await getFullUserData(uid);
     
-    //SESSION FLAG
+    if (userData.status === "disabled") {
+      await signOut(auth);
+      sessionStorage.removeItem("is_verified");
+      throw new Error("Your account is suspended. Please contact support.");
+    }
+    
     sessionStorage.setItem("is_verified", "true");
-    
-    return userCredential;
+    return { 
+      user: userCredential.user, 
+      userData: { ...userData, uid }
+    };
 
   } catch (error) {
     sessionStorage.removeItem("is_verified");
-    
-    // SECURITY: Mapping specific errors to generic message to prevent account sniffing
-    const secureErrors = ["auth/user-not-found", "auth/wrong-password", "auth/invalid-credential"];
-    const errorCode = secureErrors.includes(error.code) ? "auth/invalid-credential" : error.code;
+    const errorCode = ["auth/user-not-found", "auth/wrong-password", "auth/invalid-credential"].includes(error.code) 
+      ? "auth/invalid-credential" 
+      : error.code;
 
-    const message = AUTH_ERROR_MESSAGES[errorCode] || AUTH_ERROR_MESSAGES.default;
-    throw new Error(message);
+    throw new Error(AUTH_ERROR_MESSAGES[errorCode] || AUTH_ERROR_MESSAGES.default);
   }
 };
 
@@ -187,14 +198,14 @@ export const loginUser = async (email, password) => {
  */
 export const logoutUser = async () => {
   try {
-    //CLEAR STORAGE
-    sessionStorage.clear();
 
     //FIREBASE SIGNOUT
     await signOut(auth);
 
-    //HARD REDIRECT
-    window.location.href = "/login";
+    sessionStorage.removeItem("is_verified");
+    sessionStorage.removeItem("pending_uid");
+
+    localStorage.removeItem("last_activity");
     
     return { success: true };
   } catch (error) {
@@ -209,39 +220,37 @@ export const subscribeToAuthChanges = (callback) => {
   return onAuthStateChanged(auth, callback);
 };
 
+// Fetches complete user context from normalized nodes.
+ 
 export const getFullUserData = async (uid) => {
-  if (!uid) throw new Error(AUTH_ERROR_MESSAGES["auth/user-not-found"] || "User ID is required.");
+  if (!uid) throw new Error("User ID is required.");
 
   try {
-    const [userSnap, roleSnap, accountSnap] = await Promise.all([
+    // Fetch all three sources in parallel for speed
+    const snaps = await Promise.all([
       get(ref(db, `users/${uid}`)),
       get(ref(db, `roles/${uid}`)),
       get(ref(db, `accounts/${uid}`))
     ]);
 
-    // 3. Document Existence Check (Crucial for Production)
-    if (!userSnap.exists()) {
-      // Fallback: Default to lowest privilege if profile is missing
-      return { 
-        role: "viewer", 
-        status: "unprovisioned",
-        requiresPasswordChange: false 
-      };
-    }
-
-    const userData = userSnap.val();
+    const [userSnap, roleSnap, accountSnap] = snaps;
+    const roleData = roleSnap.val() || {}; 
+    const profile = userSnap.val() || {};
+    const account = accountSnap.val() || {};
+    
+    // Combine everything into one clean object
     return {
-      profile: userData,
-      // Fallback to 'user' if role node is missing
-      role: roleSnap.exists() ? roleSnap.val().role : 'user',
-      requiresPasswordChange: accountSnap.exists() 
-        ? accountSnap.val().requiresPasswordChange 
-        : false,
-        isPrivate: userData.isPrivate || false
+      uid,
+      ...profile, // firstName, lastName, email, etc.
+      role: roleData.role || "user",
+      status: account.status || "active",
+      requiresPasswordChange: account?.requiresPasswordChange || false,
+      isPrivate: roleData?.isPrivate || false,
+      updatedAt: roleData?.updatedAt || Date.now()
     };
 
   } catch (error) {
-    const message = AUTH_ERROR_MESSAGES[error.code] || "Failed to synchronize user profile.";
-    throw new Error(message);
+    const errorCode = error.code || error.message || "default";
+    throw new Error(AUTH_ERROR_MESSAGES[errorCode] || AUTH_ERROR_MESSAGES.default);
   }
 };
