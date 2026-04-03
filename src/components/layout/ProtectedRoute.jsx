@@ -3,7 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import { LoadingSpinner } from "../ui"; // Use your standardized spinner
 
 const ProtectedRoute = ({ requiredRole, children }) => {
-  const { currentUser, userRole, mustChangePassword, loading, isSuperAdmin } = useAuth();
+  const { currentUser, userRole, mustChangePassword, loading } = useAuth();
   const location = useLocation();
 
   // 1. LOADING STATE: Let AuthProvider handle the heavy lifting, but fallback here if needed
@@ -20,21 +20,34 @@ const ProtectedRoute = ({ requiredRole, children }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (mustChangePassword && location.pathname !== "/security-checkpoint") {
-    return <Navigate to="/security-checkpoint" replace />;
+  if (mustChangePassword && location.pathname !== "/force-password-change") {
+    return <Navigate to="/force-password-change" replace />;
   }
 
-  if (!mustChangePassword && location.pathname === "/security-checkpoint") {
+  if (!mustChangePassword && location.pathname === "/force-password-change") {
     return <Navigate to="/" replace />;
   }
 
   // 4. ROLE-BASED AUTHORIZATION: Clearance Check
   if (requiredRole) {
-    if (!userRole) {
-    return <Navigate to="/unauthorized" replace />;
-    }
+    
+    if (!userRole) return <Navigate to="/unauthorized" replace />;
 
-    const hasClearance = userRole === requiredRole || isSuperAdmin;
+    const isSuperAdmin = userRole === "superAdmin";
+    const isAdmin = userRole === "admin";
+    
+    let hasClearance = false;
+
+    if (requiredRole === "admin") {
+      // Admin pages allow both Admin and Super Admin
+      hasClearance = isAdmin || isSuperAdmin;
+    } else if (requiredRole === "superAdmin") {
+      // Super Admin pages strictly allow ONLY Super Admin
+      hasClearance = isSuperAdmin;
+    } else {
+      // Para sa ibang roles (e.g., user, technician)
+      hasClearance = userRole === requiredRole || isSuperAdmin;
+    }
 
     if (!hasClearance) {
       return <Navigate to="/unauthorized" replace />;

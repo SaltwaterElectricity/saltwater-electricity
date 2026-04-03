@@ -3,48 +3,65 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { logoutUser } from "../../services/auth.service";
 import { 
-  LayoutDashboard, Droplets, Settings, 
-  LogOut, UserPlus, UserRoundPlus, X, ShieldAlert 
-} from "lucide-react";
+  LayoutDashboard, Droplets, Settings, LogOut, 
+  UserPlus, UserRoundPlus, X, ShieldAlert, 
+  History, ClipboardList, Cpu, Bell 
+} from "lucide-react"; // Note: lucide-react in your original
 import { cn } from "../../utils/cn";
 import { ConfirmationModal } from "../ui/ConfirmationModal";
 import Toast from "../ui/Toast";
 
-const SidebarLink = memo(({ to, icon: Icon, label, onClick }) => (
+/**
+ * 1. SIDEBAR LINK COMPONENT
+ * Pinagsama ang Badge System at precise activation logic.
+ */
+const SidebarLink = memo(({ to, icon: Icon, label, onClick, badgeCount, badgeColor = "bg-red-500" }) => (
   <NavLink
     to={to}
-    // Ensures sub-routes under /admin keep the parent link active if needed
-    end={to === "/admin/dashboard"} 
+    end={to === "/dashboard" || to === "/admin/user-management"}
     onClick={onClick}
     className={({ isActive }) =>
       cn(
-        "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group text-sm font-medium",
+        "flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group text-sm font-medium",
         "text-slate-400 hover:bg-slate-800 hover:text-white",
         isActive && "bg-blue-600 text-white shadow-lg shadow-blue-900/20"
       )
     }
   >
-    <Icon className="w-5 h-5 transition-transform group-hover:scale-110" />
-    <span className="tracking-wide">{label}</span>
+    <div className="flex items-center gap-3">
+      <Icon className="w-5 h-5 transition-transform group-hover:scale-110" />
+      <span className="tracking-wide">{label}</span>
+    </div>
+
+    {badgeCount > 0 && (
+      <span className={cn(
+        "flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-[10px] font-bold text-white animate-pulse",
+        badgeColor
+      )}>
+        {badgeCount > 99 ? "99+" : badgeCount}
+      </span>
+    )}
   </NavLink>
 ));
 
 export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
   const navigate = useNavigate();
-  const { isSuperAdmin, isAdmin, user } = useAuth() || {};
+  const { isSuperAdmin, isAdmin, user, userRole } = useAuth() || {};
 
+  // UI STATES
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-
   const [showToast, setShowToast] = useState(false);
   const [toastConfig, setToastConfig] = useState({ message: "", type: "success" });
+
+  // MOCK DATA (Maaaring i-connect sa Firebase/Context)
+  const alertCounts = { systemAlerts: 3, deviceRequests: 5 };
 
   const triggerToast = (message, type = "success") => {
     setToastConfig({ message, type });
     setShowToast(true);
   };
 
-  // Memoize the click handler to prevent unnecessary re-renders of SidebarLinks
   const handleLinkClick = useCallback(() => {
     if (window.innerWidth < 1024 && typeof toggleSidebar === "function") {
       toggleSidebar();
@@ -55,19 +72,14 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
     setIsLoggingOut(true);
     try {
       await logoutUser();
-      // Clear session strictly
       sessionStorage.clear();
       setIsLogoutModalOpen(false);
       navigate("/login", { replace: true });
     } catch (error) {
-      triggerToast("Terminating session... Forcing local client-side wipe.", "warning");
-      
+      triggerToast("Terminating session... Forcing local wipe.", "warning");
       sessionStorage.clear();
       localStorage.clear();
-
-      setTimeout(() => {
-        window.location.href = "/login";
-      }, 2000);
+      setTimeout(() => { window.location.href = "/login"; }, 2000);
     } finally {
       setIsLoggingOut(false);
     }
@@ -75,29 +87,23 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
 
   return (
     <>
-      <Toast 
-        isOpen={showToast} 
-        message={toastConfig.message} 
-        type={toastConfig.type} 
-        onClose={() => setShowToast(false)} 
-      />
+      <Toast isOpen={showToast} message={toastConfig.message} type={toastConfig.type} onClose={() => setShowToast(false)} />
 
-      {/* MOBILE OVERLAY */}
+      {/* MOBILE OVERLAY - With Fade-in animation */}
       {isOpen && (
         <div 
           className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] lg:hidden animate-in fade-in duration-300" 
-          onClick={toggleSidebar}
+          onClick={toggleSidebar} 
         />
       )}
 
-      {/* SIDEBAR ASIDE */}
       <aside className={cn(
         "fixed inset-y-0 left-0 z-[70] w-64 bg-slate-900 border-r border-slate-800 flex flex-col transition-transform duration-300 ease-in-out",
         "lg:relative lg:translate-x-0",
         isOpen ? "translate-x-0" : "-translate-x-full shadow-2xl lg:shadow-none"
       )}>
         
-        {/* BRANDING */}
+        {/* BRANDING - 80px (8pt grid) */}
         <div className="h-20 flex items-center justify-between px-6 border-b border-slate-800/50">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-inner">
@@ -112,75 +118,77 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
           </button>
         </div>
 
-        {/* NAVIGATION LINKS */}
+        {/* NAVIGATION - space-y-8 (32px) */}
         <nav className="flex-1 px-4 py-6 space-y-8 overflow-y-auto custom-scrollbar">
-          {/* MONITORING GROUP */}
+          
+          {/* ANALYTICS GROUP */}
           <div className="space-y-2">
-            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-4 mb-4 opacity-50">Monitoring</p>
-            <SidebarLink to="/admin/dashboard" icon={LayoutDashboard} label="Overview" onClick={handleLinkClick} />
-            <SidebarLink to="/sensors" icon={Droplets} label="Water Quality" onClick={handleLinkClick} />
+            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-4 mb-4 opacity-50">Analytics</p>
+            <SidebarLink to="/dashboard" icon={LayoutDashboard} label="Main Dashboard" onClick={handleLinkClick} />
+            <SidebarLink to="/device-monitoring" icon={Droplets} label="Real-time Monitor" onClick={handleLinkClick} />
+            <SidebarLink to="/history" icon={History} label="Data History" onClick={handleLinkClick} />
+            <SidebarLink to="/alerts" icon={Bell} label="System Alerts" onClick={handleLinkClick} badgeCount={alertCounts.systemAlerts} />
           </div>
 
-          {/* MANAGEMENT GROUP */}
+          {/* OPERATIONS GROUP */}
+          <div className="space-y-2">
+            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-4 mb-4 opacity-50">Operations</p>
+            <SidebarLink to="/device-requests" icon={ClipboardList} label="Device Requests" onClick={handleLinkClick} badgeCount={alertCounts.deviceRequests} badgeColor="bg-blue-600" />
+          </div>
+
+          {/* ADMIN GROUP */}
           {isAdmin && (
             <div className="space-y-2">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-4 mb-4 opacity-50">Management</p>
-              <SidebarLink to="/admin/users/new" icon={UserRoundPlus} label="New Resident" onClick={handleLinkClick} />
-              
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-4 mb-4 opacity-50">Administration</p>
+              <SidebarLink to="/admin/user-management" icon={UserRoundPlus} label="User Management" onClick={handleLinkClick} />
+              <SidebarLink to="/admin/device-management" icon={Cpu} label="Device Management" onClick={handleLinkClick} />
+              <SidebarLink to="/admin/settings" icon={Settings} label="System Settings" onClick={handleLinkClick} />
               {isSuperAdmin && (
-                <>
+                <div className="pt-4 border-t border-slate-800/30 mt-4 space-y-2">
                   <SidebarLink to="/admin/staff/new" icon={UserPlus} label="Onboard Admin" onClick={handleLinkClick} />
                   <SidebarLink to="/admin/staff" icon={ShieldAlert} label="Security Roles" onClick={handleLinkClick} />
-                </>
+                </div>
               )}
-            </div>
-          )}
-
-          {/* INFRASTRUCTURE: SuperAdmin Only */}
-          {isSuperAdmin && (
-            <div className="space-y-2 pt-4">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-4 mb-4 opacity-50">Infrastructure</p>
-              <SidebarLink to="/settings" icon={Settings} label="Global Config" onClick={handleLinkClick} />
             </div>
           )}
         </nav>
 
-        {/* FOOTER: Logged in User Profile + Sign Out */}
-        <div className="p-4 border-t border-slate-800/50 space-y-2">
-          <div className="px-4 py-2 flex items-center gap-3 mb-2">
-             <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-blue-400 uppercase">
-                {user?.firstName?.[0] || 'A'}
+        {/* FOOTER - Profile & Sign Out */}
+        <div className="p-4 border-t border-slate-800/50 space-y-4">
+          <div className="px-4 py-2 flex items-center gap-3 bg-slate-800/30 rounded-xl">
+             <div className="w-9 h-9 rounded-full bg-blue-600/20 border border-blue-500/20 flex items-center justify-center text-xs font-bold text-blue-400">
+               {user?.firstName?.[0] || 'U'}
              </div>
              <div className="overflow-hidden">
                 <p className="text-xs font-bold text-white truncate">{user?.firstName} {user?.lastName}</p>
-                <p className="text-[9px] text-slate-500 font-medium uppercase tracking-tighter">{user?.role}</p>
+                <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">{userRole || 'Resident'}</p>
              </div>
           </div>
 
           <button 
-            onClick={() => setIsLogoutModalOpen(true)}
+            onClick={() => setIsLogoutModalOpen(true)} 
             className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all group border border-transparent hover:border-red-500/20"
           >
-            <LogOut className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+            <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             <span className="text-sm font-bold">Sign Out</span>
           </button>
         </div>
       </aside>
 
-      {/* LOGOUT CONFIRMATION MODAL */}
+      {/* LOGOUT CONFIRMATION - Integrated extra safety info */}
       <ConfirmationModal
         isOpen={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}
         onConfirm={handleLogout}
         isSubmitting={isLoggingOut}
         title="Confirm Sign Out"
-        description="Terminating your session will restrict access to real-time Unisan sensors until your next login."
+        description="Terminating your session will restrict access to real-time Unisan sensors hanggang sa susunod mong login."
         confirmText="Confirm Sign Out"
         variant="danger" 
       >
-        <div className="p-4 bg-red-50/50 border border-red-100 rounded-xl flex gap-3 items-center">
-           <LogOut className="text-red-600 w-6 h-6" />
-           <p className="text-[11px] text-red-700 font-medium">
+        <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 items-center">
+           <ShieldAlert className="text-red-400 w-5 h-5 flex-shrink-0" />
+           <p className="text-[10px] text-red-300 leading-tight">
              Active Session Cleanup: Clearing Firebase Auth tokens and local storage cache.
            </p>
         </div>
