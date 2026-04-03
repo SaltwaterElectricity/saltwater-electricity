@@ -1,6 +1,6 @@
 import { useState, useEffect, memo } from 'react';
 import { useForm } from 'react-hook-form';
-import { PasswordReset } from '../../services/auth.service'; 
+import { changeUserPassword } from '../../services/auth.service'; 
 import { PasswordInput, StrengthMeter, PasswordChecklist } from '../passwordChange'; 
 import { calculatePasswordStrength } from '../../utils/passwordMetrics';
 
@@ -31,7 +31,7 @@ const ResetPassword = ({ onSuccess }) => {
 
     try {
       // Step 1: Perform the update in Firebase
-      await PasswordReset(data.newPassword);
+      await changeUserPassword(data.newPassword);
       
       // Step 2: Show the success animation
       setSuccess(true);

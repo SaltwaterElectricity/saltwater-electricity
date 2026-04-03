@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext"; 
 import { PasswordInput, StrengthMeter, PasswordChecklist } from "../passwordChange";
 import { calculatePasswordStrength } from "../../utils/passwordMetrics";
-import { PasswordReset } from "../../services/auth.service"; 
+import { changeUserPassword } from "../../services/auth.service"; 
 import { LoadingSpinner, Toast } from "../ui"; 
 
 const ForcePasswordChange = ({ onSuccess }) => {
@@ -50,7 +50,7 @@ const ForcePasswordChange = ({ onSuccess }) => {
       /** * ATOMIC RESET:
        * Ang PasswordReset() na ang bahala sa Auth update at Database flag syncing.
        */
-      await PasswordReset(data.newPassword);
+      await changeUserPassword(data.newPassword);
       
       // Step B: Visual Confirmation
       setShowSuccessOverlay(true);
@@ -103,7 +103,7 @@ const ForcePasswordChange = ({ onSuccess }) => {
             strength={strength}
             validation={{ 
               required: "Password required",
-              validate: (v) => strength >= 80 || "Does not meet security requirements"
+              validate: () => strength >= 80 || "Does not meet security requirements"
             }}
           >
             <div className="flex flex-col gap-3 mt-3">

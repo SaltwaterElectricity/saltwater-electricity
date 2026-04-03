@@ -1,11 +1,8 @@
 import LoadingSpinner from "../ui/LoadingSpinner";
 import { memo } from "react";
 
-/**
- * AUTH SPLASH SCREEN
- * Location: src/components/auth/AuthSplashScreen.jsx
- * Purpose: Full-screen branded loading state for initial Firebase sync.
- */
+// AUTH SPLASH SCREEN
+
 export const AuthSplashScreen = () => {
   return (
     <div className="fixed inset-0 bg-slate-50 flex flex-col items-center justify-center z-[10000] antialiased">

@@ -1,9 +1,5 @@
 import { cn } from "../../utils/cn";
 
-/**
- * ATOMIC COMPONENT: InputField
- * Features: 8-point grid spacing, A11y support, and dynamic error states.
- */
 const InputField = ({ label, name, register, validation, errors, type = "text", className, ...rest }) => {
   const hasError = !!errors?.[name];
 
@@ -42,10 +38,6 @@ const InputField = ({ label, name, register, validation, errors, type = "text", 
   );
 };
 
-/**
- * COMPOSITE COMPONENT: RegistrationFields
- * Features: 8-point grid system, semantic sections, and auto-role assignment.
- */
 export const RegistrationFields = ({ register, errors, isAdmin = false }) => {
   return (
     <div className="space-y-10">

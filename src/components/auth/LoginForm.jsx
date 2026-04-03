@@ -6,10 +6,7 @@ import { PasswordInput } from "../passwordChange";
 import { SpinnerIcon} from "../ui";
 import ForgotPasswordModal from "./ForgotPasswordModal";
 
-/**
- * ORGANISM: Login Form
- * Integrated with ForgotPasswordModal for a seamless "One Path" experience.
- */
+
 const LoginForm = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
