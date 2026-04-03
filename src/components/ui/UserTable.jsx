@@ -142,35 +142,6 @@ export const UserTable = ({ uids = [], onActionClick, onEditClick, searchTerm, a
                           : "Get started by adding your first resident to the SmartAqua tracking system."}
                       </p>
                     </div>
-
-                    {(() => {
-                      const isSuperAdmin = currentUserRole === "superAdmin";
-                      const isAdmin = currentUserRole === "admin";
-
-                      if (activeView === "user" && (isAdmin || isSuperAdmin)) {
-                        return (
-                          <button 
-                            onClick={() => window.location.href = "/admin/users/new"}
-                            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-black uppercase tracking-widest rounded-xl shadow-sm transition-all"
-                          >
-                            + Register Resident
-                          </button>
-                        );
-                      }
-
-                      if (activeView === "admin" && isSuperAdmin) {
-                        return (
-                          <button 
-                            onClick={() => window.location.href = "/admin/staff/new"}
-                            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-black uppercase tracking-widest rounded-xl shadow-sm transition-all"
-                          >
-                            + Register Staff
-                          </button>
-                        );
-                      }
-
-                      return null;
-                    })()}
                   </div>
                 </td>
               </tr>

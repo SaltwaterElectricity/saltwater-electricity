@@ -1,15 +1,30 @@
-import { useState } from "react";
+import { useState, useCallback } from "react"; // Added useCallback
+import { useNavigate } from "react-router-dom";
+import { 
+  UserPlus, 
+  ShieldPlus, 
+  ShieldCheck, 
+  Users, 
+  AlertTriangle 
+} from "lucide-react";
+
+// Services, Hooks, at Utils
 import { useUserSubscription } from "../../hooks/useUserSubscription";
-import { updateUserStatus, USER_STATUS } from "../../services/user.service"; 
+import { updateUserStatus, updateUserProfile, USER_STATUS } from "../../services/user.service"; 
+import { cn } from "../../utils/cn";
+import { ROUTES } from "../../constants/routes";
+
+// UI Components
 import Toast from "../../components/ui/Toast";
 import SpinnerIcon from "../../components/ui/SpinnerIcon";
 import { ConfirmationModal } from "../../components/ui/ConfirmationModal";
 import EditUserModal from "../../components/ui/EditUserModal";
-import { AlertTriangle, ShieldCheck, Users } from "lucide-react";
-import { cn } from "../../utils/cn";
 import { UserTable } from "../../components/ui/UserTable"; 
 
 const AdminDashboard = ({ currentUserRole }) => {
+  const navigate = useNavigate();
+
+  // --- STATES ---
   const [searchTerm, setSearchTerm] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [toastConfig, setToastConfig] = useState({ message: "", type: "success" });
@@ -21,29 +36,28 @@ const AdminDashboard = ({ currentUserRole }) => {
   const [selectedEditUser, setSelectedEditUser] = useState(null);
   const [isEditSaving, setIsEditSaving] = useState(false);
 
-  // 1. State tracks what the UI requests
   const [viewMode, setViewMode] = useState(currentUserRole === "superAdmin" ? "admin" : "user");
 
-  // 🔒 2. Safety Override: Active view calculation strictly overrides standard admin attempts
-  const activeView = currentUserRole === "superAdmin" ? viewMode : "user";
-
-  // 3. Sync hook gets the array of UIDs from Firebase
+  // --- DERIVED LOGIC & FIREBASE SYNC ---
+  const isSuperAdmin = currentUserRole === "superAdmin";
+  const activeView = isSuperAdmin ? viewMode : "user";
   const { data: uids = [], loading, error } = useUserSubscription(activeView);
 
-  const triggerToast = (message, type = "success") => {
+  // --- MEMOIZED HANDLERS ---
+  
+  // In-apply ang useCallback dito para hindi mag-recreate ang function sa bawat render
+  const triggerToast = useCallback((message, type = "success") => {
     setToastConfig({ message, type });
     setShowToast(true);
-  };
+  }, []);
 
-  const handleConfirmStatusChange = async () => {
+  const handleConfirmStatusChange = useCallback(async () => {
     if (!selectedUser) return;
-
-    // Notice we use selectedUser.uid here, aligned with your useFullUserData standard
     const isCurrentActive = selectedUser.status === USER_STATUS.ACTIVE;
     const newStatus = isCurrentActive ? USER_STATUS.DISABLED : USER_STATUS.ACTIVE;
 
     try {
-      await updateUserStatus(selectedUser.uid, newStatus);
+      await updateUserProfile(selectedUser.uid, newStatus);
       triggerToast(`Account ${newStatus === USER_STATUS.ACTIVE ? 'restored' : 'disabled'} successfully.`);
     } catch (err) {
       triggerToast("Update failed. Please check your permissions.", "error");
@@ -51,25 +65,22 @@ const AdminDashboard = ({ currentUserRole }) => {
       setIsModalOpen(false);
       setSelectedUser(null);
     }
-  };
+  }, [selectedUser, triggerToast]); // Dependencies: selectedUser at triggerToast
 
-  const handleSaveUserData = async (newFormData) => {
+  const handleSaveUserData = useCallback(async (newFormData) => {
     if (!selectedEditUser) return;
-    
     setIsEditSaving(true);
     try {
-      // Tatawagin natin ang service function para mag-update sa Firebase
-      await updateUserData(selectedEditUser.uid, newFormData);
-      
-      triggerToast("User profile parameter updated successfully.");
-      setIsEditModalOpen(false); // Isara ang modal kapag success
+      await updateUserProfile(selectedEditUser.uid, newFormData);
+      triggerToast("User profile updated successfully.");
+      setIsEditModalOpen(false);
       setSelectedEditUser(null);
     } catch (err) {
       triggerToast("Failed to update profile. Try again.", "error");
     } finally {
       setIsEditSaving(false);
     }
-  };
+  }, [selectedEditUser, triggerToast]); // Dependency: selectedEditUser at triggerToast
 
   const isTargetActive = selectedUser?.status === USER_STATUS.ACTIVE;
 
@@ -118,13 +129,13 @@ const AdminDashboard = ({ currentUserRole }) => {
           setSelectedEditUser(null);
         }}
         user={selectedEditUser}
-        onSave={handleSaveUserData} // Ipasa ang save function natin
-        isLoading={isEditSaving} // Ipasa ang loading state natin
+        onSave={handleSaveUserData}
+        isLoading={isEditSaving}
       />
 
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+      <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div className="space-y-4">
-          {currentUserRole === "superAdmin" && (
+          {isSuperAdmin && (
             <div className="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200">
               <button
                 onClick={() => setViewMode("admin")}
@@ -152,17 +163,39 @@ const AdminDashboard = ({ currentUserRole }) => {
               {activeView} <span className="text-blue-600">Directory</span>
             </h1>
             <p className="text-slate-500 text-sm font-medium">
-              Managing system profiles parameters.
+              Managing system profiles and role-based parameters.
             </p>
           </div>
         </div>
 
-        <input 
-          type="text" 
-          placeholder={`Search ${activeView}s...`} 
-          className="px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none w-full md:w-80 shadow-sm"
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <div className="flex flex-col md:flex-row items-center gap-3">
+          <input 
+            type="text" 
+            placeholder={`Search ${activeView}s...`} 
+            className="px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none w-full md:w-80 shadow-sm"
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+
+          <div className="flex items-center gap-2 w-full md:w-auto">
+            {isSuperAdmin && activeView === "admin" && (
+              <button 
+                onClick={() => navigate(ROUTES.REGISTER_STAFF)}
+                className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-black uppercase tracking-widest rounded-xl shadow-lg transition-all active:scale-95"
+              >
+                <ShieldPlus size={16} /> Register Staff
+              </button>
+            )}
+
+            {activeView === "user" && (
+              <button 
+                onClick={() => navigate(ROUTES.REGISTER_USER)}
+                className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-black uppercase tracking-widest rounded-xl shadow-lg shadow-blue-900/20 transition-all active:scale-95"
+              >
+                <UserPlus size={16} /> Register Resident
+              </button>
+            )}
+          </div>
+        </div>
       </header>
 
       {loading && uids.length === 0 ? (

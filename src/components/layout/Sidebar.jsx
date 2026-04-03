@@ -126,8 +126,8 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
             <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-4 mb-4 opacity-50">Analytics</p>
             <SidebarLink to="/dashboard" icon={LayoutDashboard} label="Main Dashboard" onClick={handleLinkClick} />
             <SidebarLink to="/device-monitoring" icon={Droplets} label="Real-time Monitor" onClick={handleLinkClick} />
-            <SidebarLink to="/history" icon={History} label="Data History" onClick={handleLinkClick} />
             <SidebarLink to="/alerts" icon={Bell} label="System Alerts" onClick={handleLinkClick} badgeCount={alertCounts.systemAlerts} />
+            <SidebarLink to="/history" icon={History} label="Data History" onClick={handleLinkClick} />
           </div>
 
           {/* OPERATIONS GROUP */}

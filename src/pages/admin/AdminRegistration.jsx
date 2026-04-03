@@ -5,7 +5,9 @@ import { cn } from "../../utils/cn";
 // Services
 import { registerUserAccount } from "../../services/auth.service";
 import { provisionUserSystem } from "../../services/user.service";
-// UI Components
+import { useNavigate } from "react-router-dom";
+import { X } from "lucide-react"; 
+import { ROUTES } from "../../constants/routes";
 import { RegistrationFields } from "../../components/auth/RegistrationField";
 import { RegistrationSummary } from "../../components/auth/RegistrationSummary";
 import { ConfirmationModal } from "../../components/ui/ConfirmationModal";
@@ -17,6 +19,7 @@ const AdminRegistration = () => {
   const [tempData, setTempData] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState("");
+  const navigate = useNavigate();
 
   // TOAST STATE
   const [toast, setToast] = useState({ 
@@ -103,9 +106,17 @@ const AdminRegistration = () => {
   };
   
   return (
-    <div className="max-w-4xl mx-auto p-8 my-8 bg-white border border-slate-200 rounded-3xl shadow-sm">
+    <div className="max-w-4xl mx-auto p-8 my-8 bg-white border border-slate-200 rounded-3xl shadow-sm relative">
+      <button 
+        onClick={() => navigate(ROUTES.ADMIN_USER_MANAGEMENT)} // -1 para bumalik sa huling page o gamitin ang ROUTES.ADMIN_DASHBOARD
+        className="absolute top-8 right-8 z-10 p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-all"
+        title="Back to Dashboard"
+      >
+        <X size={20} />
+      </button>
+
       {/* HEADER SECTION */}
-      <header className="mb-10 border-b border-slate-100 pb-8">
+      <header className="mb-10 border-b border-slate-100 pb-8 pr-12">
         <h1 className="text-2xl font-black text-slate-900 tracking-tight">System Staff Onboarding</h1>
         <p className="text-slate-500 mt-2 text-sm">Automated registration: Credentials will be sent via email upon confirmation.</p>
       </header>
