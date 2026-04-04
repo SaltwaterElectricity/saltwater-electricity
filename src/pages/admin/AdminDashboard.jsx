@@ -57,7 +57,7 @@ const AdminDashboard = ({ currentUserRole }) => {
     const newStatus = isCurrentActive ? USER_STATUS.DISABLED : USER_STATUS.ACTIVE;
 
     try {
-      await updateUserProfile(selectedUser.uid, newStatus);
+      await updateUserStatus(selectedUser.uid, newStatus);
       triggerToast(`Account ${newStatus === USER_STATUS.ACTIVE ? 'restored' : 'disabled'} successfully.`);
     } catch (err) {
       triggerToast("Update failed. Please check your permissions.", "error");

@@ -10,7 +10,33 @@ import SpinnerIcon from "../../components/ui/SpinnerIcon";
 // 🧬 MOLECULE: Individual Real-Time Row
 // ==========================================
 const UserTableRow = memo(({ uid, onActionClick, onEditClick, searchTerm }) => {
-  const { userData, loading } = useFullUserData(uid);
+  const { userData, loading, error } = useFullUserData(uid);
+  
+  if (error) {
+    return (
+      // Siguraduhing may <tr> para hindi masira ang Table Layout
+      <tr className="bg-red-50/30 border-b border-red-100/50 transition-colors">
+        <td colSpan="3" className="px-8 py-4">
+          <div className="flex items-center gap-3">
+            {/* Visual Alert Indicator */}
+            <div className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+            </div>
+            
+            <div className="flex flex-col">
+              <span className="text-[10px] font-black text-red-600 uppercase tracking-widest">
+                Synchronization Failure
+              </span>
+              <span className="text-[9px] text-red-400 font-medium">
+                ID: {uid.slice(0, 5)}... — Check network or database permissions
+              </span>
+            </div>
+          </div>
+        </td>
+      </tr>
+    );
+  }
 
   if (loading) {
     return (
@@ -96,7 +122,7 @@ const UserTableRow = memo(({ uid, onActionClick, onEditClick, searchTerm }) => {
 // ==========================================
 // 🏢 ORGANISM: Master User Table Component
 // ==========================================
-export const UserTable = ({ uids = [], onActionClick, onEditClick, searchTerm, activeView, currentUserRole }) => {
+export const UserTable = ({ uids = [], onActionClick, onEditClick, searchTerm, activeView }) => {
   return (
     <div className="bg-white border border-slate-100 rounded-3xl shadow-sm overflow-hidden">
       <div className="overflow-x-auto custom-scrollbar">
