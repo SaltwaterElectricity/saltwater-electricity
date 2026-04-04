@@ -2,12 +2,14 @@ import { useState, memo, useCallback } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { logoutUser } from "../../services/auth.service";
+import { ROUTES } from "../../constants/routes";
 import { 
   LayoutDashboard, Droplets, Settings, LogOut, 
-  UserPlus, UserRoundPlus, X, ShieldAlert, 
+  UserRoundPlus, X, ShieldAlert, 
   History, ClipboardList, Cpu, Bell 
 } from "lucide-react"; // Note: lucide-react in your original
 import { cn } from "../../utils/cn";
+import { Logo } from "../ui/Logo";
 import { ConfirmationModal } from "../ui/ConfirmationModal";
 import Toast from "../ui/Toast";
 
@@ -18,24 +20,24 @@ import Toast from "../ui/Toast";
 const SidebarLink = memo(({ to, icon: Icon, label, onClick, badgeCount, badgeColor = "bg-red-500" }) => (
   <NavLink
     to={to}
-    end={to === "/dashboard" || to === "/admin/user-management"}
+    end={to === ROUTES.DASHBOARD || to === ROUTES.ADMIN_USER_MANAGEMENT}
     onClick={onClick}
     className={({ isActive }) =>
       cn(
-        "flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group text-sm font-medium",
-        "text-slate-400 hover:bg-slate-800 hover:text-white",
-        isActive && "bg-blue-600 text-white shadow-lg shadow-blue-900/20"
+        "flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group text-sm font-bold tracking-wide",
+        "text-slate-400 hover:bg-slate-800/50 hover:text-white",
+        isActive && "bg-blue-600 text-white shadow-lg shadow-blue-900/40 translate-x-1"
       )
     }
   >
     <div className="flex items-center gap-3">
       <Icon className="w-5 h-5 transition-transform group-hover:scale-110" />
-      <span className="tracking-wide">{label}</span>
+      <span className="tracking-widest">{label}</span>
     </div>
 
     {badgeCount > 0 && (
       <span className={cn(
-        "flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-[10px] font-bold text-white animate-pulse",
+        "flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-[10px] font-black text-white animate-pulse",
         badgeColor
       )}>
         {badgeCount > 99 ? "99+" : badgeCount}
@@ -79,7 +81,7 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
       triggerToast("Terminating session... Forcing local wipe.", "warning");
       sessionStorage.clear();
       localStorage.clear();
-      setTimeout(() => { window.location.href = "/login"; }, 2000);
+      setTimeout(() => { window.location.href = ROUTES.LOGIN; }, 2000);
     } finally {
       setIsLoggingOut(false);
     }
@@ -92,39 +94,35 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
       {/* MOBILE OVERLAY - With Fade-in animation */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] lg:hidden animate-in fade-in duration-300" 
+          className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[60] lg:hidden animate-in fade-in duration-300" 
           onClick={toggleSidebar} 
         />
       )}
 
       <aside className={cn(
-        "fixed inset-y-0 left-0 z-[70] w-64 bg-slate-900 border-r border-slate-800 flex flex-col transition-transform duration-300 ease-in-out",
+        "fixed inset-y-0 left-0 z-[70] w-72 bg-slate-900 border-r border-slate-800/50 flex flex-col transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1)",
         "lg:relative lg:translate-x-0",
-        isOpen ? "translate-x-0" : "-translate-x-full shadow-2xl lg:shadow-none"
+        isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full shadow-2xl lg:shadow-none"
       )}>
         
-        {/* BRANDING - 80px (8pt grid) */}
-        <div className="h-20 flex items-center justify-between px-6 border-b border-slate-800/50">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-inner">
-              <Droplets className="text-white w-5 h-5" />
-            </div>
-            <span className="font-black text-xl tracking-tighter text-white uppercase italic">
-              Smart<span className="text-blue-500">Aqua</span>
-            </span>
-          </div>
-          <button onClick={toggleSidebar} className="lg:hidden p-2 text-slate-400 hover:text-white transition-colors">
-            <X size={20} />
+        {/* BRANDING HEADER - h-24 (96px) | px-6 (24px) */}
+        <header className="h-24 flex items-center justify-between px-6 border-b border-slate-800/40 shrink-0">
+          <Logo />
+          <button 
+            onClick={toggleSidebar} 
+            className="lg:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all active:scale-90"
+          >
+            <X size={24} /> 
           </button>
-        </div>
+        </header>
 
         {/* NAVIGATION - space-y-8 (32px) */}
-        <nav className="flex-1 px-4 py-6 space-y-8 overflow-y-auto custom-scrollbar">
+        <nav className="flex-1 px-4 py-8 space-y-10 overflow-y-auto custom-scrollbar">
           
           {/* ANALYTICS GROUP */}
           <div className="space-y-2">
-            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-4 mb-4 opacity-50">Analytics</p>
-            <SidebarLink to="/dashboard" icon={LayoutDashboard} label="Main Dashboard" onClick={handleLinkClick} />
+            <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] px-4 mb-4">Analytics</p>
+            <SidebarLink to={ROUTES.DASHBOARD} icon={LayoutDashboard} label="Main Dashboard" onClick={handleLinkClick} />
             <SidebarLink to="/device-monitoring" icon={Droplets} label="Real-time Monitor" onClick={handleLinkClick} />
             <SidebarLink to="/alerts" icon={Bell} label="System Alerts" onClick={handleLinkClick} badgeCount={alertCounts.systemAlerts} />
             <SidebarLink to="/history" icon={History} label="Data History" onClick={handleLinkClick} />
@@ -132,20 +130,19 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
 
           {/* OPERATIONS GROUP */}
           <div className="space-y-2">
-            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-4 mb-4 opacity-50">Operations</p>
+            <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] px-4 mb-4">Operations</p>
             <SidebarLink to="/device-requests" icon={ClipboardList} label="Device Requests" onClick={handleLinkClick} badgeCount={alertCounts.deviceRequests} badgeColor="bg-blue-600" />
           </div>
 
           {/* ADMIN GROUP */}
           {isAdmin && (
             <div className="space-y-2">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-4 mb-4 opacity-50">Administration</p>
-              <SidebarLink to="/admin/user-management" icon={UserRoundPlus} label="User Management" onClick={handleLinkClick} />
+              <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] px-4 mb-4">Administration</p>
+              <SidebarLink to={ROUTES.ADMIN_USER_MANAGEMENT} icon={UserRoundPlus} label="User Management" onClick={handleLinkClick} />
               <SidebarLink to="/admin/device-management" icon={Cpu} label="Device Management" onClick={handleLinkClick} />
               <SidebarLink to="/admin/settings" icon={Settings} label="System Settings" onClick={handleLinkClick} />
               {isSuperAdmin && (
-                <div className="pt-4 border-t border-slate-800/30 mt-4 space-y-2">
-                  <SidebarLink to="/admin/staff/new" icon={UserPlus} label="Onboard Admin" onClick={handleLinkClick} />
+                <div className="pt-6 border-t border-slate-800/30 mt-6 space-y-2">
                   <SidebarLink to="/admin/staff" icon={ShieldAlert} label="Security Roles" onClick={handleLinkClick} />
                 </div>
               )}
@@ -154,8 +151,8 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
         </nav>
 
         {/* FOOTER - Profile & Sign Out */}
-        <div className="p-4 border-t border-slate-800/50 space-y-4">
-          <div className="px-4 py-2 flex items-center gap-3 bg-slate-800/30 rounded-xl">
+        <footer className="p-6 border-t border-slate-800/40 bg-slate-950/20 space-y-4">
+          <div className="px-4 py-3 flex items-center gap-4 bg-slate-800/30 rounded-xl border border-slate-700/20 group hover:border-blue-500/30 transition-colors">
              <div className="w-9 h-9 rounded-full bg-blue-600/20 border border-blue-500/20 flex items-center justify-center text-xs font-bold text-blue-400">
                {user?.firstName?.[0] || 'U'}
              </div>
@@ -167,12 +164,12 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
 
           <button 
             onClick={() => setIsLogoutModalOpen(true)} 
-            className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all group border border-transparent hover:border-red-500/20"
+            className="flex items-center gap-3 px-4 py-4 w-full rounded-2xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all group border border-transparent hover:border-red-500/20"
           >
             <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             <span className="text-sm font-bold">Sign Out</span>
           </button>
-        </div>
+        </footer>
       </aside>
 
       {/* LOGOUT CONFIRMATION - Integrated extra safety info */}
@@ -186,9 +183,9 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
         confirmText="Confirm Sign Out"
         variant="danger" 
       >
-        <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-3 items-center">
-           <ShieldAlert className="text-red-400 w-5 h-5 flex-shrink-0" />
-           <p className="text-[10px] text-red-300 leading-tight">
+        <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-4 items-center">
+           <ShieldAlert className="text-red-400 w-6 h-6 flex-shrink-0" />
+           <p className="text-[10px] text-red-300/80 leading-tight">
              Active Session Cleanup: Clearing Firebase Auth tokens and local storage cache.
            </p>
         </div>
