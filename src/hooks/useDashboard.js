@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { subscribeToAllDevices } from '../services/firebaseService';
+import { subscribeToAllDevices } from '../services/device.service';
 import { useIsConnected } from './useIsConnected';
 
 const ONLINE_TIMEOUT_MS = 30000; // 30 seconds

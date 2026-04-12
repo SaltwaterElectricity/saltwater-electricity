@@ -68,17 +68,22 @@ export const provisionUserSystem = async (uid, formData) => {
   const updates = {
     // NODE: Profile Info
     [`/users/${uid}`]: {
-      ...cleanProfile,
-      isPrivate: isActualSuperAdmin,
+      firstName: cleanProfile.firstName,
+      middleName: cleanProfile.middleName,
+      lastName: cleanProfile.lastName,
+      suffix: cleanProfile.suffix,
+      age: cleanProfile.age,
+      gender: cleanProfile.gender,
+      email: cleanProfile.email,
+      userName: cleanProfile.userName,
+      mobileNum: cleanProfile.mobileNum,
+      address: cleanProfile.address,
       updatedAt: now
     },
     // NODE: Account Status & Security Flags
     [`/accounts/${uid}`]: {
-      userId: uid,
-      userName: cleanProfile.userName,
       status: USER_STATUS.ACTIVE,
       requiresPasswordChange: !isActualSuperAdmin,
-      isPrivate: isActualSuperAdmin,
       createdAt: now
     },
     // NODE: Authorization (Source of Truth for Rules)

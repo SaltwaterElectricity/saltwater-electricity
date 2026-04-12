@@ -6,6 +6,7 @@ import { ShieldCheck, User, X, AlertCircle, Loader2 } from "lucide-react";
 import { loginUser, logoutUser } from "../../services/auth.service";
 import { logLoginSession } from "../../services/session.service";
 import ForgotPasswordModal from "../auth/ForgotPasswordModal";
+import { ROUTES, ROLE_LANDING_PAGES } from "../../constants/routes";
 
 const LoginModal = ({ isOpen, onClose, defaultRole }) => {
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
       // 4. CRITICAL SECURITY CHECK: Force password change
       if (userData.requiresPasswordChange) {
         sessionStorage.setItem("pending_uid", user.uid);
-        navigate("/security-checkpoint", { replace: true });
+        navigate(ROUTES.FORCE_PASSWORD_CHANGE, { replace: true });
         onClose();
         return;
       }
@@ -62,15 +63,7 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
       await logLoginSession(userData.uid);
 
       // 6. DYNAMIC ROLE-BASED ROUTING with existence check
-      const redirectPaths = {
-        superAdmin: "/admin/dashboard",
-        admin: "/admin/dashboard",
-        technician: "/tech/controls",
-        user: "/dashboard"
-      };
-
-      // Check if the role actually exists in our mapping
-      const path = redirectPaths[userData.role] || "/unauthorized";
+      const path = ROLE_LANDING_PAGES[userData.role] || ROUTES.UNAUTHORIZED;
 
       onClose();
       setTimeout(() => {

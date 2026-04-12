@@ -10,7 +10,9 @@ import { ForcePasswordChange } from "./components/passwordChange";
 import AdminRegistration from "./pages/admin/AdminRegistration";
 import UserRegistration from "./pages/admin/UserRegistration"; 
 import LoginPage from "./pages/auth/LoginPage";
-import AdminDashboard from "./pages/admin/AdminDashboard";
+import UserManagement from "./pages/admin/UserManagement";
+import ResidentDashboard from './pages/user/ResidentDashboard';
+import DashboardController from './pages/dashboard';
 
 const RootRedirect = ({ user, role }) => {
   if (!user) return <Navigate to={ROUTES.LOGIN} replace />;
@@ -41,7 +43,7 @@ export const AppRoutes = () => {
           
           {/* ADMIN SCOPE */}
           <Route element={<ProtectedRoute requiredRole="admin" />}>
-            <Route path={ROUTES.ADMIN_USER_MANAGEMENT} element={<AdminDashboard currentUserRole={userRole} />} />
+            <Route path={ROUTES.ADMIN_USER_MANAGEMENT} element={<UserManagement currentUserRole={userRole} />} />
             <Route path={ROUTES.REGISTER_USER} element={<UserRegistration />} />
           </Route>
 
@@ -50,7 +52,7 @@ export const AppRoutes = () => {
             <Route path={ROUTES.REGISTER_STAFF} element={<AdminRegistration />} />
           </Route>
 
-          <Route path={ROUTES.DASHBOARD} element={<div>Resident Analytics (Soon)</div>} />
+          <Route path={ROUTES.DASHBOARD} element={<DashboardController />} />
         </Route>
       </Route>
 

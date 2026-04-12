@@ -1,89 +1,76 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import LoginModal from "../../components/ui/LoginModal";
-import { User, ShieldCheck } from "lucide-react";
 import { cn } from "../../utils/cn";
+import logoImg from "../../assets/login-logo.jpg"; 
 
-// 1. CONSTANTS: Moved outside to prevent re-allocation on render
 const ROLES = {
-  USER: {
-    id: "user",
-    label: "Client Login",
-    icon: User,
-    theme: "light",
-    styles: {
-      card: "bg-white border-slate-200 shadow-sm",
-      iconBox: "bg-blue-50 text-blue-600 group-hover:bg-blue-600",
-      text: "text-slate-700"
-    }
-  },
-  ADMIN: {
-    id: "admin",
-    label: "Admin / Staff",
-    icon: ShieldCheck,
-    theme: "dark",
-    styles: {
-      card: "bg-slate-900 border-slate-800 shadow-xl",
-      iconBox: "bg-slate-800 text-slate-400 group-hover:bg-red-500",
-      text: "text-slate-400 group-hover:text-white"
-    }
-  }
+  USER: "user",
+  ADMIN: "admin",
 };
 
 const LoginPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [initialRole, setInitialRole] = useState(ROLES.USER.id);
+  const [initialRole, setInitialRole] = useState(ROLES.USER);
 
-  // 2. PERFORMANCE: Memoized handler for opening the modal
   const openLogin = useCallback((roleId) => {
     setInitialRole(roleId);
     setIsModalOpen(true);
   }, []);
 
-  // 3. PERFORMANCE: Memoized roles array for the grid
-  const rolesList = useMemo(() => Object.values(ROLES), []);
-
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-8 antialiased">
+    /* Ginamit ang 'auth-bg-active' mula sa iyong CSS base layer */
+    <div className="min-h-screen w-full flex items-center justify-center auth-bg-active px-4 antialiased">
       
-      {/* HEADER: 8pt grid (mb-16 = 128px) */}
-      <header className="text-center mb-16 animate-in fade-in slide-in-from-top-4 duration-1000">
-        <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase italic">
-          SmartAqua <span className="text-blue-600">Portal</span>
-        </h1>
-        <p className="text-slate-500 mt-3 text-xs font-bold uppercase tracking-[0.3em] opacity-60">
-          Secure Access Gateway
-        </p>
-      </header>
-      
-      {/* GRID: Responsive gap-8 (32px) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full max-w-2xl">
-        {rolesList.map((role) => (
+      <div className="bg-white w-full max-w-[380px] p-[45px_35px] rounded-xl text-center shadow-2xl animate-zoomIn">
+        
+        <div className="mb-2 flex justify-center">
+          <img 
+            src={logoImg} 
+            alt="SEM IoT Logo" 
+            /* In-update ang class dito:
+               Ginamit ang 'animate-cube-jump' na ginawa natin sa CSS 
+            */
+            className="w-[70%] max-w-[220px] h-auto -mt-2 animate-cube-jump"
+          />
+        </div>
+
+        <div className=" mb-8">
+          <h1 className="text-[22px] text-[#1a1a1a] font-bold mb-1.5">
+            Hi, Electric User's
+          </h1>
+          <p className="text-[13px] text-black font-normal -mt-0.5">
+            Please click or tap your destinations.
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-4 mb-8">
           <button 
-            key={role.id}
-            onClick={() => openLogin(role.id)}
+            onClick={() => openLogin(ROLES.ADMIN)}
             className={cn(
-              "group p-10 rounded-[40px] transition-all flex flex-col items-center gap-6 active:scale-95",
-              "hover:shadow-2xl hover:-translate-y-2 duration-500",
-              role.styles.card
+              "w-full py-3.5 text-lg font-medium rounded-lg transition-all duration-200 active:scale-95 shadow-md",
+              "bg-[#000046] text-white hover:bg-[#000066]"
             )}
           >
-            {/* ICON CONTAINER: w-20 (80px) */}
-            <div className={cn(
-              "w-20 h-20 rounded-[28px] flex items-center justify-center transition-all duration-500",
-              role.styles.iconBox
-            )}>
-              <role.icon className="w-10 h-10 transition-colors duration-500 group-hover:text-white" />
-            </div>
-
-            {/* LABEL SECTION */}
-            <span className={cn(
-              "font-black uppercase tracking-[0.25em] text-[10px] transition-colors duration-500",
-              role.styles.text
-            )}>
-              {role.label}
-            </span>
+            Administrator
           </button>
-        ))}
+          
+          <button 
+            onClick={() => openLogin(ROLES.USER)}
+            className={cn(
+              "w-full py-3.5 text-lg font-medium rounded-lg transition-all duration-200 active:scale-95 shadow-sm",
+              "bg-white text-[#2b308b] border-[1.5px] border-[#2b308b] hover:bg-[#f5f7ff]"
+            )}
+          >
+            Household Representative
+          </button>
+        </div>
+
+        <footer className="text-[12.5px] text-[#4d4d4d] leading-relaxed">
+          By using this services, you understood and<br />
+          agree to our Saltwater Electric online services<br />
+          <span className="font-bold text-[#262626] cursor-pointer hover:underline">Terms of Use</span> and{" "}
+          <span className="font-bold text-[#262626] cursor-pointer hover:underline">Privacy Statement</span>.
+        </footer>
       </div>
 
       {/* LOGIN MODAL */}

@@ -16,7 +16,7 @@ export const ROUTES = Object.freeze({
 });
 
 export const ROLE_LANDING_PAGES = Object.freeze({
-  superAdmin: ROUTES.ADMIN_USER_MANAGEMENT,
-  admin: ROUTES.ADMIN_USER_MANAGEMENT,
+  superAdmin: ROUTES.DASHBOARD,
+  admin: ROUTES.DASHBOARD,
   user: ROUTES.DASHBOARD,
 });

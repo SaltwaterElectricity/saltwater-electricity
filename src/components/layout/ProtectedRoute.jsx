@@ -35,6 +35,7 @@ const ProtectedRoute = ({ requiredRole, children }) => {
 
     const isSuperAdmin = userRole === "superAdmin";
     const isAdmin = userRole === "admin";
+    const isUser = userRole === "user";
     
     let hasClearance = false;
 
@@ -44,6 +45,9 @@ const ProtectedRoute = ({ requiredRole, children }) => {
     } else if (requiredRole === "superAdmin") {
       // Super Admin pages strictly allow ONLY Super Admin
       hasClearance = isSuperAdmin;
+    } else if (requiredRole === "user") {
+      // User pages allow Residents, and usually Admins/SuperAdmins for troubleshooting
+      hasClearance = isUser || isAdmin || isSuperAdmin;
     } else {
       // Para sa ibang roles (e.g., user, technician)
       hasClearance = userRole === requiredRole || isSuperAdmin;
