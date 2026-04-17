@@ -17,8 +17,8 @@ import { ROUTES } from "../../constants/routes";
 // UI Components
 import Toast from "../../components/ui/Toast";
 import SpinnerIcon from "../../components/ui/SpinnerIcon";
-import { ConfirmationModal } from "../../components/ui/ConfirmationModal";
-import EditUserModal from "../../components/ui/EditUserModal";
+import { ConfirmationModal } from "../../components/modal/ConfirmationModal";
+import EditUserModal from "../../components/modal/EditUserModal";
 import { UserTable } from "../../components/ui/UserTable"; 
 
 const UserManagement = ({ currentUserRole }) => {

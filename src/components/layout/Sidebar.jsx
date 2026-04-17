@@ -10,7 +10,7 @@ import {
 } from "lucide-react"; // Note: lucide-react in your original
 import { cn } from "../../utils/cn";
 import { Logo } from "../ui/Logo";
-import { ConfirmationModal } from "../ui/ConfirmationModal";
+import { ConfirmationModal } from "../modal/ConfirmationModal";
 import Toast from "../ui/Toast";
 
 /**
@@ -139,7 +139,7 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
             <div className="space-y-2">
               <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] px-4 mb-4">Administration</p>
               <SidebarLink to={ROUTES.ADMIN_USER_MANAGEMENT} icon={UserRoundPlus} label="User Management" onClick={handleLinkClick} />
-              <SidebarLink to="/admin/device-management" icon={Cpu} label="Device Management" onClick={handleLinkClick} />
+              <SidebarLink to={ROUTES.ADMIN_DEVICE_MANAGEMENT} icon={Cpu} label="Device Management" onClick={handleLinkClick} />
               <SidebarLink to="/admin/settings" icon={Settings} label="System Settings" onClick={handleLinkClick} />
               {isSuperAdmin && (
                 <div className="pt-6 border-t border-slate-800/30 mt-6 space-y-2">

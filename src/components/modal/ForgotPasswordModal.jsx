@@ -1,7 +1,7 @@
 import { useState, useEffect, memo } from 'react';
-import RequestOTPStep from './RequestOTPStep';
-import VerifyOTPStep from './VerifyOTPStep';
-import ResetPassword from './ResetPassword';
+import RequestOTPStep from '../auth/RequestOTPStep';
+import VerifyOTPStep from '../auth/VerifyOTPStep';
+import ResetPassword from '../auth/ResetPassword';
 
 /**
  * ORGANISM: ForgotPasswordModal

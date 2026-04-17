@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
-import LoginModal from "../../components/ui/LoginModal";
+import LoginModal from "../../components/modal/LoginModal";
 import { cn } from "../../utils/cn";
-import logoImg from "../../assets/login-logo.jpg"; 
+import logoImg from "../../assets/login-logo.png"; 
 
 const ROLES = {
   USER: "user",

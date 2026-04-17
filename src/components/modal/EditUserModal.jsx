@@ -1,7 +1,7 @@
 import { useState, useEffect, memo } from "react";
 import { X, Save, User, MapPin } from "lucide-react";
 import { cn } from "../../utils/cn";
-import SpinnerIcon from "./SpinnerIcon"; // Gamitin ang shared spinner mo
+import SpinnerIcon from "../ui/SpinnerIcon"; // Gamitin ang shared spinner mo
 
 const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
   // 1. Local State para sa Form Inputs

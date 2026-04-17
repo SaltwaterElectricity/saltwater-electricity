@@ -11,8 +11,8 @@ import AdminRegistration from "./pages/admin/AdminRegistration";
 import UserRegistration from "./pages/admin/UserRegistration"; 
 import LoginPage from "./pages/auth/LoginPage";
 import UserManagement from "./pages/admin/UserManagement";
-import ResidentDashboard from './pages/user/ResidentDashboard';
 import DashboardController from './pages/dashboard';
+import DeviceManagement from "./pages/admin/DeviceManagement";
 
 const RootRedirect = ({ user, role }) => {
   if (!user) return <Navigate to={ROUTES.LOGIN} replace />;
@@ -44,6 +44,7 @@ export const AppRoutes = () => {
           {/* ADMIN SCOPE */}
           <Route element={<ProtectedRoute requiredRole="admin" />}>
             <Route path={ROUTES.ADMIN_USER_MANAGEMENT} element={<UserManagement currentUserRole={userRole} />} />
+            <Route path={ROUTES.ADMIN_DEVICE_MANAGEMENT} element={<DeviceManagement />} />
             <Route path={ROUTES.REGISTER_USER} element={<UserRegistration />} />
           </Route>
 

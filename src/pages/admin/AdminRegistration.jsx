@@ -10,7 +10,7 @@ import { X } from "lucide-react";
 import { ROUTES } from "../../constants/routes";
 import { RegistrationFields } from "../../components/auth/RegistrationField";
 import { RegistrationSummary } from "../../components/auth/RegistrationSummary";
-import { ConfirmationModal } from "../../components/ui/ConfirmationModal";
+import { ConfirmationModal } from "../../components/modal/ConfirmationModal";
 import { Toast } from "../../components/ui";
 
 const AdminRegistration = () => {

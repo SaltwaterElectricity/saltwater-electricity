@@ -5,9 +5,9 @@ import { X, User, Lock, History } from "lucide-react";
 import { cn } from "../../utils/cn"; 
 
 // 🔑 Imports para sa sub-views natin
-import { SecurityForm } from "./SecurityForm"; 
-import { ProfileForm } from "./ProfileForm";   
-import { SessionHistory } from "./SessionHistory";
+import { SecurityForm } from "../profile/SecurityForm"; 
+import { ProfileForm } from "../profile/ProfileForm";   
+import { SessionHistory } from "../profile/SessionHistory";
 
 export const SettingsModal = memo(({ uid }) => {
   const [isOpen, setIsOpen] = useState(false);

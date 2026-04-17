@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db } from '../services/firebaseConfig'; 
+import { db } from '../firebaseConfig'; 
 import { ref, onValue, query, orderByChild, equalTo } from 'firebase/database';
 
 /**
@@ -21,7 +21,7 @@ export const useDevices = (onlyAvailable = false) => {
     // 2. Query Logic
     // Kung onlyAvailable ay true, i-filter natin sa server-side ang 'idle' status
     const finalQuery = onlyAvailable 
-      ? query(devicesRef, orderByChild('availability'), equalTo('idle'))
+      ? query(devicesRef, orderByChild('availability'), equalTo('available'))
       : devicesRef;
 
     // 3. Real-time Subscription

@@ -5,7 +5,7 @@ import { cn } from "../../utils/cn";
 import { ShieldCheck, User, X, AlertCircle, Loader2 } from "lucide-react";
 import { loginUser, logoutUser } from "../../services/auth.service";
 import { logLoginSession } from "../../services/session.service";
-import ForgotPasswordModal from "../auth/ForgotPasswordModal";
+import ForgotPasswordModal from "./ForgotPasswordModal";
 import { ROUTES, ROLE_LANDING_PAGES } from "../../constants/routes";
 
 const LoginModal = ({ isOpen, onClose, defaultRole }) => {
