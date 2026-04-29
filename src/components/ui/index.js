@@ -9,4 +9,3 @@ export { Logo } from './Logo';
 export { default as MetricGauge } from './MetricGauge';
 export { UserTable } from './UserTable';
 
-export * from './device';

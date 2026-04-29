@@ -9,18 +9,21 @@ import {
 } from "lucide-react";
 
 // Services, Hooks, at Utils
-import { useUserSubscription } from "../../hooks/useUserSubscription";
+import { useUserSubscription } from "../../hooks";
 import { updateUserStatus, updateUserProfile, USER_STATUS } from "../../services/user.service"; 
 import { cn } from "../../utils/cn";
 import { ROUTES } from "../../constants/routes";
 
 // UI Components
-import Toast from "../../components/ui/Toast";
-import SpinnerIcon from "../../components/ui/SpinnerIcon";
-import { ConfirmationModal } from "../../components/modal/ConfirmationModal";
-import EditUserModal from "../../components/modal/EditUserModal";
-import { UserTable } from "../../components/ui/UserTable"; 
-import GlobalSearch from "../../components/ui/GlobalSearch";
+import { 
+  Toast, 
+  SpinnerIcon, 
+  ConfirmationModal, 
+  EditUserModal, 
+  UserTable, 
+  GlobalSearch,
+  UserTableSkeleton 
+} from "../../components";
 
 const UserManagement = ({ currentUserRole }) => {
   const navigate = useNavigate();
@@ -60,7 +63,7 @@ const UserManagement = ({ currentUserRole }) => {
     try {
       await updateUserStatus(selectedUser.uid, newStatus);
       triggerToast(`Account ${newStatus === USER_STATUS.ACTIVE ? 'restored' : 'disabled'} successfully.`);
-    } catch (err) {
+    } catch (_err) {
       triggerToast("Update failed. Please check your permissions.", "error");
     } finally {
       setIsModalOpen(false);
@@ -76,7 +79,7 @@ const UserManagement = ({ currentUserRole }) => {
       triggerToast("User profile updated successfully.");
       setIsEditModalOpen(false);
       setSelectedEditUser(null);
-    } catch (err) {
+    } catch (_err) {
       triggerToast("Failed to update profile. Try again.", "error");
     } finally {
       setIsEditSaving(false);
@@ -201,14 +204,7 @@ const UserManagement = ({ currentUserRole }) => {
       </header>
 
       {loading && uids.length === 0 ? (
-        <div className="min-h-[400px] flex flex-col items-center justify-center bg-white/40 backdrop-blur-md rounded-[40px] border border-white/60 shadow-sm animate-in fade-in duration-500">
-          <div className="p-6 bg-blue-600/10 rounded-[24px] mb-6">
-            <SpinnerIcon className="w-12 h-12 text-blue-600 animate-spin" />
-          </div>
-          <p className="text-[11px] font-black text-slate-500 uppercase tracking-[0.3em]">
-            Syncing SmartAqua Records...
-          </p>
-        </div>
+        <UserTableSkeleton />
       ) : (
         <UserTable 
           uids={uids} 

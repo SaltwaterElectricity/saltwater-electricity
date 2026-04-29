@@ -1,4 +1,5 @@
 import { useState, memo } from 'react';
+import { verifyResetOTP } from '../../services/otp.service';
 
 const VerifyOTPStep = ({ email, onSuccess, onBack }) => {
   const [otp, setOtp] = useState('');

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ManagedDeviceCard } from './ManagedDeviceCard'; 
 import { AdminMonitoringLayout } from './AdminMonitoringLayout';
 import { UserDeviceLayout } from './UserDeviceLayout';
-import { cn } from "../../../utils/cn";
+import { cn } from "../../utils/cn";
 
 const DeviceCard = ({ device, telemetry, currentUser, onAction, viewMode = "default" }) => {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -34,7 +34,9 @@ const DeviceCard = ({ device, telemetry, currentUser, onAction, viewMode = "defa
       {viewMode === "management" ? (
         <ManagedDeviceCard 
           device={device} 
+          isAdmin={hasPrivilegedAccess}
           onAssignClick={(d) => handleSecureAction('ASSIGN_DEVICE', d)} 
+          onForceRelease={(id) => handleSecureAction('FORCE_DEPROVISION', id)}
         />
       ) : (
         <>

@@ -4,29 +4,18 @@ import { cn } from "../../utils/cn";
 import SpinnerIcon from "../ui/SpinnerIcon"; // Gamitin ang shared spinner mo
 
 const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
-  // 1. Local State para sa Form Inputs
+  // 1. Local State initialized directly with the user object if available, otherwise defaults
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    baranggay: "",
+    firstName: user?.firstName || "",
+    lastName: user?.lastName || "",
+    baranggay: user?.address?.baranggay || "",
   });
-
-  // 2. Sync Local State kapag nagbago ang piniling User
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
-        baranggay: user.address?.baranggay || "",
-      });
-    }
-  }, [user]);
 
   if (!isOpen || !user) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(formData); // Ipass ang bagong data pabalik sa Dashboard
+    onSave(formData); 
   };
 
   const handleInputChange = (e) => {
@@ -37,7 +26,7 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 antialiased overflow-y-auto custom-scrollbar bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300">
       
-      {/* Modal Container with Animation (pareho sa ConfirmationModal mo) */}
+      {/* Modal Container */}
       <div className="relative w-full max-w-lg bg-white border border-slate-100 rounded-3xl shadow-2xl p-8 space-y-8 animate-in fade-in zoom-in-95 duration-200">
         
         {/* Header */}
@@ -48,7 +37,7 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
             </div>
             <div>
               <h2 className="text-lg font-black text-slate-900 uppercase tracking-tight">
-                Update Profile parameter
+                Update Profile
               </h2>
               <p className="text-sm text-slate-500 font-medium">
                 Editing: <span className="font-bold text-slate-700">{user.firstName} {user.lastName}</span>

@@ -1,5 +1,5 @@
 import { Waves, Zap, Activity } from 'lucide-react'; // Gumamit ng Lucide icons para sa pro look
-import { cn } from "../../../utils/cn"; // Utility para sa clean class merging
+import { cn } from "../../utils/cn"; // Utility para sa clean class merging
 
 // 1. SUB-COMPONENT: Metric Tile (Atomic Component)
 // Sumusunod sa 8pt grid: p-4 (16px), gap-3 (12px), rounded-2xl (16px)

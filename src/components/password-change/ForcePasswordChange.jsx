@@ -77,7 +77,7 @@ const ForcePasswordChange = ({ onSuccess }) => {
     return (
       <div className="flex flex-col items-center justify-center p-12 bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-100 animate-in fade-in zoom-in duration-500">
         <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mb-8 animate-bounce">
-          <span className="material-symbols-outlined text-4xl font-bold">check</span>
+          <CheckCircle2 size={40} strokeWidth={3} />
         </div>
         <h2 className="text-2xl font-black text-slate-900 tracking-tight">Security Updated</h2>
         <p className="text-slate-500 text-sm mt-2 text-center leading-relaxed">

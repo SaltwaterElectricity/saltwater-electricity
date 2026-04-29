@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from "./context/AuthContext";
-import AnimatedLogo from "./components/ui/AnimatedLogo"; // Siguraduhing tama ang path
+import { AnimatedLogo } from "./components"; 
 import { AppRoutes } from "./AppRoutes"; 
 
 function App() {

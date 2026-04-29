@@ -1,25 +1,20 @@
 import { useState, useEffect, useRef, memo, useCallback } from "react";
 import { useProfile } from "../../hooks/useProfile";
 import { logoutUser } from "../../services/auth.service";
-import { LogOut, Settings } from "lucide-react"; // 👈 Pinalitan ng Settings icon
+import { useUI } from "../../context/UIContext";
+import { useNotification } from "../../context/NotificationContext";
+import { LogOut, Settings } from "lucide-react"; 
 import { cn } from "../../utils/cn";
-import Toast from "../ui/Toast";
 import SpinnerIcon from "../ui/SpinnerIcon"; 
 
 export const NavbarProfile = memo(({ currentUid = "" }) => {
   const dropdownRef = useRef(null);
 
   const { profile, loading } = useProfile(currentUid);
+  const { openSettings } = useUI();
+  const { showNotification } = useNotification();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-
-  const [showToast, setShowToast] = useState(false);
-  const [toastConfig, setToastConfig] = useState({ message: "", type: "success" });
-
-  const triggerToast = (message, type = "success") => {
-    setToastConfig({ message, type });
-    setShowToast(true);
-  };
 
   const getInitials = useCallback(() => {
     const fLetter = profile?.firstName?.[0] || "";
@@ -32,19 +27,15 @@ export const NavbarProfile = memo(({ currentUid = "" }) => {
   // 🛰️ DISPATCH EVENT TO OPEN MODAL (Pumupunta sa SettingsModal)
   const handleOpenSettings = (tabName) => {
     setIsOpen(false); // Isara muna ang dropdown
-    
-    // Sabihan ang SettingsModal na magbukas sa specific tab
-    window.dispatchEvent(
-      new CustomEvent("open-profile-settings", { detail: tabName })
-    );
+    openSettings(tabName);
   };
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
       await logoutUser(); 
-    } catch (error) {
-      triggerToast("Terminating session... Forcing secure reset.", "warning");
+    } catch (_error) {
+      showNotification("Terminating session... Forcing secure reset.", "warning");
 
       sessionStorage.clear();
       localStorage.clear();
@@ -72,13 +63,6 @@ export const NavbarProfile = memo(({ currentUid = "" }) => {
   return (
     <div className="relative antialiased" ref={dropdownRef}>
       
-      <Toast 
-        isOpen={showToast} 
-        message={toastConfig.message} 
-        type={toastConfig.type} 
-        onClose={() => setShowToast(false)} 
-      />
-
       <button 
         onClick={handleToggle}
         disabled={isLoggingOut}

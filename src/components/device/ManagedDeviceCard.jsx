@@ -1,26 +1,23 @@
 import { Cpu, Globe, Calendar, CheckCircle2, Lock, User, MapPin } from 'lucide-react';
-import { cn } from "../../../utils/cn";
+import { cn } from "../../utils/cn";
 import { DeviceInfoRow } from './DeviceInfoRow';
-import { useAssignmentDetails } from '../../../hooks/useAssignmentDetails';
+import { useAssignmentDetails } from '../../hooks/useAssignmentDetails';
 
-export const ManagedDeviceCard = ({ device, onAssignClick }) => {
+export const ManagedDeviceCard = ({ device, onAssignClick, onForceRelease, isAdmin }) => {
   const isAvailable = device.availability === 'available';
 
-  // Gamitin ang assignment hook
   const { fullName, address, assignedAt, loading } = useAssignmentDetails(device.device_id);
 
-  // FIX: Function para i-convert ang Address Object into a readable String
   const formatAddress = (addr) => {
     if (!addr) return "No Address Provided";
     if (typeof addr === 'string') return addr;
     
-    // Pagsasamahin ang mga parts ng address object
     const parts = [
       addr.street,
       addr.baranggay,
       addr.cityProvince,
       addr.zipCode
-    ].filter(Boolean); // Tatanggalin ang mga null o empty fields
+    ].filter(Boolean);
 
     return parts.length > 0 ? parts.join(', ') : "Invalid Address Format";
   };
@@ -33,7 +30,6 @@ export const ManagedDeviceCard = ({ device, onAssignClick }) => {
   };
 
   return (
-    // In-update mula div papuntang article para sa Semantic HTML
     <article className={cn(
       "group border rounded-[24px] p-6 shadow-sm transition-all duration-500 min-w-[300px] flex flex-col justify-between h-full backdrop-blur-md",
       isAvailable 
@@ -42,7 +38,6 @@ export const ManagedDeviceCard = ({ device, onAssignClick }) => {
     )}>
       
       <div>
-        {/* HEADER: Status Badge & ID */}
         <div className="flex justify-between items-start mb-6">
           <div className={cn(
             "flex items-center gap-1.5 px-3 py-1 rounded-full text-[12px] font-black uppercase tracking-widest",
@@ -56,7 +51,6 @@ export const ManagedDeviceCard = ({ device, onAssignClick }) => {
           </p>
         </div>
 
-        {/* DEVICE IDENTITY: Icon and Name */}
         <div className="flex items-center gap-4 mb-6">
           <div className={cn(
             "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 shrink-0",
@@ -78,7 +72,6 @@ export const ManagedDeviceCard = ({ device, onAssignClick }) => {
           </div>
         </div>
 
-        {/* DATA SECTION */}
         <div className="space-y-4 mb-8 border-y border-slate-100 py-6"> 
           {isAvailable ? (
             <>
@@ -104,7 +97,6 @@ export const ManagedDeviceCard = ({ device, onAssignClick }) => {
               />
               <DeviceInfoRow 
                 label="Location" 
-                // Ginamit ang formatAddress para i-fix ang Object Error
                 value={loading ? "Locating..." : formatAddress(address)} 
                 icon={MapPin} 
               />
@@ -118,19 +110,30 @@ export const ManagedDeviceCard = ({ device, onAssignClick }) => {
         </div>
       </div>
 
-      {/* FOOTER ACTION */}
-      <button
-        onClick={() => isAvailable && onAssignClick(device)}
-        disabled={!isAvailable}
-        className={cn(
-          "w-full h-14 rounded-2xl font-black text-[12px] tracking-[0.2em] transition-all duration-300 uppercase shrink-0",
-          isAvailable
-            ? "bg-blue-600 text-white hover:bg-blue-700 active:scale-[0.95] shadow-lg shadow-blue-100"
-            : "bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300/30"
+      <div className="flex gap-3">
+        <button
+          onClick={() => isAvailable && onAssignClick(device)}
+          disabled={!isAvailable && !isAdmin}
+          className={cn(
+            "flex-1 h-14 rounded-2xl font-black text-[12px] tracking-[0.2em] transition-all duration-300 uppercase shrink-0",
+            isAvailable
+              ? "bg-blue-600 text-white hover:bg-blue-700 active:scale-[0.95] shadow-lg shadow-blue-100"
+              : "bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300/30"
+          )}
+        >
+          {isAvailable ? 'ASSIGN DEVICE' : 'LOCKED BY END-USER'}
+        </button>
+
+        {isAdmin && !isAvailable && (
+          <button
+            onClick={() => onForceRelease(device.device_id)}
+            className="h-14 w-14 flex items-center justify-center rounded-2xl bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 transition-all border border-red-200/50"
+            title="Force Release Device"
+          >
+            <Lock size={20} />
+          </button>
         )}
-      >
-        {isAvailable ? 'ASSIGN DEVICE' : 'LOCKED BY END-USER'}
-      </button>
+      </div>
     </article>
   );
 };

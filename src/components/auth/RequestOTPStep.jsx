@@ -1,4 +1,5 @@
 import { useState, memo } from 'react';
+import { requestPasswordResetOTP } from '../../services/otp.service';
 
 const RequestOTPStep = ({ onNext }) => {
   const [email, setEmail] = useState('');

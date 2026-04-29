@@ -4,9 +4,11 @@ import { ROUTES, ROLE_LANDING_PAGES } from "./constants/routes"; // Import const
 
 // Pages & Components
 import { UnauthorizedPage } from "./pages/UnauthorizedPage";
-import MainLayout from "./components/layout/MainLayout";
-import ProtectedRoute from "./components/layout/ProtectedRoute";
-import { ForcePasswordChange } from "./components";
+import { 
+  MainLayout, 
+  ProtectedRoute, 
+  ForcePasswordChange 
+} from "./components";
 import AdminRegistration from "./pages/admin/AdminRegistration";
 import UserRegistration from "./pages/admin/UserRegistration"; 
 import LoginPage from "./pages/auth/LoginPage";

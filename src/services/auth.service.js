@@ -9,7 +9,9 @@ import {
   setPersistence, 
   browserLocalPersistence,
   getAuth,
-  updatePassword 
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential
 } from "firebase/auth";
 
 import { appError } from "../utils/appError";
@@ -127,7 +129,7 @@ export const registerUserAccount = async (userData) => {
     try {
       await sendOnboardingEmail({ email, firstName, role }, autoPassword);
       emailSent = true;
-    } catch (emailError) {
+    } catch (_emailError) {
       emailSent = false;
     }
 
@@ -145,7 +147,7 @@ export const registerUserAccount = async (userData) => {
   } catch (error) {
     // EMERGENCY CLEANUP
     if (tempApp) {
-      try { await deleteApp(tempApp); } catch (e) { /* silent cleanup fail */ }
+      try { await deleteApp(tempApp); } catch (_e) { /* silent cleanup fail */ }
     }
 
     if (error instanceof appError) throw error;
@@ -217,7 +219,7 @@ export const logoutUser = async () => {
     localStorage.removeItem("last_activity");
 
     return { success: true };
-  } catch (error) {
+  } catch (_error) {
     throw new appError("Security Check: Failed to securely terminate the session.", true, "auth/logout-failed");
   }
 };

@@ -1,7 +1,6 @@
 import { Activity, ShieldAlert, User, Wifi, ExternalLink, MoreVertical } from 'lucide-react';
-import { cn } from "../../../utils/cn";
+import { cn } from "../../utils/cn";
 
-// 1. SUB-COMPONENT: Admin Info Tag (Atomic)
 const InfoTag = ({ label, value, icon: Icon, align = "left" }) => (
   <div className={cn("flex items-center gap-2", align === "right" && "flex-row-reverse text-right")}>
     <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
@@ -15,13 +14,11 @@ const InfoTag = ({ label, value, icon: Icon, align = "left" }) => (
 );
 
 export const AdminMonitoringLayout = ({ device, telemetry, onViewAnalytics }) => {
-  // 2. QA LOGIC: Alert thresholds for Admin
   const tdsValue = telemetry?.tds || 0;
   const isAlert = tdsValue > 500;
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      {/* HEADER: Identification & QA Status (8pt: space-y-2 = 8px) */}
       <div className="flex justify-between items-start">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
@@ -37,9 +34,7 @@ export const AdminMonitoringLayout = ({ device, telemetry, onViewAnalytics }) =>
         </button>
       </div>
 
-      {/* QA MONITORING GRID (8pt: gap-3 = 12px) */}
       <div className="grid grid-cols-2 gap-3">
-        {/* Salinity QA Card - Highlighted for Admin Attention */}
         <div className={cn(
           "p-4 rounded-2xl border-2 transition-all duration-300 flex flex-col justify-between h-28",
           isAlert ? "bg-red-50 border-red-100 shadow-sm" : "bg-white border-slate-100"
@@ -58,7 +53,6 @@ export const AdminMonitoringLayout = ({ device, telemetry, onViewAnalytics }) =>
           </div>
         </div>
 
-        {/* Voltage/Power Health */}
         <div className="p-4 rounded-2xl border-2 border-slate-100 bg-white flex flex-col justify-between h-28">
           <div>
             <p className="text-[9px] font-black text-slate-400 uppercase tracking-wider">Node Power</p>
@@ -75,7 +69,6 @@ export const AdminMonitoringLayout = ({ device, telemetry, onViewAnalytics }) =>
         </div>
       </div>
 
-      {/* ACCOUNTABILITY & NETWORK (8pt: px-1 = 4px) */}
       <div className="flex items-center justify-between px-1 py-2 border-y border-slate-50">
         <InfoTag 
           label="Assigned To" 
@@ -90,7 +83,6 @@ export const AdminMonitoringLayout = ({ device, telemetry, onViewAnalytics }) =>
         />
       </div>
 
-      {/* ADMIN ACTION: View Analytics */}
       <button 
         onClick={onViewAnalytics}
         className="group w-full h-12 bg-slate-900 text-white rounded-2xl font-black text-[10px] tracking-[0.2em] uppercase transition-all hover:bg-blue-600 flex items-center justify-center gap-2"

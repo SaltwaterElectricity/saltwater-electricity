@@ -1,4 +1,4 @@
-import { cn } from "../../../utils/cn";
+import { cn } from "../../utils/cn";
 
 export const DeviceInfoRow = ({ label, value, icon: Icon, isMono = false, variant = "default" }) => (
   <div className="flex justify-between items-center py-1">

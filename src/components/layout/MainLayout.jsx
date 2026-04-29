@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useTimeout } from "../../hooks/useTimeout";
 import { Sidebar } from "./Sidebar";
 import { NavbarProfile } from "./NavbarProfile";

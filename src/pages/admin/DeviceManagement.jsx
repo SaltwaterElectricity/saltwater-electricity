@@ -1,24 +1,19 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { auth } from '../../firebaseConfig';
-import { useDevices } from '../../hooks/useDevices';
-import DeviceCard from '../../components/ui/device/DeviceCard';
-import AssignDeviceModal from '../../components/modal/AssignDeviceModal';
-import Toast from '../../components/ui/Toast';
+import { useDevices } from '../../hooks';
+import { DeviceCard, AssignDeviceModal, Toast } from '../../components';
+import { useNotification } from '../../context/NotificationContext';
 
 // Clean Code: Move Constants outside to avoid re-creation
 const STATUS_AVAILABLE = 'available';
 
 const DeviceManagement = () => {
   const { devices, loading, error } = useDevices();
+  const { showNotification } = useNotification();
   const [currentUser, setCurrentUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [selectedDevice, setSelectedDevice] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [toastConfig, setToastConfig] = useState({
-    isOpen: false,
-    message: "",
-    type: "success"
-  });
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -37,11 +32,7 @@ const DeviceManagement = () => {
   // Security Check: Ensure user is authorized before modal opens
   const handleDeviceAction = async (actionType, device) => {
     if (!currentUser) {
-      setToastConfig({
-        isOpen: true,
-        message: "Security: Unauthorized access blocked.",
-        type: "error"
-      });
+      showNotification("Security: Unauthorized access blocked.", "error");
       return;
     }
 
@@ -50,20 +41,11 @@ const DeviceManagement = () => {
         setSelectedDevice(device);
         setIsModalOpen(true);
       } else {
-        // Handle other actions like FORCE_DEPROVISION
         console.log(`[DeviceManagement] Action: ${actionType}`, device);
-        setToastConfig({
-          isOpen: true,
-          message: `Action ${actionType.replace('_', ' ')} processed successfully.`,
-          type: "success"
-        });
+        showNotification(`Action ${actionType.replace('_', ' ')} processed successfully.`, "success");
       }
     } catch (error) {
-      setToastConfig({
-        isOpen: true,
-        message: `Error: Action ${actionType} failed.`,
-        type: "error"
-      });
+      showNotification(`Error: Action ${actionType} failed.`, "error");
       throw error;
     }
   };
@@ -81,13 +63,6 @@ const DeviceManagement = () => {
     <div className="min-h-screen bg-[#f8fafc] p-6 lg:p-10 space-y-16 relative overflow-hidden">
       {/* BACKGROUND DECORATION */}
       <BackgroundDecor />
-
-      <Toast 
-        isOpen={toastConfig.isOpen}
-        message={toastConfig.message}
-        type={toastConfig.type}
-        onClose={() => setToastConfig(prev => ({ ...prev, isOpen: false }))}
-      />
 
       <header className="relative z-10">
         <h1 className="text-4xl font-black text-slate-900 tracking-tight italic">SmartAqua <span className="text-blue-600">Hub</span></h1>

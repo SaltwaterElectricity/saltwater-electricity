@@ -7,16 +7,19 @@ import { logoutUser } from "../services/auth.service";
  */
 export const useTimeout = (timeoutLimit) => {
   const timeoutRef = useRef(null);
-  const lastResetRef = useRef(Date.now());
+  const lastResetRef = useRef(null);
+
+  // Initialize on mount
+  useEffect(() => {
+    lastResetRef.current = Date.now();
+  }, []);
 
   // 1. CENTRALIZED LOGOUT LOGIC
   const handleLogout = useCallback(async () => {
     try {
-      // Linisin ang disk data bago mag-logout
       localStorage.removeItem("last_activity");
       await logoutUser();
-    } catch (error) {
-      // Fallback redirect kung mawalan ng internet
+    } catch (_error) {
       window.location.href = "/login";
     }
   }, []);
@@ -26,14 +29,11 @@ export const useTimeout = (timeoutLimit) => {
     if (!timeoutLimit) return;
 
     const now = Date.now();
-
-    // THROTTLING: 2-second buffer para sa mousemove para iwas UI lag/flicker
     if (e?.type === "mousemove") {
-      if (now - lastResetRef.current < 2000) return;
+      if (lastResetRef.current && now - lastResetRef.current < 2000) return;
     }
     
     lastResetRef.current = now;
-    // I-save sa localStorage para sa visibility check at cross-tab sync
     localStorage.setItem("last_activity", now.toString());
 
     if (timeoutRef.current) clearTimeout(timeoutRef.current);

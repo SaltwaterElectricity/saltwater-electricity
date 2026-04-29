@@ -5,7 +5,7 @@ export class appError extends Error {
     this.isOperational = isOperational; 
     this.code = code;
 
-    if (process.env.NODE_ENV === "production") {
+    if (import.meta.env.MODE === "production") {
       this.stack = ""; 
     } else {
       Error.captureStackTrace(this, this.constructor);

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext'; 
-import { useDevices } from '../../hooks/useDevices'; 
-import DeviceCard from '../../components/ui/device/DeviceCard';
-import { DeviceCardSkeleton } from '../../components/skeleton/DeviceCardSkeleton';
-import CardErrorBoundary from '../../components/error-boundary/CardErrorBoundary';
-import AssignDeviceModal from '../../components/modal/AssignDeviceModal';
+import { useDevices } from '../../hooks'; 
+import { 
+  DeviceCard, 
+  DeviceCardSkeleton, 
+  CardErrorBoundary, 
+  AssignDeviceModal 
+} from '../../components';
 import { ROUTES } from '../../constants/routes';
 import Toast from '../../components/ui/Toast';
 

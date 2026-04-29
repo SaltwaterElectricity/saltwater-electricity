@@ -60,7 +60,7 @@ const AssignDeviceModal = ({ device, isOpen, onClose, onShowToast }) => {
             });
             setUsers(validUsers);
           }
-        } catch (error) {
+        } catch (_error) {
           if (isMounted) onShowToast("System access restricted or offline.", "error");
         } finally {
           if (isMounted) setLoading(false);

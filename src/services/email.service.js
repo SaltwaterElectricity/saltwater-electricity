@@ -36,7 +36,7 @@ export const sendOTPEmail = async (email, otpCode) => {
     await emailjs.send(SERVICE_ID, OTP_TEMPLATE, templateParams, PUBLIC_KEY);
 
     return { success: true };
-  } catch (error) {
+  } catch (_error) {
     // I-mask ang error para sa security
     throw new appError("Failed to deliver the security code. Please try again later.", true, "email/delivery-failed");
   }

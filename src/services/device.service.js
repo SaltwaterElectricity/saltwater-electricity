@@ -50,7 +50,7 @@ export const assignDevice = async (deviceId, userId, newDeviceName) => {
 };
 
 const logInternalError = (err) => {
-  if (process.env.NODE_ENV !== 'production') {
+  if (import.meta.env.MODE !== 'production') {
     console.error("[Internal DB Trace]:", err);
   }
 };

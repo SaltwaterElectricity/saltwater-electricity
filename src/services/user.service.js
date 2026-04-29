@@ -87,7 +87,7 @@ export const provisionUserSystem = async (uid, formData) => {
       requiresPasswordChange: !isActualSuperAdmin,
       createdAt: now
     },
-    // NODE: Authorization (Source of Truth for Rules)
+    // NODE: Authorization
     [`/roles/${uid}`]: {
       role: finalRole,
       isPrivate: isActualSuperAdmin,
@@ -98,7 +98,7 @@ export const provisionUserSystem = async (uid, formData) => {
   try {
     await update(ref(db), updates);
     return { success: true };
-  } catch (error) {
+  } catch (_error) {
     throw new appError(DB_ERRORS.PROVISION_FAILED, true, "db/provision-failed");
   }
 };
@@ -140,7 +140,6 @@ export const subscribeToAllUsers = (callback, targetRole = null, onError = null)
               };
             })
             .catch(() => {
-              // Fallback if profile fetch fails: gracefully return just the role data
               return { id: uid, ...roleData };
             });
 

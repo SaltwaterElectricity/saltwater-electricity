@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { X } from "lucide-react";
 import { cn } from "../../utils/cn";
+import { useNotification } from "../../context/NotificationContext"; 
 
 // Services
 import { registerUserAccount } from "../../services/auth.service";
@@ -12,7 +13,6 @@ import { ROUTES } from "../../constants/routes";
 import { RegistrationFields } from "../../components/auth/RegistrationField";
 import { RegistrationSummary } from "../../components/auth/RegistrationSummary";
 import { ConfirmationModal } from "../../components/modal/ConfirmationModal";
-import { Toast } from "../../components/ui";
 
 const UserRegistration = () => {
   // STATES
@@ -21,13 +21,7 @@ const UserRegistration = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState("");
   const navigate = useNavigate();
-
-  // TOAST STATE
-  const [toast, setToast] = useState({ 
-    isOpen: false, 
-    message: "", 
-    type: "success" 
-  });
+  const { showNotification } = useNotification();
   
   // FORM INITIALIZATION
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
@@ -40,11 +34,6 @@ const UserRegistration = () => {
     }
   });
 
-  // HELPER: Show Toast
-  const showToast = (message, type = "success") => {
-    setToast({ isOpen: true, message, type });
-  };
-
    //PRE-SUBMIT
   const handlePreSubmit = (data) => {
     setServerError(""); 
@@ -53,12 +42,11 @@ const UserRegistration = () => {
   };
 
   // FINAL CONFIRMATION
-
   const handleFinalConfirm = async () => {
     // A. INTEGRITY CHECK
     if (!tempData || !tempData.email) {
       setServerError("Critical Error: Registration data is missing. Please restart the process.");
-      showToast("Data integrity check failed", "error");
+      showNotification("Data integrity check failed", "error");
       setIsModalOpen(false);
       return;
     }
@@ -79,12 +67,12 @@ const UserRegistration = () => {
       //SUCCESS NOTIFICATION & EMAIL FALLBACK
       if (!registrationResult.emailSent) {
         // Email failed pero ang account at database ay OK.
-        showToast(
+        showNotification(
           `Account created, but email failed. Temp Password: ${registrationResult.tempPassword}`, 
           "warning"
         );
       } else {
-        showToast(`User account for ${tempData.firstName} has been fully provisioned!`, "success");
+        showNotification(`User account for ${tempData.firstName} has been fully provisioned!`, "success");
       }
       
       //CLEANUP
@@ -96,7 +84,7 @@ const UserRegistration = () => {
       //ERROR HANDLING
       const errorMsg = err.message || "An unexpected error occurred.";
       setServerError(errorMsg);
-      showToast(errorMsg, "error");
+      showNotification(errorMsg, "error");
       
       // Automatic scroll para agad makita ang error message sa taas ng form.
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -143,7 +131,7 @@ const UserRegistration = () => {
         <div className="pt-6 border-t border-slate-100 space-y-6">
           <button 
             type="submit"
-            disabled={Object.keys(errors).length > 0} // <--- Dagdag na safety check
+            disabled={Object.keys(errors).length > 0} 
             className={cn(
               "w-full font-bold py-4 rounded-2xl transition-all shadow-xl flex items-center justify-center gap-2",
               Object.keys(errors).length > 0 
@@ -176,13 +164,6 @@ const UserRegistration = () => {
         {/* INJECTED SUMMARY CONTENT */}
         <RegistrationSummary data={tempData} />
       </ConfirmationModal>
-
-      <Toast 
-        isOpen={toast.isOpen} 
-        message={toast.message} 
-        type={toast.type} 
-        onClose={() => setToast({ ...toast, isOpen: false })} 
-      />
     </div>
   );
 };

@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { updateUserProfile } from "../../services/user.service"; 
-import MemoizedToast from "../../components/ui/Toast"; 
+import { useNotification } from "../../context/NotificationContext"; 
 import { Edit3, User, MapPin, X, Check } from "lucide-react"; 
 
 export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmitting }) => {
   const [isEditing, setIsEditing] = useState(false); 
   const [loading, setLoading] = useState(false);
+  const { showNotification } = useNotification();
 
   // 📦 Lokal na hawakan ng Form Data
   const [formData, setFormData] = useState({
@@ -44,14 +45,6 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
       });
     }
   }, [profileData]); // 👈 Tatakbo tuwing may pagbabago ang profileData galing sa labas
-
-  const [showToast, setShowToast] = useState(false);
-  const [toastConfig, setToastConfig] = useState({ message: "", type: "success" });
-
-  const triggerToast = (message, type = "success") => {
-    setToastConfig({ message, type });
-    setShowToast(true);
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -109,11 +102,11 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
 
     try {
       await updateUserProfile(currentUid, payload);
-      triggerToast("Your Smart Aqua profile changes have been saved successfully.", "success");
+      showNotification("Your Smart Aqua profile changes have been saved successfully.", "success");
       setIsEditing(false); 
       if (onSaveSuccess) onSaveSuccess();
     } catch (error) {
-      triggerToast(error.message || "Could not write profile updates to the server.", "error");
+      showNotification(error.message || "Could not write profile updates to the server.", "error");
     } finally {
       setLoading(false);
       if (setIsSubmitting) setIsSubmitting(false); 
@@ -122,13 +115,6 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
 
   return (
     <>
-      <MemoizedToast 
-        isOpen={showToast}
-        message={toastConfig.message}
-        type={toastConfig.type}
-        onClose={() => setShowToast(false)}
-      />
-
       <form onSubmit={handleSubmit} className="space-y-8 animate-in fade-in duration-300">
         
         {/* 🛠️ Profile Header with Edit Control */}

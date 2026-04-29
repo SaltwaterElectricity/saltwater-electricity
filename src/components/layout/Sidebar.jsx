@@ -77,7 +77,7 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
       sessionStorage.clear();
       setIsLogoutModalOpen(false);
       navigate("/login", { replace: true });
-    } catch (error) {
+    } catch (_error) {
       triggerToast("Terminating session... Forcing local wipe.", "warning");
       sessionStorage.clear();
       localStorage.clear();
