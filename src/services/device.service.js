@@ -1,9 +1,27 @@
 import { ref, update, get, serverTimestamp } from "firebase/database";
-import { db } from "../firebaseConfig";
+import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
 import { logger } from "../utils/logger";
+import { getUserClaims } from "./auth.service";
+
+/**
+ * INTERNAL GUARD: Verifies Admin clearance via Token Claims
+ */
+const verifyAdminClearance = async () => {
+  const currentUser = auth.currentUser;
+  if (!currentUser) throw new appError("Authentication required.", true, "auth/unauthorized");
+
+  const claims = await getUserClaims(currentUser);
+  if (!claims?.admin && !claims?.superAdmin) {
+    throw new appError("Access Denied: Administrative clearance required.", true, "auth/insufficient-clearance");
+  }
+  return true;
+};
 
 export const assignDevice = async (deviceId, userId, newDeviceName) => {
+  // 🛡️ SECONDARY ROLE CHECK: Authoritative Token Verification
+  await verifyAdminClearance();
+
   // 1. SAFETY CHECK: Input Validation & Sanitization
   const cleanDeviceId = deviceId?.toString().trim();
   const cleanUserId = userId?.toString().trim();
@@ -58,6 +76,9 @@ export const assignDevice = async (deviceId, userId, newDeviceName) => {
  */
 export const deprovisionDevice = async (deviceId) => {
   if (!deviceId) throw new appError("Device ID required.", true, "device/invalid-id");
+
+  // 🛡️ SECONDARY ROLE CHECK: Authoritative Token Verification
+  await verifyAdminClearance();
 
   try {
     const updates = {};

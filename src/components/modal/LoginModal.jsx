@@ -8,6 +8,7 @@ import { logLoginSession } from "../../services/session.service";
 import ForgotPasswordModal from "./ForgotPasswordModal";
 import { ROUTES, ROLE_LANDING_PAGES } from "../../constants/routes";
 import { appError } from "../../utils/appError";
+import { useBruteForce } from "../../hooks/useBruteForce";
 
 const LoginModal = ({ isOpen, onClose, defaultRole }) => {
   const navigate = useNavigate();
@@ -15,6 +16,12 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authError, setAuthError] = useState("");
   const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
+  
+  // Brute Force logic
+  const [emailToTrack, setEmailToTrack] = useState("");
+  const { isLocked, secondsRemaining, recordFailedAttempt } = useBruteForce(
+    emailToTrack ? emailToTrack.toLowerCase().replace(/[^a-zA-Z0-9]/g, '') : null
+  );
 
   const { 
     register, 
@@ -34,6 +41,12 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
   if (!isOpen) return null;
 
   const onSubmit = async (data) => {
+    setEmailToTrack(data.email);
+    if (isLocked) {
+      setAuthError(`Account locked. Please try again in ${secondsRemaining}s.`);
+      return;
+    }
+
     setIsSubmitting(true);
     setAuthError("");
     
@@ -73,6 +86,8 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
     } catch (err) {
       setAuthError(err.message);
       sessionStorage.removeItem("is_verified");
+      // Record the failure for brute force tracking
+      await recordFailedAttempt();
     } finally {
       setIsSubmitting(false);
     }

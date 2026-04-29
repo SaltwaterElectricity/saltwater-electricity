@@ -10,6 +10,8 @@ export const ROUTES = Object.freeze({
   REGISTER_USER: "/admin/register-user",
   REGISTER_STAFF: "/admin/register-staff",
   ADMIN_DEVICE_MANAGEMENT: "/admin/device-management",
+  ADMIN_REQUEST_MANAGEMENT: "/admin/request-management",
+  ADMIN_AUDIT_LOGS: "/admin/audit-logs",
   SMART_AQUA_MONITOR: "/monitor",
 
   // Resident

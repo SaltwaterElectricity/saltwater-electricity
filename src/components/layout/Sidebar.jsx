@@ -131,7 +131,14 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
           {/* OPERATIONS GROUP */}
           <div className="space-y-2">
             <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] px-4 mb-4">Operations</p>
-            <SidebarLink to={ROUTES.DEVICE_REQUESTS} icon={ClipboardList} label="Device Requests" onClick={handleLinkClick} badgeCount={alertCounts.deviceRequests} badgeColor="bg-blue-600" />
+            <SidebarLink 
+              to={isAdmin ? ROUTES.ADMIN_REQUEST_MANAGEMENT : ROUTES.DEVICE_REQUESTS} 
+              icon={ClipboardList} 
+              label="Device Requests" 
+              onClick={handleLinkClick} 
+              badgeCount={alertCounts.deviceRequests} 
+              badgeColor="bg-blue-600" 
+            />
           </div>
 
           {/* ADMIN GROUP */}
@@ -140,6 +147,7 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
               <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] px-4 mb-4">Administration</p>
               <SidebarLink to={ROUTES.ADMIN_USER_MANAGEMENT} icon={UserRoundPlus} label="User Management" onClick={handleLinkClick} />
               <SidebarLink to={ROUTES.ADMIN_DEVICE_MANAGEMENT} icon={Cpu} label="Device Management" onClick={handleLinkClick} />
+              <SidebarLink to={ROUTES.ADMIN_AUDIT_LOGS} icon={ShieldAlert} label="System Audit" onClick={handleLinkClick} />
               <SidebarLink to="/admin/settings" icon={Settings} label="System Settings" onClick={handleLinkClick} />
               {isSuperAdmin && (
                 <div className="pt-6 border-t border-slate-800/30 mt-6 space-y-2">

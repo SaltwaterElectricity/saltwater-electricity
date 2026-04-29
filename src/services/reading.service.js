@@ -1,4 +1,4 @@
-import { ref, onValue, get, query, limitToLast, orderByKey, update } from "firebase/database";
+import { ref, onValue, get, query, limitToLast, orderByKey, update, serverTimestamp } from "firebase/database";
 import { db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
 
@@ -89,16 +89,17 @@ export const subscribeToLatestReading = (deviceId, onSuccess, onError) => {
 export const updateBulbState = async (deviceId, newState) => {
   if (!deviceId) throw new appError("Device ID required.", true, "reading/invalid-id");
 
-  const timestamp = Date.now();
+  const clientTs = Date.now();
+  const now = serverTimestamp();
   const updates = {};
   
   // 1. Update Latest Reading Node (Removed bulb_ma)
   updates[`readings/${deviceId}/latest/relay_active`] = newState;
-  updates[`readings/${deviceId}/latest/timestamp`] = timestamp;
+  updates[`readings/${deviceId}/latest/timestamp`] = now;
   
   // 2. Add to Historical Logs
-  updates[`logs/${deviceId}/${timestamp}/relay_active`] = newState;
-  updates[`logs/${deviceId}/${timestamp}/timestamp`] = timestamp;
+  updates[`logs/${deviceId}/${clientTs}/relay_active`] = newState;
+  updates[`logs/${deviceId}/${clientTs}/timestamp`] = now;
   
   // 3. Hardware Command Node
   updates[`commands/${deviceId}/relay`] = newState;

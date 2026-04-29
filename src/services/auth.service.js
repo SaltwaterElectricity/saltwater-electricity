@@ -1,5 +1,5 @@
 import { auth, db, FIREBASE_CONFIG } from "../firebaseConfig";
-import { ref, get, update, serverTimestamp } from "firebase/database";
+import { ref, get, update, serverTimestamp, query, orderByChild, equalTo } from "firebase/database";
 import { initializeApp, deleteApp } from "firebase/app";
 import { 
   createUserWithEmailAndPassword, 
@@ -177,8 +177,11 @@ export const loginUser = async (email, password) => {
     const userCredential = await signInWithEmailAndPassword(auth, cleanEmail, password);
     const uid = userCredential.user.uid;
 
+    // Reset attempts on successful login
+    await update(ref(db, `login_attempts/${uid}`), { count: 0, lockoutUntil: 0 });
+
     // Verify system status before allowing the session to continue
-    const userData = await getFullUserData(uid);
+    const userData = await getFullUserData(uid, userCredential.user);
 
     if (userData.status === "disabled") {
       await signOut(auth);
@@ -193,6 +196,21 @@ export const loginUser = async (email, password) => {
     };
 
   } catch (error) {
+    // 🛡️ INCREMENT FAILED ATTEMPTS
+    if (error.code === "auth/invalid-credential" || error.code === "auth/wrong-password") {
+       const cleanEmail = email?.toLowerCase().trim();
+       const userId = await getUidByEmail(cleanEmail);
+       if (userId) {
+          const attemptsRef = ref(db, `login_attempts/${userId}`);
+          const snap = await get(attemptsRef);
+          const data = snap.val() || { count: 0 };
+          const newCount = data.count + 1;
+          const lockoutUntil = newCount >= 5 ? Date.now() + 300000 : 0;
+          await update(attemptsRef, { count: newCount, lockoutUntil });
+       }
+    }
+    // console.error("DEBUG: Firebase Auth Error:",
+    //  error.code, error.message);
     sessionStorage.removeItem("is_verified");
     if (error instanceof appError) throw error;
 
@@ -202,6 +220,17 @@ export const loginUser = async (email, password) => {
 
     throw new appError(AUTH_ERROR_MESSAGES[errorCode] || AUTH_ERROR_MESSAGES.default, true, errorCode);
   }
+};
+
+/**
+ * Helper to get UID by email (for security lookups)
+ */
+const getUidByEmail = async (email) => {
+    const usersRef = ref(db, "users");
+    const q = query(usersRef, orderByChild("email"), equalTo(email));
+    const snap = await get(q);
+    if (!snap.exists()) return null;
+    return Object.keys(snap.val())[0];
 };
 
 /**
@@ -224,6 +253,21 @@ export const logoutUser = async () => {
   }
 };
 
+/**
+ * Retrieves custom claims from the current user's ID token.
+ * This is the authoritative source for RBAC roles.
+ */
+export const getUserClaims = async (user, forceRefresh = false) => {
+  if (!user) return null;
+  try {
+    const idTokenResult = await user.getIdTokenResult(forceRefresh);
+    return idTokenResult.claims;
+  } catch (error) {
+    logger.error("Failed to fetch ID token claims:", error);
+    return null;
+  }
+};
+
 export const subscribeToAuthChanges = (callback) => {
   if (typeof callback !== "function") {
     throw new appError("Auth Callback must be a function.", true, "auth/invalid-callback");
@@ -233,11 +277,18 @@ export const subscribeToAuthChanges = (callback) => {
 
 // Fetches complete user context from normalized nodes.
 
-export const getFullUserData = async (uid) => {
+export const getFullUserData = async (uid, firebaseUser = null, forceRefresh = false) => {
   if (!uid) throw new appError("User ID is required.", true, "auth/missing-uid");
 
   try {
-    // Fetch all three sources in parallel for speed
+    // 1. Fetch token claims if firebaseUser is provided (Authoritative RBAC)
+    let claims = null;
+    if (firebaseUser) {
+      const tokenResult = await firebaseUser.getIdTokenResult(forceRefresh);
+      claims = tokenResult.claims;
+    }
+
+    // 2. Fetch all three DB sources in parallel for speed
     const snaps = await Promise.all([
       get(ref(db, `users/${uid}`)),
       get(ref(db, `roles/${uid}`)),
@@ -249,15 +300,20 @@ export const getFullUserData = async (uid) => {
     const profile = userSnap.val() || {};
     const account = accountSnap.val() || {};
 
-    // Combine everything into one clean object
+    // 3. Determine the authoritative role
+    // Prefer Token Claims if available, otherwise fallback to DB (for initial provisioning/sync)
+    const tokenRole = claims?.superAdmin ? "superAdmin" : claims?.admin ? "admin" : claims?.role;
+    const finalRole = tokenRole || roleData.role || "user";
+
     return {
       uid,
-      ...profile, // firstName, lastName, email, etc.
-      role: roleData.role || "user",
+      ...profile,
+      role: finalRole,
       status: account.status || "active",
       requiresPasswordChange: account?.requiresPasswordChange || false,
       isPrivate: roleData?.isPrivate || false,
-      updatedAt: roleData?.updatedAt || Date.now()
+      updatedAt: roleData?.updatedAt || Date.now(),
+      claims // Include raw claims for secondary checks
     };
 
   } catch (error) {

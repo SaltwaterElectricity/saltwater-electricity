@@ -9,3 +9,4 @@ export * from './useHistory';
 export * from './useReadings';
 export * from './useAssignments';
 export * from './useDeviceRequests';
+export * from './useAuditLogs';

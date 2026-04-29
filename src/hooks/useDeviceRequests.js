@@ -5,28 +5,26 @@ import { appError } from '../utils/appError';
 
 /**
  * Hook: useDeviceRequests
- * Subscribes to real-time updates for device requests filtered by userId.
+ * Subscribes to real-time updates for device requests.
  * 
- * @param {string} userId - The ID of the user whose requests to monitor.
+ * @param {string} userId - Optional. If provided, filters by userId. Otherwise fetches all.
  * @returns {Object} - { requests, loading, error }
  */
-export const useDeviceRequests = (userId) => {
+export const useDeviceRequests = (userId = null) => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!userId) {
-      setRequests([]);
-      setLoading(false);
-      return;
-    }
-
     let isMounted = true;
     const requestsRef = ref(db, 'device-requests');
-    const userRequestsQuery = query(requestsRef, orderByChild('userId'), equalTo(userId));
+    
+    // If userId is provided, filter. Otherwise fetch all.
+    const finalQuery = userId 
+      ? query(requestsRef, orderByChild('userId'), equalTo(userId))
+      : requestsRef;
 
-    const unsubscribe = onValue(userRequestsQuery, (snapshot) => {
+    const unsubscribe = onValue(finalQuery, (snapshot) => {
       if (!isMounted) return;
       
       try {
