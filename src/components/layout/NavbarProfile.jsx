@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, memo, useCallback } from "react";
 import { useProfile } from "../../hooks/useProfile";
 import { logoutUser } from "../../services/auth.service";
-import { useUI } from "../../context/UIContext";
-import { useNotification } from "../../context/NotificationContext";
+import { useUI } from "../../context/useUI";
+import { useNotification } from "../../context/useNotification";
 import { LogOut, Settings } from "lucide-react"; 
 import { cn } from "../../utils/cn";
 import SpinnerIcon from "../ui/SpinnerIcon"; 

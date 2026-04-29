@@ -17,7 +17,6 @@ import { ROUTES } from "../../constants/routes";
 // UI Components
 import { 
   Toast, 
-  SpinnerIcon, 
   ConfirmationModal, 
   EditUserModal, 
   UserTable, 

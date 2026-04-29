@@ -1,28 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from "./context/AuthContext";
+import { useState } from 'react';
+import { useAuth } from "./context/useAuth";
 import { AnimatedLogo } from "./components"; 
 import { AppRoutes } from "./AppRoutes"; 
 
 function App() {
   const { loading } = useAuth();
-  const [showSplash, setShowSplash] = useState(true);
-
-  useEffect(() => {
-    // Nag-set tayo ng 3.5s to 4s para makita ang buong animation 
-    // ng Internet of Things logo bago mag-proceed.
-    const timer = setTimeout(() => {
-      setShowSplash(false);
-    }, 3500);
-
-    return () => clearTimeout(timer);
-  }, []);
+  
+  /**
+   * isAnimationComplete State
+   * Controls the transition from the interactive splash sequence to the main application.
+   * Requirement: Ensure redirect only happens AFTER the animation completes.
+   */
+  const [isAnimationComplete, setIsAnimationComplete] = useState(false);
 
   // Global Loading State + Splash Screen Logic
-  // Lalabas ito hangga't (nag-lo-load ang Auth) O (hindi pa tapos ang splash timer)
-  if (loading || showSplash) {
+  // Render Splash if:
+  // 1. Auth is still hydrating (loading)
+  // 2. OR the splash animation sequence hasn't signaled completion (isAnimationComplete)
+  if (loading || !isAnimationComplete) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center bg-white animate-zoomIn transition-colors duration-500">
-        <AnimatedLogo />
+      <div className="h-screen w-screen flex items-center justify-center bg-white overflow-hidden fixed inset-0 z-[9999]">
+        <AnimatedLogo onComplete={() => setIsAnimationComplete(true)} />
       </div>
     );
   }

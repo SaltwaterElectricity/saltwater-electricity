@@ -1,5 +1,5 @@
 {
-  "name": "my-iot-app",
+  "name": "iot-app",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,8 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "test": "vitest run",
     "preview": "vite preview",
-    "mobile-android": "npm run build && cd ../saltwaterelectricity && cordova run android"
+     "mobile-android": "npm run build && cd ../saltwaterelectricity && cordova run android"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

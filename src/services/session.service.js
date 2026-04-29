@@ -1,5 +1,6 @@
 import { ref, push, serverTimestamp } from "firebase/database";
 import { db } from "../firebaseConfig";
+import { logger } from "../utils/logger";
 
 /**
  * Logs a login event to the Smart Aqua Realtime Database.
@@ -20,7 +21,7 @@ export const logLoginSession = async (uid) => {
   try {
     await push(sessionLogsRef, newSession);
   } catch (error) {
-    console.error("Failed to log session:", error);
+    logger.error("Failed to log session:", error);
   }
 };
 

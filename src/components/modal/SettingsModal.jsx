@@ -1,7 +1,7 @@
 import { useState, useEffect, memo } from "react";
 import { ref, onValue } from "firebase/database"; // 👈 Idinagdag para basahin ang users node
 import { db } from "../../firebaseConfig"; // Ayusin ang path base sa folder mo
-import { useUI } from "../../context/UIContext";
+import { useUI } from "../../context/useUI";
 import { X, User, Lock, History } from "lucide-react"; 
 import { cn } from "../../utils/cn"; 
 

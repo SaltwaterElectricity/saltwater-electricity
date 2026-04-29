@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebaseConfig'; 
 import { ref, onValue } from 'firebase/database';
+import { logger } from '../utils/logger';
 
 /**
  * useAssignmentDetails Hook (Production-Ready)
@@ -48,7 +49,7 @@ export const useAssignmentDetails = (deviceId) => {
         }
       }
     }, (error) => {
-      console.error("Firebase Fetch Error:", error);
+      logger.error("Firebase Fetch Error:", error);
       if (isMounted) {
         setDetails({ fullName: "Error Loading", address: "N/A", assignedAt: null, loading: false });
       }

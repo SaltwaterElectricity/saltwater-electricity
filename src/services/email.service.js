@@ -1,5 +1,6 @@
 import emailjs from '@emailjs/browser';
 import { appError } from "../utils/appError";
+import { logger } from "../utils/logger";
 
 //CONFIGURATION
 const CONFIG = {
@@ -72,7 +73,7 @@ export const sendOnboardingEmail = async (userData, autoPassword) => {
     return { success: true, emailSent: true };
   } catch (error) {
     // Para sa onboarding, hindi tayo nag-u-unhandled throw para ma-proceed pa rin ang account creation
-    console.error("[Email Service]: Onboarding delivery failed.", error);
+    logger.error("[Email Service]: Onboarding delivery failed.", error);
     return { success: true, emailSent: false };
   }
 };

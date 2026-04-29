@@ -5,4 +5,7 @@ export * from './useProfile';
 export * from './useSearch';
 export * from './useTimeout';
 export * from './useUserSubscription';
-export * from './useChartLogs';
+export * from './useHistory';
+export * from './useReadings';
+export * from './useAssignments';
+export * from './useDeviceRequests';

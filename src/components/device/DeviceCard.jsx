@@ -1,14 +1,19 @@
 import { useState } from 'react';
+import { Cpu } from 'lucide-react';
 import { ManagedDeviceCard } from './ManagedDeviceCard'; 
 import { AdminMonitoringLayout } from './AdminMonitoringLayout';
 import { UserDeviceLayout } from './UserDeviceLayout';
 import { cn } from "../../utils/cn";
+import { logger } from "../../utils/logger";
 
-const DeviceCard = ({ device, telemetry, currentUser, onAction, viewMode = "default" }) => {
+const DeviceCard = ({ device, assignment, telemetry, currentUser, onAction, viewMode = "default" }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   
+  // RBAC DETERMINATION
   const isAvailable = device.availability === 'available';
-  const isAssignedToMe = device.assigned_user_id === currentUser?.id;
+  // Use the assignment prop to check user binding
+  const isAssignedToMe = assignment?.userId === (currentUser?.id || currentUser?.uid);
+  
   const isSuperAdmin = currentUser?.role === 'superAdmin';
   const isAdmin = currentUser?.role === 'admin';
   const hasPrivilegedAccess = isSuperAdmin || isAdmin;
@@ -18,7 +23,7 @@ const DeviceCard = ({ device, telemetry, currentUser, onAction, viewMode = "defa
     try {
       await onAction(actionType, payload); 
     } catch (error) {
-      console.error(`[DeviceCard] Action ${actionType} failed:`, error);
+      logger.error(`[DeviceCard] Action ${actionType} failed:`, error);
     } finally {
       setIsProcessing(false);
     }
@@ -40,11 +45,14 @@ const DeviceCard = ({ device, telemetry, currentUser, onAction, viewMode = "defa
         />
       ) : (
         <>
+          {/* Dashboard Mode: Only show active monitoring layouts. 
+              If available, show a placeholder or nothing to avoid accidental assignment flows. */}
           {isAvailable ? (
-            <ManagedDeviceCard 
-              device={device} 
-              onAssignClick={(d) => handleSecureAction('ASSIGN_DEVICE', d)} 
-            />
+            <div className="bg-white/40 backdrop-blur-md rounded-[32px] border border-dashed border-slate-200 p-8 flex flex-col items-center justify-center text-center h-full opacity-60">
+               <Cpu size={24} className="text-slate-400 mb-2" />
+               <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Node Standby</p>
+               <p className="text-[8px] font-bold text-slate-400 mt-1">Awaiting Deployment</p>
+            </div>
           ) : (
             <div className="group bg-white/70 backdrop-blur-xl rounded-[32px] border border-white/40 shadow-xl p-8 h-full space-y-8 transition-all duration-500 hover:shadow-2xl hover:bg-white/80">
               {/* ADMIN MONITORING */}
@@ -59,6 +67,7 @@ const DeviceCard = ({ device, telemetry, currentUser, onAction, viewMode = "defa
               {/* USER VIEW */}
               {isAssignedToMe && !hasPrivilegedAccess && (
                 <UserDeviceLayout 
+                  deviceId={device.device_id}
                   deviceName={device.device_name} 
                   telemetry={telemetry} 
                   onViewHistory={() => handleSecureAction('VIEW_ANALYTICS', device.device_id)}

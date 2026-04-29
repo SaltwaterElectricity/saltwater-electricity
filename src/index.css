@@ -1,25 +1,16 @@
 @import "tailwindcss";
 
 /* ============================================================
-   0. CONFIGURATION & VARIABLES (Clean Coding Best Practice)
+   0. CONFIGURATION & VARIABLES
    ============================================================ */
 :root {
-  /* Colors */
   --logo-blue-primary: #05058c;
   --logo-blue-gradient: linear-gradient(180deg, #000000 0%, #000033 45%, #05058c 100%);
-  
-  /* Animation Speeds */
-  --animation-speed-slow: 3s;
-  --animation-speed-normal: 1.4s;
   --transition-speed-ui: 1.5s;
-  
-  /* 3D Settings */
-  --perspective-depth: 1500px;
-  --layer-depth: 60px; /* In-update mula 59px para sa standard sizing */
 }
 
 /* ============================================================
-   1. GLOBAL KEYFRAMES 
+   1. GLOBAL KEYFRAMES
    ============================================================ */
 @keyframes zoomIn {
   from { opacity: 0; transform: scale(0.9); }
@@ -37,64 +28,77 @@
   50% { transform: translateY(-20px); }
 }
 
+@keyframes float-logo {
+  0%, 100% { transform: translateY(0px) rotateX(-35.264deg) rotateY(-45deg); }
+  50% { transform: translateY(-25px) rotateX(-35.264deg) rotateY(-45deg); }
+}
+
+@keyframes fly-in-e {
+  0% { transform: rotateX(90deg) translateZ(500px) scale(0); opacity: 0; }
+  100% { transform: rotateX(90deg) translateZ(59px) scale(0.7) rotateZ(-90deg); opacity: 1; }
+}
+
+@keyframes fly-in-s {
+  0% { transform: rotateY(0deg) translateZ(100px) translateX(600px) scale(0); opacity: 0; }
+  100% { transform: rotateY(0deg) translateZ(59px) translateX(0) scale(0.7); opacity: 1; }
+}
+
+@keyframes fly-in-m {
+  0% { transform: rotateY(90deg) translateZ(100px) translateX(-600px) scale(0); opacity: 0; }
+  100% { transform: rotateY(90deg) translateZ(59px) translateX(0) scale(0.7); opacity: 1; }
+}
+
 @keyframes shine-sweep {
   0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
   20%, 100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
 }
 
-/* Logo Intro Animations - Powered by var(--layer-depth) */
-@keyframes fly-in-e { 
-  0% { transform: rotateX(90deg) translateZ(500px) scale(0); opacity: 0; }
-  100% { transform: rotateX(90deg) translateZ(var(--layer-depth)) scale(0.7) rotateZ(-90deg); opacity: 1; }
-}
-@keyframes fly-in-s { 
-  0% { transform: rotateY(0deg) translateZ(100px) translateX(600px) scale(0); opacity: 0; }
-  100% { transform: rotateY(0deg) translateZ(var(--layer-depth)) translateX(0) scale(0.7); opacity: 1; }
-}
-@keyframes fly-in-m { 
-  0% { transform: rotateY(90deg) translateZ(100px) translateX(-600px) scale(0); opacity: 0; }
-  100% { transform: rotateY(90deg) translateZ(var(--layer-depth)) translateX(0) scale(0.7); opacity: 1; }
-}
-
-/* Logo Looping Animations */
-@keyframes float-logo {
-  0%, 100% { transform: translateY(0px) rotateX(-35.264deg) rotateY(-45deg); }
-  50% { transform: translateY(-20px) rotateX(-35.264deg) rotateY(-45deg); }
-}
-
 @keyframes shadow-pulse {
   0%, 100% { 
-    opacity: 0.6; 
-    transform: rotateX(90deg) translateZ(-120px) scale(0.8); 
-    filter: blur(24px); 
+    opacity: 0.8; 
+    transform: rotateX(90deg) translateZ(-100px) scale(0.7); 
+    filter: blur(20px); 
   }
   50% { 
     opacity: 0.2; 
-    transform: rotateX(90deg) translateZ(-120px) scale(1.1); 
-    filter: blur(48px); 
+    transform: rotateX(90deg) translateZ(-100px) scale(1.2); 
+    filter: blur(50px); 
   }
+}
+
+@keyframes fade-in { 
+  to { opacity: 1; } 
+}
+
+@keyframes auth-fade { 
+  from { opacity: 0; } 
+  to { opacity: 1; } 
 }
 
 /* ============================================================
    2. BASE STYLES
    ============================================================ */
 @layer base {
-  html {
-    scrollbar-gutter: stable;
-    scroll-behavior: smooth;
+  html, body, #root {
+    margin: 0;
+    padding: 0;
+    width: 100%;
     height: 100%;
+    overflow: hidden;
+  }
+
+  html {
+    background: white;
+    font-family: 'Inter', sans-serif;
   }
 
   body {
-    @apply bg-white text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900 overflow-hidden;
+    @apply antialiased selection:bg-blue-100 selection:text-blue-900;
     -webkit-tap-highlight-color: transparent;
-    height: 100%;
-    background: radial-gradient(circle at center, #fdfdff 0%, #ffffff 80%, #ffffff 100%);
-    transition: background var(--transition-speed-ui) ease-in-out;
   }
 
   .auth-bg-active {
-    background: var(--logo-blue-gradient) !important;
+    background: linear-gradient(180deg, #000000 0%, #000033 45%, #05058c 100%) !important;
   }
 }
 
@@ -102,7 +106,6 @@
    3. COMPONENTS & CUSTOM UTILITIES
    ============================================================ */
 @layer components {
-  /* UI Utilities */
   .animate-zoomIn { animation: zoomIn 0.3s ease-out forwards; }
   .animate-shake { animation: shake 0.2s ease-in-out 0s 2; }
   .animate-cube-jump { 
@@ -111,23 +114,116 @@
   }
   .glass-card { @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-sm; }
 
-  /* --- SEM LOGO LOGIC (Clip Paths) --- */
-  .clip-e { clip-path: polygon(0% 0%, 100% 0%, 100% 20%, 20% 20%, 20% 40%, 80% 40%, 80% 60%, 20% 60%, 20% 80%, 100% 80%, 100% 100%, 0% 100%); }
-  .clip-s { clip-path: polygon(0% 0%, 100% 0%, 100% 25%, 25% 25%, 25% 40%, 100% 40%, 100% 100%, 0% 100%, 0% 75%, 75% 75%, 75% 60%, 0% 60%); }
-  .clip-m { clip-path: polygon(0% 0%, 25% 0%, 50% 45%, 75% 0%, 100% 0%, 100% 100%, 80% 100%, 80% 40%, 50% 80%, 20% 40%, 20% 100%, 0% 100%); }
-
-  /* Animation Triggers - Using Variables for Sync */
-  .animate-fly-e { animation: fly-in-e var(--animation-speed-normal) ease-out forwards; }
-  .animate-fly-s { animation: fly-in-s var(--animation-speed-normal) ease-out forwards; }
-  .animate-fly-m { animation: fly-in-m var(--animation-speed-normal) ease-out forwards; }
-  
-  .animate-float-logo { 
-    animation: float-logo var(--animation-speed-slow) ease-in-out infinite; 
-    will-change: transform;
+  /* Scene & Logo Container */
+  .logo-container {
+    @apply relative flex flex-col items-center;
   }
-  
-  .animate-shadow-pulse { 
-    animation: shadow-pulse var(--animation-speed-slow) ease-in-out infinite; 
+
+  .scene {
+    @apply flex justify-center items-center [perspective:800px] [transform-style:preserve-3d];
+    width: 600px;
+    height: 250px;
+  }
+
+  #full-cube-zoom-layer {
+    @apply [transform-style:preserve-3d] flex flex-col items-center justify-center;
+    transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.7s;
+    will-change: transform;
+    width: 100%;
+    height: 100%;
+  }
+
+  .cube {
+    @apply relative [transform-style:preserve-3d] mb-4;
+    width: 160px;
+    height: 160px;
+    transform: rotateX(-35.264deg) rotateY(-45deg);
+  }
+
+  .cube.looping {
+    animation: float-logo 1.5s ease-in-out infinite;
+  }
+
+  .face-group {
+    @apply absolute [transform-style:preserve-3d];
+    width: 160px;
+    height: 160px;
+  }
+
+  .layer {
+    @apply absolute inset-0 overflow-hidden;
+  }
+
+  .top-layer {
+    background: linear-gradient(135deg, #1a59a0 0%, #0e3f83 50%, #032561 100%);
+  }
+
+  /* Specific Face Positions */
+  #face-e {
+    transform: rotateX(90deg) translateZ(59px) scale(0.7) rotateZ(-90deg);
+    animation: fly-in-e 1.4s ease-out forwards;
+  }
+
+  #face-s {
+    transform: rotateY(0deg) translateZ(59px) scale(0.7);
+    animation: fly-in-s 1.4s ease-out forwards;
+  }
+
+  #face-m {
+    transform: rotateY(90deg) translateZ(59px) scale(0.7);
+    animation: fly-in-m 1.4s ease-out forwards;
+  }
+
+  /* Clip Paths */
+  #face-e .layer { clip-path: polygon(0% 0%, 100% 0%, 100% 20%, 20% 20%, 20% 40%, 80% 40%, 80% 60%, 20% 60%, 20% 80%, 100% 80%, 100% 100%, 0% 100%); }
+  #face-s .layer { clip-path: polygon(0% 0%, 100% 0%, 100% 25%, 25% 25%, 25% 40%, 100% 40%, 100% 100%, 0% 100%, 0% 75%, 75% 75%, 75% 60%, 0% 60%); }
+  #face-m .layer { clip-path: polygon(0% 0%, 25% 0%, 50% 45%, 75% 0%, 100% 0%, 100% 100%, 80% 100%, 80% 40%, 50% 80%, 20% 40%, 20% 100%, 0% 100%); }
+
+  /* Shine Effect */
+  .shining .layer::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shine-sweep 3s infinite;
+  }
+
+  /* Cube Shadow */
+  .cube-shadow {
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    background: rgba(14, 62, 109, 0.5);
+    filter: blur(35px);
+    border-radius: 50%;
+    transform: rotateX(90deg) translateZ(-100px);
+    opacity: 0;
+  }
+
+  .cube.looping ~ .cube-shadow {
+    opacity: 1;
+    animation: shadow-pulse 1.3s ease-in-out infinite;
+  }
+
+  /* Text Container & Styles */
+  .text-container {
+    @apply text-center opacity-0 pointer-events-none;
+    animation: fade-in 1s 1.4s forwards;
+  }
+
+  .title {
+    @apply m-0 text-[23px] font-[800] uppercase pl-[2px];
+    letter-spacing: 2px;
+    color: blue;
+  }
+
+  .subtitle {
+    @apply m-0 text-[11.5px] font-[600] uppercase pl-[6px];
+    letter-spacing: 5px;
+    color: blue;
   }
 
   /* Custom Scrollbar */
@@ -136,24 +232,12 @@
   .custom-scrollbar::-webkit-scrollbar-thumb { @apply bg-slate-200 rounded-full hover:bg-slate-300 transition-colors; }
   .custom-scrollbar { scrollbar-width: thin; scrollbar-color: #e2e8f0 transparent; }
 
-  /* Masking Logic */
-  .clip-edges {
-    mask-image: linear-gradient(to top, transparent, black 20px), linear-gradient(to bottom, transparent, black 20px);
-    mask-size: 100% 20px, 100% 20px;
-    mask-repeat: no-repeat;
-    mask-position: bottom, top;
+  .custom-scrollbar-hide::-webkit-scrollbar { display: none; }
+  .custom-scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Exit Sequence */
+  .perform-full-zoom {
+    transform: translateZ(1000px) scale(15) !important;
+    opacity: 0;
   }
-}
-
-/* ============================================================
-   4. MASTER 3D SETTINGS
-   ============================================================ */
-.dynamic-perspective { perspective: var(--perspective-depth); }
-.preserve-3d { transform-style: preserve-3d; }
-
-/* Exit Sequence Logic */
-.perform-full-zoom {
-  transform: translateZ(1000px) scale(15) rotate(-15deg) !important;
-  opacity: 0;
-  transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.7s;
 }

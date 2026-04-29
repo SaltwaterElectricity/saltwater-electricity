@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ref, onValue } from "firebase/database";
 import { db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
+import { logger } from "../utils/logger";
 
 /**
  * Hook: useProfile
@@ -30,7 +31,7 @@ export const useProfile = (uid) => {
       setLoading(false);
     }, (err) => {
       if (!isMounted) return;
-      console.error("Profile fetch error:", err);
+      logger.error("Profile fetch error:", err);
       setError(new appError("Permission denied or connection lost.", true, err.code || "db/permission-denied"));
       setLoading(false);
     });

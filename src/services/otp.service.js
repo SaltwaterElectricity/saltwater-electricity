@@ -7,6 +7,7 @@ import {
   Timestamp 
 } from "firebase/firestore";
 import { appError } from "../utils/appError";
+import { logger } from "../utils/logger";
 // IMPORT your email delivery function
 import { sendOTPEmail } from "./email.service";
 
@@ -35,14 +36,14 @@ export const requestPasswordResetOTP = async (typedEmail, userId) => {
 
     // OWASP: Silent return if user doesn't exist
     if (!userSnap.exists()) {
-      console.warn(`Enumeration attempt blocked: ${userId}`);
+      logger.warn(`Enumeration attempt blocked: ${userId}`);
       return { success: true }; 
     }
 
     // 2. EMAIL VALIDATION: Ensure the input matches the DB record
     const userData = userSnap.data();
     if (userData.email.toLowerCase() !== typedEmail.toLowerCase().trim()) {
-      console.warn(`Email mismatch for ID: ${userId}`);
+      logger.warn(`Email mismatch for ID: ${userId}`);
       return { success: true };
     }
 
@@ -90,7 +91,7 @@ export const requestPasswordResetOTP = async (typedEmail, userId) => {
     return { success: true };
   } catch (error) {
     if (error instanceof appError) throw error;
-    console.error("OTP Request Error:", error.message);
+    logger.error("OTP Request Error:", error.message);
     throw new appError(error.message || "Failed to request security code.", true, "otp/request-failed");
   }
 };
@@ -135,7 +136,7 @@ export const verifyResetOTP = async (userId, submittedCode) => {
     });
   } catch (error) {
     if (error instanceof appError) throw error;
-    console.error("OTP Verification Error:", error.message);
+    logger.error("OTP Verification Error:", error.message);
     throw new appError(error.message || "Failed to verify security code.", true, "otp/verification-failed");
   }
 };

@@ -1,13 +1,6 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import Toast from "../components/ui/Toast";
-
-const NotificationContext = createContext();
-
-export const useNotification = () => {
-  const context = useContext(NotificationContext);
-  if (!context) throw new Error("useNotification must be used within a NotificationProvider");
-  return context;
-};
+import { NotificationContext } from "./useNotification";
 
 export const NotificationProvider = ({ children }) => {
   const [toastConfig, setToastConfig] = useState({ message: "", type: "success", isOpen: false });

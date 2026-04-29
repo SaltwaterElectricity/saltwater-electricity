@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { subscribeToAllUsers } from "../services/user.service";
 import { appError } from "../utils/appError";
+import { logger } from "../utils/logger";
 
 /**
  * Hook: useUserSubscription
@@ -15,7 +16,7 @@ export const useUserSubscription = (targetRole = null) => {
 
   // Error Handler
   const parseFirebaseError = useCallback((err) => {
-    console.error("Firebase Subscription Error:", {
+    logger.error("Firebase Subscription Error:", {
       message: err?.message,
       code: err?.code,
       fullError: err

@@ -1,12 +1,5 @@
-import { createContext, useContext, useState, useCallback } from "react";
-
-const UIContext = createContext();
-
-export const useUI = () => {
-  const context = useContext(UIContext);
-  if (!context) throw new Error("useUI must be used within a UIProvider");
-  return context;
-};
+import { useState, useCallback } from "react";
+import { UIContext } from "./useUI";
 
 export const UIProvider = ({ children }) => {
   const [settingsModal, setSettingsModal] = useState({

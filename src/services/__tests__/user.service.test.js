@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
 import { updateUserProfile } from '../user.service';
-import { db } from '../../firebaseConfig';
 
 // Mocking firebase/database
 vi.mock('../../firebaseConfig', () => ({

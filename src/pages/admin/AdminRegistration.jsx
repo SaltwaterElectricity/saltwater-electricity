@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { cn } from "../../utils/cn";
-import { useNotification } from "../../context/NotificationContext"; 
+import { useNotification } from "../../context/useNotification"; 
 
 // Services
 import { registerUserAccount } from "../../services/auth.service";

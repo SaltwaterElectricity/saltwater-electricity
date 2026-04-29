@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { X } from "lucide-react";
 import { cn } from "../../utils/cn";
-import { useNotification } from "../../context/NotificationContext"; 
+import { useNotification } from "../../context/useNotification"; 
 
 // Services
 import { registerUserAccount } from "../../services/auth.service";

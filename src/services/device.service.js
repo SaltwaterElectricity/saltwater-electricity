@@ -1,6 +1,7 @@
 import { ref, update, get, serverTimestamp } from "firebase/database";
 import { db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
+import { logger } from "../utils/logger";
 
 export const assignDevice = async (deviceId, userId, newDeviceName) => {
   // 1. SAFETY CHECK: Input Validation & Sanitization
@@ -49,8 +50,35 @@ export const assignDevice = async (deviceId, userId, newDeviceName) => {
   }
 };
 
-const logInternalError = (err) => {
-  if (import.meta.env.MODE !== 'production') {
-    console.error("[Internal DB Trace]:", err);
+/**
+ * DEPROVISION DEVICE
+ * Removes user binding and resets device state to 'available'.
+ * 
+ * @param {string} deviceId - ID of the device to release
+ */
+export const deprovisionDevice = async (deviceId) => {
+  if (!deviceId) throw new appError("Device ID required.", true, "device/invalid-id");
+
+  try {
+    const updates = {};
+    
+    // 1. Remove from assignments
+    updates[`/device_assignments/${deviceId}`] = null;
+    
+    // 2. Reset device info
+    updates[`/device_information/${deviceId}/availability`] = "available";
+    updates[`/device_information/${deviceId}/assigned_user_id`] = null;
+    updates[`/device_information/${deviceId}/assigned_user_name`] = null;
+
+    await update(ref(db), updates);
+    return { success: true };
+
+  } catch (error) {
+    logInternalError(error);
+    throw new appError("System override failed. Please check network.", true, "device/override-failed");
   }
+};
+
+const logInternalError = (err) => {
+  logger.error("[Internal DB Trace]:", err);
 };

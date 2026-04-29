@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "./context/useAuth";
 import { ROUTES, ROLE_LANDING_PAGES } from "./constants/routes"; // Import constants
 
 // Pages & Components
@@ -16,6 +16,8 @@ import UserManagement from "./pages/admin/UserManagement";
 import DashboardController from './pages/dashboard';
 import RealTimeMonitor from "./pages/dashboard/RealTimeMonitor";
 import DeviceManagement from "./pages/admin/DeviceManagement";
+import DeviceAnalytics from "./pages/dashboard/DeviceAnalytics";
+import DeviceRequest from "./pages/user/DeviceRequest";
 
 const RootRedirect = ({ user, role }) => {
   if (!user) return <Navigate to={ROUTES.LOGIN} replace />;
@@ -57,6 +59,8 @@ export const AppRoutes = () => {
           </Route>
 
           <Route path={ROUTES.DASHBOARD} element={<DashboardController />} />
+          <Route path={ROUTES.DEVICE_ANALYTICS} element={<DeviceAnalytics />} />
+          <Route path={ROUTES.DEVICE_REQUESTS} element={<DeviceRequest />} />
           <Route path={ROUTES.SMART_AQUA_MONITOR} element={<RealTimeMonitor />} />
         </Route>
       </Route>

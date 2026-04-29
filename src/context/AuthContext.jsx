@@ -1,16 +1,8 @@
-import { createContext, useContext, useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { subscribeToAuthChanges, getFullUserData, logoutUser } from "../services/auth.service";
 import { USER_STATUS } from "../services/user.service"; 
-
-import { appError } from "../utils/appError";
-
-const AuthContext = createContext();
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new appError("useAuth must be used within an AuthProvider", false, "auth/context-missing");
-  return context;
-};
+import { logger } from "../utils/logger";
+import { AuthContext } from "./useAuth";
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null); // Firebase Auth User
@@ -32,7 +24,7 @@ export const AuthProvider = ({ children }) => {
           setUser(null);
         }
       } catch (error) {
-        console.error("Auth Sync Error:", error);
+        logger.error("Auth Sync Error:", error);
       } finally {
         setLoading(false);
       }

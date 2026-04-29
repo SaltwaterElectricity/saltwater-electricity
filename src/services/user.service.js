@@ -151,7 +151,7 @@ export const subscribeToAllUsers = (callback, targetRole = null, onError = null)
       const completeList = await Promise.all(hydrationPromises);
       callback(completeList);
     },
-    (error) => {
+    (_error) => {
       if (onError) onError(new appError(DB_ERRORS.FETCH_FAILED, true, "db/fetch-failed"));
     }
   );
@@ -175,7 +175,7 @@ export const updateUserStatus = async (uid, newStatus) => {
   try {
     await update(ref(db), updates);
     return { success: true };
-  } catch (error) {
+  } catch (_error) {
     throw new appError(DB_ERRORS.UPDATE_FAILED, true, "db/update-failed");
   }
 };
@@ -202,7 +202,7 @@ export const updateUserProfile = async (uid, formData) => {
   try {
     await update(ref(db), updates); // Gumagamit ng Atomic Multi-path Update
     return { success: true };
-  } catch (error) {
+  } catch (_error) {
     throw new appError("Server Error: Could not update profile info.", true, "db/update-failed");
   }
 };

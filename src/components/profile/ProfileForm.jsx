@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { updateUserProfile } from "../../services/user.service"; 
-import { useNotification } from "../../context/NotificationContext"; 
+import { useNotification } from "../../context/useNotification"; 
 import { Edit3, User, MapPin, X, Check } from "lucide-react"; 
 
 export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmitting }) => {

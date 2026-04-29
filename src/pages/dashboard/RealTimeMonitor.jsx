@@ -1,94 +1,84 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext'; 
-import { useDevices } from '../../hooks'; 
+import { useAuth } from '../../context/useAuth'; 
+import { useDevices, useAssignments } from '../../hooks'; 
+import { logger } from '../../utils/logger';
 import { 
   DeviceCard, 
   DeviceCardSkeleton, 
-  CardErrorBoundary, 
-  AssignDeviceModal 
+  CardErrorBoundary,
+  SystemAuditModal
 } from '../../components';
 import { ROUTES } from '../../constants/routes';
 import Toast from '../../components/ui/Toast';
 
 import { LayoutDashboard } from 'lucide-react';
 
+/**
+ * RealTimeMonitor Page
+ * DASHBOARD VIEW: Purely for monitoring telemetry. 
+ * NO management/assignment actions allowed here.
+ */
 const RealTimeMonitor = () => {
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
-  const { devices, telemetry, loading } = useDevices();
+  const { user, isAdmin } = useAuth();
+  const { devices, telemetry, loading: devicesLoading } = useDevices();
+  const { assignments, loading: assignmentsLoading } = useAssignments();
 
-  // MODAL & TOAST STATES
-  const [selectedDevice, setSelectedDevice] = useState(null);
-  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  // AUDIT MODAL STATE
+  const [selectedAuditDevice, setSelectedAuditDevice] = useState(null);
+  const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
+
+  // TOAST STATE (For general feedback)
   const [toastConfig, setToastConfig] = useState({
     isOpen: false,
     message: "",
     type: "success"
   });
 
-  // 1. FILTER LOGIC: Dito natin sasalain ang ipapakita base sa Role
+  // 1. FILTER LOGIC: Robust role detection using assignments
   const filteredDevices = React.useMemo(() => {
-    if (!devices) return [];
+    if (!devices || assignmentsLoading) return [];
 
-    // Kung Admin/SuperAdmin, ipakita lahat
-    if (currentUser?.role === 'admin' || currentUser?.role === 'superAdmin') {
-      return devices;
+    // Kung Admin/SuperAdmin, ipakita ang lahat ng devices na "assigned" na (Global Fleet)
+    if (isAdmin) {
+      return devices.filter(d => assignments[d.device_id]);
     }
 
-    // Kung User, ipakita lang ang naka-assign sa kanya
-    return devices.filter(d => d.assigned_user_id === currentUser?.id);
-  }, [devices, currentUser]);
+    // Kung regular User, ipakita LANG ang naka-assign sa kanya
+    return devices.filter(d => assignments[d.device_id]?.userId === (user?.id || user?.uid));
+  }, [devices, assignments, user, isAdmin, assignmentsLoading]);
 
   const handleDeviceAction = async (type, payload) => {
     try {
-      if (type === 'ASSIGN_DEVICE') {
-        setSelectedDevice(payload);
-        setIsAssignModalOpen(true);
-      } else if (type === 'VIEW_ANALYTICS') {
-        navigate(ROUTES.DASHBOARD);
+      if (type === 'VIEW_ANALYTICS') {
+        const dev = devices.find(d => d.device_id === payload);
+        setSelectedAuditDevice(dev);
+        setIsAuditModalOpen(true);
       } else {
-        console.log(`Action: ${type}`, payload);
-        // Simulate or handle other actions
-        setToastConfig({
-          isOpen: true,
-          message: `Action ${type.replace('_', ' ')} processed successfully.`,
-          type: "success"
-        });
+        // Log other actions but do not open modals (Assign flow moved to DeviceManagement)
+        logger.log(`Dashboard Action: ${type}`, payload);
       }
     } catch (error) {
       setToastConfig({
         isOpen: true,
-        message: `Security Error: Action ${type} failed.`,
+        message: `Navigation Error: ${error.message}`,
         type: "error"
       });
-      throw error; // Re-throw for DeviceCard to stop processing state
     }
   };
 
-  const closeAssignModal = () => {
-    setIsAssignModalOpen(false);
-    setTimeout(() => setSelectedDevice(null), 300);
+  const handleCloseAudit = () => {
+    setIsAuditModalOpen(false);
+    setTimeout(() => setSelectedAuditDevice(null), 300);
   };
 
-  if (loading) {
+  if (devicesLoading || assignmentsLoading) {
     return (
       <div className="min-h-screen bg-slate-50/50 p-8 relative overflow-hidden">
         <BackgroundDecor />
-        <header className="mb-12 flex items-end justify-between relative z-10">
-          <div className="animate-pulse">
-            <div className="mb-2 flex items-center gap-2">
-              <div className="h-4 w-4 bg-slate-200 rounded" />
-              <div className="h-3 w-32 bg-slate-200 rounded" />
-            </div>
-            <div className="h-10 w-64 bg-slate-200 rounded-lg" />
-          </div>
-        </header>
-
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3 relative z-10">
-          {[...Array(6)].map((_, i) => (
-            <DeviceCardSkeleton key={i} />
-          ))}
+          {[...Array(6)].map((_, i) => <DeviceCardSkeleton key={i} />)}
         </div>
       </div>
     );
@@ -96,7 +86,6 @@ const RealTimeMonitor = () => {
 
   return (
     <div className="min-h-screen bg-slate-50/30 p-8 relative overflow-hidden antialiased">
-      {/* GLASSMORPHISM DECORATION */}
       <BackgroundDecor />
 
       <Toast 
@@ -114,27 +103,16 @@ const RealTimeMonitor = () => {
               <LayoutDashboard size={16} className="text-blue-600" />
             </div>
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600">
-              Live Monitoring System
+              Fleet Telemetry
             </span>
           </div>
           <h1 className="text-4xl font-black tracking-tighter text-slate-900">
-            {currentUser?.role === 'user' ? 'My Managed Nodes' : 'Global Fleet Status'}
+            {isAdmin ? 'Global Fleet Status' : 'My Managed Nodes'}
           </h1>
-        </div>
-
-        <div className="hidden text-right md:block animate-in slide-in-from-right-4 duration-500">
-          <p className="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Network Status</p>
-          <div className="flex items-center gap-2 justify-end mt-1">
-            <span className="flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <p className="text-sm font-black text-emerald-500 uppercase">System Operational</p>
-          </div>
         </div>
       </header>
 
-      {/* GRID SECTION: 8pt Grid (gap-8 = 32px) */}
+      {/* GRID SECTION: Using DeviceCard in "default" (View-Only) mode */}
       <div className="relative z-10">
         {filteredDevices.length > 0 ? (
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
@@ -142,40 +120,42 @@ const RealTimeMonitor = () => {
               <CardErrorBoundary key={device.device_id}>
                 <DeviceCard
                   device={device}
+                  assignment={assignments[device.device_id]}
                   telemetry={telemetry?.[device.device_id]}
-                  currentUser={currentUser}
+                  currentUser={user} // Pass the 'user' object (with role) to the card
                   onAction={handleDeviceAction}
-                  viewMode="default"
+                  viewMode="default" // Force View-Only Mode
                 />
               </CardErrorBoundary>
             ))}
           </div>
         ) : (
-          <div className="flex h-[400px] flex-col items-center justify-center rounded-[40px] border border-white/40 bg-white/40 backdrop-blur-xl p-12 text-center shadow-xl animate-in zoom-in-95 duration-500">
-            <div className="w-20 h-20 bg-slate-100/50 rounded-full flex items-center justify-center mb-6 border border-white/20">
-              <LayoutDashboard size={32} className="text-slate-300" />
-            </div>
-            <p className="text-xl font-black text-slate-900 tracking-tight">No active devices found.</p>
-            <p className="text-sm font-medium text-slate-500 mt-2 max-w-xs">Check device assignments or contact system administrator for node initialization.</p>
-          </div>
+          <EmptyState />
         )}
       </div>
-
       {/* MODALS */}
-      <AssignDeviceModal 
-        isOpen={isAssignModalOpen}
-        onClose={closeAssignModal}
-        device={selectedDevice}
+      <SystemAuditModal 
+        isOpen={isAuditModalOpen}
+        onClose={handleCloseAudit}
+        deviceId={selectedAuditDevice?.device_id}
+        deviceName={selectedAuditDevice?.device_name}
       />
     </div>
   );
 };
 
+const EmptyState = () => (
+    <div className="flex h-[400px] flex-col items-center justify-center rounded-[40px] border border-white/40 bg-white/40 backdrop-blur-xl p-12 text-center shadow-xl">
+        <LayoutDashboard size={32} className="text-slate-300 mb-6" />
+        <p className="text-xl font-black text-slate-900 tracking-tight">No active nodes monitored.</p>
+        <p className="text-sm font-medium text-slate-500 mt-2">Go to Device Management to provision new hardware.</p>
+    </div>
+);
+
 const BackgroundDecor = () => (
   <div className="fixed inset-0 pointer-events-none overflow-hidden">
     <div className="absolute top-[-10%] right-[-5%] w-[50%] h-[50%] bg-blue-400/10 rounded-full blur-[120px] animate-pulse" />
     <div className="absolute bottom-[-10%] left-[-5%] w-[50%] h-[50%] bg-indigo-400/10 rounded-full blur-[120px]" />
-    <div className="absolute top-[20%] left-[10%] w-[30%] h-[30%] bg-emerald-400/5 rounded-full blur-[100px]" />
   </div>
 );
 
