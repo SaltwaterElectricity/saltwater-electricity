@@ -1,5 +1,5 @@
 import { auth, db, FIREBASE_CONFIG } from "../firebaseConfig";
-import { ref, get, update, serverTimestamp, query, orderByChild, equalTo } from "firebase/database";
+import { ref, get, update, serverTimestamp } from "firebase/database";
 import { initializeApp, deleteApp } from "firebase/app";
 import { 
   createUserWithEmailAndPassword, 
@@ -129,14 +129,9 @@ export const registerUserAccount = async (userData) => {
     const userCredential = await createUserWithEmailAndPassword(tempAuth, email, autoPassword);
     const uid = userCredential.user.uid;
 
-    // 6. SECURE CREDENTIAL DELIVERY (EmailJS)
-    let emailSent = false;
-    try {
-      await sendOnboardingEmail({ email, firstName, role }, autoPassword);
-      emailSent = true;
-    } catch (_emailError) {
-      emailSent = false;
-    }
+    // 6. SECURE CREDENTIAL DELIVERY (SendGrid)
+    const emailResult = await sendOnboardingEmail({ email, firstName, role }, autoPassword);
+    const emailSent = emailResult.emailSent;
 
     //Memory Management
     await deleteApp(tempApp);
@@ -211,17 +206,6 @@ export const loginUser = async (email, password) => {
 
     throw new appError(AUTH_ERROR_MESSAGES[errorCode] || AUTH_ERROR_MESSAGES.default, true, errorCode);
   }
-};
-
-/**
- * Helper to get UID by email (for security lookups)
- */
-const getUidByEmail = async (email) => {
-    const usersRef = ref(db, "users");
-    const q = query(usersRef, orderByChild("email"), equalTo(email));
-    const snap = await get(q);
-    if (!snap.exists()) return null;
-    return Object.keys(snap.val())[0];
 };
 
 /**

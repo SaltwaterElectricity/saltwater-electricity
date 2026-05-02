@@ -18,7 +18,7 @@ const OTP_EXPIRY_MS = 300000; // 5 minutes
  * 
  * 1. Generates a 6-digit numeric code.
  * 2. Saves it to the '/otp-requests/{userId}' node in RTDB.
- * 3. Sends the code via EmailJS (never returned to frontend).
+ * 3. Sends the code via SendGrid (never returned to frontend).
  */
 export const generateOTP = async (userId, email) => {
   if (!userId || !email) {
@@ -56,7 +56,10 @@ export const generateOTP = async (userId, email) => {
     });
 
     // 3. Delivery (Secure: Only send via email)
-    await sendOTPEmail(email, otpCode);
+    const result = await sendOTPEmail(email, otpCode);
+    if (!result.success) {
+      throw result.error;
+    }
 
     return { success: true };
 

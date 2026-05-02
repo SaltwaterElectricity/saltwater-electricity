@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { ref, onValue, update, get, set } from "firebase/database";
 import { db } from "../firebaseConfig";
+import { logger } from "../utils/logger";
 
 /**
  * Hook: useBruteForce
@@ -78,7 +79,7 @@ export const useBruteForce = (trackingId) => {
               // RESET: Deleting the node allows the next 5 attempts to be fresh
               await set(attemptsRef, null);
             } catch (err) {
-              console.warn("[useBruteForce] Auto-reset failed:", err.message);
+              logger.warn("[useBruteForce] Auto-reset failed:", err.message);
             }
           }
         }
@@ -123,9 +124,9 @@ export const useBruteForce = (trackingId) => {
       });
     } catch (error) {
       if (error.code === "PERMISSION_DENIED") {
-        console.warn("[useBruteForce] Protection inactive: Check Firebase Security Rules for /login-attempts");
+        logger.warn("[useBruteForce] Protection inactive: Check Firebase Security Rules for /login-attempts");
       } else {
-        console.error("[useBruteForce] Failed to record attempt:", error);
+        logger.error("[useBruteForce] Failed to record attempt:", error);
       }
     }
   }, [trackingId]);

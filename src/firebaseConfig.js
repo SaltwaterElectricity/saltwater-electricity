@@ -11,11 +11,7 @@ export const FIREBASE_CONFIG = Object.freeze({
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
-  serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
-  onboardingTemplateId: import.meta.env.VITE_EMAILJS_ONBOARDING_TEMPLATE_ID,
-  publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
-  otpTemplateId: import.meta.env.VITE_EMAILJS_OTP_TEMPLATE_ID
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 });
 
 // Safety Check: Validate critical variables

@@ -2,6 +2,7 @@ import { ref, push, serverTimestamp, update } from "firebase/database";
 import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
 import { getUserClaims } from "./auth.service";
+import { logActivity } from "./audit.service";
 
 /**
  * REQUEST SERVICE
@@ -103,25 +104,20 @@ export const updateRequestStatus = async (requestId, status, extraData = {}) => 
     updates[`/device-requests/${requestId}/declineReason`] = extraData.reason || "No reason provided.";
   }
 
-  // 2. Trigger System Audit Log
-  const auditRef = push(ref(db, 'system_audit'));
-  const auditEntry = {
-    eventId: auditRef.key,
-    eventType: `request_${status}`,
-    requestId,
-    adminId: extraData.adminId || "system",
-    timestamp: now,
-    details: status === 'approved' 
-      ? `Approved device request for Unit ${extraData.deviceId}`
-      : `Declined device request: ${extraData.reason || "N/A"}`
-  };
-
-  updates[`/system_audit/${auditRef.key}`] = auditEntry;
-
   try {
+    // 2. Perform Atomic Update
     await update(ref(db), updates);
+
+    // 3. Trigger Unified System Audit Log
+    const auditDetails = status === 'approved' 
+      ? `Approved device request for Unit ${extraData.deviceId}`
+      : `Declined device request: ${extraData.reason || "N/A"}`;
+
+    await logActivity(`request_${status}`, requestId, auditDetails);
+
     return { success: true };
-  } catch (_error) {
+  } catch (error) {
+    if (error instanceof appError) throw error;
     throw new appError("Failed to update request status. System sync error.", true, "request/update-failed");
   }
 };

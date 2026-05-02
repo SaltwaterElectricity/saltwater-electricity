@@ -133,25 +133,34 @@ export const updateBulbState = async (deviceId, newState) => {
   // IDOR DEFENSE: Verify access before writing hardware commands
   await verifyDeviceAccess(deviceId);
 
-  const clientTs = Date.now();
-  const now = serverTimestamp();
-  const updates = {};
-  
-  // 1. Update Latest Reading Node (Removed bulb_ma)
-  updates[`readings/${deviceId}/latest/relay_active`] = newState;
-  updates[`readings/${deviceId}/latest/timestamp`] = now;
-  
-  // 2. Add to Historical Logs
-  updates[`logs/${deviceId}/${clientTs}/relay_active`] = newState;
-  updates[`logs/${deviceId}/${clientTs}/timestamp`] = now;
-  
-  // 3. Hardware Command Node (Anti-Replay Protection)
-  updates[`commands/${deviceId}/relay`] = newState;
-  updates[`commands/${deviceId}/lastUpdated`] = now;
-
   try {
+    // SCHEMA HARDENING: Fetch current tds_ppm to ensure mandatory field is present in all writes
+    const latestRef = ref(db, `readings/${deviceId}/latest`);
+    const snapshot = await get(latestRef);
+    const currentData = snapshot.val() || {};
+    const tds = currentData.tds_ppm || 0;
+
+    const clientTs = Date.now();
+    const now = serverTimestamp();
+    const updates = {};
+    
+    // 1. Update Latest Reading Node (Removed bulb_ma)
+    updates[`readings/${deviceId}/latest/relay_active`] = newState;
+    updates[`readings/${deviceId}/latest/tds_ppm`] = tds;
+    updates[`readings/${deviceId}/latest/timestamp`] = now;
+    
+    // 2. Add to Historical Logs
+    updates[`logs/${deviceId}/${clientTs}/relay_active`] = newState;
+    updates[`logs/${deviceId}/${clientTs}/tds_ppm`] = tds;
+    updates[`logs/${deviceId}/${clientTs}/timestamp`] = now;
+    
+    // 3. Hardware Command Node (Anti-Replay Protection)
+    updates[`commands/${deviceId}/relay`] = newState;
+    updates[`commands/${deviceId}/lastUpdated`] = now;
+
     await update(ref(db), updates);
   } catch (error) {
+    if (error instanceof appError) throw error;
     throw new appError(`Hardware command failed: ${error.message}`, true, "reading/update-failed");
   }
 };

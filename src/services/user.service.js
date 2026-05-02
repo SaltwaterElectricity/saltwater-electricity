@@ -212,6 +212,10 @@ export const updateUserStatus = async (uid, newStatus) => {
 
   try {
     await update(ref(db), updates);
+    
+    // AUDIT HARDENING: Log the status change
+    await logActivity(`user_${newStatus}`, uid, `Administrative override: Account status changed to ${newStatus}`);
+    
     return { success: true };
   } catch (error) {
     if (error instanceof appError) throw error;

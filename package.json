@@ -9,11 +9,11 @@
     "lint": "eslint .",
     "test": "vitest run",
     "preview": "vite preview",
-     "mobile-android": "npm run build && cd ../saltwaterelectricity && cordova run android"
+    "mobile-android": "npm run build && cd ../saltwaterelectricity && cordova run android"
   },
   "dependencies": {
-    "@emailjs/browser": "^4.4.1",
     "@tailwindcss/vite": "^4.1.18",
+    "axios": "^1.15.2",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "firebase": "^12.9.0",
