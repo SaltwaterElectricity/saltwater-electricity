@@ -80,3 +80,13 @@ C:\Users\Admin\testcode\
 - **Logging:** Direct `console` methods are prohibited. Use `src/utils/logger.js`.
 - **Persistence:** All authentication must use `browserSessionPersistence` for public terminal security.
 - **Error Handling:** Use `appError` for all operational failures.
+
+### 6. Enumeration Prevention Protocol (EPP)
+- **Silent 404:** All unauthorized access attempts to restricted routes (403) MUST render the `NotFound` component directly. The URL in the address bar MUST remain unchanged to prevent path discovery.
+- **Conditional Registration:** Administrative and sensitive routes MUST NOT be registered in the router tree for unprivileged users. Discovery via client-side routing introspection is prohibited.
+- **Audit Triggers:** Every mount of the `NotFound` component MUST trigger a `POTENTIAL_ENUMERATION` log entry in the `audit-logs` node containing the attempted path.
+- **Neutral UI:** Error messaging MUST be empathetic and non-technical. Avoid technical codes (e.g., "403 Forbidden") that confirm the existence of hidden directories.
+
+## Project Standards
+- **Grid System:** Always use a strict 8-point grid system for all margins, padding, and layout dimensions.
+- **Coding Style:** Prioritize clean code and SOLID principles. Use descriptive naming and keep components small/decomposed.

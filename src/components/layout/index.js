@@ -1,4 +1,4 @@
 export { default as MainLayout } from './MainLayout';
 export { NavbarProfile } from './NavbarProfile';
-export { default as ProtectedRoute } from './ProtectedRoute';
+export { default as PrivateRoute } from './PrivateRoute';
 export { Sidebar } from './Sidebar';

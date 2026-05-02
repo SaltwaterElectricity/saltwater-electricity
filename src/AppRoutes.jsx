@@ -1,13 +1,13 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/useAuth";
-import { ROUTES, ROLE_LANDING_PAGES } from "./constants/routes"; // Import constants
+import { ROUTES, ROLE_LANDING_PAGES } from "./constants/routes"; 
 import { ROLES } from "./constants/roles";
 
 // Pages & Components
-import { UnauthorizedPage } from "./pages/UnauthorizedPage";
+import NotFound from "./pages/NotFound"; // Import NotFound for Silent 404
 import { 
   MainLayout, 
-  ProtectedRoute, 
+  PrivateRoute, 
   ForcePasswordChange 
 } from "./components";
 import AdminRegistration from "./pages/admin/AdminRegistration";
@@ -24,14 +24,15 @@ import DeviceRequest from "./pages/user/DeviceRequest";
 
 const RootRedirect = ({ user, role }) => {
   if (!user) return <Navigate to={ROUTES.LOGIN} replace />;
-  if (!role) return <Navigate to={ROUTES.UNAUTHORIZED} replace />;
   
-  const destination = ROLE_LANDING_PAGES[role] || ROUTES.UNAUTHORIZED;
-  return <Navigate to={destination} replace />;
+  // SILENT 404: If role is invalid or unauthorized for landing, show NotFound directly
+  if (!role || !ROLE_LANDING_PAGES[role]) return <NotFound />;
+  
+  return <Navigate to={ROLE_LANDING_PAGES[role]} replace />;
 };
 
 export const AppRoutes = () => {
-  const { currentUser, userRole, mustChangePassword } = useAuth();
+  const { currentUser, userRole, mustChangePassword, isAdmin, isSuperAdmin } = useAuth();
 
   return (
     <Routes>
@@ -44,24 +45,28 @@ export const AppRoutes = () => {
       />
 
       {/* PROTECTED ROUTES GROUP */}
-      <Route element={<ProtectedRoute />}> 
+      <Route element={<PrivateRoute />}> 
         <Route element={<MainLayout />}>
 
           <Route path="/" element={<RootRedirect user={currentUser} role={userRole} />} />
           
-          {/* ADMIN SCOPE */}
-          <Route element={<ProtectedRoute requiredRole={ROLES.ADMIN} />}>
-            <Route path={ROUTES.ADMIN_USER_MANAGEMENT} element={<UserManagement currentUserRole={userRole} />} />
-            <Route path={ROUTES.ADMIN_DEVICE_MANAGEMENT} element={<DeviceManagement />} />
-            <Route path={ROUTES.ADMIN_REQUEST_MANAGEMENT} element={<RequestManagement />} />
-            <Route path={ROUTES.ADMIN_AUDIT_LOGS} element={<AuditLogPage />} />
-            <Route path={ROUTES.REGISTER_USER} element={<UserRegistration />} />
-          </Route>
+          {/* ADMIN SCOPE: Hidden from non-admins to prevent directory enumeration */}
+          {(isAdmin || isSuperAdmin) && (
+            <Route element={<PrivateRoute requiredRole={ROLES.ADMIN} />}>
+              <Route path={ROUTES.ADMIN_USER_MANAGEMENT} element={<UserManagement currentUserRole={userRole} />} />
+              <Route path={ROUTES.ADMIN_DEVICE_MANAGEMENT} element={<DeviceManagement />} />
+              <Route path={ROUTES.ADMIN_REQUEST_MANAGEMENT} element={<RequestManagement />} />
+              <Route path={ROUTES.ADMIN_AUDIT_LOGS} element={<AuditLogPage />} />
+              <Route path={ROUTES.REGISTER_USER} element={<UserRegistration />} />
+            </Route>
+          )}
 
-          {/* SUPER ADMIN SCOPE */}
-          <Route element={<ProtectedRoute requiredRole={ROLES.SUPER_ADMIN} />}>
-            <Route path={ROUTES.REGISTER_STAFF} element={<AdminRegistration />} />
-          </Route>
+          {/* SUPER ADMIN SCOPE: Strictly hidden from all but Super Admins */}
+          {isSuperAdmin && (
+            <Route element={<PrivateRoute requiredRole={ROLES.SUPER_ADMIN} />}>
+              <Route path={ROUTES.REGISTER_STAFF} element={<AdminRegistration />} />
+            </Route>
+          )}
 
           <Route path={ROUTES.DASHBOARD} element={<DashboardController />} />
           <Route path={ROUTES.DEVICE_ANALYTICS} element={<DeviceAnalytics />} />
@@ -70,8 +75,8 @@ export const AppRoutes = () => {
         </Route>
       </Route>
 
-      <Route path={ROUTES.UNAUTHORIZED} element={<UnauthorizedPage />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      {/* SILENT 404: Catch-all renders NotFound directly to keep the URL unchanged */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

@@ -1,13 +1,20 @@
 import { Navigate, useLocation, Outlet } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
 import { ROLES } from "../../constants/roles";
-import { LoadingSpinner } from "../ui"; // Use your standardized spinner
+import { LoadingSpinner } from "../ui"; 
+import NotFound from "../../pages/NotFound"; // ENUMERATION PREVENTION: Use NotFound instead of Redirects
 
-const ProtectedRoute = ({ requiredRole, children }) => {
+/**
+ * PrivateRoute Component
+ * ENFORCES: Enumeration Prevention Protocol (EPP)
+ * Purpose: Instead of redirecting to login or unauthorized pages, 
+ * this component returns <NotFound /> to hide the existence of private routes.
+ */
+const PrivateRoute = ({ requiredRole, children }) => {
   const { currentUser, userRole, mustChangePassword, loading } = useAuth();
   const location = useLocation();
 
-  // 1. LOADING STATE: Let AuthProvider handle the heavy lifting, but fallback here if needed
+  // 1. LOADING STATE
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-slate-50 font-sans antialiased">
@@ -16,11 +23,18 @@ const ProtectedRoute = ({ requiredRole, children }) => {
     );
   }
 
-  // 2. AUTH CHECK: Redirect to Login if no active Firebase session
+  // 2. AUTH & ROLE CHECK: Silent 404 Strategy
+  // If not logged in OR role check fails, return <NotFound />
+  // This prevents unprivileged users or scanners from discovering valid paths.
+  
   if (!currentUser) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    // Exception: If they are at the root, we can redirect to login as it's the app entry.
+    // However, for explicit sub-paths, we show NotFound.
+    if (location.pathname === "/") return <Navigate to="/login" replace />;
+    return <NotFound />;
   }
 
+  // Mandatory internal system state check (Password reset)
   if (mustChangePassword && location.pathname !== "/force-password-change") {
     return <Navigate to="/force-password-change" replace />;
   }
@@ -29,10 +43,9 @@ const ProtectedRoute = ({ requiredRole, children }) => {
     return <Navigate to="/" replace />;
   }
 
-  // 4. ROLE-BASED AUTHORIZATION: Clearance Check
+  // 3. ROLE-BASED AUTHORIZATION: Clearance Check
   if (requiredRole) {
-    
-    if (!userRole) return <Navigate to="/unauthorized" replace />;
+    if (!userRole) return <NotFound />;
 
     const isSuperAdmin = userRole === ROLES.SUPER_ADMIN;
     const isAdmin = userRole === ROLES.ADMIN;
@@ -41,27 +54,22 @@ const ProtectedRoute = ({ requiredRole, children }) => {
     let hasClearance = false;
 
     if (requiredRole === ROLES.ADMIN) {
-      // Admin pages allow both Admin and Super Admin
       hasClearance = isAdmin || isSuperAdmin;
     } else if (requiredRole === ROLES.SUPER_ADMIN) {
-      // Super Admin pages strictly allow ONLY Super Admin
       hasClearance = isSuperAdmin;
     } else if (requiredRole === ROLES.RESIDENT) {
-      // User pages allow Residents, and usually Admins/SuperAdmins for troubleshooting
       hasClearance = isResident || isAdmin || isSuperAdmin;
     } else {
-      // Para sa ibang roles (e.g., technician)
       hasClearance = userRole === requiredRole || isSuperAdmin;
     }
 
     if (!hasClearance) {
-      return <Navigate to="/unauthorized" replace />;
+      return <NotFound />;
     }
   }
 
-
-  // 5. FINAL RENDER: Validated and Authorized
+  // 4. FINAL RENDER: Validated and Authorized
   return children ? children : <Outlet />;
 };
 
-export default ProtectedRoute;
+export default PrivateRoute;
