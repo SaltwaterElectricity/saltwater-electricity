@@ -1,5 +1,4 @@
 import { useReadings } from '../../hooks';
-import { cn } from '../../utils/cn';
 import { SENSOR_CONFIG, METRICS } from '../../constants';
 
 /**

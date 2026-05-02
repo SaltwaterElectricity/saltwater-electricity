@@ -7,14 +7,16 @@ import {
   signOut,
   onAuthStateChanged,
   setPersistence, 
-  browserLocalPersistence,
+  browserSessionPersistence,
   getAuth,
   updatePassword,
   EmailAuthProvider,
   reauthenticateWithCredential
 } from "firebase/auth";
 
+import { ROLES } from "../constants/roles";
 import { appError } from "../utils/appError";
+import { logger } from "../utils/logger";
 import { generateDefaultPassword } from "../utils/passwordGenerator";
 import { sendOnboardingEmail } from "./email.service"
 
@@ -31,8 +33,11 @@ export const AUTH_ERROR_MESSAGES = Object.freeze({
   "auth/missing-credentials": "Email and password are required.",
   "auth/requires-recent-login": "Security timeout. Please re-verify your identity again.",
   "auth/network-request-failed": "Connection Error: Please check the facility's internet stability.",
+  "auth/too-many-requests": "Account temporarily locked due to many failed attempts. Try again later.",
+  "auth/user-disabled": "This account has been disabled by a system administrator.",
+  "PERMISSION_DENIED": "Security Check: You do not have permission to access this data.",
   "db/permission-denied": "Security Check: You do not have permission to access this data.",
-  "db/unavailable": "The database is currently offline. Please check your connection.",
+  "unavailable": "The database is currently offline. Please check your connection.",
   "default": "An unexpected authentication error occurred."
 });
 
@@ -173,12 +178,13 @@ export const loginUser = async (email, password) => {
     }
 
     //PERSISTENCE
-    await setPersistence(auth, browserLocalPersistence);
+    await setPersistence(auth, browserSessionPersistence);
     const userCredential = await signInWithEmailAndPassword(auth, cleanEmail, password);
     const uid = userCredential.user.uid;
 
-    // Reset attempts on successful login
-    await update(ref(db, `login_attempts/${uid}`), { count: 0, lockoutUntil: 0 });
+    // Reset attempts on successful login using consistent tracking ID
+    const trackingId = cleanEmail.replace(/[^a-zA-Z0-9]/g, '');
+    await update(ref(db, `login-attempts/${trackingId}`), { count: 0, lockoutUntil: 0 });
 
     // Verify system status before allowing the session to continue
     const userData = await getFullUserData(uid, userCredential.user);
@@ -196,21 +202,6 @@ export const loginUser = async (email, password) => {
     };
 
   } catch (error) {
-    // 🛡️ INCREMENT FAILED ATTEMPTS
-    if (error.code === "auth/invalid-credential" || error.code === "auth/wrong-password") {
-       const cleanEmail = email?.toLowerCase().trim();
-       const userId = await getUidByEmail(cleanEmail);
-       if (userId) {
-          const attemptsRef = ref(db, `login_attempts/${userId}`);
-          const snap = await get(attemptsRef);
-          const data = snap.val() || { count: 0 };
-          const newCount = data.count + 1;
-          const lockoutUntil = newCount >= 5 ? Date.now() + 300000 : 0;
-          await update(attemptsRef, { count: newCount, lockoutUntil });
-       }
-    }
-    // console.error("DEBUG: Firebase Auth Error:",
-    //  error.code, error.message);
     sessionStorage.removeItem("is_verified");
     if (error instanceof appError) throw error;
 
@@ -302,8 +293,8 @@ export const getFullUserData = async (uid, firebaseUser = null, forceRefresh = f
 
     // 3. Determine the authoritative role
     // Prefer Token Claims if available, otherwise fallback to DB (for initial provisioning/sync)
-    const tokenRole = claims?.superAdmin ? "superAdmin" : claims?.admin ? "admin" : claims?.role;
-    const finalRole = tokenRole || roleData.role || "user";
+    const tokenRole = claims?.superAdmin ? ROLES.SUPER_ADMIN : claims?.admin ? ROLES.ADMIN : claims?.role;
+    const finalRole = tokenRole || roleData.role || ROLES.RESIDENT;
 
     return {
       uid,

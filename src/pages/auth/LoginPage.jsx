@@ -1,16 +1,13 @@
 import { useState, useCallback } from "react";
 import LoginModal from "../../components/modal/LoginModal";
+import { ROLES } from "../../constants/roles";
 import { cn } from "../../utils/cn";
 import logoImg from "../../assets/logo-icon.png"; 
 
-const ROLES = {
-  USER: "user",
-  ADMIN: "admin",
-};
-
 const LoginPage = () => {
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [initialRole, setInitialRole] = useState(ROLES.USER);
+  const [initialRole, setInitialRole] = useState(ROLES.RESIDENT);
 
   const openLogin = useCallback((roleId) => {
     setInitialRole(roleId);
@@ -61,7 +58,7 @@ const LoginPage = () => {
           </button>
           
           <button 
-            onClick={() => openLogin(ROLES.USER)}
+            onClick={() => openLogin(ROLES.RESIDENT)}
             className={cn(
               "w-full py-3.5 text-lg font-medium rounded-lg transition-all duration-200 active:scale-95 shadow-sm",
               "bg-white text-[#2b308b] border-[1.5px] border-[#2b308b] hover:bg-[#f5f7ff]"
@@ -70,6 +67,7 @@ const LoginPage = () => {
             Household Representative
           </button>
         </div>
+
 
         <footer className="text-[12.5px] text-[#4d4d4d] leading-relaxed">
           By using this services, you understood and<br />

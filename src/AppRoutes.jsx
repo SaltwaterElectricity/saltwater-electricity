@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/useAuth";
 import { ROUTES, ROLE_LANDING_PAGES } from "./constants/routes"; // Import constants
+import { ROLES } from "./constants/roles";
 
 // Pages & Components
 import { UnauthorizedPage } from "./pages/UnauthorizedPage";
@@ -49,7 +50,7 @@ export const AppRoutes = () => {
           <Route path="/" element={<RootRedirect user={currentUser} role={userRole} />} />
           
           {/* ADMIN SCOPE */}
-          <Route element={<ProtectedRoute requiredRole="admin" />}>
+          <Route element={<ProtectedRoute requiredRole={ROLES.ADMIN} />}>
             <Route path={ROUTES.ADMIN_USER_MANAGEMENT} element={<UserManagement currentUserRole={userRole} />} />
             <Route path={ROUTES.ADMIN_DEVICE_MANAGEMENT} element={<DeviceManagement />} />
             <Route path={ROUTES.ADMIN_REQUEST_MANAGEMENT} element={<RequestManagement />} />
@@ -58,7 +59,7 @@ export const AppRoutes = () => {
           </Route>
 
           {/* SUPER ADMIN SCOPE */}
-          <Route element={<ProtectedRoute requiredRole="superAdmin" />}>
+          <Route element={<ProtectedRoute requiredRole={ROLES.SUPER_ADMIN} />}>
             <Route path={ROUTES.REGISTER_STAFF} element={<AdminRegistration />} />
           </Route>
 

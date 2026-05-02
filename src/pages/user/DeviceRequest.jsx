@@ -12,7 +12,7 @@ import { cn } from "../../utils/cn";
  */
 const DeviceRequest = () => {
   const { user } = useAuth();
-  const { requests, loading, error } = useDeviceRequests(user?.uid);
+  const { requests, loading } = useDeviceRequests(user?.uid);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({ deviceName: '', requestType: 'new_installation' });

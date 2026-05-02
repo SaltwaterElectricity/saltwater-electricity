@@ -9,6 +9,7 @@ import {
   get,
   equalTo 
 } from "firebase/database";
+import { ROLES } from "../constants/roles";
 import { appError } from "../utils/appError";
 import { getUserClaims } from "./auth.service";
 import { logActivity } from "./audit.service";
@@ -32,17 +33,34 @@ const adminString = import.meta.env.VITE_SUPER_ADMIN_EMAILS || "";
 const adminList = adminString.split(",").map(email => email.trim().toLowerCase());
 
 /**
- * INTERNAL GUARD: Verifies Admin clearance via Token Claims
+ * INTERNAL GUARD: Verifies Admin clearance via Token Claims with DB Fallback
  */
 const verifyAdminClearance = async () => {
   const currentUser = auth.currentUser;
   if (!currentUser) throw new appError("Authentication required.", true, "auth/unauthorized");
 
+  // 1. Authoritative Tier: Check Custom Token Claims
   const claims = await getUserClaims(currentUser);
-  if (!claims?.admin && !claims?.superAdmin) {
-    throw new appError("Access Denied: Administrative clearance required.", true, "auth/insufficient-clearance");
+  if (claims?.admin || claims?.superAdmin) return true;
+
+  // 2. Database Tier: Check /roles/ node (Fallback for purely client-side sync)
+  try {
+    const roleSnap = await get(ref(db, `roles/${currentUser.uid}`));
+    const roleData = roleSnap.val();
+    if (roleData?.role === ROLES.ADMIN || roleData?.role === ROLES.SUPER_ADMIN) {
+      return true;
+    }
+  } catch (_dbError) {
+    // Ignore DB errors here and move to emergency fallback
   }
-  return true;
+
+  // 3. Emergency Tier: Check against VITE_SUPER_ADMIN_EMAILS list
+  const cleanEmail = currentUser.email?.toLowerCase().trim();
+  if (cleanEmail && adminList.includes(cleanEmail)) {
+    return true;
+  }
+
+  throw new appError("Access Denied: Administrative clearance required.", true, "auth/insufficient-clearance");
 };
 
 /**
@@ -78,10 +96,13 @@ export const provisionUserSystem = async (uid, formData) => {
   if (!uid) throw new appError(DB_ERRORS.MISSING_UID, true, "db/missing-uid");
   if (!formData?.role) throw new appError(DB_ERRORS.MISSING_DATA, true, "db/missing-data");
 
+  // 🛡️ SECONDARY ROLE CHECK: Authoritative Token Verification
+  await verifyAdminClearance();
+
   // Security Guard: Verify if the requested role is actually allowed for this email
   const inputEmail = formData.email?.toLowerCase().trim();
-  const isActualSuperAdmin = formData.role === "superAdmin" && adminList.includes(inputEmail);
-  const finalRole = isActualSuperAdmin ? "superAdmin" : (formData.role || "user");
+  const isActualSuperAdmin = formData.role === ROLES.SUPER_ADMIN && adminList.includes(inputEmail);
+  const finalRole = isActualSuperAdmin ? ROLES.SUPER_ADMIN : (formData.role || ROLES.RESIDENT);
 
   const cleanProfile = sanitizeUserData(formData);
   const now = serverTimestamp();
@@ -138,7 +159,7 @@ export const subscribeToAllUsers = (callback, targetRole = null, onError = null)
         const roleData = childSnapshot.val();
 
         // Privacy Guard
-        if (targetRole === "superAdmin" || !roleData.isPrivate) {
+        if (targetRole === ROLES.SUPER_ADMIN || !roleData.isPrivate) {
           
           // 2. Hydrate: Use the UID key to fetch profile details from the /users node
           const userProfilePromise = get(ref(db, `users/${uid}`))
@@ -168,6 +189,7 @@ export const subscribeToAllUsers = (callback, targetRole = null, onError = null)
     }
   );
 };
+
 
 // STATUS MANAGEMENT: Ensures all nodes stay in sync.
  

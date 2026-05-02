@@ -1,6 +1,7 @@
 import { ref, onValue, get, query, limitToLast, orderByKey, update, serverTimestamp } from "firebase/database";
-import { db } from "../firebaseConfig";
+import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
+import { getUserClaims } from "./auth.service";
 
 /**
  * Reading Service
@@ -8,6 +9,33 @@ import { appError } from "../utils/appError";
  * Handles real-time telemetry subscriptions and historical log retrieval.
  * Adheres to SOLID principles by separating data fetching, transformation, and error handling.
  */
+
+/**
+ * INTERNAL GUARD: Verifies device ownership or admin clearance.
+ */
+const verifyDeviceAccess = async (deviceId) => {
+  const currentUser = auth.currentUser;
+  if (!currentUser) throw new appError("Authentication required.", true, "auth/unauthorized");
+
+  // 1. Admin/SuperAdmin Bypass
+  const claims = await getUserClaims(currentUser);
+  if (claims?.admin || claims?.superAdmin) return true;
+
+  // 2. Ownership Check: Verify if device is assigned to this user
+  try {
+    const assignmentRef = ref(db, `device_assignments/${deviceId}`);
+    const snapshot = await get(assignmentRef);
+    
+    if (snapshot.exists()) {
+      const assignment = snapshot.val();
+      if (assignment.userId === currentUser.uid) return true;
+    }
+  } catch (_dbError) {
+    // Fall through to error
+  }
+
+  throw new appError("Access Denied: You are not authorized to monitor this device.", true, "auth/insufficient-clearance");
+};
 
 /**
  * Data Transformation Configuration
@@ -53,30 +81,43 @@ export const subscribeToLatestReading = (deviceId, onSuccess, onError) => {
     throw new appError("A valid Device ID is required to start monitoring.", true, "reading/invalid-id");
   }
 
-  // Changed from 'telemetry' to 'readings' to match the database node
-  const latestRef = ref(db, `readings/${deviceId}/latest`);
+  let unsubscribeNode = null;
+  let isCancelled = false;
 
-  const unsubscribe = onValue(
-    latestRef,
-    (snapshot) => {
-      try {
-        const rawData = snapshot.val();
-        onSuccess(transformReading(rawData));
-      } catch (_err) {
-        if (onError) onError(new appError("Failed to process incoming reading.", true, "reading/parse-error"));
-      }
-    },
-    (error) => {
-      const wrappedError = new appError(
-        `Real-time connection failed: ${error.message}`,
-        true,
-        "reading/connection-failed"
+  // IDOR DEFENSE: Verify access before establishing the stream
+  verifyDeviceAccess(deviceId)
+    .then(() => {
+      if (isCancelled) return;
+
+      const latestRef = ref(db, `readings/${deviceId}/latest`);
+      unsubscribeNode = onValue(
+        latestRef,
+        (snapshot) => {
+          try {
+            const rawData = snapshot.val();
+            onSuccess(transformReading(rawData));
+          } catch (_err) {
+            if (onError) onError(new appError("Failed to process incoming reading.", true, "reading/parse-error"));
+          }
+        },
+        (error) => {
+          const wrappedError = new appError(
+            `Real-time connection failed: ${error.message}`,
+            true,
+            "reading/connection-failed"
+          );
+          if (onError) onError(wrappedError);
+        }
       );
-      if (onError) onError(wrappedError);
-    }
-  );
+    })
+    .catch((err) => {
+      if (!isCancelled && onError) onError(err);
+    });
 
-  return unsubscribe;
+  return () => {
+    isCancelled = true;
+    if (unsubscribeNode) unsubscribeNode();
+  };
 };
 
 /**
@@ -88,6 +129,9 @@ export const subscribeToLatestReading = (deviceId, onSuccess, onError) => {
  */
 export const updateBulbState = async (deviceId, newState) => {
   if (!deviceId) throw new appError("Device ID required.", true, "reading/invalid-id");
+
+  // IDOR DEFENSE: Verify access before writing hardware commands
+  await verifyDeviceAccess(deviceId);
 
   const clientTs = Date.now();
   const now = serverTimestamp();
@@ -101,8 +145,9 @@ export const updateBulbState = async (deviceId, newState) => {
   updates[`logs/${deviceId}/${clientTs}/relay_active`] = newState;
   updates[`logs/${deviceId}/${clientTs}/timestamp`] = now;
   
-  // 3. Hardware Command Node
+  // 3. Hardware Command Node (Anti-Replay Protection)
   updates[`commands/${deviceId}/relay`] = newState;
+  updates[`commands/${deviceId}/lastUpdated`] = now;
 
   try {
     await update(ref(db), updates);
@@ -122,6 +167,9 @@ export const getHistoricalLogs = async (deviceId, limit = 50) => {
   if (!deviceId) {
     throw new appError("Device ID is required to fetch history.", true, "reading/invalid-parameters");
   }
+
+  // IDOR DEFENSE: Verify access before fetching logs
+  await verifyDeviceAccess(deviceId);
 
   const logsRef = query(
     ref(db, `logs/${deviceId}`),

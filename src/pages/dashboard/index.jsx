@@ -1,6 +1,8 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
 
+import { ROLES } from '../../constants/roles';
+
 // Import mula sa iyong subfolders
 import AdminDashboard from '../admin/AdminDashboard';
 import ResidentDashboard from '../user/ResidentDashboard';
@@ -12,14 +14,14 @@ const DashboardController = () => {
 
   // Mas madaling basahin kung maraming roles
   const dashboards = {
-    superadmin: <AdminDashboard />,
-    admin: <AdminDashboard />,
-    user: <ResidentDashboard />,
+    [ROLES.SUPER_ADMIN]: <AdminDashboard />,
+    [ROLES.ADMIN]: <AdminDashboard />,
+    [ROLES.RESIDENT]: <ResidentDashboard />,
     // technician: <TechDashboard />, <-- Madaling dagdagan sa hinaharap
   };
 
-  const currentRole = userRole?.toLowerCase(); 
-  return dashboards[currentRole] || <ResidentDashboard />;
+  return dashboards[userRole] || <ResidentDashboard />;
 };
+
 
 export default DashboardController;

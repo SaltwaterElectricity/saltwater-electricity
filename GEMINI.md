@@ -56,3 +56,20 @@ Ensure the following are configured in your local `.env` file:
     - Use semi-transparent backgrounds with a `backdrop-filter: blur()`.
     - Use thin, light borders (low opacity white/grey) to simulate glass edges.
     - Ensure text maintains high contrast against blurred backgrounds.
+
+## 🛡️ Security & Privacy Protocol (Smart Aqua Standard)
+
+### 1. Data Integrity & Authorization (NoSQL Protection)
+- **Principle of Least Privilege (PoLP):** No global `.read` or `.write`. All access must be scoped to `auth.uid` or `superAdmin` role.
+- **Strict Validation:** Every write operation to `/readings` and `/logs` must contain mandatory children (`timestamp`, `tds_ppm`) to prevent schema-less injection.
+- **Auto-Reset Policy:** Account lockouts (Brute Force) must automatically reset in the database after the cooldown period (MM:SS) to ensure system availability.
+
+### 2. Hardware Security (ESP32 Integration)
+- **Secure Transport:** Telemetry must use `WiFiClientSecure` with TLS 1.3. No plain HTTP communication is allowed.
+- **Command Freshness:** Every hardware command (e.g., relay toggle) must include a `serverTimestamp` to prevent Replay Attacks. Hardware should ignore commands older than 60 seconds.
+- **Key Scoping:** Firebase API keys must be restricted via Google Cloud Console to specific services (Realtime Database only).
+
+### 3. Privacy & Auditability
+- **Data Minimization:** Strictly no storage of full names or addresses in the `roles` node. Use `residentID` as the primary key.
+- **Administrative Transparency:** All "Disable/Enable" actions on user accounts must generate an entry in the `audit-logs` node containing the `adminEmail` and `timestamp`.
+- **Session Governance:** Authentication persistence is set to `browserSessionPersistence` for control-center security.

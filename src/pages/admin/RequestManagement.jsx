@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from "../../context/useAuth";
 import { useDeviceRequests, useUserSubscription } from "../../hooks";
+import { ROLES } from "../../constants/roles";
 import { updateRequestStatus } from "../../services/request.service";
 import { ModalBackdrop } from "../../components/modal";
 import { cn } from "../../utils/cn";
@@ -23,7 +24,8 @@ import Toast from "../../components/ui/Toast";
 const RequestManagement = () => {
   const { user: adminUser } = useAuth();
   const { requests, loading: requestsLoading } = useDeviceRequests();
-  const { data: users, loading: usersLoading } = useUserSubscription("user");
+  const { data: users, loading: usersLoading } = useUserSubscription(ROLES.RESIDENT);
+
 
   // TOAST STATE
   const [showToast, setShowToast] = useState(false);

@@ -1,5 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
-import { auth } from '../../firebaseConfig';
+import { useState, useMemo } from 'react';
 import { useAuth } from '../../context/useAuth';
 import { useDevices } from '../../hooks';
 import { DeviceCard, AssignDeviceModal, Toast, ConfirmationModal } from '../../components';
@@ -78,7 +77,7 @@ const DeviceManagement = () => {
   };
 
   // Error Boundary Safety
-  if (error) return <ErrorMessage message={error} />;
+  if (error) return <ErrorMessage message={error?.message || error} />;
   if (loading || authLoading) return <LoadingSpinner />;
 
   return (
@@ -206,7 +205,9 @@ const ErrorMessage = ({ message }) => (
   <div className="flex h-screen items-center justify-center bg-[#f8fafc] p-6 text-center">
     <div className="bg-red-50 p-8 rounded-3xl border border-red-100 max-w-md">
       <p className="text-red-600 font-bold uppercase tracking-widest text-xs mb-2">Error Detected</p>
-      <p className="text-slate-900 font-black">{message}</p>
+      <p className="text-slate-900 font-black">
+        {typeof message === 'object' ? message?.message || "An unexpected error occurred" : message}
+      </p>
     </div>
   </div>
 );

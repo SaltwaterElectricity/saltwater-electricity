@@ -9,7 +9,6 @@ import {
   Zap
 } from 'lucide-react';
 import { cn } from "../../utils/cn"; 
-import { useAuth } from "../../context/useAuth";
 import { useReadings, useHistory } from "../../hooks";
 import { DeviceAnalyticsChart } from "../../components";
 import { 
@@ -29,7 +28,6 @@ import { METRICS, METRIC_CONFIG } from "../../constants";
 const DeviceAnalytics = () => {
   const { deviceId } = useParams();
   const navigate = useNavigate();
-  const { isAdmin } = useAuth();
   
   // Real-time telemetry & History
   const { reading, loading: readingLoading } = useReadings(deviceId);
@@ -157,7 +155,7 @@ const DeviceAnalytics = () => {
             </header>
 
             <div className="flex-1 space-y-10 relative z-10 overflow-y-auto pr-2 custom-scrollbar-hide">
-                {logs.slice(0, 8).map((log, idx) => (
+                {logs.slice(0, 8).map((log, _idx) => (
                     <div key={log.id} className="group relative pl-8 border-l border-slate-800 transition-all hover:border-blue-500">
                         <div className="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-slate-800 border-2 border-slate-700 group-hover:bg-blue-600 group-hover:border-blue-400 transition-all" />
                         <div className="flex justify-between items-start mb-2">

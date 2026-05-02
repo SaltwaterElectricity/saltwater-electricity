@@ -3,7 +3,6 @@ import {
   History, 
   Bell
 } from 'lucide-react';
-import { cn } from "../../utils/cn"; 
 import { useAuth } from "../../context/useAuth";
 import { useDevices, useHistory } from "../../hooks";
 import { DeviceAnalyticsChart } from "../../components";

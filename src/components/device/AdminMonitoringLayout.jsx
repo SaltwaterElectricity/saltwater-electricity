@@ -14,7 +14,7 @@ const InfoTag = ({ label, value, icon: Icon, align = "left" }) => (
   </div>
 );
 
-export const AdminMonitoringLayout = ({ device, telemetry, onViewAnalytics }) => {
+export const AdminMonitoringLayout = ({ device, onViewAnalytics }) => {
   const deviceId = device.device_id;
 
   return (

@@ -2,10 +2,12 @@ import { useState, memo } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 import { loginUser, getFullUserData } from "../../services/auth.service";
+import { ROLES } from "../../constants/roles";
 import { PasswordInput } from "../password-change";
 import { SpinnerIcon} from "../ui";
 import ForgotPasswordModal from "./ForgotPasswordModal";
 import { appError } from "../../utils/appError";
+import { useBruteForce } from "../../hooks/useBruteForce";
 
 
 const LoginForm = () => {
@@ -19,70 +21,84 @@ const LoginForm = () => {
   const { 
     register, 
     handleSubmit, 
+    watch,
     formState: { errors } 
   } = useForm({ mode: "onBlur" });
 
+  // 2. BRUTE FORCE PROTECTION: Track attempts by sanitized email
+  const emailInput = watch("email");
+  const trackingId = emailInput ? emailInput.replace(/\./g, "_") : null;
+  const { isLocked, formattedTime, recordFailedAttempt } = useBruteForce(trackingId);
+
   const onSubmit = async (data) => {
-  setIsSubmitting(true);
-  setAuthError(""); // I-reset ang error bawat attempt
+    if (isLocked) return;
+    setIsSubmitting(true);
+    setAuthError(""); 
 
-  try {
-    // 1. AUTHENTICATION: I-verify ang credentials sa Firebase
-    const userCredential = await loginUser(data.email, data.password);
-    const uid = userCredential.user.uid;
+    try {
+      const userCredential = await loginUser(data.email, data.password);
+      const uid = userCredential.user.uid;
 
-    sessionStorage.setItem("is_verified", "true");
+      sessionStorage.setItem("is_verified", "true");
 
-    // 3. DATA SYNC: Kunin ang Profile at Role mula sa Database
-    const userData = await getFullUserData(uid);
+      const userData = await getFullUserData(uid);
 
-    if (!userData) {
-      throw new appError("Account not found. Please contact your system administrator.", true, "auth/user-not-found");
-    }
+      if (!userData) {
+        throw new appError("Account not found. Please contact your system administrator.", true, "auth/user-not-found");
+      }
 
-    // 4. SECURITY CHECK: Forced Password Change logic
-    if (userData.requiresPasswordChange) {
-      navigate("/force-password-change");
-      return;
-    }
+      if (userData.requiresPasswordChange) {
+        navigate("/force-password-change");
+        return;
+      }
 
-    // 5. ROLE-BASED ROUTING: Direkta sa tamang 'Office'
-    switch (userData.role) {
-      case "superAdmin":
-        navigate("/admin", { replace: true });
-        break;
-      case "admin":
-        navigate("/admin/dashboard", { replace: true });
-        break;
-      case "technician":
-        navigate("/tech/controls", { replace: true });
-        break;
-      default:
-        navigate("/dashboard", { replace: true });
-    }
+      switch (userData.role) {
+        case ROLES.SUPER_ADMIN:
+          navigate("/admin", { replace: true });
+          break;
+        case ROLES.ADMIN:
+          navigate("/admin/dashboard", { replace: true });
+          break;
+        case "technician":
+          navigate("/tech/controls", { replace: true });
+          break;
+        default:
+          navigate("/dashboard", { replace: true });
+      }
 
     } catch (err) {
-        setAuthError(err.message);
-        sessionStorage.removeItem("is_verified");
+      setAuthError(err.message);
+      sessionStorage.removeItem("is_verified");
+      // Record failed attempt for brute force protection
+      if (err.code !== "auth/user-not-found") {
+        await recordFailedAttempt();
+      }
     } finally {
-        setIsSubmitting(false);
+      setIsSubmitting(false);
     }
- };
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-8">
-      <div className="w-full max-w-md bg-white rounded-[32px] shadow-2xl p-8 border border-slate-100 animate-in fade-in zoom-in duration-500">
+      <div className="w-full max-w-md bg-white rounded-[32px] shadow-2xl p-8 border border-slate-100 animate-in fade-in zoom-in duration-500 relative">
         
-        <header className="mb-8 text-center">
+        <header className="mb-4 text-center">
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Welcome Back</h1>
           <p className="text-sm text-slate-500 mt-2">Sign in to monitor your water quality system.</p>
         </header>
 
-        {authError && (
-          <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-[10px] font-bold uppercase tracking-widest rounded">
-            {authError}
-          </div>
-        )}
+        {/* Layout stability container for messages */}
+        <div className="h-8 overflow-hidden flex items-center justify-center mb-4">
+          {(authError || isLocked) && (
+            <div className="text-center animate-in slide-in-from-top-2 duration-300">
+              <span className="text-red-500 text-[10px] font-bold uppercase tracking-tighter">
+                {isLocked ? (
+                  <>Account Locked: Try again in <span className="font-mono">{formattedTime}</span></>
+                ) : authError}
+              </span>
+            </div>
+          )}
+        </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">
@@ -115,7 +131,6 @@ const LoginForm = () => {
               validation={{ required: "Password is required" }}
             />
             
-            {/* 2. TRIGGER: Replaced <Link> with <button> to open Modal */}
             <div className="flex justify-end mt-2">
               <button 
                 type="button"
@@ -129,7 +144,7 @@ const LoginForm = () => {
 
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isLocked}
             className="w-full h-14 bg-slate-900 hover:bg-black text-white font-bold rounded-2xl shadow-lg 
                        transition-all active:scale-[0.98] flex items-center justify-center gap-3
                        disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed mt-2"
@@ -139,6 +154,8 @@ const LoginForm = () => {
                 <SpinnerIcon size="w-5 h-5" />
                 <span className="animate-pulse uppercase text-[12px] tracking-widest">Verifying...</span>
               </>
+            ) : isLocked ? (
+              <span className="uppercase text-[12px] tracking-widest">Locked ({formattedTime})</span>
             ) : (
               "Sign In"
             )}
@@ -158,7 +175,6 @@ const LoginForm = () => {
         </footer>
       </div>
 
-      {/* 3. MODAL COMPONENT: Rendered outside the main card but within the layout */}
       <ForgotPasswordModal 
         isOpen={isForgotModalOpen} 
         onClose={() => setIsForgotModalOpen(false)} 

@@ -10,6 +10,7 @@ import { registerUserAccount } from "../../services/auth.service";
 import { provisionUserSystem } from "../../services/user.service";
 import { ROUTES } from "../../constants/routes";
 // UI Components
+import { ROLES } from "../../constants/roles";
 import { RegistrationFields } from "../../components/auth/RegistrationField";
 import { RegistrationSummary } from "../../components/auth/RegistrationSummary";
 import { ConfirmationModal } from "../../components/modal/ConfirmationModal";
@@ -26,13 +27,14 @@ const UserRegistration = () => {
   // FORM INITIALIZATION
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues: { 
-      role: "user", 
+      role: ROLES.RESIDENT, 
       gender: "male",
       region: "Region IV-A",
       cityProvince: "Quezon",
       baranggay: "" 
     }
   });
+
 
    //PRE-SUBMIT
   const handlePreSubmit = (data) => {

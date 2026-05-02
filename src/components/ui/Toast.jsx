@@ -42,7 +42,9 @@ const Toast = ({ message, type = "success", isOpen, onClose, duration = 5000 }) 
         <Icon className="w-5 h-5 shrink-0" />
         <div className="flex flex-col">
           <p className="text-sm font-bold leading-tight capitalize">{titles[type]}</p>
-          <p className="text-xs opacity-90 leading-relaxed mt-1">{message}</p>
+          <p className="text-xs opacity-90 leading-relaxed mt-1">
+            {typeof message === 'object' ? message?.message || "An unexpected error occurred" : message}
+          </p>
         </div>
         <button onClick={onClose} className="ml-auto p-1 rounded-lg hover:bg-black/5 transition-colors">
           <X className="w-4 h-4 opacity-50 hover:opacity-100" />

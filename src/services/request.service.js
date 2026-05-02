@@ -121,7 +121,7 @@ export const updateRequestStatus = async (requestId, status, extraData = {}) => 
   try {
     await update(ref(db), updates);
     return { success: true };
-  } catch (error) {
+  } catch (_error) {
     throw new appError("Failed to update request status. System sync error.", true, "request/update-failed");
   }
 };

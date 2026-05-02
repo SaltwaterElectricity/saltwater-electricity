@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { ROLES } from "../constants/roles";
 import { ref, onValue } from "firebase/database";
 import { db } from "../firebaseConfig";
 import { AUTH_ERROR_MESSAGES } from "../services/auth.service";
@@ -24,13 +25,14 @@ export const useFullUserData = (uid) => {
     setUserData({
       uid,
       ...dataState.current.profile,
-      role: dataState.current.roleData?.role || "user",
+      role: dataState.current.roleData?.role || ROLES.RESIDENT,
       status: dataState.current.account?.status || "active",
       requiresPasswordChange: dataState.current.account?.requiresPasswordChange || false,
       isPrivate: dataState.current.roleData?.isPrivate || false,
     });
     setLoading(false);
   }, [uid]);
+
 
   useEffect(() => {
     if (!uid) {

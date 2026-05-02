@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Cpu } from 'lucide-react';
+import { ROLES } from "../../constants/roles";
 import { ManagedDeviceCard } from './ManagedDeviceCard'; 
 import { AdminMonitoringLayout } from './AdminMonitoringLayout';
 import { UserDeviceLayout } from './UserDeviceLayout';
@@ -14,9 +15,10 @@ const DeviceCard = ({ device, assignment, telemetry, currentUser, onAction, view
   // Use the assignment prop to check user binding
   const isAssignedToMe = assignment?.userId === (currentUser?.id || currentUser?.uid);
   
-  const isSuperAdmin = currentUser?.role === 'superAdmin';
-  const isAdmin = currentUser?.role === 'admin';
+  const isSuperAdmin = currentUser?.role === ROLES.SUPER_ADMIN;
+  const isAdmin = currentUser?.role === ROLES.ADMIN;
   const hasPrivilegedAccess = isSuperAdmin || isAdmin;
+
 
   const handleSecureAction = async (actionType, payload) => {
     setIsProcessing(true);

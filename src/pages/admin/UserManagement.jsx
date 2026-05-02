@@ -15,6 +15,7 @@ import { cn } from "../../utils/cn";
 import { ROUTES } from "../../constants/routes";
 
 // UI Components
+import { ROLES } from "../../constants/roles";
 import { 
   Toast, 
   ConfirmationModal, 
@@ -39,12 +40,13 @@ const UserManagement = ({ currentUserRole }) => {
   const [selectedEditUser, setSelectedEditUser] = useState(null);
   const [isEditSaving, setIsEditSaving] = useState(false);
 
-  const [viewMode, setViewMode] = useState(currentUserRole === "superAdmin" ? "admin" : "user");
+  const [viewMode, setViewMode] = useState(currentUserRole === ROLES.SUPER_ADMIN ? ROLES.ADMIN : ROLES.RESIDENT);
 
   // --- DERIVED LOGIC & FIREBASE SYNC ---
-  const isSuperAdmin = currentUserRole === "superAdmin";
-  const activeView = isSuperAdmin ? viewMode : "user";
+  const isSuperAdmin = currentUserRole === ROLES.SUPER_ADMIN;
+  const activeView = isSuperAdmin ? viewMode : ROLES.RESIDENT;
   const { data: uids = [], loading, error } = useUserSubscription(activeView);
+
 
   // --- MEMOIZED HANDLERS ---
   
@@ -91,7 +93,7 @@ const UserManagement = ({ currentUserRole }) => {
     <div className="p-8 space-y-8 max-w-7xl mx-auto antialiased">
       <Toast 
         isOpen={showToast || !!error} 
-        message={error || toastConfig.message} 
+        message={error?.message || toastConfig.message} 
         type={error ? "error" : toastConfig.type} 
         onClose={() => setShowToast(false)} 
       />
@@ -141,19 +143,19 @@ const UserManagement = ({ currentUserRole }) => {
           {isSuperAdmin && (
             <div className="inline-flex p-2 bg-slate-900/5 backdrop-blur-sm rounded-2xl border border-slate-200/50 shrink-0">
               <button
-                onClick={() => setViewMode("admin")}
+                onClick={() => setViewMode(ROLES.ADMIN)}
                 className={cn(
                   "flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all",
-                  activeView === "admin" ? "bg-white text-blue-600 shadow-md ring-1 ring-slate-200" : "text-slate-500 hover:text-slate-700"
+                  activeView === ROLES.ADMIN ? "bg-white text-blue-600 shadow-md ring-1 ring-slate-200" : "text-slate-500 hover:text-slate-700"
                 )}
               >
                 <ShieldCheck size={14} /> Admins
               </button>
               <button
-                onClick={() => setViewMode("user")}
+                onClick={() => setViewMode(ROLES.RESIDENT)}
                 className={cn(
                   "flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all",
-                  activeView === "user" ? "bg-white text-blue-600 shadow-md ring-1 ring-slate-200" : "text-slate-500 hover:text-slate-700"
+                  activeView === ROLES.RESIDENT ? "bg-white text-blue-600 shadow-md ring-1 ring-slate-200" : "text-slate-500 hover:text-slate-700"
                 )}
               >
                 <Users size={14} /> Residents
@@ -181,7 +183,7 @@ const UserManagement = ({ currentUserRole }) => {
           />
 
           <div className="flex items-center gap-3 w-full sm:w-auto shrink-0">
-            {isSuperAdmin && activeView === "admin" && (
+            {isSuperAdmin && activeView === ROLES.ADMIN && (
               <button 
                 onClick={() => navigate(ROUTES.REGISTER_STAFF)}
                 className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white text-[11px] font-black uppercase tracking-[0.1em] rounded-2xl shadow-xl transition-all active:scale-95 whitespace-nowrap"
@@ -190,7 +192,7 @@ const UserManagement = ({ currentUserRole }) => {
               </button>
             )}
 
-            {activeView === "user" && (
+            {activeView === ROLES.RESIDENT && (
               <button 
                 onClick={() => navigate(ROUTES.REGISTER_USER)}
                 className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-black uppercase tracking-[0.1em] rounded-2xl shadow-xl shadow-blue-900/20 transition-all active:scale-95 whitespace-nowrap"
@@ -199,6 +201,7 @@ const UserManagement = ({ currentUserRole }) => {
               </button>
             )}
           </div>
+
         </div>
       </header>
 

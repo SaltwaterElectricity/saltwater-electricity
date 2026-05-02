@@ -1,0 +1,111 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "users": {
+      ".indexOn": ["email"],
+      ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && (auth.uid == $uid || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && root.child('roles').child($uid).child('role').val() == 'resident'))"
+      }
+    },
+
+    "accounts": {
+      ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && (auth.uid == $uid || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && root.child('roles').child($uid).child('role').val() == 'resident'))"
+      }
+    },
+
+    "roles": {
+      ".indexOn": ["role"],
+      ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && !data.exists() && newData.child('role').val() == 'resident'))"
+      }
+    },
+
+    "device_information": {
+      ".indexOn": ["availability"],
+      ".read": "auth != null",
+      "$device_id": {
+        ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
+        ".validate": "newData.hasChildren(['device_id', 'availability'])"
+      }
+    },
+
+    "device_assignments": {
+      ".read": "auth != null",
+      "$device_id": {
+        ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')"
+      }
+    },
+
+    "device-requests": {
+      ".indexOn": ["userId"],
+      ".read": "auth != null",
+      "$request_id": {
+        ".write": "auth != null && (!data.exists() || data.child('userId').val() == auth.uid || root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
+        ".validate": "newData.hasChildren(['requestType', 'userId', 'status'])"
+      }
+    },
+
+    "readings": {
+      "$device_id": {
+        ".read": "auth != null",
+        "latest": {
+          ".write": "auth != null && (root.child('device_assignments').child($device_id).child('userId').val() == auth.uid || root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
+          ".validate": "newData.hasChildren(['tds_ppm', 'voltage'])"
+        }
+      }
+    },
+
+    "logs": {
+      "$device_id": {
+        ".read": "auth != null",
+        "$log_id": {
+          ".write": "auth != null && (root.child('device_assignments').child($device_id).child('userId').val() == auth.uid || root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
+          ".validate": "newData.hasChildren(['timestamp', 'tds_ppm'])"
+        }
+      }
+    },
+
+    "commands": {
+      "$device_id": {
+        ".read": "auth != null",
+        ".write": "auth != null && (root.child('device_assignments').child($device_id).child('userId').val() == auth.uid || root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')"
+      }
+    },
+
+    "audit-logs": {
+      ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
+      "$log_id": {
+        ".write": "auth != null && (!data.exists() || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
+        ".validate": "newData.hasChildren(['adminEmail', 'action', 'createdAt'])"
+      }
+    },
+
+    "otp-requests": {
+      "$userId": {
+        ".read": "auth != null && auth.uid == $userId",
+        ".write": "auth != null && (auth.uid == $userId || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
+        ".validate": "newData.hasChildren(['code', 'createdAt', 'expiresAt'])"
+      }
+    },
+
+    "login-attempts": {
+      "$trackingId": {
+        // Allows checking lockout status before login
+        ".read": true,
+        // Allows recording failed attempts (unauthenticated)
+        ".write": true,
+        // CRITICAL VALIDATION: Only allow incrementing or resetting to 0
+        ".validate": "newData.hasChildren(['count', 'lockoutUntil']) && (!data.exists() || newData.child('count').val() > data.child('count').val() || newData.child('count').val() == 0)"
+      }
+    }
+  }
+}

@@ -9,6 +9,7 @@ import {
   History, ClipboardList, Cpu, Bell 
 } from "lucide-react"; // Note: lucide-react in your original
 import { cn } from "../../utils/cn";
+import { ROLES } from "../../constants/roles";
 import { Logo } from "../ui/Logo";
 import { ConfirmationModal } from "../modal/ConfirmationModal";
 import Toast from "../ui/Toast";
@@ -166,9 +167,10 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
              </div>
              <div className="overflow-hidden">
                 <p className="text-xs font-bold text-white truncate">{user?.firstName} {user?.lastName}</p>
-                <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">{userRole || 'Resident'}</p>
+                <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">{userRole || ROLES.RESIDENT}</p>
              </div>
           </div>
+
 
           <button 
             onClick={() => setIsLogoutModalOpen(true)} 

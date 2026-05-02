@@ -1,3 +1,4 @@
+import { ROLES } from "../../constants/roles";
 import { cn } from "../../utils/cn";
 
 const InputField = ({ label, name, register, validation, errors, type = "text", className, ...rest }) => {
@@ -133,7 +134,7 @@ export const RegistrationFields = ({ register, errors, isAdmin = false }) => {
         {/* HIDDEN ROLE FIELD: Kinukuha ang value base sa isAdmin prop */}
         <input 
           type="hidden" 
-          value={isAdmin ? "admin" : "user"} 
+          value={isAdmin ? ROLES.ADMIN : ROLES.RESIDENT} 
           {...register("role")} 
         />
         
@@ -141,7 +142,7 @@ export const RegistrationFields = ({ register, errors, isAdmin = false }) => {
         <div className="flex items-center gap-2 mt-4 px-4 py-2 bg-white rounded-lg border border-slate-100 w-fit">
           <div className={cn("w-2 h-2 rounded-full", isAdmin ? "bg-blue-500" : "bg-slate-400")} />
           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-            Auto-assigned Role: <span className={isAdmin ? "text-blue-600" : "text-slate-600"}>{isAdmin ? "Admin" : "User"}</span>
+            Auto-assigned Role: <span className={isAdmin ? "text-blue-600" : "text-slate-600"}>{isAdmin ? "Admin" : "Resident"}</span>
           </span>
         </div>
       </section>

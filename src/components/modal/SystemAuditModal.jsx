@@ -147,7 +147,7 @@ const SectionHeader = ({ title, sub }) => (
 );
 
 // 1. ANALYTICS SECTION
-const AnalyticsSection = ({ logs, loading }) => {
+const AnalyticsSection = ({ logs }) => {
     const salinityData = logs.map(l => ({ timestamp: l.__normalizedTs, value: l.tds_ppm || 0 }));
     
     return (
@@ -166,7 +166,7 @@ const AnalyticsSection = ({ logs, loading }) => {
 };
 
 // 2. CONNECTIVITY SECTION
-const ConnectivitySection = ({ reading, logs }) => (
+const ConnectivitySection = ({ reading }) => (
     <div className="space-y-6 md:space-y-8 animate-fadeIn">
         <SectionHeader title="Device Health" sub="Connectivity and hardware operational state" />
         <div className="grid grid-cols-1 gap-3 md:gap-4">

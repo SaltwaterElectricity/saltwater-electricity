@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { db } from '../../firebaseConfig';
 import { ref, get } from 'firebase/database';
 import { assignDevice } from '../../services/device.service';
+import { ROLES } from '../../constants/roles';
 import GlobalSearch from '../ui/GlobalSearch'; 
 import { useSearch } from '../../hooks/useSearch';
 
@@ -56,7 +57,7 @@ const AssignDeviceModal = ({ device, isOpen, onClose, onShowToast }) => {
             
             uSnap.forEach((child) => {
               const role = roles[child.key]?.role;
-              if (role === 'admin' || role === 'user') {
+              if (role === ROLES.ADMIN || role === ROLES.RESIDENT) {
                 validUsers.push({ uid: child.key, ...child.val(), role });
               }
             });
@@ -72,6 +73,7 @@ const AssignDeviceModal = ({ device, isOpen, onClose, onShowToast }) => {
     }
     return () => { isMounted = false; };
   }, [isOpen, device, onShowToast]);
+
 
   const onAssignTrigger = async () => {
     if (!selectedUser || !editableDeviceName.trim()) return;

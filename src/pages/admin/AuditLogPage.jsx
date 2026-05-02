@@ -24,8 +24,8 @@ import Toast from "../../components/ui/Toast";
  * Restricted to Admin and SuperAdmin roles.
  */
 const AuditLogPage = () => {
-  const { user, isAdmin, isSuperAdmin } = useAuth();
-  const { logs, loading, error } = useAuditLogs(200); // Fetch last 200 for better auditing
+  const { isAdmin, isSuperAdmin } = useAuth();
+  const { logs, loading } = useAuditLogs(200); // Fetch last 200 for better auditing
 
   // --- UI STATES ---
   const [searchTerm, setSearchTerm] = useState("");
@@ -34,6 +34,18 @@ const AuditLogPage = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedLogId, setSelectedLogId] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // --- FILTERING LOGIC (Requirement 4) ---
+  const filteredLogs = useMemo(() => {
+    const cleanSearch = searchTerm.toLowerCase().trim();
+    if (!cleanSearch) return logs;
+
+    return logs.filter(log => 
+      log.adminEmail?.toLowerCase().includes(cleanSearch) ||
+      log.action?.toLowerCase().includes(cleanSearch) ||
+      log.details?.toLowerCase().includes(cleanSearch)
+    );
+  }, [logs, searchTerm]);
 
   // --- ACCESS CONTROL (Requirement 1) ---
   if (!isAdmin) {
@@ -59,18 +71,6 @@ const AuditLogPage = () => {
       </div>
     );
   }
-
-  // --- FILTERING LOGIC (Requirement 4) ---
-  const filteredLogs = useMemo(() => {
-    const cleanSearch = searchTerm.toLowerCase().trim();
-    if (!cleanSearch) return logs;
-
-    return logs.filter(log => 
-      log.adminEmail?.toLowerCase().includes(cleanSearch) ||
-      log.action?.toLowerCase().includes(cleanSearch) ||
-      log.details?.toLowerCase().includes(cleanSearch)
-    );
-  }, [logs, searchTerm]);
 
   // --- HANDLERS ---
   const triggerToast = (message, type = "success") => {

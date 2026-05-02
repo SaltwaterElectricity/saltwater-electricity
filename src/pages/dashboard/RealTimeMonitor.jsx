@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth'; 
 import { useDevices, useAssignments } from '../../hooks'; 
 import { logger } from '../../utils/logger';
@@ -20,8 +19,7 @@ import { LayoutDashboard } from 'lucide-react';
  * NO management/assignment actions allowed here.
  */
 const RealTimeMonitor = () => {
-  const navigate = useNavigate();
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, userRole } = useAuth();
   const { devices, telemetry, loading: devicesLoading } = useDevices();
   const { assignments, loading: assignmentsLoading } = useAssignments();
 
@@ -122,7 +120,7 @@ const RealTimeMonitor = () => {
                   device={device}
                   assignment={assignments[device.device_id]}
                   telemetry={telemetry?.[device.device_id]}
-                  currentUser={user} // Pass the 'user' object (with role) to the card
+                  currentUser={{ ...user, role: userRole }} // Pass the 'user' object (with standardized role) to the card
                   onAction={handleDeviceAction}
                   viewMode="default" // Force View-Only Mode
                 />

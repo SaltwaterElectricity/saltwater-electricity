@@ -9,6 +9,7 @@ import { provisionUserSystem } from "../../services/user.service";
 import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react"; 
 import { ROUTES } from "../../constants/routes";
+import { ROLES } from "../../constants/roles";
 import { RegistrationFields } from "../../components/auth/RegistrationField";
 import { RegistrationSummary } from "../../components/auth/RegistrationSummary";
 import { ConfirmationModal } from "../../components/modal/ConfirmationModal";
@@ -25,13 +26,14 @@ const AdminRegistration = () => {
   // FORM INITIALIZATION
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues: { 
-      role: "admin", 
+      role: ROLES.ADMIN, 
       gender: "male",
       region: "Region IV-A",
       cityProvince: "Quezon",
       baranggay: "" 
     }
   });
+
 
    //PRE-SUBMIT
   const handlePreSubmit = (data) => {

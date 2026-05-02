@@ -1,10 +1,11 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { subscribeToAuthChanges, getFullUserData, logoutUser } from "../services/auth.service";
 import { USER_STATUS } from "../services/user.service"; 
 import { logger } from "../utils/logger";
 import { AuthContext } from "./useAuth";
 import { ref, onValue } from "firebase/database";
 import { db } from "../firebaseConfig";
+import { ROLES } from "../constants/roles";
 import { isSuperAdmin, isAdmin } from "../utils/rbac";
 
 export const AuthProvider = ({ children }) => {
@@ -16,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   const listeners = useRef({ role: null, account: null });
 
   // 1. Authoritative Claim Synchronization
-  const syncUserContext = async (firebaseUser, forceRefresh = false) => {
+  const syncUserContext = useCallback(async (firebaseUser, forceRefresh = false) => {
     try {
       if (firebaseUser) {
         // Authoritative source: Decoded ID Token (optionally forced)
@@ -32,17 +33,17 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   /**
    * FORCE TOKEN REFRESH
    * Used to immediately update permissions when a role is changed.
    */
-  const forceTokenRefresh = async () => {
+  const forceTokenRefresh = useCallback(async () => {
     if (!currentUser) return;
     setLoading(true);
     await syncUserContext(currentUser, true);
-  };
+  }, [currentUser, syncUserContext]);
 
   useEffect(() => {
     const unsubscribeAuth = subscribeToAuthChanges((firebaseUser) => {
@@ -61,12 +62,12 @@ export const AuthProvider = ({ children }) => {
         const roleRef = ref(db, `roles/${firebaseUser.uid}`);
         const accountRef = ref(db, `accounts/${firebaseUser.uid}`);
 
-        listeners.current.role = onValue(roleRef, (snapshot) => {
+        listeners.current.role = onValue(roleRef, (_snapshot) => {
           // If the role node in DB changes, refresh the token to get new claims
           forceTokenRefresh();
         });
 
-        listeners.current.account = onValue(accountRef, (snapshot) => {
+        listeners.current.account = onValue(accountRef, (_snapshot) => {
           // If status changes (e.g. suspended), refresh token or re-sync
           syncUserContext(firebaseUser);
         });
@@ -81,27 +82,34 @@ export const AuthProvider = ({ children }) => {
       if (listeners.current.role) listeners.current.role();
       if (listeners.current.account) listeners.current.account();
     };
-  }, []);
+  }, [syncUserContext, forceTokenRefresh]);
 
   // Memoized Helpers for App.jsx and ProtectedRoute
-  const value = useMemo(() => ({
-    currentUser,
-    user, 
-    userRole: user?.role || null,
-    accountStatus: user?.status || null,
-    claims: user?.claims || {},
-    
-    // Security Flags
-    isDisabled: user?.status === USER_STATUS.DISABLED, 
-    mustChangePassword: user?.requiresPasswordChange || false,
-    
-    // Permission Helpers
-    isSuperAdmin: isSuperAdmin(user?.claims),
-    isAdmin: isAdmin(user?.claims),
-    
-    forceTokenRefresh,
-    loading
-  }), [currentUser, user, loading]);
+  const value = useMemo(() => {
+    // Determine authoritative status
+    const status = user?.status || null;
+    const role = user?.role || ROLES.RESIDENT;
+
+    return {
+      currentUser,
+      user, 
+      userRole: role,
+      accountStatus: status,
+      claims: user?.claims || {},
+      
+      // Security Flags
+      isDisabled: status === USER_STATUS.DISABLED, 
+      mustChangePassword: user?.requiresPasswordChange || false,
+      
+      // Permission Helpers (Unified Check)
+      isSuperAdmin: isSuperAdmin(user),
+      isAdmin: isAdmin(user),
+      
+      forceTokenRefresh,
+      loading
+    };
+  }, [currentUser, user, loading, forceTokenRefresh]);
+
 
   // 2. SECURITY KILL-SWITCH: Rendered if account status changes to disabled in real-time
   if (user?.status === USER_STATUS.DISABLED) {

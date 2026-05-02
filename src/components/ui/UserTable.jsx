@@ -1,3 +1,4 @@
+import { ROLES } from "../../constants/roles";
 import { useFullUserData } from "../../hooks/useFullUserData";
 import { cn } from "../../utils/cn";
 import { memo } from "react";   
@@ -163,7 +164,7 @@ export const UserTable = ({ uids = [], onActionClick, onEditClick, searchTerm, a
                         No {activeView}s Registered Yet
                       </h3>
                       <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed">
-                        {activeView === "admin" 
+                        {activeView === ROLES.ADMIN 
                           ? "There are no administrators in the system facility yet." 
                           : "Get started by adding your first resident to the SmartAqua tracking system."}
                       </p>

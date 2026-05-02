@@ -5,6 +5,7 @@ import { cn } from "../../utils/cn";
 import { ShieldCheck, User, X, AlertCircle, Loader2 } from "lucide-react";
 import { loginUser, logoutUser } from "../../services/auth.service";
 import { logLoginSession } from "../../services/session.service";
+import { ROLES } from "../../constants/roles";
 import ForgotPasswordModal from "./ForgotPasswordModal";
 import { ROUTES, ROLE_LANDING_PAGES } from "../../constants/routes";
 import { appError } from "../../utils/appError";
@@ -17,18 +18,19 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
   const [authError, setAuthError] = useState("");
   const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
   
-  // Brute Force logic
-  const [emailToTrack, setEmailToTrack] = useState("");
-  const { isLocked, secondsRemaining, recordFailedAttempt } = useBruteForce(
-    emailToTrack ? emailToTrack.toLowerCase().replace(/[^a-zA-Z0-9]/g, '') : null
-  );
-
   const { 
     register, 
     handleSubmit, 
     reset, 
+    watch,
     formState: { errors } 
   } = useForm({ mode: "onBlur" });
+
+  const watchedEmail = watch("email");
+  const trackingId = watchedEmail ? watchedEmail.toLowerCase().replace(/[^a-zA-Z0-9]/g, '') : "";
+
+  // Brute Force logic
+  const { isLocked, secondsRemaining, recordFailedAttempt } = useBruteForce(trackingId);
 
   useEffect(() => {
     if (isOpen) {
@@ -41,7 +43,7 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
   if (!isOpen) return null;
 
   const onSubmit = async (data) => {
-    setEmailToTrack(data.email);
+    // Immediate check using current state
     if (isLocked) {
       setAuthError(`Account locked. Please try again in ${secondsRemaining}s.`);
       return;
@@ -58,8 +60,8 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
       }
 
       // 3. ROLE MISMATCH GUARD
-      const isStaff = userData.role === "admin" || userData.role === "superAdmin";
-      if (role === "admin" && !isStaff) {
+      const isStaff = userData.role === ROLES.ADMIN || userData.role === ROLES.SUPER_ADMIN;
+      if (role === ROLES.ADMIN && !isStaff) {
         await logoutUser();
         throw new appError("Unauthorized access. This area is reserved for staff/admin only.", true, "auth/unauthorized");
       }
@@ -109,10 +111,10 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
             <button 
               type="button"
               disabled={isSubmitting}
-              onClick={() => setRole("user")}
+              onClick={() => setRole(ROLES.RESIDENT)}
               className={cn(
                 "flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all",
-                role === "user" ? "bg-white text-blue-600 shadow-sm" : "text-slate-400 hover:text-slate-600",
+                role === ROLES.RESIDENT ? "bg-white text-blue-600 shadow-sm" : "text-slate-400 hover:text-slate-600",
                 isSubmitting && "opacity-50 cursor-not-allowed"
               )}
             >
@@ -121,10 +123,10 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
             <button 
               type="button"
               disabled={isSubmitting}
-              onClick={() => setRole("admin")}
+              onClick={() => setRole(ROLES.ADMIN)}
               className={cn(
                 "flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all",
-                role === "admin" ? "bg-slate-900 text-white shadow-lg" : "text-slate-400 hover:text-slate-600",
+                role === ROLES.ADMIN ? "bg-slate-900 text-white shadow-lg" : "text-slate-400 hover:text-slate-600",
                 isSubmitting && "opacity-50 cursor-not-allowed"
               )}
             >
@@ -132,12 +134,13 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
             </button>
           </div>
 
-          <div className="p-8">
+          <div className="p-8 relative">
             <div className="flex justify-between items-start mb-6">
               <div>
                 <h2 className="text-xl font-black text-slate-900 tracking-tight">
-                  {role === "admin" ? "System Access" : "Welcome Back"}
+                  {role === ROLES.ADMIN ? "System Access" : "Welcome Back"}
                 </h2>
+
                 <p className="text-xs text-slate-500 mt-1 font-medium italic">
                   SmartAqua Security Node
                 </p>
@@ -149,16 +152,21 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
               )}
             </div>
 
-            {authError && (
-              <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-xl flex gap-3 items-center animate-in slide-in-from-left-2">
-                <AlertCircle size={18} className="text-red-500 shrink-0" />
-                <p className="text-[10px] font-bold text-red-700 uppercase tracking-widest leading-tight">
-                  {authError}
-                </p>
-              </div>
-            )}
+            {/* ABSOLUTE ERROR CONTAINER: Prevents layout shifts (Requirement 4) */}
+            <div className="absolute top-24 left-8 right-8 z-10 pointer-events-none h-16 flex items-center">
+              {(authError || isLocked) && (
+                <div className="w-full p-4 bg-red-50 border-l-4 border-red-500 rounded-r-xl flex gap-3 items-center animate-in slide-in-from-top-2 pointer-events-auto shadow-sm">
+                  <AlertCircle size={18} className="text-red-500 shrink-0" />
+                  <p className="text-[10px] font-bold text-red-700 uppercase tracking-widest leading-tight">
+                    {isLocked 
+                      ? `Account locked. Please try again in ${secondsRemaining}s.` 
+                      : authError}
+                  </p>
+                </div>
+              )}
+            </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pt-20">
               <div className="space-y-2">
                 <label className="text-[10px] font-bold uppercase text-slate-400 tracking-tight px-1">Email Address</label>
                 <input 
@@ -166,7 +174,7 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
                     required: "Required",
                     pattern: { value: /^\S+@\S+$/i, message: "Invalid format" }
                   })}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isLocked}
                   placeholder="name@example.com"
                   className={cn(
                     "w-full h-12 px-4 bg-slate-50 border rounded-xl outline-none transition-all text-sm",
@@ -189,7 +197,7 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
                 <input 
                   type="password"
                   {...register("password", { required: "Required" })}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isLocked}
                   placeholder="••••••••"
                   className={cn(
                     "w-full h-12 px-4 bg-slate-50 border rounded-xl outline-none transition-all text-sm",
@@ -200,14 +208,16 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
 
               {/* BUTTON WITH SPINNER AND VERIFYING STATE */}
               <button
-                disabled={isSubmitting}
+                disabled={isSubmitting || isLocked}
                 className={cn(
                   "w-full h-14 rounded-2xl font-bold uppercase text-[11px] tracking-[0.2em] shadow-lg transition-all active:scale-95 mt-4 flex items-center justify-center gap-3",
-                  role === "admin" ? "bg-slate-900 text-white" : "bg-blue-600 text-white",
-                  isSubmitting && "opacity-80 cursor-wait active:scale-100"
+                  role === ROLES.ADMIN ? "bg-slate-900 text-white" : "bg-blue-600 text-white",
+                  (isSubmitting || isLocked) && "opacity-80 cursor-wait active:scale-100 shadow-none bg-slate-200 text-slate-400"
                 )}
               >
-                {isSubmitting ? (
+                {isLocked ? (
+                  <span className="uppercase text-[11px]">System Locked</span>
+                ) : isSubmitting ? (
                   <>
                     <Loader2 size={18} className="animate-spin" />
                     <span className="animate-pulse">Verifying Context...</span>
