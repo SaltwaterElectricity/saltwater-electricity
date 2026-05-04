@@ -1,5 +1,36 @@
 @import "tailwindcss";
 
+@theme {
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 24px;
+  --spacing-lg: 48px;
+  --spacing-xl: 80px;
+  --spacing-gutter: 24px;
+  --spacing-margin: 32px;
+
+  --font-h1: "Space Grotesk", sans-serif;
+  --font-h2: "Space Grotesk", sans-serif;
+  --font-label-sm: "Inter", sans-serif;
+  --font-body-md: "Inter", sans-serif;
+
+  --text-label-sm: 13px;
+  --text-h1: 32px;
+  --text-h2: 24px;
+  --text-body-md: 16px;
+
+  /* Colors defined as per DESIGN.md */
+  --color-primary: #003d9b;
+  --color-primary-container: #0052cc;
+  --color-secondary-container: #00c1fd;
+  --color-tertiary: #004d3d;
+  --color-tertiary-fixed: #42fdd3;
+  --color-on-tertiary-fixed-variant: #005141;
+  --color-background: #f7f9fb;
+  --color-on-surface-variant: #434654;
+  --color-outline: #737685;
+}
+
 /* ============================================================
    0. CONFIGURATION & VARIABLES
    ============================================================ */
@@ -99,6 +130,21 @@
 
   .auth-bg-active {
     background: linear-gradient(180deg, #000000 0%, #000033 45%, #05058c 100%) !important;
+  }
+
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
+  }
+
+  .ocean-gradient {
+    background: linear-gradient(135deg, #0052cc 0%, #00c1fd 100%);
+  }
+
+  .glow-line {
+    filter: drop-shadow(0 0 4px rgba(0, 193, 253, 0.6));
   }
 }
 

@@ -116,7 +116,7 @@ export const SettingsModal = memo(({ uid }) => {
           </div>
 
           {/* 🖥️ Dynamic Forms Display (Right side) */}
-          <div className="flex-1 p-6 md:p-8 overflow-y-auto custom-scrollbar bg-white min-w-0">
+          <div className="flex-1 p-8 overflow-y-auto custom-scrollbar bg-white min-w-0">
             {activeTab === "profile" && (
               !profileData ? (
                 <ProfileFormSkeleton />

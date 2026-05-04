@@ -2,6 +2,7 @@ import { ref, push, serverTimestamp, update, runTransaction } from "firebase/dat
 import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
 import { getUserClaims } from "./auth.service";
+import { notifySecurityIncident } from "./notification.service";
 import { logger } from "../utils/logger";
 
 /**
@@ -101,11 +102,15 @@ export const logSecurityIncident = async (incidentType, identifier, context) => 
     if (data.count >= ALERT_THRESHOLD) {
       const details = `Security escalation: ${data.count} incidents detected within window. Context: ${JSON.stringify(context)}`;
       
+      // 1. Audit Log
       await logActivity(
         `SECURITY_ALERT/${incidentType}`,
         identifier,
         details
       );
+
+      // 2. Persistent In-App Notification for Admins (EPP Protocol)
+      await notifySecurityIncident(incidentType, identifier, details);
     }
 
     return { success: true, count: data.count };

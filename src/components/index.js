@@ -1,5 +1,6 @@
 // src/components/index.js
 
+export * from './dashboard';
 export * from './password-change';
 export * from './auth';
 export * from './ui';

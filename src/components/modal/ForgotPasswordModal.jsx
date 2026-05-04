@@ -49,7 +49,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
       {/* Click-outside backdrop (Accessibility) */}
       <div className="absolute inset-0" onClick={onClose} />
 
-      <div className="relative w-full max-w-md bg-white rounded-[32px] shadow-2xl border border-slate-100 overflow-hidden animate-in zoom-in-95 duration-300">
+      <div className="relative w-[92%] sm:w-full max-w-[440px] bg-white rounded-[32px] shadow-2xl border border-slate-100 overflow-hidden animate-in zoom-in-95 duration-300">
         
         {/* STEP INDICATOR (8pt Grid: h-1.5 = 6px) */}
         <div className="flex h-1.5 bg-slate-100">
@@ -60,9 +60,9 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
           />
         </div>
 
-        <div className="p-8">
+        <div className="p-8 flex flex-col gap-6">
           {/* HEADER: Close Action (8pt: mb-8 = 32px) */}
-          <div className="flex justify-end mb-4">
+          <div className="flex justify-end">
             <button 
               onClick={onClose} 
               className="p-2 hover:bg-slate-50 rounded-full text-slate-400 hover:text-slate-600 transition-all active:scale-90"
@@ -74,31 +74,33 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
           </div>
 
           {/* STEP 1: Request Email */}
-          {step === 1 && (
-            <RequestOTPStep 
-              onNext={(sanitizedEmail) => { 
-                setEmail(sanitizedEmail); 
-                setStep(2); 
-              }} 
-            />
-          )}
-          
-          {/* STEP 2: Verify 6-Digit Code */}
-          {step === 2 && (
-            <VerifyOTPStep 
-              email={email} 
-              onSuccess={handleVerifySuccess} 
-              onBack={() => setStep(1)} 
-            />
-          )}
+          <div className="flex flex-col gap-6">
+            {step === 1 && (
+              <RequestOTPStep 
+                onNext={(sanitizedEmail) => { 
+                  setEmail(sanitizedEmail); 
+                  setStep(2); 
+                }} 
+              />
+            )}
+            
+            {/* STEP 2: Verify 6-Digit Code */}
+            {step === 2 && (
+              <VerifyOTPStep 
+                email={email} 
+                onSuccess={handleVerifySuccess} 
+                onBack={() => setStep(1)} 
+              />
+            )}
 
-          {/* STEP 3: Create New Password (Guarded by isVerified) */}
-          {step === 3 && isVerified && (
-            <ResetPassword
-              email={email} 
-              onSuccess={handleFinalSuccess} 
-            />
-          )}
+            {/* STEP 3: Create New Password (Guarded by isVerified) */}
+            {step === 3 && isVerified && (
+              <ResetPassword
+                email={email} 
+                onSuccess={handleFinalSuccess} 
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>

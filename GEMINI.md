@@ -87,6 +87,22 @@ C:\Users\Admin\testcode\
 - **Audit Triggers:** Every mount of the `NotFound` component MUST trigger a `POTENTIAL_ENUMERATION` log entry in the `audit-logs` node containing the attempted path.
 - **Neutral UI:** Error messaging MUST be empathetic and non-technical. Avoid technical codes (e.g., "403 Forbidden") that confirm the existence of hidden directories.
 
-## Project Standards
-- **Grid System:** Always use a strict 8-point grid system for all margins, padding, and layout dimensions.
-- **Coding Style:** Prioritize clean code and SOLID principles. Use descriptive naming and keep components small/decomposed.
+# Architecture Rules: Clean Architecture
+
+## Layer Separation
+- **UI Layer:** React components only. No business logic.
+- **Service Layer:** All Firebase and API logic must live in `/src/services`.
+- **Hooks Layer:** Use Custom Hooks (e.g., `useTelemetry.js`) to bridge Services and UI.
+
+# Database Rules: Firebase RTDB vs Firestore
+
+## Mandatory Choice
+- **Primary Database:** Firebase Realtime Database (RTDB).
+- **Strict Ban:** Do not use Google Cloud Firestore. If code includes `firebase/firestore`, delete it and rewrite using `firebase/database`.
+
+## 📐 6. Spacing & Layout (8-Point Grid System)
+- **Base Unit:** All spacing (padding, margin, gap) MUST be multiples of 8px.
+- **Internal Padding:**
+    - Small Components (Chips/Badges): `8px` (unit * 1).
+    - Standard Cards: `16px` (unit * 2) or `24px` (unit * 3).
+    - Page Containers: `32px` (unit * 4).

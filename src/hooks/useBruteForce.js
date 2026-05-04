@@ -25,9 +25,12 @@ export const useBruteForce = (trackingId) => {
   // 2. Subscribe to attempt data in real-time
   useEffect(() => {
     if (!trackingId) {
-      setAttempts(0);
-      setLockoutUntil(0);
-      setSecondsRemaining(0);
+      // Use microtasks to avoid sync render cycle warnings
+      Promise.resolve().then(() => {
+        setAttempts(prev => prev === 0 ? prev : 0);
+        setLockoutUntil(prev => prev === 0 ? prev : 0);
+        setSecondsRemaining(prev => prev === 0 ? prev : 0);
+      });
       return;
     }
 
@@ -85,7 +88,9 @@ export const useBruteForce = (trackingId) => {
         }
       }, 1000);
     } else {
-      setSecondsRemaining(0);
+      Promise.resolve().then(() => {
+        setSecondsRemaining(prev => prev === 0 ? prev : 0);
+      });
     }
 
     return () => {

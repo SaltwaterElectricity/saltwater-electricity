@@ -13,6 +13,7 @@ import { ROLES } from "../constants/roles";
 import { appError } from "../utils/appError";
 import { getUserClaims } from "./auth.service";
 import { logActivity } from "./audit.service";
+import { createNotification, NOTIFICATION_TYPES } from "./notification.service";
 
 // Error Handling
 export const USER_STATUS = Object.freeze({
@@ -215,6 +216,14 @@ export const updateUserStatus = async (uid, newStatus) => {
     
     // AUDIT HARDENING: Log the status change
     await logActivity(`user_${newStatus}`, uid, `Administrative override: Account status changed to ${newStatus}`);
+    
+    // NOTIFICATION: Notify the user about their account status change
+    await createNotification(
+      uid,
+      "Account Status Update",
+      `Your account has been ${newStatus === USER_STATUS.ACTIVE ? 'restored' : 'disabled'} by a system administrator.`,
+      newStatus === USER_STATUS.ACTIVE ? NOTIFICATION_TYPES.INFO : NOTIFICATION_TYPES.WARNING
+    );
     
     return { success: true };
   } catch (error) {

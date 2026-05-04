@@ -27,10 +27,11 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
   } = useForm({ mode: "onBlur" });
 
   const watchedEmail = watch("email");
+  const watchedPassword = watch("password");
   const trackingId = watchedEmail ? watchedEmail.toLowerCase().replace(/[^a-zA-Z0-9]/g, '') : "";
 
   // Brute Force logic
-  const { isLocked, secondsRemaining, recordFailedAttempt } = useBruteForce(trackingId);
+  const { isLocked, formattedTime, recordFailedAttempt } = useBruteForce(trackingId);
 
   useEffect(() => {
     if (isOpen) {
@@ -40,12 +41,17 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
     }
   }, [defaultRole, reset, isOpen]);
 
+  // Clear auth error when user starts typing to provide immediate feedback
+  useEffect(() => {
+    setAuthError("");
+  }, [watchedEmail, watchedPassword]);
+
   if (!isOpen) return null;
 
   const onSubmit = async (data) => {
     // Immediate check using current state
     if (isLocked) {
-      setAuthError(`Account locked. Please try again in ${secondsRemaining}s.`);
+      setAuthError(`Account locked. Please try again in ${formattedTime}.`);
       return;
     }
 
@@ -104,10 +110,10 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
           onClick={!isSubmitting ? onClose : undefined} 
         />
         
-        <div className="relative w-full max-w-md bg-white rounded-[32px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 flex flex-col">
+        <div className="relative w-[92%] sm:w-full max-w-[440px] bg-white/70 backdrop-blur-xl border border-white/40 rounded-[32px] shadow-[0_8px_32px_0_rgba(0,82,204,0.08)] overflow-hidden animate-in zoom-in-95 duration-300 flex flex-col max-h-[95vh]">
           
           {/* TAB SELECTOR: Uses 8pt grid (p-2, py-3) */}
-          <div className="flex bg-slate-50 p-2 gap-2">
+          <div className="flex bg-slate-50/50 p-2 gap-2 shrink-0">
             <button 
               type="button"
               disabled={isSubmitting}
@@ -134,14 +140,14 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
             </button>
           </div>
 
-          <div className="p-8 relative">
+          <div className="p-8 overflow-y-auto custom-scrollbar-hide">
             <div className="flex justify-between items-start mb-6">
               <div>
-                <h2 className="text-xl font-black text-slate-900 tracking-tight">
+                <h2 className="text-2xl font-['Space_Grotesk'] font-bold text-slate-900 tracking-tight">
                   {role === ROLES.ADMIN ? "System Access" : "Welcome Back"}
                 </h2>
 
-                <p className="text-xs text-slate-500 mt-1 font-medium italic">
+                <p className="text-xs font-['Inter'] text-slate-500 mt-1 font-medium italic">
                   SmartAqua Security Node
                 </p>
               </div>
@@ -152,23 +158,23 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
               )}
             </div>
 
-            {/* ABSOLUTE ERROR CONTAINER: Prevents layout shifts (Requirement 4) */}
-            <div className="absolute top-24 left-8 right-8 z-10 pointer-events-none h-16 flex items-center">
+            {/* ERROR CONTAINER: Fixed height prevents layout shifts without overlapping */}
+            <div className="min-h-[64px] mb-4 flex items-center">
               {(authError || isLocked) && (
                 <div className="w-full p-4 bg-red-50 border-l-4 border-red-500 rounded-r-xl flex gap-3 items-center animate-in slide-in-from-top-2 pointer-events-auto shadow-sm">
                   <AlertCircle size={18} className="text-red-500 shrink-0" />
-                  <p className="text-[10px] font-bold text-red-700 uppercase tracking-widest leading-tight">
+                  <p className="text-[10px] font-['Inter'] font-bold text-red-700 uppercase tracking-widest leading-tight">
                     {isLocked 
-                      ? `Account locked. Please try again in ${secondsRemaining}s.` 
+                      ? `Account locked. Please try again in ${formattedTime}.` 
                       : authError}
                   </p>
                 </div>
               )}
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pt-20">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase text-slate-400 tracking-tight px-1">Email Address</label>
+                <label className="text-[11px] font-['Inter'] font-bold uppercase text-slate-400 tracking-wider px-1">Email Address</label>
                 <input 
                   {...register("email", { 
                     required: "Required",
@@ -177,7 +183,7 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
                   disabled={isSubmitting || isLocked}
                   placeholder="name@example.com"
                   className={cn(
-                    "w-full h-12 px-4 bg-slate-50 border rounded-xl outline-none transition-all text-sm",
+                    "w-full h-12 px-4 bg-white/50 border rounded-xl outline-none transition-all text-sm font-['Inter']",
                     errors.email ? "border-red-500" : "border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-50"
                   )}
                 />
@@ -185,11 +191,11 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
 
               <div className="space-y-2">
                 <div className="flex justify-between items-center px-1">
-                  <label className="text-[10px] font-bold uppercase text-slate-400 tracking-tight">Password</label>
+                  <label className="text-[11px] font-['Inter'] font-bold uppercase text-slate-400 tracking-wider">Password</label>
                   <button 
                     type="button"
                     onClick={() => setIsForgotModalOpen(true)}
-                    className="text-[9px] font-bold text-blue-600 uppercase hover:underline"
+                    className="text-[10px] font-['Inter'] font-bold text-blue-600 uppercase hover:underline"
                   >
                     Forgot?
                   </button>
@@ -200,7 +206,7 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
                   disabled={isSubmitting || isLocked}
                   placeholder="••••••••"
                   className={cn(
-                    "w-full h-12 px-4 bg-slate-50 border rounded-xl outline-none transition-all text-sm",
+                    "w-full h-12 px-4 bg-white/50 border rounded-xl outline-none transition-all text-sm font-['Inter']",
                     errors.password ? "border-red-500" : "border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-50"
                   )}
                 />
@@ -216,32 +222,32 @@ const LoginModal = ({ isOpen, onClose, defaultRole }) => {
                 )}
               >
                 {isLocked ? (
-                  <span className="uppercase text-[11px]">System Locked</span>
+                  <span className="uppercase text-[11px] font-['Inter']">System Locked</span>
                 ) : isSubmitting ? (
                   <>
                     <Loader2 size={18} className="animate-spin" />
-                    <span className="animate-pulse">Verifying Context...</span>
+                    <span className="animate-pulse font-['Inter']">Verifying Context...</span>
                   </>
                 ) : (
-                  `Authorize as ${role}`
+                  <span className="font-['Inter']">Authorize as {role}</span>
                 )}
               </button>
             </form>
 
             {/* FOOTER: Multiple of 8px (mt-8, pt-6, gap-2) */}
             <footer className="mt-8 pt-6 border-t border-slate-100 text-center">
-              <p className="text-[11px] font-medium text-slate-500">New user or missing device?</p>
+              <p className="text-[11px] font-['Inter'] font-medium text-slate-500">New user or missing device?</p>
               <div className="flex flex-col gap-2 mt-3">
                 <Link 
                   to="/get-device" 
                   onClick={onClose}
-                  className="text-[10px] font-bold text-blue-600 uppercase tracking-widest hover:text-blue-700"
+                  className="text-[10px] font-['Inter'] font-bold text-blue-600 uppercase tracking-widest hover:text-blue-700"
                 >
                   How to Get a Device
                 </Link>
                 <a 
                   href="mailto:admin@smartaqua.com" 
-                  className="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-slate-600"
+                  className="text-[10px] font-['Inter'] font-bold text-slate-400 uppercase tracking-widest hover:text-slate-600"
                 >
                   Contact Admin
                 </a>

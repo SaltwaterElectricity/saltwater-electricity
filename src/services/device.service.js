@@ -3,6 +3,7 @@ import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
 import { logger } from "../utils/logger";
 import { getUserClaims } from "./auth.service";
+import { logActivity } from "./audit.service";
 
 /**
  * INTERNAL GUARD: Verifies Admin clearance via Token Claims
@@ -58,6 +59,9 @@ export const assignDevice = async (deviceId, userId, newDeviceName) => {
 
     await update(ref(db), updates);
 
+    // 4. AUDIT LOGGING
+    await logActivity('DEVICE_ASSIGNED', cleanDeviceId, `Device assigned to User: ${cleanUserId}${cleanName ? ` with name: ${cleanName}` : ''}`);
+
     return { success: true };
 
   } catch (error) {
@@ -92,6 +96,10 @@ export const deprovisionDevice = async (deviceId) => {
     updates[`/device_information/${deviceId}/assigned_user_name`] = null;
 
     await update(ref(db), updates);
+
+    // 3. AUDIT LOGGING
+    await logActivity('DEVICE_DEPROVISIONED', deviceId, `Device deprovisioned and returned to available inventory.`);
+
     return { success: true };
 
   } catch (error) {

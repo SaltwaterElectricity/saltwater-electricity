@@ -2,6 +2,8 @@ import { ref, onValue, get, query, limitToLast, orderByKey, update, serverTimest
 import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
 import { getUserClaims } from "./auth.service";
+import { createNotification, NOTIFICATION_TYPES } from "./notification.service";
+import { SENSOR_CONFIG, METRICS } from "../constants";
 
 /**
  * Reading Service
@@ -157,6 +159,17 @@ export const updateBulbState = async (deviceId, newState) => {
     // 3. Hardware Command Node (Anti-Replay Protection)
     updates[`commands/${deviceId}/relay`] = newState;
     updates[`commands/${deviceId}/lastUpdated`] = now;
+
+    // CRITICAL ALERT CHECK: Trigger notification if TDS exceeds critical threshold
+    const tdsConfig = SENSOR_CONFIG[METRICS.TDS];
+    if (tds >= tdsConfig.critical) {
+      await createNotification(
+        auth.currentUser?.uid || "system",
+        "CRITICAL: Salinity Alert",
+        `Unit ${deviceId} detected critical TDS levels (${tds} PPM). Please inspect the facility immediately.`,
+        NOTIFICATION_TYPES.CRITICAL
+      );
+    }
 
     await update(ref(db), updates);
   } catch (error) {

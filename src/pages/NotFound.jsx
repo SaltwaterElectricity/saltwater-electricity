@@ -22,7 +22,7 @@ const NotFound = () => {
           'navigation_failure',
           `User attempted to access non-existent path: ${location.pathname}`
         );
-      } catch (error) {
+      } catch (_error) {
         // Silent fail for logging to ensure UI performance
       }
     };

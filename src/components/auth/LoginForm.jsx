@@ -79,19 +79,19 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-8">
-      <div className="w-full max-w-md bg-white rounded-[32px] shadow-2xl p-8 border border-slate-100 animate-in fade-in zoom-in duration-500 relative">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background p-8">
+      <div className="w-full max-w-md glass-panel shadow-2xl p-8 animate-in fade-in zoom-in duration-500 relative">
         
         <header className="mb-4 text-center">
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Welcome Back</h1>
-          <p className="text-sm text-slate-500 mt-2">Sign in to monitor your water quality system.</p>
+          <h1 className="text-h2 font-['Space_Grotesk'] font-bold text-primary tracking-tight">Welcome Back</h1>
+          <p className="text-label-sm text-on-surface-variant font-['Inter'] mt-2">Sign in to monitor your water quality system.</p>
         </header>
 
         {/* Layout stability container for messages */}
         <div className="h-8 overflow-hidden flex items-center justify-center mb-4">
           {(authError || isLocked) && (
             <div className="text-center animate-in slide-in-from-top-2 duration-300">
-              <span className="text-red-500 text-[10px] font-bold uppercase tracking-tighter">
+              <span className="text-error text-label-sm font-semibold uppercase tracking-wider font-['Inter']">
                 {isLocked ? (
                   <>Account Locked: Try again in <span className="font-mono">{formattedTime}</span></>
                 ) : authError}
@@ -102,7 +102,7 @@ const LoginForm = () => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">
-            <label className="text-[10px] font-bold uppercase text-slate-500 tracking-tight">
+            <label className="text-label-sm font-semibold uppercase text-on-surface-variant tracking-wider font-['Inter']">
               Email Address
             </label>
             <input
@@ -112,11 +112,11 @@ const LoginForm = () => {
                 pattern: { value: /^\S+@\S+$/i, message: "Invalid email format" }
               })}
               placeholder="name@example.com"
-              className={`w-full p-3 h-14 border rounded-xl text-sm outline-none transition-all shadow-sm
-                ${errors.email ? 'border-red-500 bg-red-50' : 'border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-50'}`}
+              className={`w-full p-3 h-14 border rounded-xl text-label-sm font-['Inter'] outline-none transition-all shadow-sm
+                ${errors.email ? 'border-error bg-error/5' : 'border-outline/30 focus:border-primary focus:ring-4 focus:ring-primary/5'}`}
             />
             {errors.email && (
-              <span className="text-[10px] text-red-600 font-bold uppercase mt-1">
+              <span className="text-label-sm text-error font-semibold uppercase mt-1 font-['Inter']">
                 {errors.email.message}
               </span>
             )}
@@ -135,7 +135,7 @@ const LoginForm = () => {
               <button 
                 type="button"
                 onClick={() => setIsForgotModalOpen(true)}
-                className="text-[10px] font-bold text-blue-600 uppercase tracking-tight hover:text-blue-700 transition-colors"
+                className="text-label-sm font-semibold text-primary uppercase tracking-wider font-['Inter'] hover:text-primary-container transition-colors"
               >
                 Forgot Password?
               </button>
@@ -145,30 +145,30 @@ const LoginForm = () => {
           <button
             type="submit"
             disabled={isSubmitting || isLocked}
-            className="w-full h-14 bg-slate-900 hover:bg-black text-white font-bold rounded-2xl shadow-lg 
+            className="w-full h-14 ocean-gradient text-white font-bold rounded-xl shadow-lg 
                        transition-all active:scale-[0.98] flex items-center justify-center gap-3
-                       disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed mt-2"
+                       disabled:bg-surface-container-highest disabled:text-outline disabled:cursor-not-allowed mt-2"
           >
             {isSubmitting ? (
               <>
                 <SpinnerIcon size="w-5 h-5" />
-                <span className="animate-pulse uppercase text-[12px] tracking-widest">Verifying...</span>
+                <span className="animate-pulse uppercase text-label-sm tracking-widest font-['Inter']">Verifying...</span>
               </>
             ) : isLocked ? (
-              <span className="uppercase text-[12px] tracking-widest">Locked ({formattedTime})</span>
+              <span className="uppercase text-label-sm tracking-widest font-['Inter']">Locked ({formattedTime})</span>
             ) : (
-              "Sign In"
+              <span className="uppercase text-label-sm tracking-widest font-['Inter']">Sign In</span>
             )}
           </button>
         </form>
 
-        <footer className="mt-8 pt-6 border-t border-slate-100 text-center">
-          <p className="text-sm text-slate-500">Need an account or device?</p>
+        <footer className="mt-8 pt-6 border-t border-outline/10 text-center">
+          <p className="text-label-sm text-on-surface-variant font-['Inter']">Need an account or device?</p>
           <div className="flex flex-col gap-2 mt-3">
-            <Link to="/get-device" className="text-[10px] font-bold text-blue-600 uppercase tracking-widest hover:text-blue-700">
+            <Link to="/get-device" className="text-label-sm font-semibold text-primary uppercase tracking-wider font-['Inter'] hover:text-primary-container">
               How to Get a Device
             </Link>
-            <a href="mailto:admin@smartaqua.com" className="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-slate-600">
+            <a href="mailto:admin@smartaqua.com" className="text-label-sm font-semibold text-outline uppercase tracking-wider font-['Inter'] hover:text-on-surface-variant">
               Contact System Admin
             </a>
           </div>

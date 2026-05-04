@@ -21,6 +21,7 @@ import RequestManagement from "./pages/admin/RequestManagement";
 import AuditLogPage from "./pages/admin/AuditLogPage";
 import DeviceAnalytics from "./pages/dashboard/DeviceAnalytics";
 import DeviceRequest from "./pages/user/DeviceRequest";
+import Alerts from "./pages/dashboard/Alerts";
 
 const RootRedirect = ({ user, role }) => {
   if (!user) return <Navigate to={ROUTES.LOGIN} replace />;
@@ -69,6 +70,7 @@ export const AppRoutes = () => {
           )}
 
           <Route path={ROUTES.DASHBOARD} element={<DashboardController />} />
+          <Route path={ROUTES.ALERTS} element={<Alerts />} />
           <Route path={ROUTES.DEVICE_ANALYTICS} element={<DeviceAnalytics />} />
           <Route path={ROUTES.DEVICE_REQUESTS} element={<DeviceRequest />} />
           <Route path={ROUTES.SMART_AQUA_MONITOR} element={<RealTimeMonitor />} />

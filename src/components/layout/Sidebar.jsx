@@ -1,75 +1,56 @@
-import { useState, memo, useCallback } from "react";
+import { useState, memo } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
+import { useNotifications } from "../../hooks/useNotifications";
 import { logoutUser } from "../../services/auth.service";
 import { ROUTES } from "../../constants/routes";
-import { 
-  LayoutDashboard, Droplets, Settings, LogOut, 
-  UserRoundPlus, X, ShieldAlert, 
-  History, ClipboardList, Cpu, Bell 
-} from "lucide-react"; // Note: lucide-react in your original
 import { cn } from "../../utils/cn";
 import { ROLES } from "../../constants/roles";
-import { Logo } from "../ui/Logo";
 import { ConfirmationModal } from "../modal/ConfirmationModal";
 import Toast from "../ui/Toast";
 
 /**
- * 1. SIDEBAR LINK COMPONENT
- * Pinagsama ang Badge System at precise activation logic.
+ * Navigation Link Component
+ * Handles active states and hover transitions based on code.html
  */
-const SidebarLink = memo(({ to, icon: Icon, label, onClick, badgeCount, badgeColor = "bg-red-500" }) => (
+const SidebarLink = memo(({ to, icon, label, badgeCount }) => (
   <NavLink
     to={to}
-    end={to === ROUTES.DASHBOARD || to === ROUTES.ADMIN_USER_MANAGEMENT}
-    onClick={onClick}
+    end={to === ROUTES.DASHBOARD}
     className={({ isActive }) =>
       cn(
-        "flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group text-sm font-bold tracking-wide",
-        "text-slate-400 hover:bg-slate-800/50 hover:text-white",
-        isActive && "bg-blue-600 text-white shadow-lg shadow-blue-900/40 translate-x-1"
+        "flex items-center space-x-3 px-4 py-3 rounded-lg transition-all justify-center group-hover/sidebar:justify-start relative",
+        isActive 
+          ? "bg-blue-50/50 text-blue-700 border-r-4 border-blue-600" 
+          : "text-slate-500 hover:bg-slate-50/50 hover:translate-x-1"
       )
     }
   >
-    <div className="flex items-center gap-3">
-      <Icon className="w-5 h-5 transition-transform group-hover:scale-110" />
-      <span className="tracking-widest">{label}</span>
-    </div>
-
+    <span className="material-symbols-outlined">{icon}</span>
+    <span className="font-['Space_Grotesk'] text-sm font-medium hidden group-hover/sidebar:block whitespace-nowrap overflow-hidden">
+      {label}
+    </span>
     {badgeCount > 0 && (
-      <span className={cn(
-        "flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-[10px] font-black text-white animate-pulse",
-        badgeColor
-      )}>
-        {badgeCount > 99 ? "99+" : badgeCount}
-      </span>
+      <span className="absolute right-3 top-3 w-2 h-2 bg-blue-600 rounded-full ring-2 ring-white"></span>
     )}
   </NavLink>
 ));
 
-export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
+/**
+ * Sidebar Component
+ * Collapsible glass-morphism navigation as per code.html
+ */
+const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
   const navigate = useNavigate();
-  const { isSuperAdmin, isAdmin, user, userRole } = useAuth() || {};
+  const { isAdmin, userRole, currentUser } = useAuth() || {};
+  const { notifications } = useNotifications(isAdmin ? 'admin' : currentUser?.uid);
 
-  // UI STATES
+  const unreadCount = notifications.filter(n => !n.isRead).length;
+
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastConfig, setToastConfig] = useState({ message: "", type: "success" });
-
-  // MOCK DATA (Maaaring i-connect sa Firebase/Context)
-  const alertCounts = { systemAlerts: 3, deviceRequests: 5 };
-
-  const triggerToast = (message, type = "success") => {
-    setToastConfig({ message, type });
-    setShowToast(true);
-  };
-
-  const handleLinkClick = useCallback(() => {
-    if (window.innerWidth < 1024 && typeof toggleSidebar === "function") {
-      toggleSidebar();
-    }
-  }, [toggleSidebar]);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -79,7 +60,8 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
       setIsLogoutModalOpen(false);
       navigate("/login", { replace: true });
     } catch (_error) {
-      triggerToast("Terminating session... Forcing local wipe.", "warning");
+      setToastConfig({ message: "Terminating session... Forcing local wipe.", type: "warning" });
+      setShowToast(true);
       sessionStorage.clear();
       localStorage.clear();
       setTimeout(() => { window.location.href = ROUTES.LOGIN; }, 2000);
@@ -92,114 +74,75 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
     <>
       <Toast isOpen={showToast} message={toastConfig.message} type={toastConfig.type} onClose={() => setShowToast(false)} />
 
-      {/* MOBILE OVERLAY - With Fade-in animation */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[60] lg:hidden animate-in fade-in duration-300" 
-          onClick={toggleSidebar} 
-        />
-      )}
+      <aside className="hidden md:flex flex-col h-screen w-20 hover:w-64 transition-all duration-300 border-r border-white/40 fixed left-0 top-0 bg-white/70 backdrop-blur-md shadow-[0_8px_32px_0_rgba(0,82,204,0.08)] p-4 z-50 group/sidebar">
+        {/* Brand Logo Section */}
+        <div className="mb-10 px-2 flex flex-col items-center group-hover/sidebar:items-start">
+          <h1 className="text-xl font-black tracking-tighter text-blue-700">
+            A<span className="hidden group-hover/sidebar:inline">lonKuryente</span>
+          </h1>
+          <p className="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest font-bold text-slate-400 hidden group-hover/sidebar:block">
+            {userRole === ROLES.SUPER_ADMIN ? "SuperAdmin" : "Administrator"}
+          </p>
+        </div>
 
-      <aside className={cn(
-        "fixed inset-y-0 left-0 z-[70] w-72 bg-slate-900 border-r border-slate-800/50 flex flex-col transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1)",
-        "lg:relative lg:translate-x-0",
-        isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full shadow-2xl lg:shadow-none"
-      )}>
-        
-        {/* BRANDING HEADER - h-24 (96px) | px-6 (24px) */}
-        <header className="h-24 flex items-center justify-between px-6 border-b border-slate-800/40 bg-slate-950/20 shrink-0">
-          <Logo />
-          <button 
-            onClick={toggleSidebar} 
-            className="lg:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all active:scale-90"
-          >
-            <X size={24} /> 
-          </button>
-        </header>
-
-        {/* NAVIGATION - space-y-8 (32px) */}
-        <nav className="flex-1 px-4 py-8 space-y-10 overflow-y-auto border-slate-800/40 bg-slate-950/20 custom-scrollbar">
+        {/* Primary Navigation */}
+        <nav className="flex-1 space-y-1 overflow-y-auto custom-scrollbar-hide">
+          <SidebarLink to={ROUTES.DASHBOARD} icon="dashboard" label="Dashboard" />
           
-          {/* ANALYTICS GROUP */}
-          <div className="space-y-2">
-            <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] px-4 mb-4">Analytics</p>
-            <SidebarLink to={ROUTES.DASHBOARD} icon={LayoutDashboard} label="Main Dashboard" onClick={handleLinkClick} />
-            <SidebarLink to={ROUTES.SMART_AQUA_MONITOR} icon={Droplets} label="Real-time Monitor" onClick={handleLinkClick} />
-            <SidebarLink to="/alerts" icon={Bell} label="System Alerts" onClick={handleLinkClick} badgeCount={alertCounts.systemAlerts} />
-            <SidebarLink to="/history" icon={History} label="Data History" onClick={handleLinkClick} />
-          </div>
-
-          {/* OPERATIONS GROUP */}
-          <div className="space-y-2">
-            <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] px-4 mb-4">Operations</p>
-            <SidebarLink 
-              to={isAdmin ? ROUTES.ADMIN_REQUEST_MANAGEMENT : ROUTES.DEVICE_REQUESTS} 
-              icon={ClipboardList} 
-              label="Device Requests" 
-              onClick={handleLinkClick} 
-              badgeCount={alertCounts.deviceRequests} 
-              badgeColor="bg-blue-600" 
-            />
-          </div>
-
-          {/* ADMIN GROUP */}
           {isAdmin && (
-            <div className="space-y-2">
-              <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] px-4 mb-4">Administration</p>
-              <SidebarLink to={ROUTES.ADMIN_USER_MANAGEMENT} icon={UserRoundPlus} label="User Management" onClick={handleLinkClick} />
-              <SidebarLink to={ROUTES.ADMIN_DEVICE_MANAGEMENT} icon={Cpu} label="Device Management" onClick={handleLinkClick} />
-              <SidebarLink to={ROUTES.ADMIN_AUDIT_LOGS} icon={ShieldAlert} label="System Audit" onClick={handleLinkClick} />
-              <SidebarLink to="/admin/settings" icon={Settings} label="System Settings" onClick={handleLinkClick} />
-              {isSuperAdmin && (
-                <div className="pt-6 border-t border-slate-800/30 mt-6 space-y-2">
-                  <SidebarLink to="/admin/staff" icon={ShieldAlert} label="Security Roles" onClick={handleLinkClick} />
-                </div>
-              )}
-            </div>
+            <>
+              <SidebarLink to={ROUTES.ADMIN_DEVICE_MANAGEMENT} icon="hub" label="Device Management" />
+              <SidebarLink to={ROUTES.ADMIN_USER_MANAGEMENT} icon="group" label="User Management" />
+            </>
           )}
+          
+          <SidebarLink to={ROUTES.ALERTS} icon="notifications_active" label="Alerts" badgeCount={unreadCount} />
+          
+          {isAdmin && (
+            <>
+              <SidebarLink to={ROUTES.ADMIN_AUDIT_LOGS} icon="insights" label="Analytics" />
+              <SidebarLink to="/predictive" icon="engineering" label="Predictive Maintenance" />
+            </>
+          )}
+          
+          <SidebarLink to="/reports" icon="description" label="Reports" />
+          <SidebarLink to="/settings" icon="settings" label="Settings" />
         </nav>
 
-        {/* FOOTER - Profile & Sign Out */}
-        <footer className="p-6 border-t border-slate-800/40 bg-slate-950/20 space-y-4">
-          <div className="px-4 py-3 flex items-center gap-4 bg-slate-800/30 rounded-xl border border-slate-700/20 group hover:border-blue-500/30 transition-colors">
-             <div className="w-9 h-9 rounded-full bg-blue-600/20 border border-blue-500/20 flex items-center justify-center text-xs font-bold text-blue-400">
-               {user?.firstName?.[0] || 'U'}
-             </div>
-             <div className="overflow-hidden">
-                <p className="text-xs font-bold text-white truncate">{user?.firstName} {user?.lastName}</p>
-                <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">{userRole || ROLES.RESIDENT}</p>
-             </div>
-          </div>
-
-
-          <button 
-            onClick={() => setIsLogoutModalOpen(true)} 
-            className="flex items-center gap-3 px-4 py-4 w-full rounded-2xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all group border border-transparent hover:border-red-500/20"
-          >
-            <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-            <span className="text-sm font-bold">Sign Out</span>
+        {/* Bottom Actions */}
+        <div className="mt-auto pt-6 space-y-1">
+          <button className="w-full ocean-gradient text-white font-['Space_Grotesk'] rounded-xl font-bold shadow-lg shadow-blue-200 mb-4 transition-transform active:scale-95 hidden group-hover/sidebar:block whitespace-nowrap overflow-hidden h-12 flex items-center justify-center group-hover/sidebar:px-4">
+            <span className="material-symbols-outlined group-hover/sidebar:mr-2">description</span>
+            <span className="hidden group-hover/sidebar:inline">Generate Report</span>
           </button>
-        </footer>
+          
+          <a className="flex items-center space-x-3 px-4 py-2 text-slate-500 hover:text-blue-600 transition-colors justify-center group-hover/sidebar:justify-start" href="#">
+            <span className="material-symbols-outlined">help</span>
+            <span className="font-['Space_Grotesk'] text-sm font-medium hidden group-hover/sidebar:block whitespace-nowrap overflow-hidden">Support</span>
+          </a>
+          
+          <button 
+            onClick={() => setIsLogoutModalOpen(true)}
+            className="w-full flex items-center space-x-3 px-4 py-2 text-slate-500 hover:text-error transition-colors justify-center group-hover/sidebar:justify-start"
+          >
+            <span className="material-symbols-outlined">logout</span>
+            <span className="font-['Space_Grotesk'] text-sm font-medium hidden group-hover/sidebar:block whitespace-nowrap overflow-hidden">Log Out</span>
+          </button>
+        </div>
       </aside>
 
-      {/* LOGOUT CONFIRMATION - Integrated extra safety info */}
       <ConfirmationModal
         isOpen={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}
         onConfirm={handleLogout}
         isSubmitting={isLoggingOut}
         title="Confirm Sign Out"
-        description="Terminating your session will restrict access to real-time Unisan sensors hanggang sa susunod mong login."
-        confirmText="Confirm Sign Out"
+        description="Terminating your session will restrict global visibility until next authentication."
+        confirmText="Log Out"
         variant="danger" 
-      >
-        <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex gap-4 items-center">
-           <ShieldAlert className="text-red-400 w-6 h-6 flex-shrink-0" />
-           <p className="text-[10px] text-red-300/80 leading-tight">
-             Active Session Cleanup: Clearing Firebase Auth tokens and local storage cache.
-           </p>
-        </div>
-      </ConfirmationModal>
+      />
     </>
   );
 });
+
+export default Sidebar;

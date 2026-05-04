@@ -18,6 +18,7 @@ export const ROUTES = Object.freeze({
   DASHBOARD: "/dashboard",
   DEVICE_ANALYTICS: "/analytics/:deviceId",
   DEVICE_REQUESTS: "/device-requests",
+  ALERTS: "/alerts",
 });
 
 export const ROLE_LANDING_PAGES = Object.freeze({
