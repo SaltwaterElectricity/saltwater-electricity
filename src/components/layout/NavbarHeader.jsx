@@ -13,7 +13,7 @@ export const NavbarHeader = ({ currentUid }) => {
     <header className="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-white/40 flex justify-between items-center px-6 py-4 w-full">
       <div className="flex items-center space-x-8">
         <span className="text-2xl font-bold bg-gradient-to-r from-blue-700 to-cyan-500 bg-clip-text text-transparent font-['Space_Grotesk']">
-          AlonKuryente
+          Saltwater Electricity
         </span>
         <nav className="hidden lg:flex space-x-6 font-['Space_Grotesk']">
           <NavLink 

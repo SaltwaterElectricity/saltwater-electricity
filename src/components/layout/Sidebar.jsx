@@ -78,7 +78,7 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
         {/* Brand Logo Section */}
         <div className="mb-10 px-2 flex flex-col items-center group-hover/sidebar:items-start">
           <h1 className="text-xl font-black tracking-tighter text-blue-700">
-            A<span className="hidden group-hover/sidebar:inline">lonKuryente</span>
+            S<span className="hidden group-hover/sidebar:inline">altwater Electricity</span>
           </h1>
           <p className="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest font-bold text-slate-400 hidden group-hover/sidebar:block">
             {userRole === ROLES.SUPER_ADMIN ? "SuperAdmin" : "Administrator"}

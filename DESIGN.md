@@ -1,6 +1,6 @@
-# AlonKuryente Design System Guide
+# Saltwater Electricity Design System Guide
 
-This document serves as the foundational style guide for the AlonKuryente platform. All future component generations and refactors must strictly adhere to these rules to maintain visual and structural consistency.
+This document serves as the foundational style guide for the Saltwater Electricity platform. All future component generations and refactors must strictly adhere to these rules to maintain visual and structural consistency.
 
 ## 1. Color Palette
 

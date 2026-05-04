@@ -28,7 +28,7 @@ const MainLayout = ({ children }) => {
 
         {/* Dynamic Page Content: Primary Scrollable Region */}
         <div className="flex-1 overflow-y-auto custom-scrollbar">
-          <div className="p-gutter md:p-margin max-w-7xl mx-auto pb-20 md:pb-8">
+          <div className="p-gutter md:p-margin max-w-7xl mx-auto pb-24 md:pb-8">
             {children || <Outlet />}
           </div>
         </div>

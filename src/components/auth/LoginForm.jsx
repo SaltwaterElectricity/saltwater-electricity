@@ -1,21 +1,16 @@
 import { useState, memo } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Loader2, AlertCircle } from "lucide-react";
 import { loginUser, getFullUserData } from "../../services/auth.service";
-import { ROLES } from "../../constants/roles";
-import { PasswordInput } from "../password-change";
-import { SpinnerIcon} from "../ui";
-import ForgotPasswordModal from "./ForgotPasswordModal";
+import ForgotPasswordModal from "../modal/ForgotPasswordModal";
 import { appError } from "../../utils/appError";
 import { useBruteForce } from "../../hooks/useBruteForce";
-
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authError, setAuthError] = useState("");
-  
-  // 1. MODAL STATE: Controls the visibility of the reset flow
   const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
 
   const { 
@@ -25,7 +20,6 @@ const LoginForm = () => {
     formState: { errors } 
   } = useForm({ mode: "onBlur" });
 
-  // 2. BRUTE FORCE PROTECTION: Track attempts by sanitized email
   const emailInput = watch("email");
   const trackingId = emailInput ? emailInput.replace(/\./g, "_") : null;
   const { isLocked, formattedTime, recordFailedAttempt } = useBruteForce(trackingId);
@@ -38,13 +32,11 @@ const LoginForm = () => {
     try {
       const userCredential = await loginUser(data.email, data.password);
       const uid = userCredential.user.uid;
-
       sessionStorage.setItem("is_verified", "true");
-
       const userData = await getFullUserData(uid);
 
       if (!userData) {
-        throw new appError("Account not found. Please contact your system administrator.", true, "auth/user-not-found");
+        throw new appError("Account not found.", true, "auth/user-not-found");
       }
 
       if (userData.requiresPasswordChange) {
@@ -52,24 +44,9 @@ const LoginForm = () => {
         return;
       }
 
-      switch (userData.role) {
-        case ROLES.SUPER_ADMIN:
-          navigate("/admin", { replace: true });
-          break;
-        case ROLES.ADMIN:
-          navigate("/admin/dashboard", { replace: true });
-          break;
-        case "technician":
-          navigate("/tech/controls", { replace: true });
-          break;
-        default:
-          navigate("/dashboard", { replace: true });
-      }
-
+      navigate("/dashboard", { replace: true });
     } catch (err) {
       setAuthError(err.message);
-      sessionStorage.removeItem("is_verified");
-      // Record failed attempt for brute force protection
       if (err.code !== "auth/user-not-found") {
         await recordFailedAttempt();
       }
@@ -79,108 +56,91 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-background p-8">
-      <div className="w-full max-w-md glass-panel shadow-2xl p-8 animate-in fade-in zoom-in duration-500 relative">
-        
-        <header className="mb-4 text-center">
-          <h1 className="text-h2 font-['Space_Grotesk'] font-bold text-primary tracking-tight">Welcome Back</h1>
-          <p className="text-label-sm text-on-surface-variant font-['Inter'] mt-2">Sign in to monitor your water quality system.</p>
-        </header>
-
-        {/* Layout stability container for messages */}
-        <div className="h-8 overflow-hidden flex items-center justify-center mb-4">
-          {(authError || isLocked) && (
-            <div className="text-center animate-in slide-in-from-top-2 duration-300">
-              <span className="text-error text-label-sm font-semibold uppercase tracking-wider font-['Inter']">
-                {isLocked ? (
-                  <>Account Locked: Try again in <span className="font-mono">{formattedTime}</span></>
-                ) : authError}
-              </span>
-            </div>
+    <>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {/* Email Field */}
+        <div className="relative mb-8">
+          <label className="block mb-2 font-bold text-[10px] uppercase tracking-widest text-primary">EMAIL ADDRESS</label>
+          <input
+            type="email"
+            {...register("email", { 
+              required: "Email is required",
+              pattern: { value: /^\S+@\S+$/i, message: "Invalid format" }
+            })}
+            placeholder="saltwaterelectricity@gmail.com"
+            disabled={isSubmitting || isLocked}
+            className={`w-full bg-white border ${errors.email ? 'border-error shadow-sm shadow-error/20' : 'border-outline-variant/30'} rounded-xl py-4 px-5 focus:border-primary transition-all placeholder:text-outline`}
+          />
+          {errors.email && (
+            <span className="absolute -bottom-5 left-0 text-error font-bold text-[10px] uppercase animate-fade-in animate-shake">
+              {errors.email.message}
+            </span>
           )}
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-          <div className="flex flex-col gap-2">
-            <label className="text-label-sm font-semibold uppercase text-on-surface-variant tracking-wider font-['Inter']">
-              Email Address
-            </label>
-            <input
-              type="email"
-              {...register("email", { 
-                required: "Email is required",
-                pattern: { value: /^\S+@\S+$/i, message: "Invalid email format" }
-              })}
-              placeholder="name@example.com"
-              className={`w-full p-3 h-14 border rounded-xl text-label-sm font-['Inter'] outline-none transition-all shadow-sm
-                ${errors.email ? 'border-error bg-error/5' : 'border-outline/30 focus:border-primary focus:ring-4 focus:ring-primary/5'}`}
-            />
-            {errors.email && (
-              <span className="text-label-sm text-error font-semibold uppercase mt-1 font-['Inter']">
-                {errors.email.message}
-              </span>
-            )}
+        {/* Password Field */}
+        <div className="relative mb-8">
+          <div className="flex justify-between items-center mb-2">
+            <label className="font-bold text-[10px] uppercase tracking-widest text-primary">PASSWORD</label>
+            <button 
+              type="button" 
+              onClick={() => setIsForgotModalOpen(true)}
+              className="text-[10px] font-bold uppercase tracking-widest text-primary hover:underline"
+            >
+              FORGOT?
+            </button>
           </div>
-
-          <div className="relative">
-            <PasswordInput
-              label="Password"
-              name="password"
-              register={register}
-              errors={errors}
-              validation={{ required: "Password is required" }}
-            />
-            
-            <div className="flex justify-end mt-2">
-              <button 
-                type="button"
-                onClick={() => setIsForgotModalOpen(true)}
-                className="text-label-sm font-semibold text-primary uppercase tracking-wider font-['Inter'] hover:text-primary-container transition-colors"
-              >
-                Forgot Password?
-              </button>
-            </div>
-          </div>
-
-          <button
-            type="submit"
+          <input
+            type="password"
+            {...register("password", { required: "Password is required" })}
+            placeholder="••••••••"
             disabled={isSubmitting || isLocked}
-            className="w-full h-14 ocean-gradient text-white font-bold rounded-xl shadow-lg 
-                       transition-all active:scale-[0.98] flex items-center justify-center gap-3
-                       disabled:bg-surface-container-highest disabled:text-outline disabled:cursor-not-allowed mt-2"
-          >
-            {isSubmitting ? (
-              <>
-                <SpinnerIcon size="w-5 h-5" />
-                <span className="animate-pulse uppercase text-label-sm tracking-widest font-['Inter']">Verifying...</span>
-              </>
-            ) : isLocked ? (
-              <span className="uppercase text-label-sm tracking-widest font-['Inter']">Locked ({formattedTime})</span>
-            ) : (
-              <span className="uppercase text-label-sm tracking-widest font-['Inter']">Sign In</span>
-            )}
-          </button>
-        </form>
+            className={`w-full bg-white border ${errors.password || isLocked ? 'border-error shadow-sm shadow-error/20' : 'border-outline-variant/30'} rounded-xl py-4 px-5 focus:border-primary transition-all placeholder:text-outline`}
+          />
+          {errors.password && (
+            <span className="absolute -bottom-5 left-0 text-error font-bold text-[10px] uppercase animate-fade-in animate-shake">
+              {errors.password.message}
+            </span>
+          )}
+          {isLocked && (
+            <span className="absolute -bottom-5 left-0 text-error font-bold text-[10px] uppercase animate-fade-in animate-shake">
+              Try again in {formattedTime}
+            </span>
+          )}
+        </div>
 
-        <footer className="mt-8 pt-6 border-t border-outline/10 text-center">
-          <p className="text-label-sm text-on-surface-variant font-['Inter']">Need an account or device?</p>
-          <div className="flex flex-col gap-2 mt-3">
-            <Link to="/get-device" className="text-label-sm font-semibold text-primary uppercase tracking-wider font-['Inter'] hover:text-primary-container">
-              How to Get a Device
-            </Link>
-            <a href="mailto:admin@smartaqua.com" className="text-label-sm font-semibold text-outline uppercase tracking-wider font-['Inter'] hover:text-on-surface-variant">
-              Contact System Admin
-            </a>
+        {/* Error Container */}
+        {authError && !isLocked && (
+          <div className="mb-4 p-2 bg-error-container/20 rounded-xl animate-fade-in">
+            <span className="text-error font-bold text-[10px] uppercase tracking-widest">
+              {authError}
+            </span>
           </div>
-        </footer>
-      </div>
+        )}
 
-      <ForgotPasswordModal 
-        isOpen={isForgotModalOpen} 
-        onClose={() => setIsForgotModalOpen(false)} 
-      />
-    </div>
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={isSubmitting || isLocked}
+          className="w-full ocean-gradient rounded-xl py-4 font-bold uppercase tracking-widest text-[14px] text-white flex items-center justify-center gap-2 transition-all hover:opacity-90"
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="animate-spin" size={16} />
+              <span>AUTHENTICATING...</span>
+            </>
+          ) : (
+            <>
+              <span>LOGIN</span>
+              <span className="material-symbols-outlined text-[20px]">login</span>
+            </>
+          )}
+        </button>
+      </form>
+
+      <ForgotPasswordModal isOpen={isForgotModalOpen} onClose={() => setIsForgotModalOpen(false)} />
+    </>
   );
 };
-const MemoizedLoginForm = memo(LoginForm);
-export default MemoizedLoginForm;
+
+export default memo(LoginForm);
