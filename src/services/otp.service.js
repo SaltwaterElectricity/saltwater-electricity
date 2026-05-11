@@ -1,12 +1,12 @@
-import { 
-  ref, 
-  get, 
-  set, 
-  remove, 
+import {
+  ref,
+  get,
+  set,
+  remove,
   serverTimestamp,
   query,
   orderByChild,
-  equalTo 
+  equalTo,
 } from "firebase/database";
 import { db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
@@ -15,7 +15,7 @@ import { sendOTPEmail } from "./email.service";
 
 /**
  * OTP SERVICE (Realtime Database)
- * 
+ *
  * Handles generation and verification of 6-digit security codes.
  * Adheres to One-Time Use policies and secure server-side synchronization.
  */
@@ -24,7 +24,7 @@ const OTP_EXPIRY_MS = 300000; // 5 minutes
 
 /**
  * GENERATE OTP
- * 
+ *
  * 1. Finds user by email to get their Auth UID.
  * 2. Generates a 6-digit numeric code.
  * 3. Saves it to the '/otp-requests/{userId}' node in RTDB.
@@ -37,8 +37,8 @@ export const generateOTP = async (userId_not_used, email) => {
 
   try {
     // 🛡️ SECURITY: Verify user existence before sending email
-    const usersRef = ref(db, 'users');
-    const emailQuery = query(usersRef, orderByChild('email'), equalTo(email.toLowerCase().trim()));
+    const usersRef = ref(db, "users");
+    const emailQuery = query(usersRef, orderByChild("email"), equalTo(email.toLowerCase().trim()));
     const snapshot = await get(emailQuery);
 
     if (!snapshot.exists()) {
@@ -53,7 +53,7 @@ export const generateOTP = async (userId_not_used, email) => {
     // 1. Generate a 6-digit numeric code
     const array = new Uint32Array(1);
     window.crypto.getRandomValues(array);
-    const otpCode = (array[0] % 900000 + 100000).toString();
+    const otpCode = ((array[0] % 900000) + 100000).toString();
 
     // 2. Save to RTDB: '/otp-requests/{userId}' using the real UID
     const otpRef = ref(db, `otp-requests/${uid}`);
@@ -61,7 +61,7 @@ export const generateOTP = async (userId_not_used, email) => {
       email,
       code: otpCode,
       createdAt: serverTimestamp(),
-      expiresAt: Date.now() + OTP_EXPIRY_MS
+      expiresAt: Date.now() + OTP_EXPIRY_MS,
     });
 
     // 3. Delivery (Secure: Only send via email)
@@ -71,31 +71,38 @@ export const generateOTP = async (userId_not_used, email) => {
     }
 
     return { success: true };
-
   } catch (error) {
     if (error instanceof appError) throw error;
     logger.error("OTP Generation Error:", error);
-    throw new appError("Failed to deliver the security code. Please try again.", true, "otp/request-failed");
+    throw new appError(
+      "Failed to deliver the security code. Please try again.",
+      true,
+      "otp/request-failed"
+    );
   }
 };
 
 /**
  * VERIFY OTP
- * 
+ *
  * 1. Reads data from '/otp-requests/{userId}'.
  * 2. Logic: Return true if code matches AND it has not expired.
  * 3. Once verified or expired, the function deletes the OTP entry (One-Time use).
  */
 export const verifyOTP = async (userId, inputCode) => {
   if (!userId || !inputCode) {
-    throw new appError("User ID and code are required for verification.", true, "otp/invalid-parameters");
+    throw new appError(
+      "User ID and code are required for verification.",
+      true,
+      "otp/invalid-parameters"
+    );
   }
 
   const otpRef = ref(db, `otp-requests/${userId}`);
 
   try {
     const snapshot = await get(otpRef);
-    
+
     if (!snapshot.exists()) {
       throw new appError("No active security code found for this account.", true, "otp/not-found");
     }
@@ -112,7 +119,11 @@ export const verifyOTP = async (userId, inputCode) => {
     }
 
     if (isExpired) {
-      throw new appError("This security code has expired. Please request a new one.", true, "otp/expired");
+      throw new appError(
+        "This security code has expired. Please request a new one.",
+        true,
+        "otp/expired"
+      );
     }
 
     if (!isMatch) {
@@ -120,11 +131,14 @@ export const verifyOTP = async (userId, inputCode) => {
     }
 
     return { verified: true, email: data.email };
-
   } catch (error) {
     if (error instanceof appError) throw error;
     logger.error("OTP Verification Error:", error);
-    throw new appError(error.message || "Security verification failed.", true, "otp/verification-failed");
+    throw new appError(
+      error.message || "Security verification failed.",
+      true,
+      "otp/verification-failed"
+    );
   }
 };
 

@@ -2,7 +2,7 @@ export const UserTableSkeleton = () => (
   <div className="bg-white border border-slate-100 rounded-[32px] shadow-sm overflow-hidden animate-pulse">
     <div className="bg-slate-50/50 border-b border-slate-100 p-6 h-16" />
     <div className="divide-y divide-slate-50">
-      {['u1', 'u2', 'u3', 'u4', 'u5'].map((id) => (
+      {["u1", "u2", "u3", "u4", "u5"].map((id) => (
         <div key={id} className="p-8 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4 flex-1">
             <div className="w-12 h-12 bg-slate-100 rounded-2xl" />

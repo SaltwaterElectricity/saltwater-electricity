@@ -2,20 +2,20 @@ import { useState, useEffect, memo } from "react";
 import { ref, onValue } from "firebase/database"; // 👈 Idinagdag para basahin ang users node
 import { db } from "../../firebaseConfig"; // Ayusin ang path base sa folder mo
 import { useUI } from "../../context/useUI";
-import { X, User, Lock, History } from "lucide-react"; 
-import { cn } from "../../utils/cn"; 
+import { X, User, Lock, History } from "lucide-react";
+import { cn } from "../../utils/cn";
 
 // 🔑 Imports para sa sub-views natin
-import { SecurityForm } from "../profile/SecurityForm"; 
-import { ProfileForm } from "../profile/ProfileForm";   
+import { SecurityForm } from "../profile/SecurityForm";
+import { ProfileForm } from "../profile/ProfileForm";
 import { SessionHistory } from "../profile/SessionHistory";
 import { ProfileFormSkeleton } from "../skeleton/ProfileFormSkeleton";
 
 export const SettingsModal = memo(({ uid }) => {
   const { settingsModal, closeSettings } = useUI();
   const { isOpen, activeTab: initialTab } = settingsModal;
-  
-  const [activeTab, setActiveTab] = useState(initialTab); 
+
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
 
@@ -48,8 +48,8 @@ export const SettingsModal = memo(({ uid }) => {
   const handleSaveSuccess = () => {
     setTimeout(() => {
       closeSettings();
-      setIsSubmitting(false); 
-    }, 2000); 
+      setIsSubmitting(false);
+    }, 2000);
   };
 
   if (!isOpen) return null;
@@ -62,25 +62,27 @@ export const SettingsModal = memo(({ uid }) => {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      
       {/* 🌑 Overlay Backdrop */}
-      <div 
-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200" 
-        onClick={handleCloseModal} 
+      <div
+        className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200"
+        onClick={handleCloseModal}
       />
 
       {/* 📦 Modal Container */}
       <div className="relative glass-panel w-full max-w-2xl h-[550px] rounded-[32px] shadow-[0_40px_80px_rgba(0,82,204,0.12)] flex flex-col overflow-hidden z-10 animate-zoomIn border border-white/40">
-        
         {/* Header */}
         <div className="h-18 flex items-center justify-between px-8 border-b border-outline-variant/20 flex-shrink-0 bg-surface-container-low/50 backdrop-blur-md">
           <div>
-            <h2 className="text-[10px] font-black text-primary uppercase tracking-[0.25em] font-display">System Configuration</h2>
-            <p className="text-h2 font-bold text-on-surface tracking-tight mt-0.5">Account Settings</p>
+            <h2 className="text-[10px] font-black text-primary uppercase tracking-[0.25em] font-display">
+              System Configuration
+            </h2>
+            <p className="text-h2 font-bold text-on-surface tracking-tight mt-0.5">
+              Account Settings
+            </p>
           </div>
-          <button 
-            onClick={handleCloseModal} 
-            disabled={isSubmitting} 
+          <button
+            onClick={handleCloseModal}
+            disabled={isSubmitting}
             className="p-2.5 rounded-xl text-outline hover:text-on-surface hover:bg-white/40 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed border border-outline-variant/10"
           >
             <X size={20} />
@@ -89,26 +91,31 @@ export const SettingsModal = memo(({ uid }) => {
 
         {/* Layout Body */}
         <div className="flex-1 flex overflow-hidden">
-          
           {/* 📑 Tab Sidebar (Left side) */}
           <div className="w-16 md:w-56 border-r border-outline-variant/20 p-3 space-y-2 bg-surface-container-low/30 flex-shrink-0 flex flex-col items-center md:items-stretch">
-            <TabButton 
-              isActive={activeTab === "profile"} 
-              onClick={() => { if (!isSubmitting) setActiveTab("profile"); }} 
+            <TabButton
+              isActive={activeTab === "profile"}
+              onClick={() => {
+                if (!isSubmitting) setActiveTab("profile");
+              }}
               disabled={isSubmitting}
               icon={User}
               label="Facility Profile"
             />
-            <TabButton 
-              isActive={activeTab === "security"} 
-              onClick={() => { if (!isSubmitting) setActiveTab("security"); }} 
+            <TabButton
+              isActive={activeTab === "security"}
+              onClick={() => {
+                if (!isSubmitting) setActiveTab("security");
+              }}
               disabled={isSubmitting}
               icon={Lock}
               label="Security Protocol"
             />
-            <TabButton 
-              isActive={activeTab === "sessions"} 
-              onClick={() => { if (!isSubmitting) setActiveTab("sessions"); }} 
+            <TabButton
+              isActive={activeTab === "sessions"}
+              onClick={() => {
+                if (!isSubmitting) setActiveTab("sessions");
+              }}
               disabled={isSubmitting}
               icon={History}
               label="Session Audit"
@@ -117,27 +124,21 @@ export const SettingsModal = memo(({ uid }) => {
 
           {/* 🖥️ Dynamic Forms Display (Right side) */}
           <div className="flex-1 p-10 overflow-y-auto custom-scrollbar bg-white/40 min-w-0">
-            {activeTab === "profile" && (
-              !profileData ? (
+            {activeTab === "profile" &&
+              (!profileData ? (
                 <ProfileFormSkeleton />
               ) : (
-                <ProfileForm 
-                  profileData={profileData} 
-                  currentUid={uid} 
+                <ProfileForm
+                  profileData={profileData}
+                  currentUid={uid}
                   onSaveSuccess={handleSaveSuccess}
                   setIsSubmitting={setIsSubmitting}
                 />
-              )
-            )}
+              ))}
             {activeTab === "security" && (
-              <SecurityForm 
-                onSaveSuccess={handleSaveSuccess}
-                setIsSubmitting={setIsSubmitting}
-              />
+              <SecurityForm onSaveSuccess={handleSaveSuccess} setIsSubmitting={setIsSubmitting} />
             )}
-            {activeTab === "sessions" && (
-              <SessionHistory uid={uid} />
-            )}
+            {activeTab === "sessions" && <SessionHistory uid={uid} />}
           </div>
         </div>
       </div>
@@ -145,7 +146,7 @@ export const SettingsModal = memo(({ uid }) => {
   );
 });
 
-SettingsModal.displayName = 'SettingsModal';
+SettingsModal.displayName = "SettingsModal";
 
 const TabButton = ({ isActive, onClick, disabled, icon: Icon, label }) => (
   <button
@@ -154,8 +155,8 @@ const TabButton = ({ isActive, onClick, disabled, icon: Icon, label }) => (
     title={label}
     className={cn(
       "w-full flex items-center justify-center md:justify-start gap-0 md:gap-3 p-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all disabled:cursor-not-allowed disabled:opacity-60 font-body-md",
-      isActive 
-        ? "ocean-gradient text-white shadow-lg shadow-primary/20" 
+      isActive
+        ? "ocean-gradient text-white shadow-lg shadow-primary/20"
         : "text-outline hover:bg-white/40 hover:text-on-surface"
     )}
   >

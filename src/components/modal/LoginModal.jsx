@@ -8,7 +8,7 @@ const LoginModal = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose} />
-      
+
       <div className="relative w-[92%] sm:w-full max-w-[480px] glass-panel bg-white shadow-[0_8px_32px_0_rgba(0,82,204,0.08)] rounded-[40px] overflow-hidden flex flex-col max-h-[95vh]">
         <div className="p-8 pb-0 flex justify-between items-start">
           <div>
@@ -19,7 +19,10 @@ const LoginModal = ({ isOpen, onClose }) => {
               SALTWATER ELECTRICITY MONITORING SYSTEM
             </p>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full text-slate-400 transition-colors">
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-slate-100 rounded-full text-slate-400 transition-colors"
+          >
             <X size={20} />
           </button>
         </div>

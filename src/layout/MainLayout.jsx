@@ -2,16 +2,16 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useTimeout } from "../hooks/useTimeout";
 import Sidebar from "./Sidebar";
-import { NavbarHeader } from "./NavbarHeader"; 
+import { NavbarHeader } from "./NavbarHeader";
 import { BottomNav } from "./BottomNav";
-import { useAuth } from "../context/useAuth"; 
+import { useAuth } from "../context/useAuth";
 import { SettingsModal } from "../components/modal/SettingsModal";
 
 const MainLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-  const { currentUser, isAdmin } = useAuth() || {}; 
+  const { currentUser, isAdmin } = useAuth() || {};
   const currentUid = currentUser?.uid || "";
 
   useTimeout(isAdmin ? 1800000 : null);
@@ -22,7 +22,6 @@ const MainLayout = ({ children }) => {
 
       {/* Main Content Canvas */}
       <main className="flex-1 flex flex-col h-full md:ml-20 min-w-0 relative">
-
         {/* Top App Bar */}
         <NavbarHeader currentUid={currentUid} />
 
@@ -43,7 +42,7 @@ const MainLayout = ({ children }) => {
         <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-100 rounded-full blur-[100px]" />
       </div>
 
-      <SettingsModal uid={currentUid}/>
+      <SettingsModal uid={currentUid} />
     </div>
   );
 };

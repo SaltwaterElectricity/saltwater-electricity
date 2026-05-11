@@ -14,7 +14,6 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen w-full bg-[#f7f9fb] relative antialiased flex flex-col overflow-hidden">
-      
       {/* Background Decorative Gradients (Maritime Vibe) */}
       {!successData && (
         <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
@@ -28,7 +27,6 @@ const LoginPage = () => {
       {!successData && (
         <main className="flex-grow flex items-center justify-center px-6">
           <div className="flex flex-col md:flex-row items-center justify-center max-w-6xl w-full gap-12 md:gap-32">
-            
             {/* Left Side: Branding */}
             <div className="hidden md:block scale-110">
               <LoginHero />
@@ -37,14 +35,11 @@ const LoginPage = () => {
             {/* Right Side: Auth Form */}
             <div className="w-full max-w-[390px] relative z-10">
               <div className="glass-panel p-7 shadow-2xl border border-white/40 bg-white min-h-[490px] rounded-[18px] flex flex-col">
-                
                 <div className="text-center mb-5">
                   <h1 className="text-2xl font-bold text-on-surface mb-2 font-display">
                     Welcome Back
                   </h1>
-                  <p className="text-outline text-xs font-body-md">
-                    Saltwater Device Monitoring
-                  </p>
+                  <p className="text-outline text-xs font-body-md">Saltwater Device Monitoring</p>
                   <p className="text-outline text-[11px] font-medium mt-1 font-body-md">
                     Please enter the needed information.
                   </p>
@@ -60,10 +55,10 @@ const LoginPage = () => {
       )}
 
       {/* Centered Modal for Successful Login */}
-      <AccessGrantedModal 
-        isOpen={!!successData} 
-        userData={successData} 
-        onFinished={handleRedirect} 
+      <AccessGrantedModal
+        isOpen={!!successData}
+        userData={successData}
+        onFinished={handleRedirect}
       />
     </div>
   );

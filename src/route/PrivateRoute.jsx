@@ -1,13 +1,13 @@
 import { Navigate, useLocation, Outlet } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 import { ROLES } from "../constants/roles";
-import { LoadingSpinner } from "../components/ui"; 
+import { LoadingSpinner } from "../components/ui";
 import NotFound from "../pages/NotFound"; // ENUMERATION PREVENTION: Use NotFound instead of Redirects
 
 /**
  * PrivateRoute Component
  * ENFORCES: Enumeration Prevention Protocol (EPP)
- * Purpose: Instead of redirecting to login or unauthorized pages, 
+ * Purpose: Instead of redirecting to login or unauthorized pages,
  * this component returns <NotFound /> to hide the existence of private routes.
  */
 const PrivateRoute = ({ requiredRole, children }) => {
@@ -26,7 +26,7 @@ const PrivateRoute = ({ requiredRole, children }) => {
   // 2. AUTH & ROLE CHECK: Silent 404 Strategy
   // If not logged in OR role check fails, return <NotFound />
   // This prevents unprivileged users or scanners from discovering valid paths.
-  
+
   if (!currentUser) {
     // Redirect to login if session has expired or user is unauthenticated
     return <Navigate to="/login" state={{ from: location }} replace />;
@@ -48,7 +48,7 @@ const PrivateRoute = ({ requiredRole, children }) => {
     const isSuperAdmin = userRole === ROLES.SUPER_ADMIN;
     const isAdmin = userRole === ROLES.ADMIN;
     const isResident = userRole === ROLES.RESIDENT;
-    
+
     let hasClearance = false;
 
     if (requiredRole === ROLES.ADMIN) {

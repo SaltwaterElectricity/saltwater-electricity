@@ -1,4 +1,13 @@
-import { ref, onValue, get, query, limitToLast, orderByKey, update, serverTimestamp } from "firebase/database";
+import {
+  ref,
+  onValue,
+  get,
+  query,
+  limitToLast,
+  orderByKey,
+  update,
+  serverTimestamp,
+} from "firebase/database";
 import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
 import { getUserClaims } from "./auth.service";
@@ -7,7 +16,7 @@ import { SENSOR_CONFIG, METRICS, METRIC_MAP } from "../constants";
 
 /**
  * Reading Service
- * 
+ *
  * Handles real-time telemetry subscriptions and historical log retrieval.
  * Adheres to SOLID principles by separating data fetching, transformation, and error handling.
  */
@@ -27,7 +36,7 @@ const verifyDeviceAccess = async (deviceId) => {
   try {
     const assignmentRef = ref(db, `device_assignments/${deviceId}`);
     const snapshot = await get(assignmentRef);
-    
+
     if (snapshot.exists()) {
       const assignment = snapshot.val();
       if (assignment.userId === currentUser.uid) return true;
@@ -36,7 +45,11 @@ const verifyDeviceAccess = async (deviceId) => {
     // Fall through to error
   }
 
-  throw new appError("Access Denied: You are not authorized to monitor this device.", true, "auth/insufficient-clearance");
+  throw new appError(
+    "Access Denied: You are not authorized to monitor this device.",
+    true,
+    "auth/insufficient-clearance"
+  );
 };
 
 /**
@@ -58,10 +71,10 @@ const transformReading = (data) => {
   if (!data) return null;
 
   const transformed = { ...data };
-  
+
   // Clean data transformation: format decimals while keeping them as numbers
   Object.keys(PRECISION_CONFIG).forEach((key) => {
-    if (typeof transformed[key] === 'number') {
+    if (typeof transformed[key] === "number") {
       transformed[key] = Number(transformed[key].toFixed(PRECISION_CONFIG[key]));
     }
   });
@@ -79,7 +92,7 @@ const transformReading = (data) => {
 /**
  * Subscribes to the 'latest' reading node for a specific device.
  * Designed to work seamlessly with hooks like useReadings.
- * 
+ *
  * @param {string} deviceId - Unique identifier for the device
  * @param {Function} onSuccess - Callback for data updates
  * @param {Function} onError - Callback for subscription errors
@@ -87,7 +100,11 @@ const transformReading = (data) => {
  */
 export const subscribeToLatestReading = (deviceId, onSuccess, onError) => {
   if (!deviceId) {
-    throw new appError("A valid Device ID is required to start monitoring.", true, "reading/invalid-id");
+    throw new appError(
+      "A valid Device ID is required to start monitoring.",
+      true,
+      "reading/invalid-id"
+    );
   }
 
   let unsubscribeNode = null;
@@ -106,7 +123,10 @@ export const subscribeToLatestReading = (deviceId, onSuccess, onError) => {
             const rawData = snapshot.val();
             onSuccess(transformReading(rawData));
           } catch {
-            if (onError) onError(new appError("Failed to process incoming reading.", true, "reading/parse-error"));
+            if (onError)
+              onError(
+                new appError("Failed to process incoming reading.", true, "reading/parse-error")
+              );
           }
         },
         (error) => {
@@ -132,7 +152,7 @@ export const subscribeToLatestReading = (deviceId, onSuccess, onError) => {
 /**
  * Updates the bulb state using an atomic multi-path update.
  * Synchronizes 'relay_active' and 'timestamp' across latest and logs.
- * 
+ *
  * @param {string} deviceId - ID of the device
  * @param {boolean} newState - Target ON/OFF state
  */
@@ -153,18 +173,18 @@ export const updateBulbState = async (deviceId, newState) => {
     const clientTs = Date.now();
     const now = serverTimestamp();
     const updates = {};
-    
+
     // 1. Update Latest Reading Node (Removed bulb_ma)
     updates[`readings/${deviceId}/latest/relay_active`] = newState;
     updates[`readings/${deviceId}/latest/tds_ppm`] = tds;
     updates[`readings/${deviceId}/latest/voltage`] = voltage;
     updates[`readings/${deviceId}/latest/timestamp`] = now;
-    
+
     // 2. Add to Historical Logs
     updates[`logs/${deviceId}/${clientTs}/relay_active`] = newState;
     updates[`logs/${deviceId}/${clientTs}/tds_ppm`] = tds;
     updates[`logs/${deviceId}/${clientTs}/timestamp`] = now;
-    
+
     // 3. Hardware Command Node (Anti-Replay Protection)
     updates[`commands/${deviceId}/relay`] = newState;
     updates[`commands/${deviceId}/lastUpdated`] = now;
@@ -189,40 +209,39 @@ export const updateBulbState = async (deviceId, newState) => {
 
 /**
  * Fetches historical logs for a device.
- * 
+ *
  * @param {string} deviceId - Unique identifier for the device
  * @param {number} limit - Maximum number of logs to retrieve
  * @returns {Promise<Array>} - List of formatted logs
  */
 export const getHistoricalLogs = async (deviceId, limit = 50) => {
   if (!deviceId) {
-    throw new appError("Device ID is required to fetch history.", true, "reading/invalid-parameters");
+    throw new appError(
+      "Device ID is required to fetch history.",
+      true,
+      "reading/invalid-parameters"
+    );
   }
 
   // IDOR DEFENSE: Verify access before fetching logs
   await verifyDeviceAccess(deviceId);
 
-  const logsRef = query(
-    ref(db, `logs/${deviceId}`),
-    orderByKey(),
-    limitToLast(limit)
-  );
+  const logsRef = query(ref(db, `logs/${deviceId}`), orderByKey(), limitToLast(limit));
 
   try {
     const snapshot = await get(logsRef);
     if (!snapshot.exists()) return [];
 
     const data = snapshot.val();
-    
+
     // Transform and normalize historical data
     return Object.entries(data)
       .map(([key, val]) => ({
         id: key,
         ...transformReading(val),
-        __normalizedTs: val.timestamp || parseInt(key) || Date.now()
+        __normalizedTs: val.timestamp || parseInt(key) || Date.now(),
       }))
       .sort((a, b) => b.__normalizedTs - a.__normalizedTs);
-
   } catch {
     throw new appError(
       "The historical data service is currently unavailable.",
@@ -234,6 +253,5 @@ export const getHistoricalLogs = async (deviceId, limit = 50) => {
 
 export default {
   subscribeToLatestReading,
-  getHistoricalLogs
+  getHistoricalLogs,
 };
-

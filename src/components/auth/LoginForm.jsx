@@ -15,11 +15,11 @@ const LoginForm = ({ onLoginSuccess }) => {
   const [authError, setAuthError] = useState("");
   const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
 
-  const { 
-    register, 
-    handleSubmit, 
+  const {
+    register,
+    handleSubmit,
     watch,
-    formState: { errors } 
+    formState: { errors },
   } = useForm({ mode: "onBlur" });
 
   const emailInput = watch("email");
@@ -29,7 +29,7 @@ const LoginForm = ({ onLoginSuccess }) => {
   const onSubmit = async (data) => {
     if (isLocked) return;
     setIsSubmitting(true);
-    setAuthError(""); 
+    setAuthError("");
 
     try {
       const response = await loginUser(data.email, data.password);
@@ -79,9 +79,9 @@ const LoginForm = ({ onLoginSuccess }) => {
           <div className="relative group mt-5">
             <input
               type="email"
-              {...register("email", { 
+              {...register("email", {
                 required: "Email is required",
-                pattern: { value: /^\S+@\S+$/i, message: "Invalid format" }
+                pattern: { value: /^\S+@\S+$/i, message: "Invalid format" },
               })}
               placeholder="name@example.com"
               disabled={isSubmitting || isLocked}
@@ -89,7 +89,7 @@ const LoginForm = ({ onLoginSuccess }) => {
                 "w-full px-4 py-3 bg-surface-container-low border border-outline-variant/30 rounded-xl font-body-md text-sm text-on-surface transition-all outline-none",
                 "placeholder:text-outline/40",
                 "focus:ring-2 focus:ring-primary/10 focus:border-primary",
-                errors.email ? 'border-error/50 bg-error/5' : 'hover:border-outline-variant'
+                errors.email ? "border-error/50 bg-error/5" : "hover:border-outline-variant"
               )}
             />
             {errors.email && (
@@ -106,8 +106,8 @@ const LoginForm = ({ onLoginSuccess }) => {
             <label className="text-[10px] font-bold uppercase tracking-wider text-primary font-body-md">
               Password
             </label>
-            <button 
-              type="button" 
+            <button
+              type="button"
               onClick={() => setIsForgotModalOpen(true)}
               className="text-[10px] font-bold text-primary hover:underline uppercase tracking-wider font-body-md"
             >
@@ -124,7 +124,9 @@ const LoginForm = ({ onLoginSuccess }) => {
                 "w-full px-4 py-3 bg-surface-container-low border border-outline-variant/30 rounded-xl font-body-md text-sm text-on-surface transition-all outline-none",
                 "placeholder:text-outline/40",
                 "focus:ring-2 focus:ring-primary/10 focus:border-primary",
-                (errors.password || isLocked) ? 'border-error/50 bg-error/5' : 'hover:border-outline-variant'
+                errors.password || isLocked
+                  ? "border-error/50 bg-error/5"
+                  : "hover:border-outline-variant"
               )}
             />
             {errors.password && (
@@ -171,10 +173,16 @@ const LoginForm = ({ onLoginSuccess }) => {
           New user or missing device?
         </p>
         <div className="flex flex-col gap-2">
-          <a href="#" className="text-[11px] font-bold text-primary tracking-widest hover:underline uppercase font-body-md">
+          <a
+            href="#"
+            className="text-[11px] font-bold text-primary tracking-widest hover:underline uppercase font-body-md"
+          >
             How to get a device
           </a>
-          <a href="#" className="text-[11px] font-bold text-outline/60 tracking-widest hover:underline uppercase font-body-md">
+          <a
+            href="#"
+            className="text-[11px] font-bold text-outline/60 tracking-widest hover:underline uppercase font-body-md"
+          >
             Contact Facility Admin
           </a>
         </div>

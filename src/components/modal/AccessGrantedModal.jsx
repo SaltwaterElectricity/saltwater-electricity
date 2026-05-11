@@ -13,7 +13,7 @@ const AccessGrantedModal = ({ isOpen, userData, onFinished }) => {
         particleCount: 150,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ['#003d9b', '#00c1fd', '#42fdd3']
+        colors: ["#003d9b", "#00c1fd", "#42fdd3"],
       });
 
       const duration = 2500; // 2.5 seconds
@@ -40,7 +40,6 @@ const AccessGrantedModal = ({ isOpen, userData, onFinished }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-background/80 backdrop-blur-sm animate-fade-in">
       <div className="max-w-[480px] w-full glass-panel rounded-[20px] p-10 shadow-[0_40px_80px_rgba(0,82,204,0.12)] flex flex-col items-center text-center animate-zoomIn">
-        
         {/* User Identity Header (Replacing Checkmark) */}
         <div className="relative mb-8 flex flex-col items-center">
           <div className="relative flex items-center justify-center">
@@ -54,11 +53,11 @@ const AccessGrantedModal = ({ isOpen, userData, onFinished }) => {
                 </span>
               )}
             </div>
-            
+
             {/* Subtle Orbiting Ring - Correctly Aligned */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[108px] h-[108px] border-2 border-dashed border-tertiary-fixed/40 rounded-full animate-[spin_12s_linear_infinite] pointer-events-none" />
           </div>
-          
+
           {/* Floating Role Badge */}
           <div className="mt-6 px-4 py-1.5 bg-tertiary-fixed/20 text-tertiary font-bold text-[10px] uppercase tracking-[0.2em] rounded-full border border-tertiary-fixed/30 shadow-sm backdrop-blur-md">
             {userData?.role || "Resident"}
@@ -84,10 +83,10 @@ const AccessGrantedModal = ({ isOpen, userData, onFinished }) => {
           </div>
           {/* Progress Bar Container */}
           <div className="h-2.5 w-full bg-surface-container-highest rounded-full overflow-hidden p-[2px] border border-white/40 shadow-inner">
-            <div 
+            <div
               className="h-full progress-shimmer rounded-full glow-line transition-all duration-300 ease-out"
               style={{ width: `${progress}%` }}
-             />
+            />
           </div>
         </div>
 
@@ -95,16 +94,26 @@ const AccessGrantedModal = ({ isOpen, userData, onFinished }) => {
         <div className="mt-12 pt-8 border-t border-outline-variant/20 w-full">
           <div className="flex justify-center gap-8">
             <div className="flex flex-col items-center">
-              <span className="text-label-sm font-label-sm text-outline uppercase tracking-tighter text-[10px]">Tier</span>
-              <span className="text-body-md font-semibold text-primary text-sm uppercase">{userData?.role || "Resident"}</span>
+              <span className="text-label-sm font-label-sm text-outline uppercase tracking-tighter text-[10px]">
+                Tier
+              </span>
+              <span className="text-body-md font-semibold text-primary text-sm uppercase">
+                {userData?.role || "Resident"}
+              </span>
             </div>
             <div className="flex flex-col items-center">
-              <span className="text-label-sm font-label-sm text-outline uppercase tracking-tighter text-[10px]">Facility</span>
+              <span className="text-label-sm font-label-sm text-outline uppercase tracking-tighter text-[10px]">
+                Facility
+              </span>
               <span className="text-body-md font-semibold text-primary text-sm">SAN ANDRES</span>
             </div>
             <div className="flex flex-col items-center">
-              <span className="text-label-sm font-label-sm text-outline uppercase tracking-tighter text-[10px]">Integrity</span>
-              <span className="text-body-md font-semibold text-tertiary text-sm uppercase">{userData?.status || "Active"}</span>
+              <span className="text-label-sm font-label-sm text-outline uppercase tracking-tighter text-[10px]">
+                Integrity
+              </span>
+              <span className="text-body-md font-semibold text-tertiary text-sm uppercase">
+                {userData?.status || "Active"}
+              </span>
             </div>
           </div>
         </div>

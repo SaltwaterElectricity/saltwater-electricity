@@ -1,13 +1,13 @@
 import { db, auth } from "../firebaseConfig";
-import { 
-  ref, 
-  update, 
-  serverTimestamp, 
-  onValue, 
-  query, 
-  orderByChild, 
+import {
+  ref,
+  update,
+  serverTimestamp,
+  onValue,
+  query,
+  orderByChild,
   get,
-  equalTo 
+  equalTo,
 } from "firebase/database";
 import { ROLES } from "../constants/roles";
 import { appError } from "../utils/appError";
@@ -27,11 +27,11 @@ const DB_ERRORS = Object.freeze({
   MISSING_DATA: "Safety Check: Form data is incomplete.",
   PROVISION_FAILED: "Server Error: Could not initialize user tables.",
   FETCH_FAILED: "Server Error: Could not retrieve user profile.",
-  UPDATE_FAILED: "Server Error: Could not update status."
+  UPDATE_FAILED: "Server Error: Could not update status.",
 });
 
 const adminString = import.meta.env.VITE_SUPER_ADMIN_EMAILS || "";
-const adminList = adminString.split(",").map(email => email.trim().toLowerCase());
+const adminList = adminString.split(",").map((email) => email.trim().toLowerCase());
 
 /**
  * INTERNAL GUARD: Verifies Admin clearance via Token Claims with DB Fallback
@@ -61,7 +61,11 @@ const verifyAdminClearance = async () => {
     return true;
   }
 
-  throw new appError("Access Denied: Administrative clearance required.", true, "auth/insufficient-clearance");
+  throw new appError(
+    "Access Denied: Administrative clearance required.",
+    true,
+    "auth/insufficient-clearance"
+  );
 };
 
 /**
@@ -70,14 +74,16 @@ const verifyAdminClearance = async () => {
  */
 const sanitizeUserData = (data) => {
   const cleanEmail = data.email?.toLowerCase().trim() || "";
-  
+
   return {
     firstName: data.firstName?.toString().trim().substring(0, 50) || "",
     middleName: data.middleName?.toString().trim().substring(0, 50) || "",
     lastName: data.lastName?.toString().trim().substring(0, 50) || "",
     suffix: data.suffix?.toString().trim().substring(0, 10) || "",
     age: Math.max(0, Math.min(120, parseInt(data.age) || 0)),
-    gender: ["Male", "Female", "Other", "Not Specified"].includes(data.gender) ? data.gender : "Not Specified",
+    gender: ["Male", "Female", "Other", "Not Specified"].includes(data.gender)
+      ? data.gender
+      : "Not Specified",
     email: cleanEmail,
     userName: data.userName?.toString().trim().substring(0, 30) || `user_${Date.now()}`,
     mobileNum: data.mobileNum?.toString().trim() || "N/A",
@@ -86,13 +92,13 @@ const sanitizeUserData = (data) => {
       baranggay: data.baranggay?.toString().trim() || "Unset",
       cityProvince: data.cityProvince?.toString().trim() || "Unset",
       region: data.region?.toString().trim() || "Unset",
-      zipCode: data.zipCode?.toString().trim() || ""
-    }
+      zipCode: data.zipCode?.toString().trim() || "",
+    },
   };
 };
 
 // PROVISIONING: Atomic multi-path update.
- 
+
 export const provisionUserSystem = async (uid, formData) => {
   if (!uid) throw new appError(DB_ERRORS.MISSING_UID, true, "db/missing-uid");
   if (!formData?.role) throw new appError(DB_ERRORS.MISSING_DATA, true, "db/missing-data");
@@ -103,7 +109,7 @@ export const provisionUserSystem = async (uid, formData) => {
   // Security Guard: Verify if the requested role is actually allowed for this email
   const inputEmail = formData.email?.toLowerCase().trim();
   const isActualSuperAdmin = formData.role === ROLES.SUPER_ADMIN && adminList.includes(inputEmail);
-  const finalRole = isActualSuperAdmin ? ROLES.SUPER_ADMIN : (formData.role || ROLES.RESIDENT);
+  const finalRole = isActualSuperAdmin ? ROLES.SUPER_ADMIN : formData.role || ROLES.RESIDENT;
 
   const cleanProfile = sanitizeUserData(formData);
   const now = serverTimestamp();
@@ -112,25 +118,29 @@ export const provisionUserSystem = async (uid, formData) => {
     // NODE: Profile Info
     [`/users/${uid}`]: {
       ...cleanProfile,
-      updatedAt: now
+      updatedAt: now,
     },
     // NODE: Account Status & Security Flags
     [`/accounts/${uid}`]: {
       status: USER_STATUS.ACTIVE,
       requiresPasswordChange: !isActualSuperAdmin,
-      createdAt: now
+      createdAt: now,
     },
     // NODE: Authorization
     [`/roles/${uid}`]: {
       role: finalRole,
       isPrivate: isActualSuperAdmin,
-      updatedAt: now
-    }
+      updatedAt: now,
+    },
   };
 
   try {
     await update(ref(db), updates);
-    await logActivity('USER_PROVISIONED', uid, `User ${cleanProfile.email} provisioned with role: ${finalRole}`);
+    await logActivity(
+      "USER_PROVISIONED",
+      uid,
+      `User ${cleanProfile.email} provisioned with role: ${finalRole}`
+    );
     return { success: true };
   } catch {
     throw new appError(DB_ERRORS.PROVISION_FAILED, true, "db/provision-failed");
@@ -157,10 +167,7 @@ export const subscribeToAllUsers = (callback, targetRole = null, onError = null)
 
       try {
         // Optimization: Fetch Users and Accounts collections in parallel once
-        const [usersSnap, accountsSnap] = await Promise.all([
-          get(usersRef),
-          get(accountsRef)
-        ]);
+        const [usersSnap, accountsSnap] = await Promise.all([get(usersRef), get(accountsRef)]);
 
         const allUsers = usersSnap.val() || {};
         const allAccounts = accountsSnap.val() || {};
@@ -174,14 +181,14 @@ export const subscribeToAllUsers = (callback, targetRole = null, onError = null)
           if (targetRole === ROLES.SUPER_ADMIN || !roleData.isPrivate) {
             const profileData = allUsers[uid] || {};
             const accountData = allAccounts[uid] || {};
-            
+
             results.push({
               id: uid,
               uid: uid, // for compatibility
-              ...roleData,    
+              ...roleData,
               ...profileData,
               status: accountData.status || "active",
-              requiresPasswordChange: accountData.requiresPasswordChange || false
+              requiresPasswordChange: accountData.requiresPasswordChange || false,
             });
           }
         });
@@ -197,9 +204,8 @@ export const subscribeToAllUsers = (callback, targetRole = null, onError = null)
   );
 };
 
-
 // STATUS MANAGEMENT: Ensures all nodes stay in sync.
- 
+
 export const updateUserStatus = async (uid, newStatus) => {
   if (!uid) throw new appError(DB_ERRORS.FETCH_FAILED, true, "db/missing-uid");
 
@@ -214,23 +220,27 @@ export const updateUserStatus = async (uid, newStatus) => {
 
   const updates = {
     [`/accounts/${uid}/status`]: newStatus,
-    [`/accounts/${uid}/updatedAt`]: now
+    [`/accounts/${uid}/updatedAt`]: now,
   };
 
   try {
     await update(ref(db), updates);
-    
+
     // AUDIT HARDENING: Log the status change
-    await logActivity(`user_${newStatus}`, uid, `Administrative override: Account status changed to ${newStatus}`);
-    
+    await logActivity(
+      `user_${newStatus}`,
+      uid,
+      `Administrative override: Account status changed to ${newStatus}`
+    );
+
     // NOTIFICATION: Notify the user about their account status change
     await createNotification(
       uid,
       "Account Status Update",
-      `Your account has been ${newStatus === USER_STATUS.ACTIVE ? 'restored' : 'disabled'} by a system administrator.`,
+      `Your account has been ${newStatus === USER_STATUS.ACTIVE ? "restored" : "disabled"} by a system administrator.`,
       newStatus === USER_STATUS.ACTIVE ? NOTIFICATION_TYPES.INFO : NOTIFICATION_TYPES.WARNING
     );
-    
+
     return { success: true };
   } catch (error) {
     if (error instanceof appError) throw error;
@@ -244,11 +254,12 @@ export const updateUserStatus = async (uid, newStatus) => {
  */
 export const updateUserProfile = async (targetUid, formData) => {
   const currentUser = auth.currentUser;
-  
+
   // 🛡️ SECURITY: Use targetUid for admin edits, but fallback to currentUser for self-edits
   const uid = targetUid || currentUser?.uid;
 
-  if (!uid) throw new appError("User identification required for profile update.", true, "db/missing-uid");
+  if (!uid)
+    throw new appError("User identification required for profile update.", true, "db/missing-uid");
 
   // 🛡️ SECONDARY ROLE CHECK: If editing someone else, must be admin
   if (targetUid && targetUid !== currentUser?.uid) {
@@ -271,7 +282,7 @@ export const updateUserProfile = async (targetUid, formData) => {
     [`/users/${uid}/address/cityProvince`]: clean.address.cityProvince,
     [`/users/${uid}/address/region`]: clean.address.region,
     [`/users/${uid}/address/zipCode`]: clean.address.zipCode,
-    [`/users/${uid}/updatedAt`]: serverTimestamp()
+    [`/users/${uid}/updatedAt`]: serverTimestamp(),
   };
 
   try {

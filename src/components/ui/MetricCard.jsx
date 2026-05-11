@@ -25,6 +25,6 @@ const MetricCard = memo(({ title, value, status, icon, colorClass = "text-blue-5
   );
 });
 
-MetricCard.displayName = 'MetricCard';
+MetricCard.displayName = "MetricCard";
 
 export default MetricCard;

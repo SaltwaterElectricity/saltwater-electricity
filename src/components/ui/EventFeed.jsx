@@ -12,28 +12,34 @@ const EventItem = memo(({ severity, type, message, timestamp, station }) => {
       border: "border-error",
       icon: "report",
       iconColor: "text-error",
-      label: "Critical Error"
+      label: "Critical Error",
     },
     warning: {
       bg: "bg-yellow-50",
       border: "border-yellow-500",
       icon: "warning",
       iconColor: "text-yellow-600",
-      label: "Warning"
+      label: "Warning",
     },
     normal: {
       bg: "bg-blue-50",
       border: "border-blue-500",
       icon: "check_circle",
       iconColor: "text-blue-600",
-      label: type || "User Action"
-    }
+      label: type || "User Action",
+    },
   };
 
   const config = configs[severity] || configs.normal;
 
   return (
-    <div className={cn("flex space-x-3 p-sm rounded-xl border-l-4 font-['Inter']", config.bg, config.border)}>
+    <div
+      className={cn(
+        "flex space-x-3 p-sm rounded-xl border-l-4 font-['Inter']",
+        config.bg,
+        config.border
+      )}
+    >
       <span className={cn("material-symbols-outlined text-xl", config.iconColor)}>
         {config.icon}
       </span>
@@ -50,7 +56,7 @@ const EventItem = memo(({ severity, type, message, timestamp, station }) => {
   );
 });
 
-EventItem.displayName = 'EventItem';
+EventItem.displayName = "EventItem";
 
 /**
  * EventFeed Component
@@ -61,7 +67,9 @@ const EventFeed = memo(({ events = [] }) => {
   return (
     <div className="glass-panel h-[480px] flex flex-col">
       <div className="p-md border-b border-white/40 flex justify-between items-center">
-        <h3 className="font-h2 text-h2 text-primary font-['Space_Grotesk'] tracking-tight">System Events</h3>
+        <h3 className="font-h2 text-h2 text-primary font-['Space_Grotesk'] tracking-tight">
+          System Events
+        </h3>
         <span className="bg-slate-100 text-[10px] font-bold px-2 py-1 rounded font-['Inter'] uppercase tracking-widest">
           LIVE FEED
         </span>
@@ -79,7 +87,10 @@ const EventFeed = memo(({ events = [] }) => {
       </div>
 
       <div className="p-md text-center border-t border-white/40">
-        <a className="text-sm font-bold text-blue-600 hover:underline font-['Inter'] uppercase tracking-widest" href="#">
+        <a
+          className="text-sm font-bold text-blue-600 hover:underline font-['Inter'] uppercase tracking-widest"
+          href="#"
+        >
           View All Logs
         </a>
       </div>
@@ -87,6 +98,6 @@ const EventFeed = memo(({ events = [] }) => {
   );
 });
 
-EventFeed.displayName = 'EventFeed';
+EventFeed.displayName = "EventFeed";
 
 export default EventFeed;

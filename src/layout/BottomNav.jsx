@@ -12,12 +12,14 @@ export const BottomNav = ({ toggleSidebar }) => (
     <BottomNavLink to={ROUTES.ADMIN_USER_MANAGEMENT} icon="group" label="Users" />
     <BottomNavLink to="/alerts" icon="notifications" label="Alerts" />
     <BottomNavLink to="/trends" icon="query_stats" label="Trends" />
-    <button 
-      onClick={toggleSidebar} 
+    <button
+      onClick={toggleSidebar}
       className="flex flex-col items-center justify-center text-slate-400"
     >
       <span className="material-symbols-outlined">menu</span>
-      <span className="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest font-bold">More</span>
+      <span className="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest font-bold">
+        More
+      </span>
     </button>
   </nav>
 );

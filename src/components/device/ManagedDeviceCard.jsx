@@ -1,48 +1,51 @@
-import { Cpu, Globe, Calendar, CheckCircle2, Lock, User, MapPin } from 'lucide-react';
+import { Cpu, Globe, Calendar, CheckCircle2, Lock, User, MapPin } from "lucide-react";
 import { cn } from "../../utils/cn";
-import { DeviceInfoRow } from './DeviceInfoRow';
-import { useAssignmentDetails } from '../../hooks/useAssignmentDetails';
+import { DeviceInfoRow } from "./DeviceInfoRow";
+import { useAssignmentDetails } from "../../hooks/useAssignmentDetails";
 
 export const ManagedDeviceCard = ({ device, onAssignClick, onForceRelease, isAdmin }) => {
-  const isAvailable = device.availability === 'available';
+  const isAvailable = device.availability === "available";
 
   const { fullName, address, assignedAt, loading } = useAssignmentDetails(device.device_id);
 
   const formatAddress = (addr) => {
     if (!addr) return "No Address Provided";
-    if (typeof addr === 'string') return addr;
-    
-    const parts = [
-      addr.street,
-      addr.baranggay,
-      addr.cityProvince,
-      addr.zipCode
-    ].filter(Boolean);
+    if (typeof addr === "string") return addr;
 
-    return parts.length > 0 ? parts.join(', ') : "Invalid Address Format";
+    const parts = [addr.street, addr.baranggay, addr.cityProvince, addr.zipCode].filter(Boolean);
+
+    return parts.length > 0 ? parts.join(", ") : "Invalid Address Format";
   };
 
   const formatDate = (timestamp) => {
-    if (!timestamp) return 'N/A';
-    return new Date(timestamp).toLocaleString('en-PH', {
-      month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+    if (!timestamp) return "N/A";
+    return new Date(timestamp).toLocaleString("en-PH", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   return (
-    <article className={cn(
-      "glass-panel rounded-[20px] p-6 overflow-hidden transition-all duration-500 min-w-[300px] flex flex-col justify-between h-full group",
-      !isAvailable && "opacity-90"
-    )}>
-      
+    <article
+      className={cn(
+        "glass-panel rounded-[20px] p-6 overflow-hidden transition-all duration-500 min-w-[300px] flex flex-col justify-between h-full group",
+        !isAvailable && "opacity-90"
+      )}
+    >
       <div>
         <div className="flex justify-between items-start mb-6">
-          <div className={cn(
-            "flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest font-body-md",
-            isAvailable ? "bg-tertiary-fixed-dim/20 text-tertiary" : "bg-primary-container/10 text-primary"
-          )}>
+          <div
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest font-body-md",
+              isAvailable
+                ? "bg-tertiary-fixed-dim/20 text-tertiary"
+                : "bg-primary-container/10 text-primary"
+            )}
+          >
             {isAvailable ? <CheckCircle2 size={10} /> : <Lock size={10} />}
-            {device.availability?.toUpperCase() || 'UNKNOWN'}
+            {device.availability?.toUpperCase() || "UNKNOWN"}
           </div>
           <p className="text-[10px] text-outline font-mono bg-surface-container-low px-2 py-0.5 rounded">
             #{device.device_id}
@@ -50,12 +53,14 @@ export const ManagedDeviceCard = ({ device, onAssignClick, onForceRelease, isAdm
         </div>
 
         <div className="flex items-center gap-4 mb-6">
-          <div className={cn(
-            "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 shrink-0 shadow-lg",
-            isAvailable 
-              ? "ocean-gradient text-white shadow-blue-500/20" 
-              : "bg-surface-container-high text-outline"
-          )}>
+          <div
+            className={cn(
+              "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 shrink-0 shadow-lg",
+              isAvailable
+                ? "ocean-gradient text-white shadow-blue-500/20"
+                : "bg-surface-container-high text-outline"
+            )}
+          >
             <Cpu size={24} />
           </div>
           <div className="flex-1 min-w-0">
@@ -70,38 +75,38 @@ export const ManagedDeviceCard = ({ device, onAssignClick, onForceRelease, isAdm
           </div>
         </div>
 
-        <div className="space-y-4 mb-8 border-y border-outline-variant/30 py-6"> 
+        <div className="space-y-4 mb-8 border-y border-outline-variant/30 py-6">
           {isAvailable ? (
             <>
-              <DeviceInfoRow 
-                label="IP Address" 
-                value={device.ip_address || '0.0.0.0'} 
-                icon={Globe} 
-                isMono 
+              <DeviceInfoRow
+                label="IP Address"
+                value={device.ip_address || "0.0.0.0"}
+                icon={Globe}
+                isMono
               />
-              <DeviceInfoRow 
-                label="System Start" 
-                value={formatDate(device.created_at)} 
-                icon={Calendar} 
+              <DeviceInfoRow
+                label="System Start"
+                value={formatDate(device.created_at)}
+                icon={Calendar}
               />
             </>
           ) : (
             <>
-              <DeviceInfoRow 
-                label="Assigned To" 
-                value={loading ? "Fetching..." : fullName} 
-                icon={User} 
+              <DeviceInfoRow
+                label="Assigned To"
+                value={loading ? "Fetching..." : fullName}
+                icon={User}
                 variant="highlight"
               />
-              <DeviceInfoRow 
-                label="Location" 
-                value={loading ? "Locating..." : formatAddress(address)} 
-                icon={MapPin} 
+              <DeviceInfoRow
+                label="Location"
+                value={loading ? "Locating..." : formatAddress(address)}
+                icon={MapPin}
               />
-              <DeviceInfoRow 
-                label="Deployed On" 
-                value={loading ? "..." : formatDate(assignedAt)} 
-                icon={Calendar} 
+              <DeviceInfoRow
+                label="Deployed On"
+                value={loading ? "..." : formatDate(assignedAt)}
+                icon={Calendar}
               />
             </>
           )}
@@ -119,7 +124,7 @@ export const ManagedDeviceCard = ({ device, onAssignClick, onForceRelease, isAdm
               : "bg-surface-container-highest text-outline cursor-not-allowed border border-outline-variant/30"
           )}
         >
-          {isAvailable ? 'ASSIGN DEVICE' : 'LOCKED BY END-USER'}
+          {isAvailable ? "ASSIGN DEVICE" : "LOCKED BY END-USER"}
         </button>
 
         {isAdmin && !isAvailable && (

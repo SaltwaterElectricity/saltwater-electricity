@@ -2,17 +2,17 @@ import { useState, useEffect, memo } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle2 } from "lucide-react";
-import { useAuth } from "../../context/useAuth"; 
+import { useAuth } from "../../context/useAuth";
 import PasswordInput from "./PasswordInput";
 import StrengthMeter from "./StrengthMeter";
 import PasswordChecklist from "./PasswordChecklist";
 import { calculatePasswordStrength } from "../../utils/passwordMetrics";
-import { changeUserPassword } from "../../services/auth.service"; 
-import { LoadingSpinner, Toast } from "../ui"; 
+import { changeUserPassword } from "../../services/auth.service";
+import { LoadingSpinner, Toast } from "../ui";
 
 const ForcePasswordChange = ({ onSuccess }) => {
   const navigate = useNavigate();
-  const { setMustChangePassword } = useAuth(); 
+  const { setMustChangePassword } = useAuth();
 
   // STATES
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,17 +20,22 @@ const ForcePasswordChange = ({ onSuccess }) => {
   const [strength, setStrength] = useState(0);
 
   // TOAST STATE
-  const [toast, setToast] = useState({ 
-    isOpen: false, 
-    message: "", 
-    type: "success" 
+  const [toast, setToast] = useState({
+    isOpen: false,
+    message: "",
+    type: "success",
   });
 
   // FORM INITIALIZATION
-  const { register, handleSubmit, watch, formState: { errors } } = useForm({
-    mode: "onChange"
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    mode: "onChange",
   });
-  
+
   const newPassword = watch("newPassword", "");
 
   // HELPER: Show Toast
@@ -48,23 +53,22 @@ const ForcePasswordChange = ({ onSuccess }) => {
     if (strength < 80) return;
 
     setIsSubmitting(true);
-    
+
     try {
       /** * ATOMIC RESET:
        * Ang PasswordReset() na ang bahala sa Auth update at Database flag syncing.
        */
       await changeUserPassword(data.newPassword, { isForceReset: true });
-      
+
       // Step B: Visual Confirmation
       setShowSuccessOverlay(true);
 
       // Step C: UX Transition Delay
       setTimeout(() => {
         if (setMustChangePassword) setMustChangePassword(false);
-        if (onSuccess) onSuccess(); 
+        if (onSuccess) onSuccess();
         navigate("/login");
       }, 2000);
-      
     } catch (err) {
       // Gagamit ng Toast sa halip na inline serverError para sa "Top Middle" feedback
       showToast(err.message, "error");
@@ -93,20 +97,22 @@ const ForcePasswordChange = ({ onSuccess }) => {
     <div className="p-8 bg-white rounded-[32px] max-w-md w-full shadow-2xl border border-slate-200 animate-in fade-in zoom-in duration-300">
       <header className="mb-10">
         <h2 className="text-2xl font-black text-slate-900 tracking-tight">Protect Your Account</h2>
-        <p className="text-sm text-slate-500 mt-2 leading-relaxed">Change your temporary password to unlock the SmartAqua dashboard.</p>
+        <p className="text-sm text-slate-500 mt-2 leading-relaxed">
+          Change your temporary password to unlock the SmartAqua dashboard.
+        </p>
       </header>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-10">
         <div className="space-y-6">
-          <PasswordInput 
-            label="New Password" 
-            name="newPassword" 
-            register={register} 
-            errors={errors} 
+          <PasswordInput
+            label="New Password"
+            name="newPassword"
+            register={register}
+            errors={errors}
             strength={strength}
-            validation={{ 
+            validation={{
               required: "Password required",
-              validate: () => strength >= 80 || "Does not meet security requirements"
+              validate: () => strength >= 80 || "Does not meet security requirements",
             }}
           >
             <div className="flex flex-col gap-3 mt-3">
@@ -115,19 +121,19 @@ const ForcePasswordChange = ({ onSuccess }) => {
             </div>
           </PasswordInput>
 
-          <PasswordInput 
-            label="Verify New Password" 
-            name="confirmPassword" 
-            register={register} 
-            errors={errors} 
-            validation={{ 
+          <PasswordInput
+            label="Verify New Password"
+            name="confirmPassword"
+            register={register}
+            errors={errors}
+            validation={{
               required: "Please confirm your password",
-              validate: (v) => v === newPassword || "Passwords do not match" 
-            }} 
+              validate: (v) => v === newPassword || "Passwords do not match",
+            }}
           />
         </div>
-          
-        <button 
+
+        <button
           type="submit"
           disabled={isSubmitting || strength < 80}
           className="w-full bg-slate-900 hover:bg-black text-white font-bold py-5 rounded-2xl 
@@ -136,7 +142,7 @@ const ForcePasswordChange = ({ onSuccess }) => {
         >
           {isSubmitting ? (
             <div className="flex items-center justify-center gap-3">
-              <LoadingSpinner size="w-5 h-5" color="text-white"/>
+              <LoadingSpinner size="w-5 h-5" color="text-white" />
               <span className="animate-pulse">Updating Security...</span>
             </div>
           ) : (
@@ -146,11 +152,11 @@ const ForcePasswordChange = ({ onSuccess }) => {
       </form>
 
       {/* TOAST PLACEMENT: Lalabas ito sa Top Middle base sa iyong Toast configuration */}
-      <Toast 
-        isOpen={toast.isOpen} 
-        message={toast.message} 
-        type={toast.type} 
-        onClose={() => setToast({ ...toast, isOpen: false })} 
+      <Toast
+        isOpen={toast.isOpen}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ ...toast, isOpen: false })}
       />
     </div>
   );

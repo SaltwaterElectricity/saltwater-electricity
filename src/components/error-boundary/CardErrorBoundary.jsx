@@ -1,7 +1,7 @@
 // src/components/common/ErrorBoundary/CardErrorBoundary.jsx
-import React from 'react';
-import { RefreshCcw, AlertCircle } from 'lucide-react';
-import { logger } from '../../utils/logger';
+import React from "react";
+import { RefreshCcw, AlertCircle } from "lucide-react";
+import { logger } from "../../utils/logger";
 
 class CardErrorBoundary extends React.Component {
   constructor(props) {
@@ -21,7 +21,7 @@ class CardErrorBoundary extends React.Component {
   // RECOVERY LOGIC: Para ma-reset ang error state ng card lang
   handleReset = () => {
     this.setState({ hasError: false });
-  }
+  };
 
   render() {
     if (this.state.hasError) {
@@ -30,11 +30,11 @@ class CardErrorBoundary extends React.Component {
           <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mb-4">
             <AlertCircle size={20} className="text-red-500" />
           </div>
-          
+
           <h4 className="text-[10px] font-black text-red-500 uppercase tracking-[0.2em] mb-2">
             Node Sync Error
           </h4>
-          
+
           <p className="text-[11px] text-slate-400 mb-6 max-w-[180px] leading-relaxed">
             Something went wrong while syncing this device&apos;s data.
           </p>

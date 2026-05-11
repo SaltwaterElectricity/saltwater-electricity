@@ -14,7 +14,7 @@ const LoginHero = () => {
     // Initial entrance delay -> Shining
     const shineTimer = setTimeout(() => {
       setStatus("shining");
-      
+
       // Shining -> Looping
       const loopTimer = setTimeout(() => {
         setStatus("looping");
@@ -30,7 +30,7 @@ const LoginHero = () => {
     <div className="logo-container">
       {/* 3D Cube Scene */}
       <div className="scene">
-        <div 
+        <div
           id="logo-cube"
           className={cn(
             "cube",
@@ -60,12 +60,8 @@ const LoginHero = () => {
 
       {/* Brand Typography */}
       <div className="text-container">
-        <h1 className="cube-title uppercase">
-          Device Monitoring
-        </h1>
-        <h2 className="cube-subtitle uppercase">
-          Saltwater Electricity
-        </h2>
+        <h1 className="cube-title uppercase">Device Monitoring</h1>
+        <h2 className="cube-subtitle uppercase">Saltwater Electricity</h2>
       </div>
     </div>
   );

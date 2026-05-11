@@ -7,7 +7,7 @@ import { logger } from "../utils/logger";
 
 /**
  * AUDIT SERVICE
- * 
+ *
  * Handles the recording of administrative and system activities for accountability.
  * Adheres to SOLID principles by focusing strictly on 'Write' operations.
  */
@@ -21,14 +21,18 @@ const verifySuperAdminClearance = async () => {
 
   const claims = await getUserClaims(currentUser);
   if (!claims?.superAdmin) {
-    throw new appError("Access Denied: SuperAdmin clearance required for this operation.", true, "auth/insufficient-clearance");
+    throw new appError(
+      "Access Denied: SuperAdmin clearance required for this operation.",
+      true,
+      "auth/insufficient-clearance"
+    );
   }
   return true;
 };
 
 /**
  * Logs an administrative activity to the Realtime Database.
- * 
+ *
  * @param {string} action - The descriptive action performed (e.g., 'user_disabled', 'request_approved').
  * @param {string} targetId - The ID of the affected entity (User UID, Request ID, etc.).
  * @param {string} details - A brief summary or context of the action.
@@ -36,19 +40,19 @@ const verifySuperAdminClearance = async () => {
  */
 export const logActivity = async (action, targetId, details) => {
   const currentUser = auth.currentUser;
-  
+
   // Requirement: Get current user's email from Auth
   const adminEmail = currentUser?.email || "system@saltwaterelectricity.internal";
 
   try {
-    const auditRef = ref(db, 'audit-logs');
-    
+    const auditRef = ref(db, "audit-logs");
+
     const logEntry = {
       adminEmail,
       action,
       targetId,
       details,
-      createdAt: serverTimestamp()
+      createdAt: serverTimestamp(),
     };
 
     // Requirement: Use push() to automatically create a unique entry node
@@ -58,8 +62,8 @@ export const logActivity = async (action, targetId, details) => {
   } catch {
     // Mask internal DB errors with operational appError
     throw new appError(
-      "Security Audit Failure: Could not record the activity trail.", 
-      true, 
+      "Security Audit Failure: Could not record the activity trail.",
+      true,
       "audit/log-failed"
     );
   }
@@ -67,9 +71,9 @@ export const logActivity = async (action, targetId, details) => {
 
 /**
  * Logs and monitors high-priority security incidents.
- * Automatically escalates to a CRITICAL audit log if thresholds are met 
+ * Automatically escalates to a CRITICAL audit log if thresholds are met
  * (e.g., multiple 404s in a short window indicating a directory scan).
- * 
+ *
  * @param {string} incidentType - Category of incident (e.g. 'PATH_ENUMERATION')
  * @param {string} identifier - Key for tracking (e.g. User UID or IP)
  * @param {Object} context - Metadata about the event
@@ -77,7 +81,7 @@ export const logActivity = async (action, targetId, details) => {
 export const logSecurityIncident = async (incidentType, identifier, context) => {
   // Use internal tracking node for pattern detection
   const monitorRef = ref(db, `internal/security_monitoring/${identifier}/${incidentType}`);
-  
+
   // Protocol: 5 events within 1 minute triggers an escalation
   const ALERT_THRESHOLD = 5;
   const WINDOW_MS = 60000;
@@ -86,13 +90,13 @@ export const logSecurityIncident = async (incidentType, identifier, context) => 
     const { snapshot } = await runTransaction(monitorRef, (current) => {
       const now = Date.now();
       // Reset if no record or window expired
-      if (!current || (now - current.lastTimestamp > WINDOW_MS)) {
+      if (!current || now - current.lastTimestamp > WINDOW_MS) {
         return { count: 1, lastTimestamp: now };
       }
       return {
         ...current,
         count: current.count + 1,
-        lastTimestamp: now
+        lastTimestamp: now,
       };
     });
 
@@ -101,13 +105,9 @@ export const logSecurityIncident = async (incidentType, identifier, context) => 
     // ESCALATION: Record formal security incident to audit-logs if pattern is confirmed
     if (data.count >= ALERT_THRESHOLD) {
       const details = `Security escalation: ${data.count} incidents detected within window. Context: ${JSON.stringify(context)}`;
-      
+
       // 1. Audit Log
-      await logActivity(
-        `SECURITY_ALERT/${incidentType}`,
-        identifier,
-        details
-      );
+      await logActivity(`SECURITY_ALERT/${incidentType}`, identifier, details);
 
       // 2. Persistent In-App Notification for Admins (EPP Protocol)
       await notifySecurityIncident(incidentType, identifier, details);
@@ -134,7 +134,7 @@ export const updateAuditLog = async (logId, updatedData) => {
   const safeUpdate = {
     details: updatedData.details?.toString().trim() || "Manual override",
     action: updatedData.action || "audit_entry_updated",
-    updatedAt: serverTimestamp()
+    updatedAt: serverTimestamp(),
   };
 
   try {
@@ -165,4 +165,3 @@ export const deleteAuditLog = async (logId) => {
     throw new appError("Failed to purge the security log entry.", true, "audit/delete-failed");
   }
 };
-

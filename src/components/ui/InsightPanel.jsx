@@ -31,11 +31,13 @@ const InsightPanel = memo(() => {
           </div>
           <p className="text-sm text-slate-700 mt-1 font-medium leading-relaxed">
             Potential filter maintenance required within 48 hours.{" "}
-            <span className="text-blue-700 font-bold">78% probability of intake obstruction</span> detected at Station: Batangas South.
+            <span className="text-blue-700 font-bold">78% probability of intake obstruction</span>{" "}
+            detected at Station: Batangas South.
           </p>
           <div className="mt-3 flex space-x-3">
             <button className="text-xs font-bold text-blue-700 hover:underline flex items-center transition-all uppercase tracking-widest">
-              <span className="material-symbols-outlined text-sm mr-1">schedule</span> Schedule Service
+              <span className="material-symbols-outlined text-sm mr-1">schedule</span> Schedule
+              Service
             </button>
             <button className="text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors uppercase tracking-widest">
               Dismiss
@@ -47,6 +49,6 @@ const InsightPanel = memo(() => {
   );
 });
 
-InsightPanel.displayName = 'InsightPanel';
+InsightPanel.displayName = "InsightPanel";
 
 export default InsightPanel;

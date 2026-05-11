@@ -14,7 +14,11 @@ const verifyAdminClearance = async () => {
 
   const claims = await getUserClaims(currentUser);
   if (!claims?.admin && !claims?.superAdmin) {
-    throw new appError("Access Denied: Administrative clearance required.", true, "auth/insufficient-clearance");
+    throw new appError(
+      "Access Denied: Administrative clearance required.",
+      true,
+      "auth/insufficient-clearance"
+    );
   }
   return true;
 };
@@ -37,31 +41,35 @@ export const assignDevice = async (deviceId, userId, newDeviceName) => {
     const deviceStatusRef = ref(db, `device_information/${cleanDeviceId}/availability`);
     const statusSnapshot = await get(deviceStatusRef);
 
-    if (statusSnapshot.exists() && statusSnapshot.val() !== 'available') {
-      throw new appError("This device is already assigned to another user.", true, "device/already-occupied");
+    if (statusSnapshot.exists() && statusSnapshot.val() !== "available") {
+      throw new appError(
+        "This device is already assigned to another user.",
+        true,
+        "device/already-occupied"
+      );
     }
 
     // 3. ATOMIC TRANSACTION DATA
     const now = serverTimestamp();
     const updates = {};
-    
+
     updates[`/device_assignments/${cleanDeviceId}`] = {
       userId: cleanUserId,
       assignedAt: now,
-      status: "active"
+      status: "active",
     };
 
     updates[`/device_information/${cleanDeviceId}/availability`] = "assigned";
     updates[`/device_information/${cleanDeviceId}/assigned_user_id`] = cleanUserId;
-    
+
     // Fetch user name to store in device_information for quick access
     const userSnap = await get(ref(db, `users/${cleanUserId}`));
     if (userSnap.exists()) {
       const userData = userSnap.val();
-      updates[`/device_information/${cleanDeviceId}/assigned_user_name`] = 
-        `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
+      updates[`/device_information/${cleanDeviceId}/assigned_user_name`] =
+        `${userData.firstName || ""} ${userData.lastName || ""}`.trim();
     }
-    
+
     if (cleanName) {
       updates[`/device_information/${cleanDeviceId}/device_name`] = cleanName;
     }
@@ -69,22 +77,29 @@ export const assignDevice = async (deviceId, userId, newDeviceName) => {
     await update(ref(db), updates);
 
     // 4. AUDIT LOGGING
-    await logActivity('DEVICE_ASSIGNED', cleanDeviceId, `Device assigned to User: ${cleanUserId}${cleanName ? ` with name: ${cleanName}` : ''}`);
+    await logActivity(
+      "DEVICE_ASSIGNED",
+      cleanDeviceId,
+      `Device assigned to User: ${cleanUserId}${cleanName ? ` with name: ${cleanName}` : ""}`
+    );
 
     return { success: true };
-
   } catch (error) {
     if (error instanceof appError) throw error;
-    
-    logInternalError(error); 
-    throw new appError("The monitoring service is temporarily unavailable. Please try again.", true, "device/service-unavailable");
+
+    logInternalError(error);
+    throw new appError(
+      "The monitoring service is temporarily unavailable. Please try again.",
+      true,
+      "device/service-unavailable"
+    );
   }
 };
 
 /**
  * DEPROVISION DEVICE
  * Removes user binding and resets device state to 'available'.
- * 
+ *
  * @param {string} deviceId - ID of the device to release
  */
 export const deprovisionDevice = async (deviceId) => {
@@ -95,10 +110,10 @@ export const deprovisionDevice = async (deviceId) => {
 
   try {
     const updates = {};
-    
+
     // 1. Remove from assignments
     updates[`/device_assignments/${deviceId}`] = null;
-    
+
     // 2. Reset device info
     updates[`/device_information/${deviceId}/availability`] = "available";
     updates[`/device_information/${deviceId}/assigned_user_id`] = null;
@@ -107,13 +122,20 @@ export const deprovisionDevice = async (deviceId) => {
     await update(ref(db), updates);
 
     // 3. AUDIT LOGGING
-    await logActivity('DEVICE_DEPROVISIONED', deviceId, `Device deprovisioned and returned to available inventory.`);
+    await logActivity(
+      "DEVICE_DEPROVISIONED",
+      deviceId,
+      `Device deprovisioned and returned to available inventory.`
+    );
 
     return { success: true };
-
   } catch (error) {
     logInternalError(error);
-    throw new appError("System override failed. Please check network.", true, "device/override-failed");
+    throw new appError(
+      "System override failed. Please check network.",
+      true,
+      "device/override-failed"
+    );
   }
 };
 

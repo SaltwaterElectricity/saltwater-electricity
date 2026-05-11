@@ -1,5 +1,5 @@
-import React from 'react';
-import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
+import React from "react";
+import { AlertTriangle, Home, RefreshCw } from "lucide-react";
 
 class GlobalErrorBoundary extends React.Component {
   constructor(props) {
@@ -19,13 +19,14 @@ class GlobalErrorBoundary extends React.Component {
             <div className="w-20 h-20 bg-amber-50 rounded-3xl flex items-center justify-center mx-auto mb-8">
               <AlertTriangle size={40} className="text-amber-500" />
             </div>
-            
+
             <h1 className="text-2xl font-black text-slate-900 tracking-tighter mb-4">
               System Interruption
             </h1>
-            
+
             <p className="text-slate-500 text-sm leading-relaxed mb-10">
-              The dashboard encountered an unexpected error. Don&apos;t worry, your device data is safe.
+              The dashboard encountered an unexpected error. Don&apos;t worry, your device data is
+              safe.
             </p>
 
             <div className="flex flex-col gap-3">
@@ -36,9 +37,9 @@ class GlobalErrorBoundary extends React.Component {
                 <RefreshCw size={14} />
                 Reload Application
               </button>
-              
+
               <button
-                onClick={() => window.location.href = '/'}
+                onClick={() => (window.location.href = "/")}
                 className="w-full py-4 bg-slate-100 text-slate-600 rounded-2xl font-black text-[11px] tracking-widest uppercase flex items-center justify-center gap-2 hover:bg-slate-200 transition-all"
               >
                 <Home size={14} />

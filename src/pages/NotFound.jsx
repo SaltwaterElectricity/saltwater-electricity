@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Home } from 'lucide-react';
-import { logActivity } from '../services/audit.service';
-import { ROUTES } from '../constants/routes';
+import { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Home } from "lucide-react";
+import { logActivity } from "../services/audit.service";
+import { ROUTES } from "../constants/routes";
 
 /**
  * NotFound Page
@@ -19,20 +19,20 @@ const NotFound = () => {
     const logTrace = async () => {
       try {
         await logActivity(
-          'POTENTIAL_ENUMERATION',
-          'navigation_failure',
+          "POTENTIAL_ENUMERATION",
+          "navigation_failure",
           `User attempted to access non-existent path: ${location.pathname}`
         );
       } catch {
         // Silent fail for logging to ensure UI performance
       }
-      };
+    };
 
-      logTrace();
-      }, [location.pathname]);
+    logTrace();
+  }, [location.pathname]);
 
-      return (
-      <div className="min-h-[80vh] flex items-center justify-center p-md antialiased">
+  return (
+    <div className="min-h-[80vh] flex items-center justify-center p-md antialiased">
       {/* Decorative Water Background Effects */}
       <div className="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none overflow-hidden opacity-30">
         <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#00c1fd] rounded-full blur-[120px]" />
@@ -56,7 +56,7 @@ const NotFound = () => {
         </div>
 
         {/* Action Button */}
-        <button 
+        <button
           onClick={() => navigate(ROUTES.DASHBOARD)}
           className="w-full flex items-center justify-center gap-sm px-md py-sm ocean-gradient text-white rounded-[20px] font-black text-label-sm uppercase tracking-widest transition-all active:scale-95"
         >
@@ -69,4 +69,3 @@ const NotFound = () => {
 };
 
 export default NotFound;
-

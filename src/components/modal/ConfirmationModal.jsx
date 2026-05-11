@@ -1,17 +1,17 @@
 import { cn } from "../../utils/cn";
 import ModalBackdrop from "./ModalBackdrop";
 
-export const ConfirmationModal = ({ 
-  isOpen, 
-  onClose, 
-  onConfirm, 
+export const ConfirmationModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
   isSubmitting,
   title = "Confirm Action",
   description = "Are you sure you want to proceed?",
   confirmText = "Confirm",
   variant = "primary", // primary (blue), danger (red), etc.
   icon = null,
-  children 
+  children,
 }) => {
   if (!isOpen) return null;
 
@@ -21,7 +21,6 @@ export const ConfirmationModal = ({
   return (
     <ModalBackdrop>
       <div className="glass-panel w-[92%] sm:w-full max-w-[440px] rounded-[32px] shadow-[0_40px_80px_rgba(0,82,204,0.12)] overflow-hidden animate-zoomIn flex flex-col border border-white/40">
-
         {/* HEADER */}
         <div className="bg-surface-container-low/50 p-8 border-b border-outline-variant/20 text-center backdrop-blur-md">
           <h2 className="text-xl font-black text-on-surface tracking-tight uppercase font-display italic">
@@ -36,10 +35,12 @@ export const ConfirmationModal = ({
         <div className="p-8 max-h-[60vh] overflow-y-auto custom-scrollbar flex flex-col gap-6 font-body-md text-on-surface-variant">
           {children || (
             <div className="flex items-center justify-center p-4">
-              <div className={cn(
-                "w-20 h-20 rounded-full flex items-center justify-center shadow-inner border border-white/40",
-                variant === "danger" ? "bg-error/10 text-error" : "bg-primary/10 text-primary"
-              )}>
+              <div
+                className={cn(
+                  "w-20 h-20 rounded-full flex items-center justify-center shadow-inner border border-white/40",
+                  variant === "danger" ? "bg-error/10 text-error" : "bg-primary/10 text-primary"
+                )}
+              >
                 <span className="material-symbols-outlined text-[40px]">{displayIcon}</span>
               </div>
             </div>
@@ -60,8 +61,8 @@ export const ConfirmationModal = ({
             disabled={isSubmitting}
             className={cn(
               "flex-[2] px-4 py-3.5 rounded-xl text-xs font-black uppercase tracking-[0.15em] text-white shadow-lg transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 font-body-md",
-              variant === "danger" 
-                ? "bg-error hover:bg-error/90 shadow-error/20" 
+              variant === "danger"
+                ? "bg-error hover:bg-error/90 shadow-error/20"
                 : "ocean-gradient hover:opacity-90 shadow-primary/20"
             )}
           >

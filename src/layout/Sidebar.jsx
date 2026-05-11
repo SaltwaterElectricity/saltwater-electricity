@@ -22,8 +22,8 @@ const SidebarLink = memo(({ to, icon, label, badgeCount }) => (
     className={({ isActive }) =>
       cn(
         "flex items-center space-x-3 px-4 py-3 rounded-lg transition-all justify-center group-hover/sidebar:justify-start relative",
-        isActive 
-          ? "bg-blue-50/50 text-blue-700 border-r-4 border-blue-600" 
+        isActive
+          ? "bg-blue-50/50 text-blue-700 border-r-4 border-blue-600"
           : "text-slate-500 hover:bg-slate-50/50 hover:translate-x-1"
       )
     }
@@ -38,7 +38,7 @@ const SidebarLink = memo(({ to, icon, label, badgeCount }) => (
   </NavLink>
 ));
 
-SidebarLink.displayName = 'SidebarLink';
+SidebarLink.displayName = "SidebarLink";
 
 /**
  * Sidebar Component
@@ -47,10 +47,10 @@ SidebarLink.displayName = 'SidebarLink';
 const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
   const navigate = useNavigate();
   const { isAdmin, userRole, currentUser } = useAuth() || {};
-  const { notifications } = useNotifications(isAdmin ? 'admin' : currentUser?.uid);
+  const { notifications } = useNotifications(isAdmin ? "admin" : currentUser?.uid);
   const { deviceId } = useActiveDevice(currentUser?.uid, isAdmin);
 
-  const unreadCount = notifications.filter(n => !n.isRead).length;
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -69,7 +69,9 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
       setShowToast(true);
       sessionStorage.clear();
       localStorage.clear();
-      setTimeout(() => { window.location.href = ROUTES.LOGIN; }, 2000);
+      setTimeout(() => {
+        window.location.href = ROUTES.LOGIN;
+      }, 2000);
     } finally {
       setIsLoggingOut(false);
     }
@@ -77,7 +79,12 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
 
   return (
     <>
-      <Toast isOpen={showToast} message={toastConfig.message} type={toastConfig.type} onClose={() => setShowToast(false)} />
+      <Toast
+        isOpen={showToast}
+        message={toastConfig.message}
+        type={toastConfig.type}
+        onClose={() => setShowToast(false)}
+      />
 
       <aside className="hidden md:flex flex-col h-screen w-20 hover:w-64 transition-all duration-300 border-r border-white/40 fixed left-0 top-0 bg-white/70 backdrop-blur-md shadow-[0_8px_32px_0_rgba(0,82,204,0.08)] p-4 z-50 group/sidebar">
         {/* Brand Logo Section */}
@@ -94,36 +101,45 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
         <nav className="flex-1 space-y-1 overflow-y-auto custom-scrollbar-hide">
           <SidebarLink to={ROUTES.DASHBOARD} icon="dashboard" label="Dashboard" />
 
-          <SidebarLink 
-            to={ROUTES.SMART_AQUA_MONITOR} 
-            icon="visibility" 
-            label={isAdmin ? "Fleet Monitor" : "Live Monitor"} 
+          <SidebarLink
+            to={ROUTES.SMART_AQUA_MONITOR}
+            icon="visibility"
+            label={isAdmin ? "Fleet Monitor" : "Live Monitor"}
           />
-          
+
           {isAdmin && (
             <>
-              <SidebarLink to={ROUTES.ADMIN_DEVICE_MANAGEMENT} icon="hub" label="Device Management" />
+              <SidebarLink
+                to={ROUTES.ADMIN_DEVICE_MANAGEMENT}
+                icon="hub"
+                label="Device Management"
+              />
               <SidebarLink to={ROUTES.ADMIN_USER_MANAGEMENT} icon="group" label="User Management" />
             </>
           )}
 
           {deviceId && (
-            <SidebarLink 
-              to={ROUTES.DEVICE_ANALYTICS.replace(':deviceId', deviceId)} 
-              icon="monitoring" 
-              label="Device Analytics" 
+            <SidebarLink
+              to={ROUTES.DEVICE_ANALYTICS.replace(":deviceId", deviceId)}
+              icon="monitoring"
+              label="Device Analytics"
             />
           )}
-          
-          <SidebarLink to={ROUTES.ALERTS} icon="notifications_active" label="Alerts" badgeCount={unreadCount} />
-          
+
+          <SidebarLink
+            to={ROUTES.ALERTS}
+            icon="notifications_active"
+            label="Alerts"
+            badgeCount={unreadCount}
+          />
+
           {isAdmin && (
             <>
               <SidebarLink to={ROUTES.ADMIN_AUDIT_LOGS} icon="insights" label="Audit Logs" />
               <SidebarLink to="/predictive" icon="engineering" label="Predictive Maintenance" />
             </>
           )}
-          
+
           <SidebarLink to="/reports" icon="description" label="Reports" />
           <SidebarLink to="/settings" icon="settings" label="Settings" />
         </nav>
@@ -134,18 +150,25 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
             <span className="material-symbols-outlined group-hover/sidebar:mr-2">description</span>
             <span className="hidden group-hover/sidebar:inline">Generate Report</span>
           </button>
-          
-          <a className="flex items-center space-x-3 px-4 py-2 text-slate-500 hover:text-blue-600 transition-colors justify-center group-hover/sidebar:justify-start" href="#">
+
+          <a
+            className="flex items-center space-x-3 px-4 py-2 text-slate-500 hover:text-blue-600 transition-colors justify-center group-hover/sidebar:justify-start"
+            href="#"
+          >
             <span className="material-symbols-outlined">help</span>
-            <span className="font-['Space_Grotesk'] text-sm font-medium hidden group-hover/sidebar:block whitespace-nowrap overflow-hidden">Support</span>
+            <span className="font-['Space_Grotesk'] text-sm font-medium hidden group-hover/sidebar:block whitespace-nowrap overflow-hidden">
+              Support
+            </span>
           </a>
-          
-          <button 
+
+          <button
             onClick={() => setIsLogoutModalOpen(true)}
             className="w-full flex items-center space-x-3 px-4 py-2 text-slate-500 hover:text-error transition-colors justify-center group-hover/sidebar:justify-start"
           >
             <span className="material-symbols-outlined">logout</span>
-            <span className="font-['Space_Grotesk'] text-sm font-medium hidden group-hover/sidebar:block whitespace-nowrap overflow-hidden">Log Out</span>
+            <span className="font-['Space_Grotesk'] text-sm font-medium hidden group-hover/sidebar:block whitespace-nowrap overflow-hidden">
+              Log Out
+            </span>
           </button>
         </div>
       </aside>
@@ -158,19 +181,19 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
         title="Confirm Sign Out"
         description="Terminating your session will restrict access to real-time SAN ANDRES sensors hanggang sa susunod mong login."
         confirmText="Confirm Sign Out"
-        variant="danger" 
+        variant="danger"
       >
         <div className="mt-4 p-4 bg-error/5 border border-error/20 rounded-xl flex gap-4 items-center">
-           <ShieldAlert className="text-error w-6 h-6 flex-shrink-0" />
-           <p className="text-[10px] text-on-surface-variant/80 font-bold uppercase tracking-tight leading-tight">
-             Active Session Cleanup: Clearing Firebase Auth tokens and local storage cache.
-           </p>
+          <ShieldAlert className="text-error w-6 h-6 flex-shrink-0" />
+          <p className="text-[10px] text-on-surface-variant/80 font-bold uppercase tracking-tight leading-tight">
+            Active Session Cleanup: Clearing Firebase Auth tokens and local storage cache.
+          </p>
         </div>
       </ConfirmationModal>
     </>
   );
 });
 
-Sidebar.displayName = 'Sidebar';
+Sidebar.displayName = "Sidebar";
 
 export default Sidebar;

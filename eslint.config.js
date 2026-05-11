@@ -39,10 +39,13 @@ export default defineConfig([
       ...security.configs.recommended.rules,
       "react/prop-types": "off",
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
-      "no-unused-vars": ["error", { 
-        varsIgnorePattern: "^_",
-        argsIgnorePattern: "^_" 
-      }],
+      "no-unused-vars": [
+        "error",
+        {
+          varsIgnorePattern: "^_",
+          argsIgnorePattern: "^_",
+        },
+      ],
       "security/detect-object-injection": "off",
       // Strict React rules
       "react/no-array-index-key": "error",
@@ -55,15 +58,17 @@ export default defineConfig([
       "no-restricted-syntax": [
         "error",
         {
-          "selector": "Literal[value=/AIza[0-9A-Za-z-_]{35}/]",
-          "message": "Do not hardcode Firebase API keys. Use environment variables (VITE_FIREBASE_API_KEY)."
+          selector: "Literal[value=/AIza[0-9A-Za-z-_]{35}/]",
+          message:
+            "Do not hardcode Firebase API keys. Use environment variables (VITE_FIREBASE_API_KEY).",
         },
         {
-          "selector": "Literal[value=/SG\\.[0-9A-Za-z-_]{22}\\.[0-9A-Za-z-_]{43}/]",
-          "message": "Do not hardcode SendGrid API keys. Use environment variables (VITE_SENDGRID_API_KEY)."
-        }
+          selector: "Literal[value=/SG\\.[0-9A-Za-z-_]{22}\\.[0-9A-Za-z-_]{43}/]",
+          message:
+            "Do not hardcode SendGrid API keys. Use environment variables (VITE_SENDGRID_API_KEY).",
+        },
       ],
-      "no-console": ["error", { "allow": ["warn", "error"] }],
+      "no-console": ["error", { allow: ["warn", "error"] }],
       "no-debugger": "error",
     },
   },

@@ -15,15 +15,22 @@ export const AIInsightCard = () => (
       </div>
       <div className="flex-1">
         <div className="flex items-center justify-between">
-          <h4 className="font-['Space_Grotesk'] text-sm font-bold text-blue-900 uppercase tracking-wider">AI Predictive Insight</h4>
-          <span className="text-[10px] font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">CONFIDENCE: 92%</span>
+          <h4 className="font-['Space_Grotesk'] text-sm font-bold text-blue-900 uppercase tracking-wider">
+            AI Predictive Insight
+          </h4>
+          <span className="text-[10px] font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
+            CONFIDENCE: 92%
+          </span>
         </div>
         <p className="text-sm text-slate-700 mt-1 font-medium italic">
-          Potential filter maintenance required within 48 hours. <span className="text-blue-700 font-bold">78% probability of intake obstruction</span> detected at Station: Batangas South.
+          Potential filter maintenance required within 48 hours.{" "}
+          <span className="text-blue-700 font-bold">78% probability of intake obstruction</span>{" "}
+          detected at Station: Batangas South.
         </p>
         <div className="mt-3 flex space-x-3">
           <button className="text-xs font-bold text-blue-700 hover:underline flex items-center">
-            <span className="material-symbols-outlined text-sm mr-1">schedule</span> Schedule Service
+            <span className="material-symbols-outlined text-sm mr-1">schedule</span> Schedule
+            Service
           </button>
           <button className="text-xs font-bold text-slate-400 hover:text-slate-600">Dismiss</button>
         </div>

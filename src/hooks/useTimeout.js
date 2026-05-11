@@ -25,28 +25,31 @@ export const useTimeout = (timeoutLimit) => {
   }, []);
 
   // 2. MEMOIZED RESET LOGIC WITH THROTTLING
-  const resetTimer = useCallback((e) => {
-    if (!timeoutLimit) return;
+  const resetTimer = useCallback(
+    (e) => {
+      if (!timeoutLimit) return;
 
-    const now = Date.now();
-    if (e?.type === "mousemove") {
-      if (lastResetRef.current && now - lastResetRef.current < 2000) return;
-    }
-    
-    lastResetRef.current = now;
-    localStorage.setItem("last_activity", now.toString());
+      const now = Date.now();
+      if (e?.type === "mousemove") {
+        if (lastResetRef.current && now - lastResetRef.current < 2000) return;
+      }
 
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      lastResetRef.current = now;
+      localStorage.setItem("last_activity", now.toString());
 
-    timeoutRef.current = setTimeout(handleLogout, timeoutLimit);
-  }, [timeoutLimit, handleLogout]);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+      timeoutRef.current = setTimeout(handleLogout, timeoutLimit);
+    },
+    [timeoutLimit, handleLogout]
+  );
 
   // 3. VISIBILITY & EVENT LISTENER MANAGEMENT
   useEffect(() => {
     // Safety exit kung walang limit
     if (!timeoutLimit) {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      return; 
+      return;
     }
 
     // Check inactivity kapag bumalik ang user sa tab (browser throttling fix)
@@ -65,9 +68,9 @@ export const useTimeout = (timeoutLimit) => {
     };
 
     const events = ["mousemove", "keypress", "scroll", "mousedown", "touchstart"];
-    
+
     // Attach listeners
-    events.forEach(event => window.addEventListener(event, resetTimer));
+    events.forEach((event) => window.addEventListener(event, resetTimer));
     window.addEventListener("visibilitychange", checkInactivityOnFocus);
     window.addEventListener("focus", checkInactivityOnFocus);
 
@@ -76,7 +79,7 @@ export const useTimeout = (timeoutLimit) => {
 
     // CLEANUP: Prevent memory leaks
     return () => {
-      events.forEach(event => window.removeEventListener(event, resetTimer));
+      events.forEach((event) => window.removeEventListener(event, resetTimer));
       window.removeEventListener("visibilitychange", checkInactivityOnFocus);
       window.removeEventListener("focus", checkInactivityOnFocus);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);

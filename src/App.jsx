@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { useAuth } from "./context/useAuth";
-import { AnimatedLogo } from "./components"; 
-import { AppRoutes } from "./route/AppRoutes"; 
+import { AnimatedLogo } from "./components";
+import { AppRoutes } from "./route/AppRoutes";
 
 function App() {
   const { loading } = useAuth();
-  
+
   /**
    * isAnimationComplete State
    * Controls the transition from the interactive splash sequence to the main application.
@@ -25,9 +25,7 @@ function App() {
     );
   }
 
-  return (
-    <AppRoutes />
-  );
+  return <AppRoutes />;
 }
 
 export default App;

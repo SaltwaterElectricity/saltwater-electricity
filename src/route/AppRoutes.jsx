@@ -1,17 +1,17 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
-import { ROUTES, ROLE_LANDING_PAGES } from "../constants/routes"; 
+import { ROUTES, ROLE_LANDING_PAGES } from "../constants/routes";
 import { ROLES } from "../constants/roles";
 
 // Pages & Components
-import NotFound from "../pages/NotFound"; 
+import NotFound from "../pages/NotFound";
 import { ForcePasswordChange } from "../components";
 import { MainLayout } from "../layout";
 import AdminRegistration from "../pages/admin/AdminRegistration";
-import UserRegistration from "../pages/admin/UserRegistration"; 
+import UserRegistration from "../pages/admin/UserRegistration";
 import LoginPage from "../pages/auth/LoginPage";
 import UserManagement from "../pages/admin/UserManagement";
-import DashboardController from '../pages/dashboard';
+import DashboardController from "../pages/dashboard";
 import RealTimeMonitor from "../pages/dashboard/RealTimeMonitor";
 import DeviceManagement from "../pages/admin/DeviceManagement";
 import RequestManagement from "../pages/admin/RequestManagement";
@@ -36,7 +36,7 @@ const RootRedirect = ({ user, role }) => {
   if (ROLE_LANDING_PAGES[role]) {
     return <Navigate to={ROLE_LANDING_PAGES[role]} replace />;
   }
-  
+
   return <NotFound />;
 };
 
@@ -51,35 +51,45 @@ export const AppRoutes = () => {
       <Route path="/" element={<RootRedirect user={currentUser} role={userRole} />} />
 
       {/* 2. AUTH ROUTE: Render LoginPage at '/login' */}
-      <Route path={ROUTES.LOGIN} element={currentUser ? <Navigate to="/" replace /> : <LoginPage />} />
-      
+      <Route
+        path={ROUTES.LOGIN}
+        element={currentUser ? <Navigate to="/" replace /> : <LoginPage />}
+      />
+
       {/* Required for system security: Forced password changes */}
-      <Route 
-        path={ROUTES.FORCE_PASSWORD_CHANGE} 
-        element={mustChangePassword ? <ForcePasswordChange /> : <Navigate to="/" replace />} 
+      <Route
+        path={ROUTES.FORCE_PASSWORD_CHANGE}
+        element={mustChangePassword ? <ForcePasswordChange /> : <Navigate to="/" replace />}
       />
 
       {/* 3. PROTECTED ROUTES & PLACEHOLDERS */}
-      <Route element={<PrivateRoute />}> 
+      <Route element={<PrivateRoute />}>
         <Route element={<MainLayout />}>
-          
           {/* Dashboard Route (Standard entry point) */}
           <Route path="/dashboard" element={<DashboardController />} />
 
           {/* Admin Placeholder / Base Route */}
-          <Route path="/admin" element={
-            <div className="flex items-center justify-center h-[60vh]">
-              <div className="text-center">
-                <h2 className="text-2xl font-bold text-primary mb-2">Admin Portal</h2>
-                <p className="text-outline">Select a management module from the sidebar to begin.</p>
+          <Route
+            path="/admin"
+            element={
+              <div className="flex items-center justify-center h-[60vh]">
+                <div className="text-center">
+                  <h2 className="text-2xl font-bold text-primary mb-2">Admin Portal</h2>
+                  <p className="text-outline">
+                    Select a management module from the sidebar to begin.
+                  </p>
+                </div>
               </div>
-            </div>
-          } />
+            }
+          />
 
           {/* Detailed Admin Modules */}
           {(isAdmin || isSuperAdmin) && (
             <Route element={<PrivateRoute requiredRole={ROLES.ADMIN} />}>
-              <Route path={ROUTES.ADMIN_USER_MANAGEMENT} element={<UserManagement currentUserRole={userRole} />} />
+              <Route
+                path={ROUTES.ADMIN_USER_MANAGEMENT}
+                element={<UserManagement currentUserRole={userRole} />}
+              />
               <Route path={ROUTES.ADMIN_DEVICE_MANAGEMENT} element={<DeviceManagement />} />
               <Route path={ROUTES.ADMIN_REQUEST_MANAGEMENT} element={<RequestManagement />} />
               <Route path={ROUTES.ADMIN_AUDIT_LOGS} element={<AuditLogPage />} />

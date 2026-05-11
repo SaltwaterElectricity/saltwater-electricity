@@ -4,7 +4,7 @@ import { logoutUser } from "../services/auth.service";
 import { useUI } from "../context/useUI";
 import { useNotification } from "../context/useNotification";
 import { cn } from "../utils/cn";
-import SpinnerIcon from "../components/ui/SpinnerIcon"; 
+import SpinnerIcon from "../components/ui/SpinnerIcon";
 import { ConfirmationModal } from "../components/modal/ConfirmationModal";
 
 export const NavbarProfile = memo(({ currentUid = "" }) => {
@@ -38,7 +38,7 @@ export const NavbarProfile = memo(({ currentUid = "" }) => {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      await logoutUser(); 
+      await logoutUser();
       window.location.href = "/login";
     } catch {
       showNotification("Terminating session... Forcing secure reset.", "warning");
@@ -67,8 +67,7 @@ export const NavbarProfile = memo(({ currentUid = "" }) => {
 
   return (
     <div className="relative antialiased" ref={dropdownRef}>
-
-      <button 
+      <button
         onClick={handleToggle}
         disabled={isLoggingOut}
         className="h-10 w-10 rounded-full bg-slate-200 overflow-hidden border-2 border-blue-100 hover:border-blue-500 transition-all flex items-center justify-center font-bold text-blue-700 shadow-sm active:scale-95"
@@ -93,16 +92,18 @@ export const NavbarProfile = memo(({ currentUid = "" }) => {
           </div>
 
           <div className="space-y-1">
-            <button 
-              onClick={() => handleOpenSettings("profile")} 
+            <button
+              onClick={() => handleOpenSettings("profile")}
               disabled={isLoggingOut}
               className="w-full flex items-center gap-3 p-3 text-xs font-bold text-slate-600 hover:bg-slate-50 rounded-xl transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <span className="material-symbols-outlined text-lg text-slate-400 group-hover:text-blue-500 transition-colors">settings</span> 
+              <span className="material-symbols-outlined text-lg text-slate-400 group-hover:text-blue-500 transition-colors">
+                settings
+              </span>
               Account Settings
             </button>
 
-            <button 
+            <button
               onClick={handleLogoutClick}
               disabled={isLoggingOut}
               className={cn(
@@ -112,7 +113,9 @@ export const NavbarProfile = memo(({ currentUid = "" }) => {
               )}
             >
               <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-lg text-error transition-transform group-hover:-translate-x-1">logout</span> 
+                <span className="material-symbols-outlined text-lg text-error transition-transform group-hover:-translate-x-1">
+                  logout
+                </span>
                 <span>{isLoggingOut ? "Signing out..." : "Logout Session"}</span>
               </div>
               {isLoggingOut && <SpinnerIcon className="w-4 h-4 animate-spin text-error" />}
@@ -129,10 +132,10 @@ export const NavbarProfile = memo(({ currentUid = "" }) => {
         title="Confirm Sign Out"
         description="Terminating your session will restrict global visibility until next authentication."
         confirmText="Log Out"
-        variant="danger" 
+        variant="danger"
       />
     </div>
-    );
-    });
+  );
+});
 
-    NavbarProfile.displayName = 'NavbarProfile';
+NavbarProfile.displayName = "NavbarProfile";

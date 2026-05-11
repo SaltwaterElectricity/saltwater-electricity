@@ -1,20 +1,20 @@
-import { useState, useMemo } from 'react';
-import { useAuth } from '../../context/useAuth';
-import { useDevices } from '../../hooks';
-import { DeviceCard, AssignDeviceModal, ConfirmationModal } from '../../components';
-import { useNotification } from '../../context/useNotification';
-import { logger } from '../../utils/logger';
-import { deprovisionDevice } from '../../services/device.service';
-import { ShieldAlert } from 'lucide-react';
+import { useState, useMemo } from "react";
+import { useAuth } from "../../context/useAuth";
+import { useDevices } from "../../hooks";
+import { DeviceCard, AssignDeviceModal, ConfirmationModal } from "../../components";
+import { useNotification } from "../../context/useNotification";
+import { logger } from "../../utils/logger";
+import { deprovisionDevice } from "../../services/device.service";
+import { ShieldAlert } from "lucide-react";
 
 // Clean Code: Move Constants outside to avoid re-creation
-const STATUS_AVAILABLE = 'available';
+const STATUS_AVAILABLE = "available";
 
 const DeviceManagement = () => {
   const { user: currentUser, loading: authLoading } = useAuth();
   const { devices, loading, error } = useDevices();
   const { showNotification } = useNotification();
-  
+
   const [selectedDevice, setSelectedDevice] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -22,14 +22,17 @@ const DeviceManagement = () => {
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,
     deviceId: null,
-    isSubmitting: false
+    isSubmitting: false,
   });
 
   // Performance Safety: Use useMemo for heavy filtering
-  const { availableDevices, occupiedDevices } = useMemo(() => ({
-    availableDevices: devices.filter(d => d.availability === STATUS_AVAILABLE),
-    occupiedDevices: devices.filter(d => d.availability !== STATUS_AVAILABLE)
-  }), [devices]);
+  const { availableDevices, occupiedDevices } = useMemo(
+    () => ({
+      availableDevices: devices.filter((d) => d.availability === STATUS_AVAILABLE),
+      occupiedDevices: devices.filter((d) => d.availability !== STATUS_AVAILABLE),
+    }),
+    [devices]
+  );
 
   // Security Check: Ensure user is authorized before modal opens
   const handleDeviceAction = async (actionType, payload) => {
@@ -39,19 +42,22 @@ const DeviceManagement = () => {
     }
 
     try {
-      if (actionType === 'ASSIGN_DEVICE') {
+      if (actionType === "ASSIGN_DEVICE") {
         setSelectedDevice(payload);
         setIsModalOpen(true);
-      } else if (actionType === 'FORCE_DEPROVISION') {
+      } else if (actionType === "FORCE_DEPROVISION") {
         // payload is deviceId in this case
         setConfirmModal({
           isOpen: true,
           deviceId: payload,
-          isSubmitting: false
+          isSubmitting: false,
         });
       } else {
         logger.log(`[DeviceManagement] Action: ${actionType}`, payload);
-        showNotification(`Action ${actionType.replace('_', ' ')} processed successfully.`, "success");
+        showNotification(
+          `Action ${actionType.replace("_", " ")} processed successfully.`,
+          "success"
+        );
       }
     } catch (error) {
       showNotification(`Error: Action ${actionType} failed.`, "error");
@@ -65,14 +71,14 @@ const DeviceManagement = () => {
   };
 
   const handleConfirmDeprovision = async () => {
-    setConfirmModal(prev => ({ ...prev, isSubmitting: true }));
+    setConfirmModal((prev) => ({ ...prev, isSubmitting: true }));
     try {
       await deprovisionDevice(confirmModal.deviceId);
       showNotification("Device has been released and is now available.", "success");
       setConfirmModal({ isOpen: false, deviceId: null, isSubmitting: false });
     } catch (error) {
       showNotification(error.message, "error");
-      setConfirmModal(prev => ({ ...prev, isSubmitting: false }));
+      setConfirmModal((prev) => ({ ...prev, isSubmitting: false }));
     }
   };
 
@@ -86,8 +92,12 @@ const DeviceManagement = () => {
       <BackgroundDecor />
 
       <header className="relative z-10">
-        <h1 className="text-4xl font-black text-slate-900 tracking-tight italic">SaltwaterElectricity <span className="text-blue-600">Hub</span></h1>
-        <p className="text-slate-500 font-medium mt-2">Manage IoT deployments and node availability.</p>
+        <h1 className="text-4xl font-black text-slate-900 tracking-tight italic">
+          SaltwaterElectricity <span className="text-blue-600">Hub</span>
+        </h1>
+        <p className="text-slate-500 font-medium mt-2">
+          Manage IoT deployments and node availability.
+        </p>
       </header>
 
       {/* STATS OVERVIEW */}
@@ -98,9 +108,9 @@ const DeviceManagement = () => {
 
       <div className="space-y-20 relative z-10">
         {/* AVAILABLE SECTION */}
-        <DeviceSection 
-          title="Available Inventory" 
-          items={availableDevices} 
+        <DeviceSection
+          title="Available Inventory"
+          items={availableDevices}
           onAction={handleDeviceAction}
           currentUser={currentUser}
           isEmpty={availableDevices.length === 0}
@@ -108,9 +118,9 @@ const DeviceManagement = () => {
 
         {/* DEPLOYED SECTION */}
         {occupiedDevices.length > 0 && (
-          <DeviceSection 
-            title="Deployed Units" 
-            items={occupiedDevices} 
+          <DeviceSection
+            title="Deployed Units"
+            items={occupiedDevices}
             onAction={handleDeviceAction}
             currentUser={currentUser}
             isDimmed
@@ -118,15 +128,11 @@ const DeviceManagement = () => {
         )}
       </div>
 
-      <AssignDeviceModal
-        device={selectedDevice}
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-      />
+      <AssignDeviceModal device={selectedDevice} isOpen={isModalOpen} onClose={handleCloseModal} />
 
       <ConfirmationModal
         isOpen={confirmModal.isOpen}
-        onClose={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+        onClose={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
         onConfirm={handleConfirmDeprovision}
         isSubmitting={confirmModal.isSubmitting}
         title="Confirm Device Release"
@@ -135,13 +141,18 @@ const DeviceManagement = () => {
         variant="danger"
       >
         <div className="p-4 bg-amber-50 border border-amber-100 rounded-xl flex gap-4 items-center">
-            <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 shrink-0">
-                <ShieldAlert size={20} />
-            </div>
-            <div>
-                <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest">System Override</p>
-                <p className="text-[10px] text-amber-700 font-bold leading-tight mt-0.5">The hardware will be immediately available for re-assignment after this process completes.</p>
-            </div>
+          <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 shrink-0">
+            <ShieldAlert size={20} />
+          </div>
+          <div>
+            <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest">
+              System Override
+            </p>
+            <p className="text-[10px] text-amber-700 font-bold leading-tight mt-0.5">
+              The hardware will be immediately available for re-assignment after this process
+              completes.
+            </p>
+          </div>
         </div>
       </ConfirmationModal>
     </div>
@@ -153,14 +164,18 @@ const DeviceManagement = () => {
 const StatCard = ({ label, value, subLabel, isHighlight }) => (
   <div className="bg-white/60 backdrop-blur-md p-6 rounded-[28px] border border-white/80 shadow-sm">
     <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">{label}</p>
-    <p className={`text-3xl font-black ${isHighlight ? 'text-blue-600' : 'text-slate-900'}`}>
+    <p className={`text-3xl font-black ${isHighlight ? "text-blue-600" : "text-slate-900"}`}>
       {value} {subLabel && <span className="text-sm text-slate-400">{subLabel}</span>}
     </p>
   </div>
 );
 
 const DeviceSection = ({ title, items, onAction, currentUser, isEmpty, isDimmed }) => (
-  <section className={isDimmed ? "opacity-80 grayscale-[0.2] hover:opacity-100 transition-all duration-500" : ""}>
+  <section
+    className={
+      isDimmed ? "opacity-80 grayscale-[0.2] hover:opacity-100 transition-all duration-500" : ""
+    }
+  >
     <div className="flex items-center gap-4 mb-8">
       <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 bg-white/50 px-4 py-2 rounded-full border border-slate-100 backdrop-blur-sm">
         {title}
@@ -170,16 +185,18 @@ const DeviceSection = ({ title, items, onAction, currentUser, isEmpty, isDimmed 
 
     {isEmpty ? (
       <div className="bg-white/40 backdrop-blur-sm p-16 text-center rounded-[32px] border-2 border-dashed border-slate-200">
-        <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Empty inventory.</p>
+        <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">
+          Empty inventory.
+        </p>
       </div>
     ) : (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {items.map(device => (
-          <DeviceCard 
-            key={device.id || device.device_id} 
-            device={device} 
-            currentUser={currentUser} 
-            onAction={onAction} 
+        {items.map((device) => (
+          <DeviceCard
+            key={device.id || device.device_id}
+            device={device}
+            currentUser={currentUser}
+            onAction={onAction}
             viewMode="management"
           />
         ))}
@@ -204,9 +221,11 @@ const LoadingSpinner = () => (
 const ErrorMessage = ({ message }) => (
   <div className="flex h-screen items-center justify-center bg-[#f8fafc] p-6 text-center">
     <div className="bg-red-50 p-8 rounded-3xl border border-red-100 max-w-md">
-      <p className="text-red-600 font-bold uppercase tracking-widest text-xs mb-2">Error Detected</p>
+      <p className="text-red-600 font-bold uppercase tracking-widest text-xs mb-2">
+        Error Detected
+      </p>
       <p className="text-slate-900 font-black">
-        {typeof message === 'object' ? message?.message || "An unexpected error occurred" : message}
+        {typeof message === "object" ? message?.message || "An unexpected error occurred" : message}
       </p>
     </div>
   </div>

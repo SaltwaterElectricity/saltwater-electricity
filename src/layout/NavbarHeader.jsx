@@ -16,17 +16,21 @@ export const NavbarHeader = ({ currentUid }) => {
           Saltwater Electricity
         </span>
         <nav className="hidden lg:flex space-x-6 font-['Space_Grotesk']">
-          <NavLink 
-            to={ROUTES.DASHBOARD} 
-            className={({ isActive }) => cn(
-              "pb-1 font-medium transition-colors",
-              isActive ? "text-blue-700 border-b-2 border-blue-600" : "text-slate-600 hover:text-blue-500"
-            )}
+          <NavLink
+            to={ROUTES.DASHBOARD}
+            className={({ isActive }) =>
+              cn(
+                "pb-1 font-medium transition-colors",
+                isActive
+                  ? "text-blue-700 border-b-2 border-blue-600"
+                  : "text-slate-600 hover:text-blue-500"
+              )
+            }
           >
             Live View
           </NavLink>
-          <NavLink 
-            to="/grid-status" 
+          <NavLink
+            to="/grid-status"
             className="text-slate-600 hover:text-blue-500 transition-colors font-medium"
           >
             Grid Status
@@ -36,13 +40,13 @@ export const NavbarHeader = ({ currentUid }) => {
 
       <div className="flex items-center space-x-4">
         <div className="relative hidden sm:block">
-          <input 
-            className="bg-slate-100/50 border-none rounded-full px-4 py-2 text-sm w-64 focus:ring-2 focus:ring-blue-500 transition-all outline-none" 
-            placeholder="Search grid components..." 
+          <input
+            className="bg-slate-100/50 border-none rounded-full px-4 py-2 text-sm w-64 focus:ring-2 focus:ring-blue-500 transition-all outline-none"
+            placeholder="Search grid components..."
             type="text"
           />
         </div>
-        
+
         {/* Notifications */}
         <button className="hover:bg-slate-100/50 rounded-full p-2 text-slate-600 relative transition-colors">
           <span className="material-symbols-outlined">notifications</span>
@@ -53,7 +57,7 @@ export const NavbarHeader = ({ currentUid }) => {
         <button className="hover:bg-slate-100/50 rounded-full p-2 text-slate-600 transition-colors">
           <span className="material-symbols-outlined">settings_suggest</span>
         </button>
-        
+
         {/* Profile / Avatar with defined blue border */}
         <div className="border-2 border-blue-100 rounded-full">
           <NavbarProfile currentUid={currentUid} />
@@ -62,4 +66,3 @@ export const NavbarHeader = ({ currentUid }) => {
     </header>
   );
 };
-

@@ -1,14 +1,14 @@
 import { memo } from "react";
-import { 
-  AreaChart, 
-  Area, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer 
-} from 'recharts';
-import { CHART_STYLES } from '../../constants';
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import { CHART_STYLES } from "../../constants";
 
 /**
  * AnalyticsChart Component
@@ -25,19 +25,22 @@ const AnalyticsChart = memo(({ voltageData = [], salinityData = [] }) => {
         </h3>
         <div className="flex space-x-4 font-['Inter']">
           <span className="flex items-center space-x-2">
-            <span className="w-3 h-3 rounded-full bg-[#003d9b]" /> 
-            <span className="text-label-sm font-bold text-on-surface-variant uppercase tracking-widest">ENERGY</span>
+            <span className="w-3 h-3 rounded-full bg-[#003d9b]" />
+            <span className="text-label-sm font-bold text-on-surface-variant uppercase tracking-widest">
+              ENERGY
+            </span>
           </span>
           <span className="flex items-center space-x-2">
-            <span className="w-3 h-3 rounded-full bg-[#00c1fd]" /> 
-            <span className="text-label-sm font-bold text-on-surface-variant uppercase tracking-widest">SALINITY</span>
+            <span className="w-3 h-3 rounded-full bg-[#00c1fd]" />
+            <span className="text-label-sm font-bold text-on-surface-variant uppercase tracking-widest">
+              SALINITY
+            </span>
           </span>
         </div>
       </div>
-      
+
       {/* Dual Chart Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-md h-64 font-['Inter']">
-        
         {/* ENERGY (VOLTAGE) CHART */}
         <div className="relative w-full h-full bg-slate-50/50 rounded-xl overflow-hidden p-4 border border-white/40 shadow-inner group">
           <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#003d9b]/10 to-transparent pointer-events-none" />
@@ -45,32 +48,32 @@ const AnalyticsChart = memo(({ voltageData = [], salinityData = [] }) => {
             <AreaChart data={voltageData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="energyGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#003d9b" stopOpacity={0.2}/>
-                  <stop offset="95%" stopColor="#003d9b" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#003d9b" stopOpacity={0.2} />
+                  <stop offset="95%" stopColor="#003d9b" stopOpacity={0} />
                 </linearGradient>
                 <filter id="glow-energy">
-                  <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+                  <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
                   <feMerge>
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
                   </feMerge>
                 </filter>
               </defs>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
               <XAxis dataKey="timestamp" hide />
-              <YAxis hide domain={['auto', 'auto']} />
-              <Tooltip 
+              <YAxis hide domain={["auto", "auto"]} />
+              <Tooltip
                 contentStyle={CHART_STYLES.tooltip.contentStyle}
-                itemStyle={{ fontSize: '10px', fontWeight: 900, color: '#003d9b' }}
-                labelStyle={{ display: 'none' }}
+                itemStyle={{ fontSize: "10px", fontWeight: 900, color: "#003d9b" }}
+                labelStyle={{ display: "none" }}
               />
-              <Area 
-                type="monotone" 
-                dataKey="value" 
-                stroke="#003d9b" 
+              <Area
+                type="monotone"
+                dataKey="value"
+                stroke="#003d9b"
                 strokeWidth={3}
-                fillOpacity={1} 
-                fill="url(#energyGrad)" 
+                fillOpacity={1}
+                fill="url(#energyGrad)"
                 filter="url(#glow-energy)"
                 animationDuration={1500}
               />
@@ -87,32 +90,32 @@ const AnalyticsChart = memo(({ voltageData = [], salinityData = [] }) => {
             <AreaChart data={salinityData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="salinityGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#00c1fd" stopOpacity={0.2}/>
-                  <stop offset="95%" stopColor="#00c1fd" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#00c1fd" stopOpacity={0.2} />
+                  <stop offset="95%" stopColor="#00c1fd" stopOpacity={0} />
                 </linearGradient>
                 <filter id="glow-salinity">
-                  <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+                  <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
                   <feMerge>
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
                   </feMerge>
                 </filter>
               </defs>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
               <XAxis dataKey="timestamp" hide />
-              <YAxis hide domain={['auto', 'auto']} />
-              <Tooltip 
+              <YAxis hide domain={["auto", "auto"]} />
+              <Tooltip
                 contentStyle={CHART_STYLES.tooltip.contentStyle}
-                itemStyle={{ fontSize: '10px', fontWeight: 900, color: '#00c1fd' }}
-                labelStyle={{ display: 'none' }}
+                itemStyle={{ fontSize: "10px", fontWeight: 900, color: "#00c1fd" }}
+                labelStyle={{ display: "none" }}
               />
-              <Area 
-                type="monotone" 
-                dataKey="value" 
-                stroke="#00c1fd" 
+              <Area
+                type="monotone"
+                dataKey="value"
+                stroke="#00c1fd"
                 strokeWidth={3}
-                fillOpacity={1} 
-                fill="url(#salinityGrad)" 
+                fillOpacity={1}
+                fill="url(#salinityGrad)"
                 filter="url(#glow-salinity)"
                 animationDuration={1500}
               />
@@ -127,6 +130,6 @@ const AnalyticsChart = memo(({ voltageData = [], salinityData = [] }) => {
   );
 });
 
-AnalyticsChart.displayName = 'AnalyticsChart';
+AnalyticsChart.displayName = "AnalyticsChart";
 
 export default AnalyticsChart;
