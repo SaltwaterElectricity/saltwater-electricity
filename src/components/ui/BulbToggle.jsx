@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Lightbulb } from 'lucide-react';
 import { useReadings } from '../../hooks';
 import { updateBulbState } from '../../services/reading.service';

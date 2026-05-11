@@ -1,8 +1,8 @@
 import { Navigate, useLocation, Outlet } from "react-router-dom";
-import { useAuth } from "../../context/useAuth";
-import { ROLES } from "../../constants/roles";
-import { LoadingSpinner } from "../ui"; 
-import NotFound from "../../pages/NotFound"; // ENUMERATION PREVENTION: Use NotFound instead of Redirects
+import { useAuth } from "../context/useAuth";
+import { ROLES } from "../constants/roles";
+import { LoadingSpinner } from "../components/ui"; 
+import NotFound from "../pages/NotFound"; // ENUMERATION PREVENTION: Use NotFound instead of Redirects
 
 /**
  * PrivateRoute Component
@@ -28,10 +28,8 @@ const PrivateRoute = ({ requiredRole, children }) => {
   // This prevents unprivileged users or scanners from discovering valid paths.
   
   if (!currentUser) {
-    // Exception: If they are at the root, we can redirect to login as it's the app entry.
-    // However, for explicit sub-paths, we show NotFound.
-    if (location.pathname === "/") return <Navigate to="/login" replace />;
-    return <NotFound />;
+    // Redirect to login if session has expired or user is unauthenticated
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   // Mandatory internal system state check (Password reset)

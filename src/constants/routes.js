@@ -3,7 +3,7 @@ export const ROUTES = Object.freeze({
   HOME: "/",
   LOGIN: "/login",
   FORCE_PASSWORD_CHANGE: "/force-password-change",
-  UNAUTHORIZED: "/unauthorized",
+  NOTFOUND: "/not-found",
 
   // Admin & User Management
   ADMIN_USER_MANAGEMENT: "/admin/user-management",

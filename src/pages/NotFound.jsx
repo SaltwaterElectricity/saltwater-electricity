@@ -23,16 +23,16 @@ const NotFound = () => {
           'navigation_failure',
           `User attempted to access non-existent path: ${location.pathname}`
         );
-      } catch (_error) {
+      } catch {
         // Silent fail for logging to ensure UI performance
       }
-    };
-    
-    logTrace();
-  }, [location.pathname]);
+      };
 
-  return (
-    <div className="min-h-[80vh] flex items-center justify-center p-md antialiased">
+      logTrace();
+      }, [location.pathname]);
+
+      return (
+      <div className="min-h-[80vh] flex items-center justify-center p-md antialiased">
       {/* Decorative Water Background Effects */}
       <div className="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none overflow-hidden opacity-30">
         <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#00c1fd] rounded-full blur-[120px]" />
@@ -51,7 +51,7 @@ const NotFound = () => {
             Navigation Error
           </h2>
           <p className="font-['Inter'] text-body-md text-on-surface-variant leading-relaxed">
-            It looks like this path has drifted away. Let's get you back to familiar waters.
+            It looks like this path has drifted away. Let&apos;s get you back to familiar waters.
           </p>
         </div>
 

@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useAuth } from '../../context/useAuth';
 import { useDevices } from '../../hooks';
-import { DeviceCard, AssignDeviceModal, Toast, ConfirmationModal } from '../../components';
+import { DeviceCard, AssignDeviceModal, ConfirmationModal } from '../../components';
 import { useNotification } from '../../context/useNotification';
 import { logger } from '../../utils/logger';
 import { deprovisionDevice } from '../../services/device.service';
@@ -197,7 +197,7 @@ const BackgroundDecor = () => (
 
 const LoadingSpinner = () => (
   <div className="flex h-screen items-center justify-center bg-[#f8fafc]">
-    <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-600"></div>
+    <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-600" />
   </div>
 );
 

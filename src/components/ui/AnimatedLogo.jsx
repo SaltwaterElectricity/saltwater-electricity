@@ -71,26 +71,32 @@ const AnimatedLogo = ({ onComplete }) => {
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center bg-white overflow-hidden">
       <div className="logo-container" id="intro-container">
-        <div className="scene">
-          <div className="cube-shadow"></div>
+        <div className="splash-scene">
+          <div className="cube-shadow" />
 
           {/* Moved text-container inside full-cube-zoom-layer to ensure it zooms with the cube */}
-          <div id="full-cube-zoom-layer" className={cn(status === "zoom" && "perform-full-zoom")}>
+          <div 
+            id="full-cube-zoom-layer" 
+            className={cn(
+              "flex flex-col items-center justify-center gap-12",
+              status === "zoom" && "perform-full-zoom"
+            )}
+          >
             <div className={cn("cube", (status === "shining" || status === "looping") && "shining", status === "looping" && "looping")} id="logo-cube">
               <div className="face-group" id="face-e">
-                <div className="layer top-layer"></div>
+                <div className="layer top-layer" />
               </div>
               <div className="face-group" id="face-s">
-                <div className="layer top-layer"></div>
+                <div className="layer top-layer" />
               </div>
               <div className="face-group" id="face-m">
-                <div className="layer top-layer"></div>
+                <div className="layer top-layer" />
               </div>
             </div>
 
             <div className="text-container">
-              <h1 className="title"> DEVICE MONITORING</h1>
-              <h2 className="subtitle">SALTWATER ELECTRICITY</h2>
+              <h1 className="cube-title uppercase">Device Monitoring</h1>
+              <h2 className="cube-subtitle uppercase">Saltwater Electricity</h2>
             </div>
           </div>
         </div>

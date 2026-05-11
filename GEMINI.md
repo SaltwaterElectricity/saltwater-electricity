@@ -106,3 +106,29 @@ C:\Users\Admin\testcode\
     - Small Components (Chips/Badges): `8px` (unit * 1).
     - Standard Cards: `16px` (unit * 2) or `24px` (unit * 3).
     - Page Containers: `32px` (unit * 4).
+
+
+### 🛡️ Set Up Automated Static Testing (Husky + lint-staged)
+Run the following prompt in the Gemini CLI to automatically initialize the Git hooks and update the package.json.
+
+```bash
+gemini -p "Automate the setup of Husky and lint-staged for this project.
+
+Tasks to execute:
+1. Terminal Commands: Run 'npm install --save-dev husky lint-staged' and 'npx husky init'.
+2. Hook Configuration: Overwrite the '.husky/pre-commit' file to contain exactly: 'npx lint-staged'.
+3. Package.json Update: Inject the 'lint-staged' configuration block into package.json targeting '*.{js,jsx}' for 'eslint --fix' and 'prettier --write', and '*.{json,css,md}' for 'prettier --write'.
+4. Ensure the 'prepare': 'husky' script is in the scripts section."
+
+
+### 🎭 Initialize Playwright Testing Suite
+Run this prompt in the Gemini CLI to fully automate the installation and configuration of Playwright.
+
+```bash
+gemini -p "Initialize Playwright for this React Vite project.
+
+Tasks to execute:
+1. Installation: Run 'npm init playwright@latest -- --yes --quiet --browser=chromium --browser=firefox --browser=webkit --lang=js'.
+2. Scripts: Add 'test:e2e': 'playwright test' and 'test:ui': 'playwright test --ui' to the package.json.
+3. Configuration: Update 'playwright.config.js' to point 'testDir' to './src/tests/e2e' and set 'use.baseURL' to 'http://localhost:5173'.
+4. Boilerplate: Create a sample test file '@src/tests/e2e/login.spec.js' that checks if the LoginPage renders the 'Welcome Back' header."

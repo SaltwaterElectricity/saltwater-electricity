@@ -24,7 +24,7 @@ const LoginModal = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        <div className="px-8 pb-8 overflow-y-auto">
+        <div className="px-8 pb-8 overflow-y-auto custom-scrollbar">
           <LoginForm />
         </div>
       </div>

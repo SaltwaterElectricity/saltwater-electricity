@@ -36,7 +36,7 @@ class CardErrorBoundary extends React.Component {
           </h4>
           
           <p className="text-[11px] text-slate-400 mb-6 max-w-[180px] leading-relaxed">
-            Something went wrong while syncing this device's data.
+            Something went wrong while syncing this device&apos;s data.
           </p>
 
           <button

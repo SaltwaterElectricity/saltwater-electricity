@@ -18,7 +18,8 @@ import { ROLES } from "../constants/roles";
 import { appError } from "../utils/appError";
 import { logger } from "../utils/logger";
 import { generateDefaultPassword } from "../utils/passwordGenerator";
-import { sendOnboardingEmail } from "./email.service"
+import { sendOnboardingEmail } from "./email.service";
+import { sanitizeForFirebaseKey } from "../utils/sanitization";
 
 /**
  * ERROR MAPPER: Centralized for all auth actions.
@@ -96,8 +97,6 @@ export const changeUserPassword = async (newPassword, { currentPassword = null, 
 
     await update(ref(db), updates);
 
-    sessionStorage.removeItem("is_verified");
-
     return { success: true };
   } catch (error) {
     if (error instanceof appError) throw error;
@@ -147,7 +146,7 @@ export const registerUserAccount = async (userData) => {
   } catch (error) {
     // EMERGENCY CLEANUP
     if (tempApp) {
-      try { await deleteApp(tempApp); } catch (_e) { /* silent cleanup fail */ }
+      try { await deleteApp(tempApp); } catch { /* silent cleanup fail */ }
     }
 
     if (error instanceof appError) throw error;
@@ -178,7 +177,7 @@ export const loginUser = async (email, password) => {
     const uid = userCredential.user.uid;
 
     // Reset attempts on successful login using consistent tracking ID
-    const trackingId = cleanEmail.replace(/[^a-zA-Z0-9]/g, '');
+    const trackingId = sanitizeForFirebaseKey(cleanEmail);
     await update(ref(db, `login-attempts/${trackingId}`), { count: 0, lockoutUntil: 0 });
 
     // Verify system status before allowing the session to continue
@@ -186,18 +185,15 @@ export const loginUser = async (email, password) => {
 
     if (userData.status === "disabled") {
       await signOut(auth);
-      sessionStorage.removeItem("is_verified");
       throw new appError("Your account is suspended. Please contact support.", true, "auth/account-suspended");
     }
 
-    sessionStorage.setItem("is_verified", "true");
     return { 
       user: userCredential.user, 
       userData: { ...userData, uid }
     };
 
   } catch (error) {
-    sessionStorage.removeItem("is_verified");
     if (error instanceof appError) throw error;
 
     const errorCode = ["auth/user-not-found", "auth/wrong-password", "auth/invalid-credential"].includes(error.code) 
@@ -217,13 +213,12 @@ export const logoutUser = async () => {
     //FIREBASE SIGNOUT
     await signOut(auth);
 
-    sessionStorage.removeItem("is_verified");
     sessionStorage.removeItem("pending_uid");
 
     localStorage.removeItem("last_activity");
 
     return { success: true };
-  } catch (_error) {
+  } catch {
     throw new appError("Security Check: Failed to securely terminate the session.", true, "auth/logout-failed");
   }
 };

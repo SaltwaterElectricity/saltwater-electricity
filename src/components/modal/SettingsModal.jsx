@@ -70,20 +70,20 @@ export const SettingsModal = memo(({ uid }) => {
       />
 
       {/* 📦 Modal Container */}
-      <div className="relative bg-white w-full max-w-2xl h-[550px] rounded-3xl shadow-2xl flex flex-col overflow-hidden z-10 animate-in fade-in slide-in-from-bottom-4 duration-300 border border-slate-100">
+      <div className="relative glass-panel w-full max-w-2xl h-[550px] rounded-[32px] shadow-[0_40px_80px_rgba(0,82,204,0.12)] flex flex-col overflow-hidden z-10 animate-zoomIn border border-white/40">
         
         {/* Header */}
-        <div className="h-16 flex items-center justify-between px-6 border-b border-slate-100 flex-shrink-0">
+        <div className="h-18 flex items-center justify-between px-8 border-b border-outline-variant/20 flex-shrink-0 bg-surface-container-low/50 backdrop-blur-md">
           <div>
-            <h2 className="text-xs font-black text-slate-900 uppercase tracking-wider">Account Settings</h2>
-            <p className="text-[10px] font-bold text-slate-400">Manage your facility profile and system security credentials</p>
+            <h2 className="text-[10px] font-black text-primary uppercase tracking-[0.25em] font-display">System Configuration</h2>
+            <p className="text-h2 font-bold text-on-surface tracking-tight mt-0.5">Account Settings</p>
           </div>
           <button 
             onClick={handleCloseModal} 
             disabled={isSubmitting} 
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-900 hover:bg-slate-50 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-2.5 rounded-xl text-outline hover:text-on-surface hover:bg-white/40 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed border border-outline-variant/10"
           >
-            <X size={18} />
+            <X size={20} />
           </button>
         </div>
 
@@ -91,32 +91,32 @@ export const SettingsModal = memo(({ uid }) => {
         <div className="flex-1 flex overflow-hidden">
           
           {/* 📑 Tab Sidebar (Left side) */}
-          <div className="w-16 md:w-52 border-r border-slate-100 p-2 md:p-3 space-y-2 bg-slate-50/50 flex-shrink-0 flex flex-col items-center md:items-stretch">
+          <div className="w-16 md:w-56 border-r border-outline-variant/20 p-3 space-y-2 bg-surface-container-low/30 flex-shrink-0 flex flex-col items-center md:items-stretch">
             <TabButton 
               isActive={activeTab === "profile"} 
               onClick={() => { if (!isSubmitting) setActiveTab("profile"); }} 
               disabled={isSubmitting}
               icon={User}
-              label="Profile"
+              label="Facility Profile"
             />
             <TabButton 
               isActive={activeTab === "security"} 
               onClick={() => { if (!isSubmitting) setActiveTab("security"); }} 
               disabled={isSubmitting}
               icon={Lock}
-              label="Security"
+              label="Security Protocol"
             />
             <TabButton 
               isActive={activeTab === "sessions"} 
               onClick={() => { if (!isSubmitting) setActiveTab("sessions"); }} 
               disabled={isSubmitting}
               icon={History}
-              label="Sessions"
+              label="Session Audit"
             />
           </div>
 
           {/* 🖥️ Dynamic Forms Display (Right side) */}
-          <div className="flex-1 p-8 overflow-y-auto custom-scrollbar bg-white min-w-0">
+          <div className="flex-1 p-10 overflow-y-auto custom-scrollbar bg-white/40 min-w-0">
             {activeTab === "profile" && (
               !profileData ? (
                 <ProfileFormSkeleton />
@@ -145,19 +145,21 @@ export const SettingsModal = memo(({ uid }) => {
   );
 });
 
+SettingsModal.displayName = 'SettingsModal';
+
 const TabButton = ({ isActive, onClick, disabled, icon: Icon, label }) => (
   <button
     onClick={onClick}
     disabled={disabled}
     title={label}
     className={cn(
-      "w-full flex items-center justify-center md:justify-start gap-0 md:gap-3 p-3 rounded-xl text-xs font-bold transition-all disabled:cursor-not-allowed disabled:opacity-60",
+      "w-full flex items-center justify-center md:justify-start gap-0 md:gap-3 p-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all disabled:cursor-not-allowed disabled:opacity-60 font-body-md",
       isActive 
-        ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20" 
-        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+        ? "ocean-gradient text-white shadow-lg shadow-primary/20" 
+        : "text-outline hover:bg-white/40 hover:text-on-surface"
     )}
   >
-    <Icon size={18} className={isActive ? "text-white" : "text-slate-400"} />
+    <Icon size={18} className={isActive ? "text-white" : "text-outline"} />
     <span className="hidden md:inline truncate">{label}</span>
   </button>
 );

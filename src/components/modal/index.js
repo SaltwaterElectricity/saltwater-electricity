@@ -1,3 +1,4 @@
+export { default as AccessGrantedModal } from './AccessGrantedModal';
 export { default as AssignDeviceModal } from './AssignDeviceModal';
 export { ConfirmationModal } from './ConfirmationModal';
 export { default as EditUserModal } from './EditUserModal';

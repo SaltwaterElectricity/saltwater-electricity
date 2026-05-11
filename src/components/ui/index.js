@@ -9,6 +9,7 @@ export { default as GlobalSearch } from './GlobalSearch';
 export { Logo } from './Logo';
 export { default as SalinityGauge } from './SalinityGauge';
 export { default as VoltageGauge } from './VoltageGauge';
+export { default as GlowLineChart } from './GlowLineChart';
 export { UserTable } from './UserTable';
 export { default as MetricCard } from './MetricCard';
 export { AIInsightCard } from './AIInsightCard';

@@ -51,7 +51,7 @@ const verifyAdminClearance = async () => {
     if (roleData?.role === ROLES.ADMIN || roleData?.role === ROLES.SUPER_ADMIN) {
       return true;
     }
-  } catch (_dbError) {
+  } catch {
     // Ignore DB errors here and move to emergency fallback
   }
 
@@ -132,7 +132,7 @@ export const provisionUserSystem = async (uid, formData) => {
     await update(ref(db), updates);
     await logActivity('USER_PROVISIONED', uid, `User ${cleanProfile.email} provisioned with role: ${finalRole}`);
     return { success: true };
-  } catch (_error) {
+  } catch {
     throw new appError(DB_ERRORS.PROVISION_FAILED, true, "db/provision-failed");
   }
 };
@@ -140,6 +140,8 @@ export const provisionUserSystem = async (uid, formData) => {
 // READER: Real-time subscription.
 export const subscribeToAllUsers = (callback, targetRole = null, onError = null) => {
   const rolesRef = ref(db, "roles");
+  const usersRef = ref(db, "users");
+  const accountsRef = ref(db, "accounts");
 
   const roleQuery = targetRole
     ? query(rolesRef, orderByChild("role"), equalTo(targetRole))
@@ -153,39 +155,43 @@ export const subscribeToAllUsers = (callback, targetRole = null, onError = null)
         return callback([]);
       }
 
-      const hydrationPromises = [];
+      try {
+        // Optimization: Fetch Users and Accounts collections in parallel once
+        const [usersSnap, accountsSnap] = await Promise.all([
+          get(usersRef),
+          get(accountsRef)
+        ]);
 
-      snapshot.forEach((childSnapshot) => {
-        const uid = childSnapshot.key;
-        const roleData = childSnapshot.val();
+        const allUsers = usersSnap.val() || {};
+        const allAccounts = accountsSnap.val() || {};
+        const results = [];
 
-        // Privacy Guard
-        if (targetRole === ROLES.SUPER_ADMIN || !roleData.isPrivate) {
-          
-          // 2. Hydrate: Use the UID key to fetch profile details from the /users node
-          const userProfilePromise = get(ref(db, `users/${uid}`))
-            .then((userSnapshot) => {
-              const profileData = userSnapshot.exists() ? userSnapshot.val() : {};
-              
-              return {
-                id: uid,
-                ...roleData,    // Contains role, isPrivate, updatedAt
-                ...profileData, // Contains firstName, lastName, email, etc.
-              };
-            })
-            .catch(() => {
-              return { id: uid, ...roleData };
+        snapshot.forEach((childSnapshot) => {
+          const uid = childSnapshot.key;
+          const roleData = childSnapshot.val();
+
+          // Privacy Guard & Hydration
+          if (targetRole === ROLES.SUPER_ADMIN || !roleData.isPrivate) {
+            const profileData = allUsers[uid] || {};
+            const accountData = allAccounts[uid] || {};
+            
+            results.push({
+              id: uid,
+              uid: uid, // for compatibility
+              ...roleData,    
+              ...profileData,
+              status: accountData.status || "active",
+              requiresPasswordChange: accountData.requiresPasswordChange || false
             });
+          }
+        });
 
-          hydrationPromises.push(userProfilePromise);
-        }
-      });
-
-      // 3. Wait for all profile lookups to resolve before sending back to UI
-      const completeList = await Promise.all(hydrationPromises);
-      callback(completeList);
+        callback(results);
+      } catch (err) {
+        if (onError) onError(err);
+      }
     },
-    (_error) => {
+    () => {
       if (onError) onError(new appError(DB_ERRORS.FETCH_FAILED, true, "db/fetch-failed"));
     }
   );

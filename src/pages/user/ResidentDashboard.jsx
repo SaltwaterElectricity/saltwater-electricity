@@ -60,7 +60,7 @@ const ResidentDashboard = () => {
                 </div>
                 <h2 className="text-h2 font-['Space_Grotesk'] font-bold text-primary tracking-tight italic">No Active Node</h2>
                 <p className="text-body-md text-on-surface-variant mt-4 leading-relaxed font-['Inter']">
-                    Your account doesn't have an assigned monitoring unit yet. Contact the facility administrator to provision your hardware.
+                    Your account doesn&apos;t have an assigned monitoring unit yet. Contact the facility administrator to provision your hardware.
                 </p>
             </div>
         </div>
@@ -84,7 +84,7 @@ const ResidentDashboard = () => {
         </div>
         <button className="relative p-3 glass-panel rounded-xl hover:bg-primary/5 transition-all active:scale-95 shadow-sm group border-outline/20">
           <Bell size={20} className="text-on-surface-variant group-hover:text-primary transition-colors" />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-white animate-pulse"></span>
+          <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-white animate-pulse" />
         </button>
       </header>
 

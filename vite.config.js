@@ -8,6 +8,12 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './setupTests.js', // We will create this next
+  },
   
   base: './', // 👈 1. Keeps asset paths relative so the phone can find them locally!
   build: {

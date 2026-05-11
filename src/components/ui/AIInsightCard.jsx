@@ -5,8 +5,8 @@ export const AIInsightCard = () => (
   <div className="glass-panel p-md border-secondary-container/30 bg-secondary-container/5 relative overflow-hidden">
     <div className="absolute top-0 right-0 p-2">
       <span className="flex h-2 w-2 relative">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-        <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
+        <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500" />
       </span>
     </div>
     <div className="flex items-start space-x-4">

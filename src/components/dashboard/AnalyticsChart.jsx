@@ -25,11 +25,11 @@ const AnalyticsChart = memo(({ voltageData = [], salinityData = [] }) => {
         </h3>
         <div className="flex space-x-4 font-['Inter']">
           <span className="flex items-center space-x-2">
-            <span className="w-3 h-3 rounded-full bg-[#003d9b]"></span> 
+            <span className="w-3 h-3 rounded-full bg-[#003d9b]" /> 
             <span className="text-label-sm font-bold text-on-surface-variant uppercase tracking-widest">ENERGY</span>
           </span>
           <span className="flex items-center space-x-2">
-            <span className="w-3 h-3 rounded-full bg-[#00c1fd]"></span> 
+            <span className="w-3 h-3 rounded-full bg-[#00c1fd]" /> 
             <span className="text-label-sm font-bold text-on-surface-variant uppercase tracking-widest">SALINITY</span>
           </span>
         </div>
@@ -126,5 +126,7 @@ const AnalyticsChart = memo(({ voltageData = [], salinityData = [] }) => {
     </div>
   );
 });
+
+AnalyticsChart.displayName = 'AnalyticsChart';
 
 export default AnalyticsChart;

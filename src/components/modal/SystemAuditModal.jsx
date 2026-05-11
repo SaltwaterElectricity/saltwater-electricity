@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   X, 
   Activity, 
@@ -6,8 +6,7 @@ import {
   Table as TableIcon, 
   UserCheck, 
   Zap,
-  Download,
-  AlertCircle
+  Download
 } from 'lucide-react';
 import { cn } from "../../utils/cn";
 import { useReadings, useHistory, useAssignmentDetails } from '../../hooks';
@@ -181,7 +180,7 @@ const ConnectivitySection = ({ reading }) => (
 const RawTelemetrySection = ({ logs }) => (
     <div className="flex flex-col gap-8 animate-fadeIn">
         <SectionHeader title="Raw Logs" sub="Unfiltered telemetry data audit trail" />
-        <div className="overflow-x-auto rounded-2xl border border-slate-100 bg-white shadow-sm">
+        <div className="overflow-x-auto custom-scrollbar rounded-2xl border border-slate-100 bg-white shadow-sm">
             <table className="w-full text-left border-collapse">
                 <thead className="bg-slate-50 text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 font-['Inter']">
                     <tr>

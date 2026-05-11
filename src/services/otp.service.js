@@ -1,4 +1,13 @@
-import { ref, get, set, remove, serverTimestamp } from "firebase/database";
+import { 
+  ref, 
+  get, 
+  set, 
+  remove, 
+  serverTimestamp,
+  query,
+  orderByChild,
+  equalTo 
+} from "firebase/database";
 import { db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
 import { logger } from "../utils/logger";
@@ -16,38 +25,38 @@ const OTP_EXPIRY_MS = 300000; // 5 minutes
 /**
  * GENERATE OTP
  * 
- * 1. Generates a 6-digit numeric code.
- * 2. Saves it to the '/otp-requests/{userId}' node in RTDB.
- * 3. Sends the code via SendGrid (never returned to frontend).
+ * 1. Finds user by email to get their Auth UID.
+ * 2. Generates a 6-digit numeric code.
+ * 3. Saves it to the '/otp-requests/{userId}' node in RTDB.
+ * 4. Sends the code via SendGrid (never returned to frontend).
  */
-export const generateOTP = async (userId, email) => {
-  if (!userId || !email) {
-    throw new appError("User identification and email are required.", true, "otp/invalid-parameters");
+export const generateOTP = async (userId_not_used, email) => {
+  if (!email) {
+    throw new appError("Email is required for password reset.", true, "otp/invalid-parameters");
   }
 
   try {
     // 🛡️ SECURITY: Verify user existence before sending email
-    const userRef = ref(db, `users/${userId}`);
-    const userSnap = await get(userRef);
+    const usersRef = ref(db, 'users');
+    const emailQuery = query(usersRef, orderByChild('email'), equalTo(email.toLowerCase().trim()));
+    const snapshot = await get(emailQuery);
 
-    if (!userSnap.exists()) {
-      logger.warn(`OTP Request blocked: User ${userId} does not exist.`);
+    if (!snapshot.exists()) {
+      logger.warn(`OTP Request blocked: No account for ${email}.`);
       return { success: true }; // OWASP: Anti-enumeration silent return
     }
 
-    const userData = userSnap.val();
-    if (userData.email.toLowerCase() !== email.toLowerCase().trim()) {
-      logger.warn(`OTP Request blocked: Email mismatch for ${userId}.`);
-      return { success: true }; // OWASP: Anti-enumeration silent return
-    }
+    // Pull the actual UID and data
+    const userEntries = Object.entries(snapshot.val());
+    const [uid] = userEntries[0];
 
     // 1. Generate a 6-digit numeric code
     const array = new Uint32Array(1);
     window.crypto.getRandomValues(array);
     const otpCode = (array[0] % 900000 + 100000).toString();
 
-    // 2. Save to RTDB: '/otp-requests/{userId}'
-    const otpRef = ref(db, `otp-requests/${userId}`);
+    // 2. Save to RTDB: '/otp-requests/{userId}' using the real UID
+    const otpRef = ref(db, `otp-requests/${uid}`);
     await set(otpRef, {
       email,
       code: otpCode,

@@ -38,7 +38,7 @@ export const useDevices = (onlyAvailable = false) => {
           setDevices(deviceList);
         }
         setError(null);
-      } catch (_err) {
+      } catch {
         setError(new appError("Failed to parse device list.", true, "db/parse-failed"));
       } finally {
         setLoading(false);

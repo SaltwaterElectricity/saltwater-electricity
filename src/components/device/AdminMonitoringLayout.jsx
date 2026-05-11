@@ -1,53 +1,94 @@
 import { Activity, User, Wifi, ExternalLink, MoreVertical } from 'lucide-react';
 import { cn } from "../../utils/cn";
-import { SalinityGauge, VoltageGauge } from '../ui';
+import { GlowLineChart } from '../ui';
+import { useHistory } from '../../hooks';
+import { SENSOR_CONFIG, METRICS } from '../../constants';
 
 const InfoTag = ({ label, value, icon: Icon, align = "left" }) => (
   <div className={cn("flex items-center gap-2", align === "right" && "flex-row-reverse text-right")}>
-    <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+    <div className="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-outline">
       <Icon size={14} />
     </div>
     <div>
-      <p className="text-[8px] font-black text-slate-400 uppercase tracking-tighter leading-none mb-1">{label}</p>
-      <p className="text-[11px] font-black text-slate-700 leading-none">{value}</p>
+      <p className="text-[11px] font-bold text-outline uppercase tracking-widest leading-none mb-1 font-body-md">{label}</p>
+      <p className="text-[13px] font-bold text-on-surface leading-none font-body-md">{value}</p>
     </div>
   </div>
 );
 
-export const AdminMonitoringLayout = ({ device, onViewAnalytics }) => {
-  const deviceId = device.device_id;
+const MetricRow = ({ label, value, unit, type, status, history }) => (
+  <div className="flex justify-between items-end">
+    <div>
+      <p className="text-[11px] font-bold text-outline uppercase tracking-widest mb-1 font-body-md">{label}</p>
+      <p className={cn(
+        "text-xl font-h2 text-on-surface",
+        status === 'Warning' && type === 'voltage' && "text-error"
+      )}>
+        {value}<span className="text-xs font-normal text-outline ml-1">{unit}</span>
+      </p>
+    </div>
+    <GlowLineChart type={type} status={status} history={history} />
+  </div>
+);
+
+export const AdminMonitoringLayout = ({ device, telemetry, onViewAnalytics }) => {
+  const voltageThreshold = SENSOR_CONFIG[METRICS.VOLTAGE]?.warning || 3.2;
+  const status = device.status || (telemetry?.voltage < voltageThreshold ? 'Warning' : 'Online');
+  const { logs: history } = useHistory(device.device_id, 10);
 
   return (
     <div className="space-y-6 animate-fadeIn">
       <div className="flex justify-between items-start">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <div className="flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
-            <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">System Live</p>
+            <div className={cn(
+              "flex h-2 w-2 rounded-full",
+              status === 'Online' ? "bg-tertiary-fixed-dim shadow-[0_0_8px_rgba(0,224,184,0.5)]" : "bg-error"
+            )} />
+            <p className={cn(
+              "text-[10px] font-bold uppercase tracking-widest",
+              status === 'Online' ? "text-tertiary" : "text-error"
+            )}>
+              {status === 'Online' ? 'System Live' : 'Maintenance Required'}
+            </p>
           </div>
-          <h3 className="text-lg font-black text-slate-900 truncate max-w-[180px]">
+          <h3 className="font-h2 text-xl font-bold text-on-surface truncate max-w-[180px]">
             {device.device_name}
           </h3>
+          <p className="text-xs font-mono text-outline">ID: {device.device_id}</p>
         </div>
-        <button className="p-2 hover:bg-slate-50 rounded-xl transition-colors text-slate-400">
+        <button className="p-2 hover:bg-surface-container rounded-xl transition-colors text-outline">
           <MoreVertical size={18} />
         </button>
       </div>
 
-      {/* GAUGE GRID: Using specialized UI components */}
-      <div className="grid grid-cols-2 gap-4">
-        <SalinityGauge deviceId={deviceId} size={150} />
-        <VoltageGauge deviceId={deviceId} size={150} />
+      <div className="space-y-8 py-4">
+        <MetricRow 
+          label="Voltage" 
+          value={telemetry?.voltage || '0.00'} 
+          unit="V" 
+          type="voltage" 
+          status={status} 
+          history={history}
+        />
+        <MetricRow 
+          label="Salinity" 
+          value={telemetry?.tds || '0.0'} 
+          unit="PSU" 
+          type="salinity" 
+          status={status} 
+          history={history}
+        />
       </div>
 
-      <div className="flex items-center justify-between px-1 py-2 border-y border-slate-50">
+      <div className="flex items-center justify-between px-1">
         <InfoTag 
           label="Assigned To" 
           value={device.assigned_user_name || "Unassigned"} 
           icon={User} 
         />
         <InfoTag 
-          label="ESP32 Heartbeat" 
+          label="Heartbeat" 
           value="Active 30s ago" 
           icon={Wifi} 
           align="right" 
@@ -56,11 +97,11 @@ export const AdminMonitoringLayout = ({ device, onViewAnalytics }) => {
 
       <button 
         onClick={onViewAnalytics}
-        className="group w-full h-12 bg-slate-900 text-white rounded-2xl font-black text-[10px] tracking-[0.2em] uppercase transition-all hover:bg-blue-600 flex items-center justify-center gap-2"
+        className="group w-full py-4 ocean-gradient text-white font-bold text-sm tracking-wide hover:opacity-90 transition-opacity flex items-center justify-center gap-2 rounded-2xl"
       >
-        <Activity size={14} />
+        <Activity size={16} />
         Full System Audit
-        <ExternalLink size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+        <ExternalLink size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
       </button>
     </div>
   );

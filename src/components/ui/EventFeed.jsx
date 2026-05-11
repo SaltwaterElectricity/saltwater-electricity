@@ -50,6 +50,8 @@ const EventItem = memo(({ severity, type, message, timestamp, station }) => {
   );
 });
 
+EventItem.displayName = 'EventItem';
+
 /**
  * EventFeed Component
  * Sidebar list for real-time system events.
@@ -84,5 +86,7 @@ const EventFeed = memo(({ events = [] }) => {
     </div>
   );
 });
+
+EventFeed.displayName = 'EventFeed';
 
 export default EventFeed;

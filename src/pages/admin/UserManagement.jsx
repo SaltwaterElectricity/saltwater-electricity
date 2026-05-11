@@ -45,7 +45,7 @@ const UserManagement = ({ currentUserRole }) => {
   // --- DERIVED LOGIC & FIREBASE SYNC ---
   const isSuperAdmin = currentUserRole === ROLES.SUPER_ADMIN;
   const activeView = isSuperAdmin ? viewMode : ROLES.RESIDENT;
-  const { data: uids = [], loading, error } = useUserSubscription(activeView);
+  const { data: users = [], loading, error } = useUserSubscription(activeView);
 
 
   // --- MEMOIZED HANDLERS ---
@@ -64,7 +64,7 @@ const UserManagement = ({ currentUserRole }) => {
     try {
       await updateUserStatus(selectedUser.uid, newStatus);
       triggerToast(`Account ${newStatus === USER_STATUS.ACTIVE ? 'restored' : 'disabled'} successfully.`);
-    } catch (_err) {
+    } catch {
       triggerToast("Update failed. Please check your permissions.", "error");
     } finally {
       setIsModalOpen(false);
@@ -80,7 +80,7 @@ const UserManagement = ({ currentUserRole }) => {
       triggerToast("User profile updated successfully.");
       setIsEditModalOpen(false);
       setSelectedEditUser(null);
-    } catch (_err) {
+    } catch {
       triggerToast("Failed to update profile. Try again.", "error");
     } finally {
       setIsEditSaving(false);
@@ -205,11 +205,11 @@ const UserManagement = ({ currentUserRole }) => {
         </div>
       </header>
 
-      {loading && uids.length === 0 ? (
+      {loading && users.length === 0 ? (
         <UserTableSkeleton />
       ) : (
         <UserTable 
-          uids={uids} 
+          users={users} 
           onActionClick={(userData) => {
             setSelectedUser(userData);
             setIsModalOpen(true);

@@ -25,7 +25,7 @@ class GlobalErrorBoundary extends React.Component {
             </h1>
             
             <p className="text-slate-500 text-sm leading-relaxed mb-10">
-              The dashboard encountered an unexpected error. Don't worry, your device data is safe.
+              The dashboard encountered an unexpected error. Don&apos;t worry, your device data is safe.
             </p>
 
             <div className="flex flex-col gap-3">

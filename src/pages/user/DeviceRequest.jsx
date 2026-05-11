@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Plus, Clock, CheckCircle2, XCircle, ChevronLeft } from 'lucide-react';
+import { Plus, Clock, CheckCircle2, XCircle } from 'lucide-react';
 import { useAuth } from "../../context/useAuth";
 import { useDeviceRequests } from "../../hooks";
 import { createDeviceRequest } from "../../services/request.service";
@@ -100,7 +100,7 @@ const DeviceRequest = () => {
 
       {/* TABLE SECTION */}
       <section className="bg-white/70 backdrop-blur-xl rounded-[40px] border border-white shadow-sm overflow-hidden transition-all hover:bg-white/80">
-        <div className="overflow-x-auto overflow-y-hidden">
+        <div className="overflow-x-auto custom-scrollbar overflow-y-hidden">
           <table className="w-full text-left border-collapse min-w-[600px]">
             <thead>
               <tr className="border-b border-slate-100">

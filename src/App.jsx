@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from "./context/useAuth";
 import { AnimatedLogo } from "./components"; 
-import { AppRoutes } from "./AppRoutes"; 
+import { AppRoutes } from "./route/AppRoutes"; 
 
 function App() {
   const { loading } = useAuth();

@@ -106,6 +106,17 @@
         // CRITICAL VALIDATION: Only allow incrementing or resetting to 0
         ".validate": "newData.hasChildren(['count', 'lockoutUntil']) && (!data.exists() || newData.child('count').val() > data.child('count').val() || newData.child('count').val() == 0)"
       }
+    },
+
+    "notifications": {
+      "admin": {
+        ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
+        ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')"
+      },
+      "$uid": {
+        ".read": "auth != null && (auth.uid == $uid || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
+        ".write": "auth != null && (auth.uid == $uid || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')"
+      }
     }
   }
 }

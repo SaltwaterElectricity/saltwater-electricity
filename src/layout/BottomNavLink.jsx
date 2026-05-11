@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { cn } from "../../utils/cn";
+import { cn } from "../utils/cn";
 
 /**
  * BottomNavLink Component

@@ -44,7 +44,7 @@ export const useDeviceRequests = (userId = null) => {
           setRequests(requestList);
         }
         setError(null);
-      } catch (_err) {
+      } catch {
         setError(new appError("Failed to parse the request list.", true, "db/parse-failed"));
       } finally {
         setLoading(false);

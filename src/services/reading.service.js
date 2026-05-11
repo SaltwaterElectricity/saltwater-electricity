@@ -3,7 +3,7 @@ import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
 import { getUserClaims } from "./auth.service";
 import { createNotification, NOTIFICATION_TYPES } from "./notification.service";
-import { SENSOR_CONFIG, METRICS } from "../constants";
+import { SENSOR_CONFIG, METRICS, METRIC_MAP } from "../constants";
 
 /**
  * Reading Service
@@ -32,7 +32,7 @@ const verifyDeviceAccess = async (deviceId) => {
       const assignment = snapshot.val();
       if (assignment.userId === currentUser.uid) return true;
     }
-  } catch (_dbError) {
+  } catch {
     // Fall through to error
   }
 
@@ -59,10 +59,17 @@ const transformReading = (data) => {
 
   const transformed = { ...data };
   
+  // Clean data transformation: format decimals while keeping them as numbers
   Object.keys(PRECISION_CONFIG).forEach((key) => {
     if (typeof transformed[key] === 'number') {
-      // Clean data transformation: format decimals while keeping them as numbers
       transformed[key] = Number(transformed[key].toFixed(PRECISION_CONFIG[key]));
+    }
+  });
+
+  // NORMALIZATION: Map hardware-specific keys to UI-standard keys
+  Object.entries(METRIC_MAP).forEach(([uiKey, dbKey]) => {
+    if (transformed[dbKey] !== undefined && uiKey !== dbKey) {
+      transformed[uiKey] = transformed[dbKey];
     }
   });
 
@@ -98,7 +105,7 @@ export const subscribeToLatestReading = (deviceId, onSuccess, onError) => {
           try {
             const rawData = snapshot.val();
             onSuccess(transformReading(rawData));
-          } catch (_err) {
+          } catch {
             if (onError) onError(new appError("Failed to process incoming reading.", true, "reading/parse-error"));
           }
         },
@@ -136,11 +143,12 @@ export const updateBulbState = async (deviceId, newState) => {
   await verifyDeviceAccess(deviceId);
 
   try {
-    // SCHEMA HARDENING: Fetch current tds_ppm to ensure mandatory field is present in all writes
+    // SCHEMA HARDENING: Fetch current tds_ppm and voltage to ensure mandatory fields are present in all writes
     const latestRef = ref(db, `readings/${deviceId}/latest`);
     const snapshot = await get(latestRef);
     const currentData = snapshot.val() || {};
     const tds = currentData.tds_ppm || 0;
+    const voltage = currentData.voltage || 0;
 
     const clientTs = Date.now();
     const now = serverTimestamp();
@@ -149,6 +157,7 @@ export const updateBulbState = async (deviceId, newState) => {
     // 1. Update Latest Reading Node (Removed bulb_ma)
     updates[`readings/${deviceId}/latest/relay_active`] = newState;
     updates[`readings/${deviceId}/latest/tds_ppm`] = tds;
+    updates[`readings/${deviceId}/latest/voltage`] = voltage;
     updates[`readings/${deviceId}/latest/timestamp`] = now;
     
     // 2. Add to Historical Logs
@@ -214,7 +223,7 @@ export const getHistoricalLogs = async (deviceId, limit = 50) => {
       }))
       .sort((a, b) => b.__normalizedTs - a.__normalizedTs);
 
-  } catch (_error) {
+  } catch {
     throw new appError(
       "The historical data service is currently unavailable.",
       true,
@@ -227,3 +236,4 @@ export default {
   subscribeToLatestReading,
   getHistoricalLogs
 };
+

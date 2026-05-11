@@ -1,5 +1,6 @@
 export { useAssignmentDetails } from './useAssignmentDetails';
 export { useAssignments } from './useAssignments';
+export { useActiveDevice } from './useActiveDevice';
 export { useAuditLogs } from './useAuditLogs';
 export { useBruteForce } from './useBruteForce';
 export { useDeviceRequests } from './useDeviceRequests';

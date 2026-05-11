@@ -1,6 +1,7 @@
 import { useState, useEffect, memo } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { CheckCircle2 } from "lucide-react";
 import { useAuth } from "../../context/useAuth"; 
 import PasswordInput from "./PasswordInput";
 import StrengthMeter from "./StrengthMeter";

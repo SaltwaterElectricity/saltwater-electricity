@@ -19,7 +19,7 @@ export const useTimeout = (timeoutLimit) => {
     try {
       localStorage.removeItem("last_activity");
       await logoutUser();
-    } catch (_error) {
+    } catch {
       window.location.href = "/login";
     }
   }, []);

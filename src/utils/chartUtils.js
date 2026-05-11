@@ -113,8 +113,31 @@ export const getFormattedStats = (windowData, metricId) => {
     }
 
     return stats;
-  } catch (error) {
+    } catch (error) {
     logger.error("[Data Engine Error]: Stats orchestration failed.", error.message);
     return EMPTY_STATE.stats;
-  }
-};
+    }
+    };
+
+    /**
+    * Generates an SVG path from telemetry data points.
+    * Scales data to a 100x40 coordinate system.
+    */
+    export const generateSVGPath = (data = [], range = { min: 0, max: 100 }) => {
+    const width = 100;
+    const height = 40;
+
+    if (!data || data.length === 0) return `M0,${height/2} L${width},${height/2}`;
+
+    const points = data.slice(-10); // Last 10 points
+    const step = width / (points.length - 1 || 1);
+
+    return points.map((val, i) => {
+    const x = i * step;
+    const normalized = Math.min(Math.max((val - range.min) / (range.max - range.min || 1), 0), 1);
+    // SVG y=0 is top, so we invert it: y = height - (normalized * height)
+    // We add a small 2px margin to prevent clipping strokes
+    const y = (height - 4) - (normalized * (height - 8)) + 2; 
+    return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+    };

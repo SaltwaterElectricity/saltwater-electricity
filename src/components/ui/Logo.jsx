@@ -31,5 +31,7 @@ export const Logo = memo(() => {
         </span>
       </div>
     </div>
-  );
-});
+    );
+    });
+
+    Logo.displayName = 'Logo';

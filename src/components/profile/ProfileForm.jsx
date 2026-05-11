@@ -114,8 +114,7 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit} className="space-y-8 animate-in fade-in duration-300">
+    <form onSubmit={handleSubmit} className="space-y-8 animate-in fade-in duration-300">
         
         {/* 🛠️ Profile Header with Edit Control */}
         <div className="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -204,7 +203,6 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
           </div>
         )}
       </form>
-    </>
   );
 };
 

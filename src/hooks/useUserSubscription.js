@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { ROLES } from "../constants/roles";
 import { subscribeToAllUsers } from "../services/user.service";
 import { appError } from "../utils/appError";
 import { logger } from "../utils/logger";
@@ -61,7 +60,7 @@ export const useUserSubscription = (targetRole = null) => {
             setLoading(false);
           }
         );
-      } catch (_err) {
+      } catch {
         if (isMounted) {
           setError(new appError("System failure: Could not establish connection.", false, "db/crash"));
           setLoading(false);
@@ -78,5 +77,6 @@ export const useUserSubscription = (targetRole = null) => {
       }
     };
   }, [targetRole, parseFirebaseError]);
+
   return { data, loading, error };
 };

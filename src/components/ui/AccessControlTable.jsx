@@ -82,4 +82,6 @@ const AccessControlTable = memo(({ operators = [] }) => {
   );
 });
 
+AccessControlTable.displayName = 'AccessControlTable';
+
 export default AccessControlTable;

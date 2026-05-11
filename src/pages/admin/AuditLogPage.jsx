@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { Navigate } from "react-router-dom";
 import { 
   ShieldAlert, 
   Search, 
@@ -148,7 +147,7 @@ const AuditLogPage = () => {
 
       {/* GLASSMORPHIC TABLE (Requirement 2 & 5) */}
       <main className="bg-white/40 backdrop-blur-xl rounded-[40px] border border-white/60 shadow-sm overflow-hidden transition-all hover:bg-white/50">
-        <div className="overflow-x-auto overflow-y-hidden">
+        <div className="overflow-x-auto custom-scrollbar overflow-y-hidden">
           <table className="w-full text-left border-collapse min-w-[900px]">
             <thead>
               <tr className="border-b border-white/40 bg-slate-900/5">

@@ -24,8 +24,8 @@ const Alerts = () => {
         </div>
         <div className="flex items-center space-x-2 bg-secondary-container/20 px-4 py-2 rounded-full border border-secondary-container/30">
           <span className="flex h-3 w-3 relative">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary-fixed opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-tertiary-fixed"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary-fixed opacity-75" />
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-tertiary-fixed" />
           </span>
           <span className="font-['Inter'] text-label-sm font-bold text-primary uppercase tracking-widest">LIVE STREAM ACTIVE</span>
         </div>
@@ -88,7 +88,7 @@ const Alerts = () => {
                     </p>
                     {!alert.isRead && (
                        <div className="mt-3 flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                           <span className="text-label-sm font-black text-primary uppercase tracking-widest font-['Inter']">New Transmission</span>
                        </div>
                     )}

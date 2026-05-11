@@ -12,8 +12,8 @@ export const ProfileFormSkeleton = () => (
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {[...Array(6)].map((_, i) => (
-        <div key={i} className="flex flex-col space-y-2">
+      {['fn', 'mn', 'ln', 'sx', 'age', 'mob'].map((id) => (
+        <div key={id} className="flex flex-col space-y-2">
           <div className="h-2 w-20 bg-slate-100 rounded" />
           <div className="h-10 w-full bg-slate-50 rounded-xl" />
         </div>
@@ -26,8 +26,8 @@ export const ProfileFormSkeleton = () => (
         <div className="h-3 w-32 bg-slate-100 rounded" />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {[...Array(4)].map((_, i) => (
-          <div key={i} className="flex flex-col space-y-2">
+        {['st', 'br', 'cp', 're'].map((id) => (
+          <div key={id} className="flex flex-col space-y-2">
             <div className="h-2 w-20 bg-slate-100 rounded" />
             <div className="h-10 w-full bg-slate-50 rounded-xl" />
           </div>

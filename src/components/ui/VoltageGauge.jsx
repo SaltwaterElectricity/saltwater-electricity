@@ -1,5 +1,6 @@
 import { useReadings } from '../../hooks';
 import { cn } from '../../utils/cn';
+import { SENSOR_CONFIG, METRICS } from '../../constants';
 
 /**
  * VoltageGauge Component
@@ -10,13 +11,14 @@ const VoltageGauge = ({ deviceId, size = 240 }) => {
   const { reading, loading, error } = useReadings(deviceId);
   
   const voltage = reading?.voltage ?? 0;
-  const min = 0;
-  const max = 15;
+  const config = SENSOR_CONFIG[METRICS.VOLTAGE];
+  const min = config.min;
+  const max = config.max;
 
   // 🎨 DYNAMIC COLOR LOGIC
   const getStatusColor = (v) => {
-    if (v < 3.2) return 'stroke-red-500 shadow-red-500/50';
-    if (v > 12.6) return 'stroke-amber-400 shadow-amber-400/50';
+    if (v < config.critical) return 'stroke-red-600 shadow-red-600/50';
+    if (v < config.warning) return 'stroke-amber-500 shadow-amber-500/50';
     return 'stroke-emerald-500 shadow-emerald-500/50';
   };
 

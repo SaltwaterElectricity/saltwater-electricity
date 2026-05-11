@@ -70,7 +70,10 @@ export const SecurityForm = ({ onSaveSuccess }) => {
 
     try {
       // 🚀 Dito tatawagin ang service mo. Isasabay nito ang Re-Auth at Pag-update!
-      await changeUserPassword(formData.newPassword, formData.currentPassword, false);
+      await changeUserPassword(formData.newPassword, { 
+        currentPassword: formData.currentPassword, 
+        isForceReset: false 
+      });
 
       triggerToast("Security credentials updated successfully!", "success");
       setFormData({ currentPassword: "", newPassword: "", confirmPassword: "" });

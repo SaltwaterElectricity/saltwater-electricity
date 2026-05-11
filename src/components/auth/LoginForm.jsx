@@ -1,13 +1,15 @@
 import { useState, memo } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { Loader2, AlertCircle } from "lucide-react";
-import { loginUser, getFullUserData } from "../../services/auth.service";
-import ForgotPasswordModal from "../modal/ForgotPasswordModal";
+import { Loader2 } from "lucide-react";
+import { loginUser } from "../../services/auth.service";
+import { ForgotPasswordModal } from "../modal";
 import { appError } from "../../utils/appError";
 import { useBruteForce } from "../../hooks/useBruteForce";
+import { sanitizeForFirebaseKey } from "../../utils/sanitization";
+import { cn } from "../../utils/cn";
 
-const LoginForm = () => {
+const LoginForm = ({ onLoginSuccess }) => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authError, setAuthError] = useState("");
@@ -21,7 +23,7 @@ const LoginForm = () => {
   } = useForm({ mode: "onBlur" });
 
   const emailInput = watch("email");
-  const trackingId = emailInput ? emailInput.replace(/\./g, "_") : null;
+  const trackingId = emailInput ? sanitizeForFirebaseKey(emailInput) : null;
   const { isLocked, formattedTime, recordFailedAttempt } = useBruteForce(trackingId);
 
   const onSubmit = async (data) => {
@@ -30,10 +32,8 @@ const LoginForm = () => {
     setAuthError(""); 
 
     try {
-      const userCredential = await loginUser(data.email, data.password);
-      const uid = userCredential.user.uid;
-      sessionStorage.setItem("is_verified", "true");
-      const userData = await getFullUserData(uid);
+      const response = await loginUser(data.email, data.password);
+      const { userData } = response;
 
       if (!userData) {
         throw new appError("Account not found.", true, "auth/user-not-found");
@@ -44,7 +44,10 @@ const LoginForm = () => {
         return;
       }
 
-      navigate("/dashboard", { replace: true });
+      // Instead of navigating, pass the data to the parent to trigger the success UI
+      if (onLoginSuccess) {
+        onLoginSuccess({ ...userData, email: data.email });
+      }
     } catch (err) {
       setAuthError(err.message);
       if (err.code !== "auth/user-not-found") {
@@ -56,90 +59,129 @@ const LoginForm = () => {
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        {/* Email Field */}
-        <div className="relative mb-8">
-          <label className="block mb-2 font-bold text-[10px] uppercase tracking-widest text-primary">EMAIL ADDRESS</label>
-          <input
-            type="email"
-            {...register("email", { 
-              required: "Email is required",
-              pattern: { value: /^\S+@\S+$/i, message: "Invalid format" }
-            })}
-            placeholder="saltwaterelectricity@gmail.com"
-            disabled={isSubmitting || isLocked}
-            className={`w-full bg-white border ${errors.email ? 'border-error shadow-sm shadow-error/20' : 'border-outline-variant/30'} rounded-xl py-4 px-5 focus:border-primary transition-all placeholder:text-outline`}
-          />
-          {errors.email && (
-            <span className="absolute -bottom-5 left-0 text-error font-bold text-[10px] uppercase animate-fade-in animate-shake">
-              {errors.email.message}
-            </span>
-          )}
-        </div>
-
-        {/* Password Field */}
-        <div className="relative mb-8">
-          <div className="flex justify-between items-center mb-2">
-            <label className="font-bold text-[10px] uppercase tracking-widest text-primary">PASSWORD</label>
-            <button 
-              type="button" 
-              onClick={() => setIsForgotModalOpen(true)}
-              className="text-[10px] font-bold uppercase tracking-widest text-primary hover:underline"
-            >
-              FORGOT?
-            </button>
-          </div>
-          <input
-            type="password"
-            {...register("password", { required: "Password is required" })}
-            placeholder="••••••••"
-            disabled={isSubmitting || isLocked}
-            className={`w-full bg-white border ${errors.password || isLocked ? 'border-error shadow-sm shadow-error/20' : 'border-outline-variant/30'} rounded-xl py-4 px-5 focus:border-primary transition-all placeholder:text-outline`}
-          />
-          {errors.password && (
-            <span className="absolute -bottom-5 left-0 text-error font-bold text-[10px] uppercase animate-fade-in animate-shake">
-              {errors.password.message}
-            </span>
-          )}
-          {isLocked && (
-            <span className="absolute -bottom-5 left-0 text-error font-bold text-[10px] uppercase animate-fade-in animate-shake">
-              Try again in {formattedTime}
-            </span>
-          )}
-        </div>
-
-        {/* Error Container */}
+    <div className="w-full">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* Global Error Container */}
         {authError && !isLocked && (
-          <div className="mb-4 p-2 bg-error-container/20 rounded-xl animate-fade-in">
-            <span className="text-error font-bold text-[10px] uppercase tracking-widest">
+          <div className="p-2 bg-error/5 border border-error/20 rounded-lg animate-fade-in mb-2">
+            <span className="text-error font-bold text-[9px] uppercase tracking-widest flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-[12px]">report</span>
               {authError}
             </span>
           </div>
         )}
 
+        {/* Email Field */}
+        <div className="pt-1">
+          <label className="block text-[10px] font-bold uppercase tracking-wider text-primary font-body-md pl-1 mb-1">
+            Email Address
+          </label>
+          <div className="relative group mt-5">
+            <input
+              type="email"
+              {...register("email", { 
+                required: "Email is required",
+                pattern: { value: /^\S+@\S+$/i, message: "Invalid format" }
+              })}
+              placeholder="name@example.com"
+              disabled={isSubmitting || isLocked}
+              className={cn(
+                "w-full px-4 py-3 bg-surface-container-low border border-outline-variant/30 rounded-xl font-body-md text-sm text-on-surface transition-all outline-none",
+                "placeholder:text-outline/40",
+                "focus:ring-2 focus:ring-primary/10 focus:border-primary",
+                errors.email ? 'border-error/50 bg-error/5' : 'hover:border-outline-variant'
+              )}
+            />
+            {errors.email && (
+              <span className="absolute -top-5 left-0 text-error font-bold text-[9px] uppercase tracking-widest animate-fade-in block pl-1">
+                {errors.email.message}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Password Field */}
+        <div className="pt-1">
+          <div className="flex justify-between items-center px-1 mb-1">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-primary font-body-md">
+              Password
+            </label>
+            <button 
+              type="button" 
+              onClick={() => setIsForgotModalOpen(true)}
+              className="text-[10px] font-bold text-primary hover:underline uppercase tracking-wider font-body-md"
+            >
+              Forgot?
+            </button>
+          </div>
+          <div className="relative group mt-5">
+            <input
+              type="password"
+              {...register("password", { required: "Password is required" })}
+              placeholder="••••••••"
+              disabled={isSubmitting || isLocked}
+              className={cn(
+                "w-full px-4 py-3 bg-surface-container-low border border-outline-variant/30 rounded-xl font-body-md text-sm text-on-surface transition-all outline-none",
+                "placeholder:text-outline/40",
+                "focus:ring-2 focus:ring-primary/10 focus:border-primary",
+                (errors.password || isLocked) ? 'border-error/50 bg-error/5' : 'hover:border-outline-variant'
+              )}
+            />
+            {errors.password && (
+              <span className="absolute -top-5 left-0 text-error font-bold text-[9px] uppercase tracking-widest animate-fade-in block pl-1">
+                {errors.password.message}
+              </span>
+            )}
+            {isLocked && (
+              <span className="absolute -top-5 left-0 text-error font-bold text-[9px] uppercase tracking-widest animate-fade-in block pl-1">
+                Security Lock: {formattedTime}
+              </span>
+            )}
+          </div>
+        </div>
+
         {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={isSubmitting || isLocked}
-          className="w-full ocean-gradient rounded-xl py-4 font-bold uppercase tracking-widest text-[14px] text-white flex items-center justify-center gap-2 transition-all hover:opacity-90"
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="animate-spin" size={16} />
-              <span>AUTHENTICATING...</span>
-            </>
-          ) : (
-            <>
-              <span>LOGIN</span>
-              <span className="material-symbols-outlined text-[20px]">login</span>
-            </>
-          )}
-        </button>
+        <div className="pt-2">
+          <button
+            type="submit"
+            disabled={isSubmitting || isLocked}
+            className={cn(
+              "w-full ocean-gradient text-white py-3 rounded-2xl font-bold tracking-widest text-xs uppercase shadow-xl transition-all flex items-center justify-center gap-2",
+              "hover:shadow-primary/30 hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:grayscale disabled:scale-100"
+            )}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="animate-spin" size={18} />
+                <span>Verifying...</span>
+              </>
+            ) : (
+              <>
+                <span>LOGIN NOW</span>
+                <span className="material-symbols-outlined text-[18px]">login</span>
+              </>
+            )}
+          </button>
+        </div>
       </form>
 
+      {/* Helper Links */}
+      <div className="mt-8 text-center space-y-3">
+        <p className="text-[10px] text-outline font-body-md uppercase tracking-widest opacity-60">
+          New user or missing device?
+        </p>
+        <div className="flex flex-col gap-2">
+          <a href="#" className="text-[11px] font-bold text-primary tracking-widest hover:underline uppercase font-body-md">
+            How to get a device
+          </a>
+          <a href="#" className="text-[11px] font-bold text-outline/60 tracking-widest hover:underline uppercase font-body-md">
+            Contact Facility Admin
+          </a>
+        </div>
+      </div>
+
       <ForgotPasswordModal isOpen={isForgotModalOpen} onClose={() => setIsForgotModalOpen(false)} />
-    </>
+    </div>
   );
 };
 

@@ -13,11 +13,14 @@ import {
   UserRow, 
   EventItem 
 } from "../../components";
+import { useAuth } from "../../context/useAuth";
+import { Footer } from "../../layout";
 
 /**
  * MAIN ADMIN DASHBOARD PAGE
  */
 const AdminDashboard = () => {
+  const { userRole } = useAuth();
   const { data: users, loading: usersLoading } = useUserSubscription();
   const { logs: auditLogs, loading: logsLoading } = useAuditLogs(10);
   const { requests } = useDeviceRequests();
@@ -69,7 +72,7 @@ const AdminDashboard = () => {
       <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div>
           <h1 className="font-['Space_Grotesk'] text-2xl lg:text-3xl text-primary mb-2 tracking-tight italic uppercase">
-            Welcome, <span className="text-primary-container">Commander.</span>
+            Welcome, <span className="text-primary-container">{userRole}.</span>
           </h1>
           <p className="font-['Inter'] text-body-md text-on-surface-variant">
             System overview for the Philippine Seascape Energy Grid. Global visibility active.
@@ -77,8 +80,8 @@ const AdminDashboard = () => {
         </div>
         <div className="flex items-center space-x-2 bg-secondary-container/20 px-6 py-3 rounded-full border border-secondary-container/30">
           <span className="flex h-3 w-3 relative">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary-fixed opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-tertiary-fixed"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary-fixed opacity-75" />
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-tertiary-fixed" />
           </span>
           <span className="font-['Space_Grotesk'] text-sm font-bold text-blue-800 uppercase tracking-widest">
             Generating: 1.2GW
@@ -158,7 +161,7 @@ const AdminDashboard = () => {
           <div className="glass-panel p-6 border-primary/20 bg-primary/5 rounded-[20px]">
             <div className="flex justify-between items-center mb-6">
               <h3 className="font-['Space_Grotesk'] text-2xl font-bold text-primary uppercase tracking-tighter">
-                Pending <span className='text-primary-container'>Access</span>
+                Pending <span className='text-primary-container'>Request</span>
               </h3>
               <span className="bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full animate-pulse tracking-widest font-['Inter']">
                 {requests?.filter(r => r.status === 'pending').length || 0} NEW
@@ -218,20 +221,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* 4. FOOTER */}
-      <footer className="mt-12 py-8 flex flex-col md:flex-row justify-between items-center border-t border-white/40 text-outline font-['Inter']">
-        <div className="mb-4 md:mb-0 text-center md:text-left">
-          <h5 className="font-['Space_Grotesk'] text-lg text-primary tracking-tight italic uppercase">
-            Lakas ng Alon, <span className='text-primary-container'>Bantay ng Kuryente.</span>
-          </h5>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] mt-1 opacity-60">AlonKuryente Intelligent Grid Management © 2026</p>
-        </div>
-        <div className="flex space-x-6 text-slate-400">
-          <button className="hover:text-primary transition-all active:scale-90 p-2"><span className="material-symbols-outlined">share</span></button>
-          <button className="hover:text-primary transition-all active:scale-90 p-2"><span className="material-symbols-outlined">download</span></button>
-          <button className="hover:text-primary transition-all active:scale-90 p-2"><span className="material-symbols-outlined">info</span></button>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

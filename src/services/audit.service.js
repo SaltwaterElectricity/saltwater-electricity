@@ -55,7 +55,7 @@ export const logActivity = async (action, targetId, details) => {
     await push(auditRef, logEntry);
 
     return { success: true };
-  } catch (_error) {
+  } catch {
     // Mask internal DB errors with operational appError
     throw new appError(
       "Security Audit Failure: Could not record the activity trail.", 

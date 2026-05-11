@@ -123,8 +123,8 @@ const SalinityGauge = ({ deviceId, size = 220 }) => {
       {/* LIVE HEARTBEAT INDICATOR */}
       <div className="absolute bottom-8 flex items-center gap-2 px-3 py-1 bg-white/50 backdrop-blur-sm border border-white/40 rounded-full shadow-sm">
         <span className="relative flex h-1.5 w-1.5">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
+          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500" />
         </span>
         <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Live Stream</span>
       </div>

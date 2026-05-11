@@ -52,6 +52,15 @@ export const assignDevice = async (deviceId, userId, newDeviceName) => {
     };
 
     updates[`/device_information/${cleanDeviceId}/availability`] = "assigned";
+    updates[`/device_information/${cleanDeviceId}/assigned_user_id`] = cleanUserId;
+    
+    // Fetch user name to store in device_information for quick access
+    const userSnap = await get(ref(db, `users/${cleanUserId}`));
+    if (userSnap.exists()) {
+      const userData = userSnap.val();
+      updates[`/device_information/${cleanDeviceId}/assigned_user_name`] = 
+        `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
+    }
     
     if (cleanName) {
       updates[`/device_information/${cleanDeviceId}/device_name`] = cleanName;

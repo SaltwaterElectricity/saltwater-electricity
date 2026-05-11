@@ -49,7 +49,7 @@ export const useAuditLogs = (limit = 100) => {
           setLogs(logList);
         }
         setError(null);
-      } catch (_err) {
+      } catch {
         setError(new appError("Data Stream Error: Failed to process audit records.", true, "audit/parse-error"));
       } finally {
         setLoading(false);

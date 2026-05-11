@@ -31,6 +31,8 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       logger.error("Auth Sync Error:", error);
     } finally {
+      // Only set loading to false. We don't want to set it to true 
+      // during background syncs to avoid flickering the global splash.
       setLoading(false);
     }
   }, []);
@@ -41,18 +43,17 @@ export const AuthProvider = ({ children }) => {
    */
   const forceTokenRefresh = useCallback(async () => {
     if (!currentUser) return;
-    setLoading(true);
+    // For background refreshes, we don't set global loading=true 
+    // to prevent the app from unmounting and showing the splash screen.
     await syncUserContext(currentUser, true);
   }, [currentUser, syncUserContext]);
 
   useEffect(() => {
+    const currentListeners = listeners.current;
     const unsubscribeAuth = subscribeToAuthChanges((firebaseUser) => {
-      setLoading(true); 
-
-      // Cleanup existing listeners if user changes or signs out
-      if (listeners.current.role) listeners.current.role();
-      if (listeners.current.account) listeners.current.account();
-      listeners.current = { role: null, account: null };
+      // We don't call setLoading(true) here because it would trigger 
+      // the global splash screen in App.jsx and unmount the current view.
+      // Initial loading is true by default, and syncUserContext will set it to false.
 
       if (firebaseUser) {
         syncUserContext(firebaseUser);
@@ -62,12 +63,12 @@ export const AuthProvider = ({ children }) => {
         const roleRef = ref(db, `roles/${firebaseUser.uid}`);
         const accountRef = ref(db, `accounts/${firebaseUser.uid}`);
 
-        listeners.current.role = onValue(roleRef, (_snapshot) => {
+        currentListeners.role = onValue(roleRef, (_snapshot) => {
           // If the role node in DB changes, refresh the token to get new claims
           forceTokenRefresh();
         });
 
-        listeners.current.account = onValue(accountRef, (_snapshot) => {
+        currentListeners.account = onValue(accountRef, (_snapshot) => {
           // If status changes (e.g. suspended), refresh token or re-sync
           syncUserContext(firebaseUser);
         });
@@ -79,8 +80,8 @@ export const AuthProvider = ({ children }) => {
 
     return () => {
       unsubscribeAuth();
-      if (listeners.current.role) listeners.current.role();
-      if (listeners.current.account) listeners.current.account();
+      if (currentListeners.role) currentListeners.role();
+      if (currentListeners.account) currentListeners.account();
     };
   }, [syncUserContext, forceTokenRefresh]);
 

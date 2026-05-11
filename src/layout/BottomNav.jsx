@@ -1,5 +1,5 @@
 import { BottomNavLink } from "./BottomNavLink";
-import { ROUTES } from "../../constants/routes";
+import { ROUTES } from "../constants/routes";
 
 /**
  * BottomNav Component

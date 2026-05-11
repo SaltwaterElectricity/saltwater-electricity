@@ -1,69 +1,22 @@
 import { ROLES } from "../../constants/roles";
-import { useFullUserData } from "../../hooks/useFullUserData";
 import { cn } from "../../utils/cn";
 import { memo } from "react";   
 import { MapPin, Edit3, Trash2, RotateCcw, Users } from "lucide-react";
 
-// 🛰️ Import your shared UI atom
-import SpinnerIcon from "../../components/ui/SpinnerIcon";
-
-// ==========================================
 // 🧬 MOLECULE: Individual Real-Time Row
-// ==========================================
-const UserTableRow = memo(({ uid, onActionClick, onEditClick, searchTerm }) => {
-  const { userData, loading, error } = useFullUserData(uid);
-  
-  if (error) {
-    return (
-      // Siguraduhing may <tr> para hindi masira ang Table Layout
-      <tr className="bg-red-50/30 border-b border-red-100/50 transition-colors">
-        <td colSpan="3" className="px-8 py-4">
-          <div className="flex items-center gap-3">
-            {/* Visual Alert Indicator */}
-            <div className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-            </div>
-            
-            <div className="flex flex-col">
-              <span className="text-[10px] font-black text-red-600 uppercase tracking-widest">
-                Synchronization Failure
-              </span>
-              <span className="text-[9px] text-red-400 font-medium">
-                ID: {uid.slice(0, 5)}... — Check network or database permissions
-              </span>
-            </div>
-          </div>
-        </td>
-      </tr>
-    );
-  }
-
-  if (loading) {
-    return (
-      <tr className="border-b border-slate-50">
-        <td colSpan="3" className="px-8 py-6">
-          <div className="flex items-center gap-3 text-xs font-bold text-slate-400 tracking-wider uppercase">
-            <SpinnerIcon size="w-4 h-4" color="text-blue-600" />
-            Synchronizing live state...
-          </div>
-        </td>
-      </tr>
-    );
-  }
-
+const UserTableRow = memo(({ user, onActionClick, onEditClick, searchTerm }) => {
   const {
     firstName = "",
     lastName = "",
     email = "",
     status = "disabled",
     address = {}
-  } = userData || {};
+  } = user || {};
 
   const fullName = `${firstName} ${lastName}`.trim().toLowerCase();
   const searchMatch = fullName.includes(searchTerm?.toLowerCase() || "") || email.toLowerCase().includes(searchTerm?.toLowerCase() || "");
 
-  if (!searchMatch || !userData) return null;
+  if (!searchMatch || !user) return null;
 
   const isActive = status === "active";
 
@@ -100,12 +53,12 @@ const UserTableRow = memo(({ uid, onActionClick, onEditClick, searchTerm }) => {
       <td className="px-8 py-6 text-right">
         <div className="flex justify-end gap-2">
           <button 
-            onClick={() => onEditClick(userData)}
+            onClick={() => onEditClick(user)}
             className="h-10 w-10 flex items-center justify-center bg-white border border-slate-200 rounded-xl text-slate-600 hover:text-blue-600 shadow-sm transition-all">
             <Edit3 size={18} />
           </button>
           <button 
-            onClick={() => onActionClick(userData)}
+            onClick={() => onActionClick(user)}
             className={cn(
               "h-10 w-10 flex items-center justify-center bg-white border rounded-xl transition-all shadow-sm",
               isActive ? "text-slate-400 hover:text-red-600 border-slate-200" : "text-emerald-600 border-emerald-100 bg-emerald-50/50"
@@ -119,11 +72,11 @@ const UserTableRow = memo(({ uid, onActionClick, onEditClick, searchTerm }) => {
   );
 });
 
+UserTableRow.displayName = 'UserTableRow';
 
-// ==========================================
+
 // 🏢 ORGANISM: Master User Table Component
-// ==========================================
-export const UserTable = ({ uids = [], onActionClick, onEditClick, searchTerm, activeView }) => {
+export const UserTable = ({ users = [], onActionClick, onEditClick, searchTerm, activeView }) => {
   return (
     <div className="bg-white border border-slate-100 rounded-3xl shadow-sm overflow-hidden">
       <div className="overflow-x-auto custom-scrollbar">
@@ -136,21 +89,16 @@ export const UserTable = ({ uids = [], onActionClick, onEditClick, searchTerm, a
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50">
-            {uids.length > 0 ? (
-                uids.map((userOrId) => {
-                    // 🛡️ Defend against objects! Pull the string UID if it's an object.
-                    const finalUid = typeof userOrId === "object" ? (userOrId.uid || userOrId.id) : userOrId;
-
-                    return (
-                        <UserTableRow 
-                            key={finalUid} 
-                            uid={finalUid}
-                            onEditClick={onEditClick} 
-                            onActionClick={onActionClick}
-                            searchTerm={searchTerm} 
-                        />
-                    );
-                })
+            {users.length > 0 ? (
+                users.map((user) => (
+                    <UserTableRow 
+                        key={user.uid || user.id} 
+                        user={user}
+                        onEditClick={onEditClick} 
+                        onActionClick={onActionClick}
+                        searchTerm={searchTerm} 
+                    />
+                ))
             ) : (
               <tr>
                 <td colSpan="3" className="px-8 py-16 text-center antialiased">

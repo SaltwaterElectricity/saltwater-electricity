@@ -12,19 +12,21 @@ export const APP_SETTINGS = Object.freeze({
 // 2. METRIC KEYS: Single source of truth for internal keys
 export const METRICS = Object.freeze({
   TDS: 'tds',
-  TEMP: 'temp'
+  TEMP: 'temp',
+  VOLTAGE: 'voltage'
 });
 
 // 3. DATABASE MAP: Decouples UI keys from API response keys
 export const METRIC_MAP = Object.freeze({
   [METRICS.TDS]: 'tds_ppm',
   [METRICS.TEMP]: 'water_temp',
+  [METRICS.VOLTAGE]: 'voltage'
 });
 
 // 4. UI CONFIGURATION: The "Brain" of your UI components
 export const METRIC_CONFIG = Object.freeze({
   [METRICS.TDS]: { 
-    id: METRICS.TDS, // FIXED TYPO: Removed .TRICS
+    id: METRICS.TDS, 
     label: 'TDS', 
     icon: '💧', 
     unit: 'ppm', 
@@ -38,6 +40,14 @@ export const METRIC_CONFIG = Object.freeze({
     unit: '°C', 
     chartColor: '#f43f5e', 
     colorClass: 'text-rose-500' 
+  },
+  [METRICS.VOLTAGE]: { 
+    id: METRICS.VOLTAGE, 
+    label: 'Voltage', 
+    icon: '⚡', 
+    unit: 'V', 
+    chartColor: '#00c1fd', 
+    colorClass: 'text-blue-400' 
   },
   DEFAULT: {
     id: 'unknown',
@@ -133,6 +143,15 @@ export const SENSOR_CONFIG = Object.freeze({
     warning: 28,
     critical: 32,
     precision: 1      // Temp needs one decimal (e.g., 25.4°C)
+  },
+  [METRICS.VOLTAGE]: {
+    unit: 'V',
+    icon: '⚡',
+    min: 0,
+    max: 15,
+    warning: 3.2,
+    critical: 2.8,
+    precision: 2
   }
 });
 
