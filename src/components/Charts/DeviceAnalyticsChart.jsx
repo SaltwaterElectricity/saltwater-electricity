@@ -34,19 +34,13 @@ const DeviceAnalyticsChart = ({ data = [], metricConfig = {} }) => {
               </feMerge>
             </filter>
           </defs>
-          <CartesianGrid 
-            strokeDasharray={CHART_STYLES.grid.strokeDasharray} 
-            vertical={CHART_STYLES.grid.vertical} 
-            stroke={CHART_STYLES.grid.stroke} 
+          <CartesianGrid
+            strokeDasharray={CHART_STYLES.grid.strokeDasharray}
+            vertical={CHART_STYLES.grid.vertical}
+            stroke={CHART_STYLES.grid.stroke}
           />
-          <XAxis 
-            dataKey="timestamp" 
-            hide 
-          />
-          <YAxis 
-            hide 
-            domain={["auto", "auto"]} 
-          />
+          <XAxis dataKey="timestamp" hide />
+          <YAxis hide domain={["auto", "auto"]} />
           <Tooltip
             contentStyle={CHART_STYLES.tooltip.contentStyle}
             itemStyle={{ ...CHART_STYLES.tooltip.itemStyle, color: chartColor }}
