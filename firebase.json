@@ -15,8 +15,12 @@
         "npm --prefix \"$RESOURCE_DIR\" run lint"
       ]
     }
+<<<<<<< HEAD
   ],
   "database": {
     "rules": "database.rules.json"
   }
+=======
+  ]
+>>>>>>> c81ec3273035eaedf93d36882c4b5ed75935f31a
 }

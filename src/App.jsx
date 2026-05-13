@@ -1,11 +1,18 @@
+<<<<<<< HEAD
 import { useState } from "react";
 import { useAuth } from "./context/useAuth";
 import { AnimatedLogo } from "./components";
 import { AppRoutes } from "./route/AppRoutes";
+=======
+import { useAuth } from "./context/AuthContext";
+import { AuthSplashScreen } from "./components/auth";
+import { AppRoutes } from "./AppRoutes"; 
+>>>>>>> c81ec3273035eaedf93d36882c4b5ed75935f31a
 
 function App() {
   const { loading } = useAuth();
 
+<<<<<<< HEAD
   /**
    * isAnimationComplete State
    * Controls the transition from the interactive splash sequence to the main application.
@@ -29,3 +36,17 @@ function App() {
 }
 
 export default App;
+=======
+  // Global Loading State
+  if (loading) {
+    return <AuthSplashScreen message="Synchronizing SmartAqua..." />;
+  }
+
+  // Mapapansin mo: Wala nang <Router> dito dahil nasa main.jsx na ito.
+  return (
+    <AppRoutes />
+  );
+}
+
+export default App;
+>>>>>>> c81ec3273035eaedf93d36882c4b5ed75935f31a

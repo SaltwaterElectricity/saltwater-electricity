@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState, useEffect, memo } from "react";
 import { useForm } from "react-hook-form";
 import { changeUserPassword } from "../../services/auth.service";
@@ -17,6 +18,22 @@ const ResetPassword = ({ onSuccess }) => {
     formState: { errors },
   } = useForm({
     mode: "onChange",
+=======
+import { useState, useEffect, memo } from 'react';
+import { useForm } from 'react-hook-form';
+import { changeUserPassword } from '../../services/auth.service'; 
+import { PasswordInput, StrengthMeter, PasswordChecklist } from '../passwordChange'; 
+import { calculatePasswordStrength } from '../../utils/passwordMetrics';
+
+const ResetPassword = ({ onSuccess }) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [strength, setStrength] = useState(0);
+
+  const { register, handleSubmit, watch, formState: { errors } } = useForm({ 
+    mode: "onChange" 
+>>>>>>> c81ec3273035eaedf93d36882c4b5ed75935f31a
   });
 
   const newPassword = watch("newPassword", "");
@@ -32,11 +49,16 @@ const ResetPassword = ({ onSuccess }) => {
     }
 
     setLoading(true);
+<<<<<<< HEAD
     setError("");
+=======
+    setError('');
+>>>>>>> c81ec3273035eaedf93d36882c4b5ed75935f31a
 
     try {
       // Step 1: Perform the update in Firebase
       await changeUserPassword(data.newPassword);
+<<<<<<< HEAD
 
       // Step 2: Show the success animation
       setSuccess(true);
@@ -48,6 +70,20 @@ const ResetPassword = ({ onSuccess }) => {
       }, 2000);
     } catch (err) {
       setError(err.message || "Failed to update your credentials. Please try again.");
+=======
+      
+      // Step 2: Show the success animation
+      setSuccess(true);
+
+      // Step 3: Wait 2 seconds so the user feels the "Success", 
+      // then call onSuccess to close the modal and show the Login form.
+      setTimeout(() => {
+        onSuccess(); 
+      }, 2000);
+
+    } catch (err) {
+      setError(err.message);
+>>>>>>> c81ec3273035eaedf93d36882c4b5ed75935f31a
     } finally {
       setLoading(false);
     }
@@ -62,6 +98,7 @@ const ResetPassword = ({ onSuccess }) => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
           </svg>
         </div>
+<<<<<<< HEAD
         <h2 className="text-2xl font-bold text-slate-900 tracking-tight text-center">
           Security Updated
         </h2>
@@ -73,6 +110,15 @@ const ResetPassword = ({ onSuccess }) => {
           </span>
         </p>
 
+=======
+        <h2 className="text-2xl font-bold text-slate-900 tracking-tight text-center">Security Updated</h2>
+        <p className="text-slate-500 text-sm mt-2 text-center leading-relaxed">
+          Your password has been changed successfully. 
+          <br />
+          <span className="font-semibold text-blue-600 italic">You can now sign in with your new credentials.</span>
+        </p>
+        
+>>>>>>> c81ec3273035eaedf93d36882c4b5ed75935f31a
         {/* Visual Progress Bar (8pt: mt-8 = 32px) */}
         <div className="w-full h-1 bg-slate-100 rounded-full mt-8 overflow-hidden">
           <div className="h-full bg-green-500 animate-progress-fast" />
@@ -85,11 +131,17 @@ const ResetPassword = ({ onSuccess }) => {
     <div className="animate-in fade-in slide-in-from-right-4 duration-300">
       <header className="mb-8">
         <h2 className="text-2xl font-bold text-slate-800 tracking-tight">New Password</h2>
+<<<<<<< HEAD
         <p className="text-sm text-slate-500 mt-1">
           Create a strong password to secure your account.
         </p>
       </header>
 
+=======
+        <p className="text-sm text-slate-500 mt-1">Create a strong password to secure your account.</p>
+      </header>
+      
+>>>>>>> c81ec3273035eaedf93d36882c4b5ed75935f31a
       {error && (
         <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-[10px] font-bold uppercase tracking-wider rounded">
           {error}
@@ -105,7 +157,11 @@ const ResetPassword = ({ onSuccess }) => {
           strength={strength}
           validation={{
             required: "Required",
+<<<<<<< HEAD
             validate: () => strength >= 80 || "Does not meet complexity requirements",
+=======
+            validate: () => strength >= 80 || "Does not meet complexity requirements"
+>>>>>>> c81ec3273035eaedf93d36882c4b5ed75935f31a
           }}
         >
           <div className="flex flex-col gap-2 mt-2">
@@ -121,7 +177,11 @@ const ResetPassword = ({ onSuccess }) => {
           errors={errors}
           validation={{
             required: "Required",
+<<<<<<< HEAD
             validate: (val) => val === newPassword || "Passwords do not match",
+=======
+            validate: (val) => val === newPassword || "Passwords do not match"
+>>>>>>> c81ec3273035eaedf93d36882c4b5ed75935f31a
           }}
         />
 
@@ -137,4 +197,8 @@ const ResetPassword = ({ onSuccess }) => {
   );
 };
 const MemoizedResetPassword = memo(ResetPassword);
+<<<<<<< HEAD
 export default MemoizedResetPassword;
+=======
+export default MemoizedResetPassword;
+>>>>>>> c81ec3273035eaedf93d36882c4b5ed75935f31a
