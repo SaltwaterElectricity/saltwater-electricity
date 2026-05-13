@@ -91,11 +91,7 @@ export const generateOTP = async (userId_not_used, email) => {
  */
 export const verifyOTP = async (userId, inputCode) => {
   if (!userId || !inputCode) {
-    throw new appError(
-      "Verification parameters are missing.",
-      true,
-      "otp/invalid-parameters"
-    );
+    throw new appError("Verification parameters are missing.", true, "otp/invalid-parameters");
   }
 
   const otpRef = ref(db, `otp-requests/${userId}`);

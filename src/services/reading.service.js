@@ -127,7 +127,11 @@ export const subscribeToLatestReading = (deviceId, onSuccess, onError) => {
             logger.error("[Reading Service]: Data transformation failed.", error);
             if (onError)
               onError(
-                new appError("Data processing error: Could not interpret sensor values.", true, "reading/parse-error")
+                new appError(
+                  "Data processing error: Could not interpret sensor values.",
+                  true,
+                  "reading/parse-error"
+                )
               );
           }
         },
@@ -207,7 +211,11 @@ export const updateBulbState = async (deviceId, newState) => {
   } catch (error) {
     logger.error("[Reading Service]: Hardware command failed.", error);
     if (error instanceof appError) throw error;
-    throw new appError("Device command failed. The sensor node may be offline.", true, "reading/update-failed");
+    throw new appError(
+      "Device command failed. The sensor node may be offline.",
+      true,
+      "reading/update-failed"
+    );
   }
 };
 

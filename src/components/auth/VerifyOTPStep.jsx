@@ -1,14 +1,17 @@
-import { useState, memo } from 'react';
-import { verifyResetOTP } from '../../services/otp.service';
+import { useState, memo } from "react";
+import { verifyResetOTP } from "../../services/otp.service";
 
 const VerifyOTPStep = ({ email, onSuccess, onBack }) => {
-  const [otp, setOtp] = useState('');
+  const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   // Standardized helper to match RequestOTPStep
-  const getUserId = (emailStr) => 
-    emailStr.trim().toLowerCase().replace(/[^a-zA-Z0-9]/g, '');
+  const getUserId = (emailStr) =>
+    emailStr
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-zA-Z0-9]/g, "");
 
   const handleVerify = async (e) => {
     e.preventDefault();
@@ -18,27 +21,27 @@ const VerifyOTPStep = ({ email, onSuccess, onBack }) => {
     }
 
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
       const userId = getUserId(email);
-      
+
       // Step A: Call the service (which now runs a secure transaction)
       const result = await verifyResetOTP(userId, otp);
 
       // Step B: If verified, pass the DB-verified email to the next step
       if (result.verified) {
-        onSuccess(result.email); 
+        onSuccess(result.email);
       }
     } catch (err) {
-      // Step C: This now catches "Expired", "Invalid (with attempts left)", 
+      // Step C: This now catches "Expired", "Invalid (with attempts left)",
       // or "Security Lockout" errors from your service.
       const safeMsg = err.message || "Security verification failed. Please try again.";
       setError(safeMsg);
-      
+
       // If lockout or expired, clear the OTP field to signal a reset
       if (safeMsg.includes("lockout") || safeMsg.includes("expired")) {
-        setOtp('');
+        setOtp("");
       }
     } finally {
       setLoading(false);
@@ -46,7 +49,10 @@ const VerifyOTPStep = ({ email, onSuccess, onBack }) => {
   };
 
   return (
-    <form onSubmit={handleVerify} className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+    <form
+      onSubmit={handleVerify}
+      className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300"
+    >
       <div className="text-center">
         <h2 className="text-2xl font-bold text-slate-800 tracking-tight">Verify Identity</h2>
         <p className="text-sm text-slate-500 mt-2">
@@ -61,13 +67,13 @@ const VerifyOTPStep = ({ email, onSuccess, onBack }) => {
       )}
 
       <div className="space-y-4">
-        <input 
-          type="text" 
-          maxLength="6" 
+        <input
+          type="text"
+          maxLength="6"
           placeholder="· · · · · ·"
-          className="w-full h-20 text-center text-5xl font-mono tracking-[0.2em] rounded-2xl bg-slate-50 border-2 border-slate-100 focus:border-blue-600 focus:bg-white focus:ring-0 outline-none transition-all text-slate-700" 
-          value={otp} 
-          onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+          className="w-full h-20 text-center text-5xl font-mono tracking-[0.2em] rounded-2xl bg-slate-50 border-2 border-slate-100 focus:border-blue-600 focus:bg-white focus:ring-0 outline-none transition-all text-slate-700"
+          value={otp}
+          onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
           disabled={loading}
         />
         <p className="text-center text-[10px] text-slate-400 uppercase tracking-widest">
@@ -75,17 +81,17 @@ const VerifyOTPStep = ({ email, onSuccess, onBack }) => {
         </p>
       </div>
 
-      <button 
+      <button
         type="submit"
-        disabled={loading || otp.length < 6} 
+        disabled={loading || otp.length < 6}
         className="w-full h-14 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold rounded-xl shadow-lg shadow-blue-200 transition-all active:scale-95 flex items-center justify-center gap-2"
       >
         {loading ? "Verifying..." : "Verify & Continue"}
       </button>
 
-      <button 
-        type="button" 
-        onClick={onBack} 
+      <button
+        type="button"
+        onClick={onBack}
         disabled={loading}
         className="w-full text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors uppercase tracking-widest"
       >

@@ -101,7 +101,7 @@ const DeviceRequestModal = ({ isOpen, onClose, onShowToast }) => {
                 <option value="upgrade">Hardware Upgrade</option>
               </select>
               <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                 <ChevronRight size={18} className="rotate-90" />
+                <ChevronRight size={18} className="rotate-90" />
               </div>
             </div>
           </div>
@@ -126,7 +126,7 @@ const DeviceRequestModal = ({ isOpen, onClose, onShowToast }) => {
               )}
             >
               {isSubmitting ? (
-                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
                 <>
                   Submit Request

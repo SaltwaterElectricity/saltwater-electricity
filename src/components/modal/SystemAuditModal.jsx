@@ -1,14 +1,23 @@
 import { useState, useEffect } from "react";
-import { X, Activity, History, Table as TableIcon, UserCheck, Zap, Download, Settings2 } from "lucide-react";
+import {
+  X,
+  Activity,
+  History,
+  Table as TableIcon,
+  UserCheck,
+  Zap,
+  Download,
+  Settings2,
+} from "lucide-react";
 import { useReadings, useHistory, useAssignmentDetails } from "../../hooks";
 import { NavButton, ModalBackdrop } from "../../components";
-import { 
-  AnalyticsSection, 
-  ConnectivitySection, 
-  RawTelemetrySection, 
-  AccountabilitySection, 
+import {
+  AnalyticsSection,
+  ConnectivitySection,
+  RawTelemetrySection,
+  AccountabilitySection,
   ConsumptionSection,
-  ControlSection
+  ControlSection,
 } from "./audit-sections";
 
 /**

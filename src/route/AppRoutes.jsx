@@ -51,10 +51,7 @@ export const AppRoutes = () => {
       <Route path="/" element={<RootRedirect user={currentUser} role={userRole} />} />
 
       {/* 2. AUTH ROUTE: Render LoginPage at '/login' */}
-      <Route
-        path={ROUTES.LOGIN}
-        element={<LoginPage />}
-      />
+      <Route path={ROUTES.LOGIN} element={<LoginPage />} />
 
       {/* Required for system security: Forced password changes */}
       <Route

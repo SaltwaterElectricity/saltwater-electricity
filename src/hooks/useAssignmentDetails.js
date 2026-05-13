@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { db } from '../firebaseConfig'; 
-import { ref, onValue } from 'firebase/database';
-import { logger } from '../utils/logger';
+import { useState, useEffect } from "react";
+import { db } from "../firebaseConfig";
+import { ref, onValue } from "firebase/database";
+import { logger } from "../utils/logger";
 
 /**
  * useAssignmentDetails Hook (Production-Ready)
@@ -12,51 +12,70 @@ export const useAssignmentDetails = (deviceId) => {
     fullName: "Loading...",
     address: "Loading...",
     assignedAt: null,
-    loading: !!deviceId // Initialize loading based on presence of deviceId
+    loading: !!deviceId, // Initialize loading based on presence of deviceId
   });
 
   useEffect(() => {
     if (!deviceId) return;
 
-    let isMounted = true; 
+    let isMounted = true;
     const assignmentRef = ref(db, `device_assignments/${deviceId}`);
-    
-    const unsubscribeAssignment = onValue(assignmentRef, (snapshot) => {
-      const assignmentData = snapshot.val();
-      
-      if (assignmentData?.userId) {
-        const userRef = ref(db, `users/${assignmentData.userId}`);
-        
-        onValue(userRef, (userSnapshot) => {
-          if (!isMounted) return;
 
-          const userData = userSnapshot.val();
-          if (userData) {
+    const unsubscribeAssignment = onValue(
+      assignmentRef,
+      (snapshot) => {
+        const assignmentData = snapshot.val();
+
+        if (assignmentData?.userId) {
+          const userRef = ref(db, `users/${assignmentData.userId}`);
+
+          onValue(
+            userRef,
+            (userSnapshot) => {
+              if (!isMounted) return;
+
+              const userData = userSnapshot.val();
+              if (userData) {
+                setDetails({
+                  fullName:
+                    `${userData.firstName || ""} ${userData.lastName || ""}`.trim() ||
+                    "Unnamed User",
+                  address: userData.address || "No Address Provided",
+                  assignedAt: assignmentData.assignedAt,
+                  loading: false,
+                });
+              } else {
+                setDetails({
+                  fullName: "User Not Found",
+                  address: "N/A",
+                  assignedAt: null,
+                  loading: false,
+                });
+              }
+            },
+            { onlyOnce: true }
+          );
+        } else {
+          if (isMounted) {
             setDetails({
-              fullName: `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || "Unnamed User",
-              address: userData.address || "No Address Provided",
-              assignedAt: assignmentData.assignedAt,
-              loading: false
+              fullName: "Not Assigned",
+              address: "N/A",
+              assignedAt: null,
+              loading: false,
             });
-          } else {
-            setDetails({ fullName: "User Not Found", address: "N/A", assignedAt: null, loading: false });
           }
-        }, { onlyOnce: true });
-
-      } else {
+        }
+      },
+      (error) => {
+        logger.error("[Assignment Hook]: Firebase Fetch Error:", error);
         if (isMounted) {
-          setDetails({ fullName: "Not Assigned", address: "N/A", assignedAt: null, loading: false });
+          setDetails((prev) => ({ ...prev, fullName: "Information unavailable", loading: false }));
         }
       }
-    }, (error) => {
-      logger.error("[Assignment Hook]: Firebase Fetch Error:", error);
-      if (isMounted) {
-        setDetails((prev) => ({ ...prev, fullName: "Information unavailable", loading: false }));
-      }
-    });
+    );
 
     return () => {
-      isMounted = false; 
+      isMounted = false;
       unsubscribeAssignment();
     };
   }, [deviceId]);

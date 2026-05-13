@@ -43,7 +43,10 @@ const VoltageGauge = ({ deviceId, size = 160 }) => {
       )}
       style={{ width: size, height: size }}
     >
-      <svg className="w-full h-full transform -rotate-90" viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}>
+      <svg
+        className="w-full h-full transform -rotate-90"
+        viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
+      >
         <defs>
           <linearGradient id="voltage-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" style={{ stopColor: "#0052cc", stopOpacity: 1 }} />
@@ -90,7 +93,9 @@ const VoltageGauge = ({ deviceId, size = 160 }) => {
       {/* Error Overlay */}
       {error && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="bg-red-500 text-white text-[8px] px-2 py-0.5 rounded-full font-black uppercase">Offline</span>
+          <span className="bg-red-500 text-white text-[8px] px-2 py-0.5 rounded-full font-black uppercase">
+            Offline
+          </span>
         </div>
       )}
     </div>

@@ -53,7 +53,7 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
       }
     } catch (err) {
       setAuthError(err.message);
-      
+
       // SYNC: Tell parent login failed so it can unblock redirects if needed
       if (onLoginError) onLoginError();
 

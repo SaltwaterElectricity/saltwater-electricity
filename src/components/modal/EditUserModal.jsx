@@ -18,7 +18,7 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(formData); 
+    onSave(formData);
   };
 
   const handleInputChange = (e) => {
@@ -29,7 +29,6 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
   return (
     <ModalBackdrop>
       <div className="relative w-[92%] sm:w-full max-w-[440px] bg-white border border-slate-100 rounded-[32px] shadow-2xl p-8 flex flex-col gap-8 animate-in fade-in zoom-in-95 duration-200 overflow-hidden">
-        
         {/* Header */}
         <header className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
@@ -45,8 +44,8 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
               </p>
             </div>
           </div>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
           >
             <X size={20} />
@@ -55,12 +54,13 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-          
           {/* Name Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-['Inter']">
             <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">First Name</label>
-              <input 
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
+                First Name
+              </label>
+              <input
                 type="text"
                 name="firstName"
                 value={formData.firstName}
@@ -71,8 +71,10 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Last Name</label>
-              <input 
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
+                Last Name
+              </label>
+              <input
                 type="text"
                 name="lastName"
                 value={formData.lastName}
@@ -86,8 +88,10 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
 
           {/* Personal Details */}
           <div className="flex flex-col gap-2 font-['Inter']">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Birth Date</label>
-            <input 
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
+              Birth Date
+            </label>
+            <input
               type="date"
               name="birthDate"
               value={formData.birthDate}
@@ -100,10 +104,15 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
           {/* Location Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-['Inter']">
             <div className="flex flex-col gap-2 relative">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Municipality</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
+                Municipality
+              </label>
               <div className="relative">
-                <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input 
+                <MapPin
+                  size={16}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                />
+                <input
                   type="text"
                   name="municipality"
                   value={formData.municipality}
@@ -114,10 +123,15 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
               </div>
             </div>
             <div className="flex flex-col gap-2 relative">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Baranggay</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
+                Baranggay
+              </label>
               <div className="relative">
-                <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input 
+                <MapPin
+                  size={16}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                />
+                <input
                   type="text"
                   name="baranggay"
                   value={formData.baranggay}
@@ -131,15 +145,15 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
 
           {/* Footer Actions */}
           <footer className="flex items-center justify-end gap-3 pt-6 border-t border-slate-100 font-['Inter']">
-            <button 
-              type="button" 
-              onClick={onClose} 
+            <button
+              type="button"
+              onClick={onClose}
               className="px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest text-slate-600 hover:bg-slate-100 transition-colors"
             >
               Cancel
             </button>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={isLoading}
               className={cn(
                 "flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-black uppercase tracking-widest rounded-xl shadow-sm transition-all",
@@ -160,7 +174,6 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
             </button>
           </footer>
         </form>
-
       </div>
     </ModalBackdrop>
   );

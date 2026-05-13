@@ -3,7 +3,7 @@ import { logger } from "../utils/logger";
 
 /**
  * EMAIL SERVICE (Refactored for Vercel Serverless Functions)
- * 
+ *
  * Secure backend triggers for SendGrid communications.
  */
 
@@ -16,9 +16,9 @@ const isValidEmail = (email) => EMAIL_REGEX.test(email);
  */
 const triggerSecureEmail = async (emailData) => {
   if (!isValidEmail(emailData.to)) {
-    return { 
-      success: false, 
-      error: new appError("Invalid recipient email address.", true, "email/invalid-email") 
+    return {
+      success: false,
+      error: new appError("Invalid recipient email address.", true, "email/invalid-email"),
     };
   }
 
@@ -46,11 +46,15 @@ const triggerSecureEmail = async (emailData) => {
   } catch (error) {
     // SECURITY: Log technical details internally
     logger.error("[Email Service]: Vercel trigger failed.", error);
-    
+
     // UX: Neutral error message
-    return { 
-      success: false, 
-      error: new appError("Communications link interrupted. Please verify your connection or try again later.", true, "email/delivery-failed") 
+    return {
+      success: false,
+      error: new appError(
+        "Communications link interrupted. Please verify your connection or try again later.",
+        true,
+        "email/delivery-failed"
+      ),
     };
   }
 };
@@ -58,15 +62,15 @@ const triggerSecureEmail = async (emailData) => {
 // SEND OTP EMAIL
 export const sendOTPEmail = async (email, otpCode) => {
   if (!email || !otpCode) {
-    return { 
-      success: false, 
-      error: new appError("Missing recipient or reset code.", true, "email/invalid-parameters") 
+    return {
+      success: false,
+      error: new appError("Missing recipient or reset code.", true, "email/invalid-parameters"),
     };
   }
 
-  const expiryTime = new Date(Date.now() + 15 * 60000).toLocaleTimeString([], { 
-    hour: '2-digit', 
-    minute: '2-digit' 
+  const expiryTime = new Date(Date.now() + 15 * 60000).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
   });
 
   return await triggerSecureEmail({
@@ -75,17 +79,21 @@ export const sendOTPEmail = async (email, otpCode) => {
     templateType: "otp",
     templateData: {
       otpCode,
-      expiryTime
-    }
+      expiryTime,
+    },
   });
 };
 
 // SEND ONBOARDING EMAIL
 export const sendOnboardingEmail = async (userData, autoPassword) => {
   if (!userData?.email || !autoPassword) {
-    return { 
-      success: false, 
-      error: new appError("Missing user data or generated password.", true, "email/invalid-parameters") 
+    return {
+      success: false,
+      error: new appError(
+        "Missing user data or generated password.",
+        true,
+        "email/invalid-parameters"
+      ),
     };
   }
 
@@ -97,13 +105,13 @@ export const sendOnboardingEmail = async (userData, autoPassword) => {
       firstName: userData.firstName,
       userName: userData.userName,
       tempPassword: autoPassword,
-      role: userData.role
-    }
+      role: userData.role,
+    },
   });
 
-  return { 
-    success: true, 
-    emailSent: result.success, 
-    error: result.error 
+  return {
+    success: true,
+    emailSent: result.success,
+    error: result.error,
   };
 };

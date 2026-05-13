@@ -93,7 +93,7 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
             S<span className="hidden group-hover/sidebar:inline">altwater Electricity</span>
           </h1>
           <p className="font-display text-[10px] uppercase tracking-widest font-bold text-outline hidden group-hover/sidebar:block">
-            {userRole === ROLES.SUPER_ADMIN ? "SuperAdmin" : (isAdmin ? "Administrator" : "Resident")}
+            {userRole === ROLES.SUPER_ADMIN ? "SuperAdmin" : isAdmin ? "Administrator" : "Resident"}
           </p>
         </div>
 

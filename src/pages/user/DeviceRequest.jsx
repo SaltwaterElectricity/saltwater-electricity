@@ -2,10 +2,7 @@ import { useState, useMemo, useCallback } from "react";
 import { Plus, Clock, CheckCircle2, XCircle } from "lucide-react";
 import { useAuth } from "../../context/useAuth";
 import { useDeviceRequests } from "../../hooks";
-import { 
-  DeviceRequestModal,
-  Toast
-} from "../../components";
+import { DeviceRequestModal, Toast } from "../../components";
 import { cn } from "../../utils/cn";
 
 /**
@@ -16,7 +13,7 @@ import { cn } from "../../utils/cn";
 const DeviceRequest = () => {
   const { user } = useAuth();
   const { requests, loading, error } = useDeviceRequests(user?.uid);
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [toastConfig, setToastConfig] = useState({ isOpen: false, message: "", type: "success" });
 
@@ -43,14 +40,14 @@ const DeviceRequest = () => {
 
   return (
     <div className="space-y-margin animate-in fade-in duration-700 antialiased text-on-surface">
-      <Toast 
-        isOpen={toastConfig.isOpen || !!error} 
-        message={error?.message || toastConfig.message} 
-        type={error ? "error" : toastConfig.type} 
-        onClose={() => setToastConfig(prev => ({ ...prev, isOpen: false }))} 
+      <Toast
+        isOpen={toastConfig.isOpen || !!error}
+        message={error?.message || toastConfig.message}
+        type={error ? "error" : toastConfig.type}
+        onClose={() => setToastConfig((prev) => ({ ...prev, isOpen: false }))}
       />
 
-      <DeviceRequestModal 
+      <DeviceRequestModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onShowToast={triggerToast}
@@ -86,10 +83,10 @@ const DeviceRequest = () => {
       {hasPendingRequest && (
         <div className="bg-amber-50 border border-amber-100 p-6 rounded-[24px] flex items-center gap-4 animate-in slide-in-from-top-4 duration-500">
           <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
-             <Clock size={20} />
+            <Clock size={20} />
           </div>
           <p className="text-xs md:text-sm font-bold text-amber-800 leading-relaxed font-body-md">
-            Transmission Pending: Our technical team is reviewing your latest hardware request. 
+            Transmission Pending: Our technical team is reviewing your latest hardware request.
             Multiple active requests are throttled to ensure grid integrity.
           </p>
         </div>
@@ -98,9 +95,11 @@ const DeviceRequest = () => {
       {/* TABLE SECTION */}
       <section className="glass-panel rounded-[32px] border border-white/40 shadow-sm overflow-hidden transition-all hover:bg-white/80">
         <div className="p-8 border-b border-outline-variant/10 bg-white/30">
-           <h3 className="text-sm font-black text-on-surface uppercase tracking-widest font-display">Recent Activity</h3>
+          <h3 className="text-sm font-black text-on-surface uppercase tracking-widest font-display">
+            Recent Activity
+          </h3>
         </div>
-        
+
         <div className="overflow-x-auto custom-scrollbar">
           <table className="w-full text-left border-collapse min-w-[600px]">
             <thead>
@@ -144,7 +143,10 @@ const DeviceRequest = () => {
                 </tr>
               ) : (
                 requests.map((req) => (
-                  <tr key={req.id} className="group hover:bg-surface-container-low/30 transition-colors">
+                  <tr
+                    key={req.id}
+                    className="group hover:bg-surface-container-low/30 transition-colors"
+                  >
                     <td className="px-8 py-6">
                       <span className="text-[11px] font-mono font-black text-primary bg-primary/5 px-2 py-1 rounded-md">
                         #{req.id.substring(0, 8).toUpperCase()}
@@ -153,14 +155,16 @@ const DeviceRequest = () => {
                     <td className="px-8 py-6">
                       <p className="text-xs font-bold text-on-surface font-body-md">
                         {new Date(req.createdAt).toLocaleDateString(undefined, {
-                           year: 'numeric',
-                           month: 'long',
-                           day: 'numeric'
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
                         })}
                       </p>
                     </td>
                     <td className="px-8 py-6">
-                      <p className="text-xs font-black text-on-surface font-display">{req.deviceName}</p>
+                      <p className="text-xs font-black text-on-surface font-display">
+                        {req.deviceName}
+                      </p>
                       <p className="text-[9px] font-bold text-outline uppercase tracking-tight mt-1 font-body-md">
                         {req.requestType.replace("_", " ")}
                       </p>
@@ -190,4 +194,3 @@ const DeviceRequest = () => {
 };
 
 export default DeviceRequest;
-

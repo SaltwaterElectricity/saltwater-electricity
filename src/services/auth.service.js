@@ -121,7 +121,7 @@ export const changeUserPassword = async (
     return { success: true };
   } catch (error) {
     if (error instanceof appError) throw error;
-    
+
     // SECURITY: Log technical details internally
     logger.error("[Auth Service]: Password update failed.", error);
 

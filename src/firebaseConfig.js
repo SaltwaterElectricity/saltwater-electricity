@@ -12,12 +12,16 @@ export const FIREBASE_CONFIG = Object.freeze({
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 });
 
 // Safety Check: Validate critical variables
 if (!FIREBASE_CONFIG.apiKey || !FIREBASE_CONFIG.databaseURL) {
-  throw new appError("Firebase Environment Variables missing. Check your .env file.", false, "config/missing-env");
+  throw new appError(
+    "Firebase Environment Variables missing. Check your .env file.",
+    false,
+    "config/missing-env"
+  );
 }
 
 // Singleton Pattern
