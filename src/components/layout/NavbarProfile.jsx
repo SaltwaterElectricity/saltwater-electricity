@@ -43,7 +43,7 @@ export const NavbarProfile = memo(({ currentUid = "" }) => {
     setIsLoggingOut(true);
     try {
       await logoutUser(); 
-    } catch (error) {
+    } catch {
       triggerToast("Terminating session... Forcing secure reset.", "warning");
 
       sessionStorage.clear();
@@ -136,3 +136,5 @@ export const NavbarProfile = memo(({ currentUid = "" }) => {
     </div>
   );
 });
+
+NavbarProfile.displayName = "NavbarProfile";

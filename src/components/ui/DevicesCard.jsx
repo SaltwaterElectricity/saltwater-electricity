@@ -58,7 +58,7 @@ const DevicesCard = ({ mac, data, active }) => {
           )}
           <div className={`h-2.5 w-2.5 rounded-full ${
             !isOnline ? 'bg-slate-300' : 'bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]'
-          }`}></div>
+          }`} />
         </div>
       </div>
       

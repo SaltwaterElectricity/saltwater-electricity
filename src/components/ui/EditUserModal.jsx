@@ -1,4 +1,4 @@
-import { useState, useEffect, memo } from "react";
+import { useState, memo } from "react";
 import { X, Save, User, MapPin } from "lucide-react";
 import { cn } from "../../utils/cn";
 import SpinnerIcon from "./SpinnerIcon"; // Gamitin ang shared spinner mo
@@ -11,16 +11,19 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
     baranggay: "",
   });
 
-  // 2. Sync Local State kapag nagbago ang piniling User
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
-        baranggay: user.address?.baranggay || "",
-      });
-    }
-  }, [user]);
+  // 2. Sync Local State kapag nagbago ang piniling User (Derived State)
+  // Note: Standard React practice is to use a `key={user?.uid}` on this component 
+  // in the parent to automatically reset state. This useEffect is a fallback.
+  const [lastUserId, setLastUserId] = useState(null);
+
+  if (user && user.uid !== lastUserId) {
+    setFormData({
+      firstName: user.firstName || "",
+      lastName: user.lastName || "",
+      baranggay: user.address?.baranggay || "",
+    });
+    setLastUserId(user.uid);
+  }
 
   if (!isOpen || !user) return null;
 

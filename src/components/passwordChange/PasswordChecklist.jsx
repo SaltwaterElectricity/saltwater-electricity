@@ -11,6 +11,7 @@ const RequirementItem = memo(({ label, isMet }) => (
     <span className="text-[10px] font-bold uppercase tracking-tight">{label}</span>
   </div>
 ));
+RequirementItem.displayName = "RequirementItem";
 
 const PasswordChecklist = ({ password = "" }) => {
   const requirements = [
@@ -21,12 +22,13 @@ const PasswordChecklist = ({ password = "" }) => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-2 p-3 bg-slate-50 rounded-xl border border-slate-100">
-      {requirements.map((req, idx) => (
-        <RequirementItem key={idx} label={req.label} isMet={req.met} />
+      {requirements.map((req) => (
+        <RequirementItem key={req.label} label={req.label} isMet={req.met} />
       ))}
     </div>
   );
 };
 
 const MemoizedPasswordChecklist = memo(PasswordChecklist);
+MemoizedPasswordChecklist.displayName = "PasswordChecklist";
 export default MemoizedPasswordChecklist;

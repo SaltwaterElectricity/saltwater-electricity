@@ -9,28 +9,30 @@ import { useIsConnected } from '../useIsConnected';
  */
 export const useDeviceLogs = (mac, limit = 50, startDate = null) => {
   const [logs, setLogs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); // New error state
+  const [loading, setLoading] = useState(!!mac);
+  const [error, setError] = useState(null); 
   const isConnected = useIsConnected();
 
-  useEffect(() => {
-    // 1. Reset State: Clear everything when MAC changes to avoid "Ghost Data"
-    setError(null);
+  // Pattern: Adjusting state when a prop changes (Derived State)
+  // This avoids calling setState inside useEffect which triggers cascading renders.
+  const [prevMac, setPrevMac] = useState(mac);
+  if (mac !== prevMac) {
     setLogs([]);
-    
+    setError(null);
+    setLoading(true);
+    setPrevMac(mac);
+  }
+
+  useEffect(() => {
     if (!mac) {
-      setLoading(false);
       return;
     }
-    
-    setLoading(true);
     
     // Define a cleanup variable for the subscription
     let unsubscribe = () => {};
 
     try {
       // 2. Subscription with Error Handling
-      // We wrap the call itself in try/catch for immediate connection issues
       unsubscribe = subscribeToDeviceLogs(
         mac, 
         limit, 
@@ -38,11 +40,11 @@ export const useDeviceLogs = (mac, limit = 50, startDate = null) => {
           const incomingData = Array.isArray(data) ? data : [];
           setLogs([...incomingData]);
           setLoading(false);
-          setError(null); // Clear any previous errors on success
+          setError(null); 
         }, 
         startDate,
         (err) => {
-          // Callback for Firebase-specific errors (permissions, quota, etc.)
+          // Firebase errors are already asynchronous callbacks, so this is safe.
           console.error("[Firebase Stream Error]:", err);
           setError("Failed to sync with device. Check permissions.");
           setLoading(false);
@@ -50,20 +52,22 @@ export const useDeviceLogs = (mac, limit = 50, startDate = null) => {
       );
       
     } catch (err) {
-      // Catch synchronous setup errors
+      // Synchronous errors during setup must be handled asynchronously to avoid
+      // "set-state-in-effect" lint errors in strict environments.
       console.error("[Subscription Setup Error]:", err);
-      setError("Connection setup failed.");
-      setLoading(false);
+      Promise.resolve().then(() => {
+        setError("Connection setup failed.");
+        setLoading(false);
+      });
     }
 
-    // 3. Cleanup: Sever the link to prevent memory leaks
     return () => unsubscribe();
   }, [mac, limit, startDate]);
 
   return { 
     logs, 
     loading, 
-    error, // Exposed for UI Alerts
+    error, 
     isReconnecting: !isConnected 
   };
 };

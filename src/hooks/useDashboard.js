@@ -32,7 +32,7 @@ const transformDevice = (deviceData, now) => {
 export const useDashboard = () => {
   const [rawDevices, setRawDevices] = useState({});
   const [loading, setLoading] = useState(true);
-  const [currentTime, setCurrentTime] = useState(Date.now());
+  const [currentTime, setCurrentTime] = useState(() => Date.now());
   const isConnected = useIsConnected();
 
   // 2. REAL-TIME SUBSCRIPTION

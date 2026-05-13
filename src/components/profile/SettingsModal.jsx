@@ -153,6 +153,8 @@ export const SettingsModal = memo(({ uid }) => {
   );
 });
 
+SettingsModal.displayName = "SettingsModal";
+
 const TabButton = ({ isActive, onClick, disabled, icon: Icon, label }) => (
   <button
     onClick={onClick}

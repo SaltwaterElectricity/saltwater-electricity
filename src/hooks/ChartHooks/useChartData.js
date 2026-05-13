@@ -25,7 +25,10 @@ export const useChartData = (logs, activeMetric = METRICS.TDS, timeRangeHours = 
     }
 
     try {
-      const now = Date.now();
+      // Use the timestamp of the most recent log as the 'now' reference for stable windowing
+      // Fallback to 0 if missing; windowing logic handles empty ranges.
+      // Date.now() is impure during render, so we prefer log-based timing.
+      const now = cleanLogs[cleanLogs.length - 1]?.timestamp || 0;
       const windowMs = timeRangeHours * 3600000; // ms in an hour
 
       /**

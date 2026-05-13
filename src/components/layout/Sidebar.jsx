@@ -46,6 +46,8 @@ const SidebarLink = memo(({ to, icon: Icon, label, onClick, badgeCount, badgeCol
   </NavLink>
 ));
 
+SidebarLink.displayName = "SidebarLink";
+
 export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
   const navigate = useNavigate();
   const { isSuperAdmin, isAdmin, user, userRole } = useAuth() || {};
@@ -77,7 +79,7 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
       sessionStorage.clear();
       setIsLogoutModalOpen(false);
       navigate("/login", { replace: true });
-    } catch (error) {
+    } catch {
       triggerToast("Terminating session... Forcing local wipe.", "warning");
       sessionStorage.clear();
       localStorage.clear();
@@ -193,3 +195,5 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
     </>
   );
 });
+
+Sidebar.displayName = "Sidebar";
