@@ -10,6 +10,7 @@ import {
 } from "firebase/database";
 import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
+import logger from "../utils/logger";
 import { getUserClaims } from "./auth.service";
 import { createNotification, NOTIFICATION_TYPES } from "./notification.service";
 import { SENSOR_CONFIG, METRICS, METRIC_MAP } from "../constants";
@@ -101,7 +102,7 @@ const transformReading = (data) => {
 export const subscribeToLatestReading = (deviceId, onSuccess, onError) => {
   if (!deviceId) {
     throw new appError(
-      "A valid Device ID is required to start monitoring.",
+      "A valid Device identifier is required to start monitoring.",
       true,
       "reading/invalid-id"
     );
@@ -122,16 +123,18 @@ export const subscribeToLatestReading = (deviceId, onSuccess, onError) => {
           try {
             const rawData = snapshot.val();
             onSuccess(transformReading(rawData));
-          } catch {
+          } catch (error) {
+            logger.error("[Reading Service]: Data transformation failed.", error);
             if (onError)
               onError(
-                new appError("Failed to process incoming reading.", true, "reading/parse-error")
+                new appError("Data processing error: Could not interpret sensor values.", true, "reading/parse-error")
               );
           }
         },
         (error) => {
+          logger.error("[Reading Service]: Real-time connection failed.", error);
           const wrappedError = new appError(
-            `Real-time connection failed: ${error.message}`,
+            "Communications link interrupted. Please check your network.",
             true,
             "reading/connection-failed"
           );
@@ -157,7 +160,7 @@ export const subscribeToLatestReading = (deviceId, onSuccess, onError) => {
  * @param {boolean} newState - Target ON/OFF state
  */
 export const updateBulbState = async (deviceId, newState) => {
-  if (!deviceId) throw new appError("Device ID required.", true, "reading/invalid-id");
+  if (!deviceId) throw new appError("Device identifier required.", true, "reading/invalid-id");
 
   // IDOR DEFENSE: Verify access before writing hardware commands
   await verifyDeviceAccess(deviceId);
@@ -202,8 +205,9 @@ export const updateBulbState = async (deviceId, newState) => {
 
     await update(ref(db), updates);
   } catch (error) {
+    logger.error("[Reading Service]: Hardware command failed.", error);
     if (error instanceof appError) throw error;
-    throw new appError(`Hardware command failed: ${error.message}`, true, "reading/update-failed");
+    throw new appError("Device command failed. The sensor node may be offline.", true, "reading/update-failed");
   }
 };
 

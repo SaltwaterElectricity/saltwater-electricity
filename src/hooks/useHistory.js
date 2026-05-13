@@ -25,7 +25,11 @@ export const useHistory = (deviceId, limit = 50) => {
       setLogs(data);
       setError(null);
     } catch (err) {
-      setError(err);
+      // SECURITY: Logs technical details internally
+      console.error("[History Hook]: Fetch failure.", err);
+      
+      // UX: Human-first generic message
+      setError(new Error("The historical data service is currently unavailable."));
     } finally {
       setLoading(false);
     }

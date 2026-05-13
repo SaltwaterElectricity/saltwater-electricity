@@ -32,37 +32,42 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center p-md antialiased">
-      {/* Decorative Water Background Effects */}
-      <div className="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none overflow-hidden opacity-30">
-        <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#00c1fd] rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#0052cc] rounded-full blur-[100px]" />
+    <div className="min-h-screen w-full flex items-center justify-center p-6 md:p-12 antialiased relative animate-in fade-in duration-700 overflow-hidden">
+      {/* Decorative Water Background Effects - Restored for Standalone Presence */}
+      <div className="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none overflow-hidden opacity-40">
+        <div className="absolute top-[-15%] right-[-10%] w-[70%] h-[70%] bg-secondary-container/40 rounded-full blur-[140px]" />
+        <div className="absolute bottom-[-15%] left-[-10%] w-[60%] h-[60%] bg-primary/20 rounded-full blur-[120px]" />
       </div>
 
-      <div className="w-full max-w-[500px] text-center glass-panel p-md shadow-2xl flex flex-col gap-md">
+      <div className="w-full max-w-[560px] text-center glass-panel p-8 md:p-12 shadow-[0_32px_64px_-12px_rgba(0,101,145,0.15)] flex flex-col gap-10 z-10 relative">
         {/* Branding */}
-        <h1 className="text-[48px] font-['Space_Grotesk'] font-semibold text-primary tracking-tighter uppercase glow-line">
-          404
-        </h1>
+        <div className="space-y-2">
+          <h1 className="text-[72px] md:text-[96px] font-h1 font-black text-primary tracking-tighter uppercase glow-line leading-none opacity-80">
+            404
+          </h1>
+          <div className="h-1.5 w-24 ocean-gradient mx-auto rounded-full opacity-50" />
+        </div>
 
         {/* Message */}
-        <div className="space-y-sm">
-          <h2 className="text-[24px] font-['Space_Grotesk'] font-medium text-on-surface">
+        <div className="space-y-4">
+          <h2 className="text-[28px] md:text-[32px] font-h2 font-bold text-on-surface uppercase tracking-tight">
             Navigation Error
           </h2>
-          <p className="font-['Inter'] text-body-md text-on-surface-variant leading-relaxed">
+          <p className="font-body-md text-body-lg text-on-surface-variant leading-relaxed max-w-md mx-auto">
             It looks like this path has drifted away. Let&apos;s get you back to familiar waters.
           </p>
         </div>
 
         {/* Action Button */}
-        <button
-          onClick={() => navigate(ROUTES.DASHBOARD)}
-          className="w-full flex items-center justify-center gap-sm px-md py-sm ocean-gradient text-white rounded-[20px] font-black text-label-sm uppercase tracking-widest transition-all active:scale-95"
-        >
-          <Home size={18} />
-          Return to Dashboard
-        </button>
+        <div className="pt-4">
+          <button
+            onClick={() => navigate(ROUTES.DASHBOARD)}
+            className="w-full flex items-center justify-center gap-3 px-8 py-5 ocean-gradient text-white rounded-[24px] font-black text-body-md uppercase tracking-[0.15em] transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-primary/30"
+          >
+            <Home size={20} />
+            Return to Dashboard
+          </button>
+        </div>
       </div>
     </div>
   );

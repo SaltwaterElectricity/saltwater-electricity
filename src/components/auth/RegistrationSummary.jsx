@@ -28,9 +28,8 @@ export const RegistrationSummary = ({ data }) => {
             value={`${data.firstName} ${data.middleName || ""} ${data.lastName} ${data.suffix || ""}`} 
             className="col-span-2"
           />
-          <SummaryItem label="Username" value={data.userName} />
           <SummaryItem label="System Role" value={data.role} className="capitalize font-bold text-blue-700" />
-          <SummaryItem label="Work Email" value={data.email} className="col-span-2" />
+          <SummaryItem label="Work Email" value={data.email} />
         </div>
       </div>
 
@@ -39,7 +38,7 @@ export const RegistrationSummary = ({ data }) => {
         <div>
           <h3 className="text-[11px] font-black uppercase text-slate-400 tracking-widest mb-3">Profile Details</h3>
           <div className="space-y-1">
-            <SummaryItem label="Age" value={`${data.age} years old`} />
+            <SummaryItem label="Birth Date" value={data.birthDate} />
             <SummaryItem label="Gender" value={data.gender} className="capitalize" />
             <SummaryItem label="Mobile" value={data.mobileNum} />
           </div>
@@ -49,6 +48,7 @@ export const RegistrationSummary = ({ data }) => {
           <h3 className="text-[11px] font-black uppercase text-slate-400 tracking-widest mb-3">Permanent Address</h3>
           <div className="space-y-1">
             <SummaryItem label="Baranggay" value={data.baranggay} />
+            <SummaryItem label="Municipality" value={data.municipality} />
             <SummaryItem label="City / Province" value={data.cityProvince} />
             <SummaryItem label="Region" value={data.region} />
           </div>

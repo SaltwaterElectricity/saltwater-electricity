@@ -14,12 +14,13 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
     middleName: "",
     lastName: "",
     suffix: "",
-    age: 0,
+    birthDate: "",
     gender: "Not Specified",
     email: "",
     mobileNum: "",
     street: "",
     baranggay: "",
+    municipality: "",
     cityProvince: "",
     region: "",
     zipCode: "",
@@ -33,12 +34,13 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
         middleName: profileData.middleName?.trim() || "",
         lastName: profileData.lastName?.trim() || "",
         suffix: profileData.suffix?.trim() || "",
-        age: profileData.age ? parseInt(profileData.age) : 0,
+        birthDate: profileData.birthDate || "",
         gender: profileData.gender || "Not Specified",
         email: profileData.email?.trim() || "",
         mobileNum: profileData.mobileNum || "",
         street: profileData.address?.street || "",
         baranggay: profileData.address?.baranggay || "",
+        municipality: profileData.address?.municipality || "",
         cityProvince: profileData.address?.cityProvince || "",
         region: profileData.address?.region || "",
         zipCode: profileData.address?.zipCode || "",
@@ -50,7 +52,7 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "age" ? parseInt(value) || 0 : value,
+      [name]: value,
     }));
   };
 
@@ -62,12 +64,13 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
         middleName: profileData.middleName?.trim() || "",
         lastName: profileData.lastName?.trim() || "",
         suffix: profileData.suffix?.trim() || "",
-        age: profileData.age ? parseInt(profileData.age) : 0,
+        birthDate: profileData.birthDate || "",
         gender: profileData.gender || "Not Specified",
         email: profileData.email?.trim() || "",
         mobileNum: profileData.mobileNum || "",
         street: profileData.address?.street || "",
         baranggay: profileData.address?.baranggay || "",
+        municipality: profileData.address?.municipality || "",
         cityProvince: profileData.address?.cityProvince || "",
         region: profileData.address?.region || "",
         zipCode: profileData.address?.zipCode || "",
@@ -87,13 +90,14 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
       middleName: formData.middleName.trim(),
       lastName: formData.lastName.trim(),
       suffix: formData.suffix.trim(),
-      age: formData.age,
+      birthDate: formData.birthDate,
       gender: formData.gender,
       email: formData.email.trim(),
       mobileNum: formData.mobileNum.trim(),
       address: {
         street: formData.street.trim(),
         baranggay: formData.baranggay.trim(),
+        municipality: formData.municipality.trim(),
         cityProvince: formData.cityProvince.trim(),
         region: formData.region.trim(),
         zipCode: formData.zipCode.trim(),
@@ -184,10 +188,10 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
           isEditing={isEditing}
         />
         <Field
-          label="Age"
-          name="age"
-          type="number"
-          value={formData.age}
+          label="Birth Date"
+          name="birthDate"
+          type="date"
+          value={formData.birthDate}
           onChange={handleChange}
           isEditing={isEditing}
         />
@@ -244,6 +248,13 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
             label="Baranggay"
             name="baranggay"
             value={formData.baranggay}
+            onChange={handleChange}
+            isEditing={isEditing}
+          />
+          <Field
+            label="Municipality"
+            name="municipality"
+            value={formData.municipality}
             onChange={handleChange}
             isEditing={isEditing}
           />

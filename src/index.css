@@ -250,6 +250,21 @@
     filter: drop-shadow(0 2px 4px rgba(0, 193, 253, 0.3));
   }
 
+  .progress-shimmer {
+    background: linear-gradient(90deg, #0052cc 0%, #00c1fd 50%, #0052cc 100%);
+    background-size: 200% 100%;
+    animation: progress-shimmer 2s infinite linear;
+  }
+
+  @keyframes progress-shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
   .ocean-gradient-text {
     background: linear-gradient(to right, #0052cc, #00c1fd);
     -webkit-background-clip: text;
@@ -444,14 +459,15 @@
 
   /* Custom Scrollbar */
   .custom-scrollbar::-webkit-scrollbar {
-    width: var(--spacing-xs);
+    width: 6px;
+    height: 6px;
   }
   .custom-scrollbar::-webkit-scrollbar-track {
-    @apply bg-transparent;
-    margin-block: var(--spacing-stack-md);
+    @apply bg-slate-50/50;
+    border-radius: 10px;
   }
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-outline-variant/50 rounded-full hover:bg-outline-variant transition-colors;
+    @apply bg-slate-300 rounded-full hover:bg-slate-400 transition-colors border-2 border-transparent bg-clip-padding;
   }
   .custom-scrollbar {
     scrollbar-width: thin;

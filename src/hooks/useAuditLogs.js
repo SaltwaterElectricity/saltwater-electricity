@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { db } from "../firebaseConfig";
 import { ref, onValue, query, limitToLast, orderByChild } from "firebase/database";
 import { appError } from "../utils/appError";
+import logger from "../utils/logger";
 
 /**
  * Hook: useAuditLogs
@@ -47,10 +48,11 @@ export const useAuditLogs = (limit = 100) => {
             setLogs(logList);
           }
           setError(null);
-        } catch {
+        } catch (error) {
+          logger.error("[Audit Hook]: Log processing failed.", error);
           setError(
             new appError(
-              "Data Stream Error: Failed to process audit records.",
+              "Activity Log Error: Could not load recent audit entries.",
               true,
               "audit/parse-error"
             )
@@ -62,6 +64,7 @@ export const useAuditLogs = (limit = 100) => {
       (err) => {
         if (!isMounted) return;
 
+        logger.error("[Audit Hook]: Subscription failed.", err);
         const wrappedError = new appError(
           "Security Monitor: Lost connection to the audit trail.",
           true,

@@ -53,7 +53,7 @@ export const AppRoutes = () => {
       {/* 2. AUTH ROUTE: Render LoginPage at '/login' */}
       <Route
         path={ROUTES.LOGIN}
-        element={currentUser ? <Navigate to="/" replace /> : <LoginPage />}
+        element={<LoginPage />}
       />
 
       {/* Required for system security: Forced password changes */}

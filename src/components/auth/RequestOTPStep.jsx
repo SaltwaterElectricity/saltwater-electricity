@@ -32,8 +32,8 @@ const RequestOTPStep = ({ onNext }) => {
       }, 2000);
 
     } catch (err) {
-      // This will catch the "Rate Limit" error from your transaction
-      setError(err.message);
+      // UX: Use sanitized service message or generic fallback
+      setError(err.message || "The request service is currently unavailable. Please try again.");
     } finally {
       setLoading(false);
     }

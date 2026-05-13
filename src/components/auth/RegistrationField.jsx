@@ -62,12 +62,8 @@ export const RegistrationFields = ({ register, errors, isAdmin = false }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <InputField 
-            label="Age" name="age" type="number" register={register} errors={errors}
-            validation={{ 
-              required: "Age is required", 
-              min: { value: 18, message: "Must be 18 or older" },
-              max: { value: 100, message: "Invalid age" }
-            }} 
+            label="Birth Date" name="birthDate" type="date" register={register} errors={errors}
+            validation={{ required: "Birth date is required" }} 
           />
           <div className="flex flex-col">
             <label className="text-[10px] font-bold uppercase text-slate-400 mb-2">Gender</label>
@@ -104,8 +100,11 @@ export const RegistrationFields = ({ register, errors, isAdmin = false }) => {
           <InputField label="Street / House No." name="street" register={register} errors={errors} placeholder="e.g. 123 Rizal St." />
           <InputField label="Baranggay" name="baranggay" register={register} errors={errors} validation={{ required: "Baranggay is required" }} />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <InputField label="Municipality" name="municipality" register={register} errors={errors} validation={{ required: "Municipality is required" }} />
           <InputField label="City / Province" name="cityProvince" register={register} errors={errors} validation={{ required: "City/Province is required" }} />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <InputField label="Region" name="region" register={register} errors={errors} />
           <InputField label="Zip Code" name="zipCode" register={register} errors={errors} />
         </div>
@@ -116,18 +115,13 @@ export const RegistrationFields = ({ register, errors, isAdmin = false }) => {
         <h2 className="text-xs font-bold text-slate-700 uppercase tracking-widest">
           Access Credentials
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           <InputField 
             label="Work Email" name="email" type="email" register={register} errors={errors}
             validation={{ 
               required: "Email is required",
               pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Invalid email" } 
             }} 
-          />
-          <InputField 
-            label="Username" name="userName" register={register} errors={errors} 
-            placeholder="j.donquillo"
-            validation={{ required: "Username required" }} 
           />
         </div>
 

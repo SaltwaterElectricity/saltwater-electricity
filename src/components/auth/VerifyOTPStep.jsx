@@ -33,10 +33,11 @@ const VerifyOTPStep = ({ email, onSuccess, onBack }) => {
     } catch (err) {
       // Step C: This now catches "Expired", "Invalid (with attempts left)", 
       // or "Security Lockout" errors from your service.
-      setError(err.message);
+      const safeMsg = err.message || "Security verification failed. Please try again.";
+      setError(safeMsg);
       
       // If lockout or expired, clear the OTP field to signal a reset
-      if (err.message.includes("lockout") || err.message.includes("expired")) {
+      if (safeMsg.includes("lockout") || safeMsg.includes("expired")) {
         setOtp('');
       }
     } finally {

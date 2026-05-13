@@ -9,6 +9,8 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
   const [formData, setFormData] = useState({
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
+    birthDate: user?.birthDate || "",
+    municipality: user?.address?.municipality || "",
     baranggay: user?.address?.baranggay || "",
   });
 
@@ -82,19 +84,48 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
             </div>
           </div>
 
+          {/* Personal Details */}
+          <div className="flex flex-col gap-2 font-['Inter']">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Birth Date</label>
+            <input 
+              type="date"
+              name="birthDate"
+              value={formData.birthDate}
+              onChange={handleInputChange}
+              required
+              className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none shadow-sm transition-all"
+            />
+          </div>
+
           {/* Location Section */}
-          <div className="flex flex-col gap-2 relative font-['Inter']">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Baranggay / Location</label>
-            <div className="relative">
-              <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input 
-                type="text"
-                name="baranggay"
-                value={formData.baranggay}
-                onChange={handleInputChange}
-                className="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none shadow-sm transition-all"
-                placeholder="Poblacion Uno"
-              />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-['Inter']">
+            <div className="flex flex-col gap-2 relative">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Municipality</label>
+              <div className="relative">
+                <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input 
+                  type="text"
+                  name="municipality"
+                  value={formData.municipality}
+                  onChange={handleInputChange}
+                  className="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none shadow-sm transition-all"
+                  placeholder="San Andres"
+                />
+              </div>
+            </div>
+            <div className="flex flex-col gap-2 relative">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Baranggay</label>
+              <div className="relative">
+                <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input 
+                  type="text"
+                  name="baranggay"
+                  value={formData.baranggay}
+                  onChange={handleInputChange}
+                  className="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none shadow-sm transition-all"
+                  placeholder="Poblacion"
+                />
+              </div>
             </div>
           </div>
 

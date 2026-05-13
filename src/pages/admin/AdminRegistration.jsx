@@ -30,7 +30,9 @@ const AdminRegistration = () => {
       gender: "male",
       region: "Region IV-A",
       cityProvince: "Quezon",
-      baranggay: "" 
+      municipality: "San Andres",
+      baranggay: "",
+      birthDate: "" 
     }
   });
 

@@ -49,9 +49,9 @@ export const useAssignmentDetails = (deviceId) => {
         }
       }
     }, (error) => {
-      logger.error("Firebase Fetch Error:", error);
+      logger.error("[Assignment Hook]: Firebase Fetch Error:", error);
       if (isMounted) {
-        setDetails({ fullName: "Error Loading", address: "N/A", assignedAt: null, loading: false });
+        setDetails((prev) => ({ ...prev, fullName: "Information unavailable", loading: false }));
       }
     });
 

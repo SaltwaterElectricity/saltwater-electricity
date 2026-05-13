@@ -1,6 +1,7 @@
 import { ref, push, serverTimestamp, update } from "firebase/database";
 import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
+import logger from "../utils/logger";
 import { getUserClaims } from "./auth.service";
 import { logActivity } from "./audit.service";
 
@@ -66,6 +67,9 @@ export const createDeviceRequest = async (deviceData) => {
   } catch (error) {
     if (error instanceof appError) throw error;
     
+    // SECURITY: Log technical details internally
+    logger.error("[Request Service]: Creation failed.", error);
+
     // Wrap Firebase errors in a descriptive operational appError
     throw new appError(
       "The request service is currently unavailable. Please try again later.", 
@@ -118,6 +122,6 @@ export const updateRequestStatus = async (requestId, status, extraData = {}) => 
     return { success: true };
   } catch (error) {
     if (error instanceof appError) throw error;
-    throw new appError("Failed to update request status. System sync error.", true, "request/update-failed");
+    throw new appError("Failed to update request status. Please try again later.", true, "request/update-failed");
   }
 };

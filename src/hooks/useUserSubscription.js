@@ -50,7 +50,7 @@ export const useUserSubscription = (targetRole = null) => {
     }
 
     return new appError(
-      `System Error: Data stream interrupted. (Code: ${code || "Unknown"})`,
+      "System Error: The data stream was interrupted unexpectedly.",
       true,
       code || "db/unknown"
     );

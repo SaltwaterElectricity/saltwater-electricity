@@ -23,11 +23,11 @@ export const USER_STATUS = Object.freeze({
 });
 
 const DB_ERRORS = Object.freeze({
-  MISSING_UID: "Safety Check: User ID is required to provision data.",
+  MISSING_UID: "Safety Check: User identification required for setup.",
   MISSING_DATA: "Safety Check: Form data is incomplete.",
-  PROVISION_FAILED: "Server Error: Could not initialize user tables.",
-  FETCH_FAILED: "Server Error: Could not retrieve user profile.",
-  UPDATE_FAILED: "Server Error: Could not update status.",
+  PROVISION_FAILED: "Server Error: Could not complete the account setup.",
+  FETCH_FAILED: "Server Error: Could not retrieve the requested profile.",
+  UPDATE_FAILED: "Server Error: Could not save recent changes.",
 });
 
 const adminString = import.meta.env.VITE_SUPER_ADMIN_EMAILS || "";
@@ -80,16 +80,16 @@ const sanitizeUserData = (data) => {
     middleName: data.middleName?.toString().trim().substring(0, 50) || "",
     lastName: data.lastName?.toString().trim().substring(0, 50) || "",
     suffix: data.suffix?.toString().trim().substring(0, 10) || "",
-    age: Math.max(0, Math.min(120, parseInt(data.age) || 0)),
+    birthDate: data.birthDate || "",
     gender: ["Male", "Female", "Other", "Not Specified"].includes(data.gender)
       ? data.gender
       : "Not Specified",
     email: cleanEmail,
-    userName: data.userName?.toString().trim().substring(0, 30) || `user_${Date.now()}`,
     mobileNum: data.mobileNum?.toString().trim() || "N/A",
     address: {
       street: data.street?.toString().trim() || "Unset",
       baranggay: data.baranggay?.toString().trim() || "Unset",
+      municipality: data.municipality?.toString().trim() || "Unset",
       cityProvince: data.cityProvince?.toString().trim() || "Unset",
       region: data.region?.toString().trim() || "Unset",
       zipCode: data.zipCode?.toString().trim() || "",
@@ -274,11 +274,12 @@ export const updateUserProfile = async (targetUid, formData) => {
     [`/users/${uid}/middleName`]: clean.middleName,
     [`/users/${uid}/lastName`]: clean.lastName,
     [`/users/${uid}/suffix`]: clean.suffix,
-    [`/users/${uid}/age`]: clean.age,
+    [`/users/${uid}/birthDate`]: clean.birthDate,
     [`/users/${uid}/gender`]: clean.gender,
     [`/users/${uid}/mobileNum`]: clean.mobileNum,
     [`/users/${uid}/address/street`]: clean.address.street,
     [`/users/${uid}/address/baranggay`]: clean.address.baranggay,
+    [`/users/${uid}/address/municipality`]: clean.address.municipality,
     [`/users/${uid}/address/cityProvince`]: clean.address.cityProvince,
     [`/users/${uid}/address/region`]: clean.address.region,
     [`/users/${uid}/address/zipCode`]: clean.address.zipCode,

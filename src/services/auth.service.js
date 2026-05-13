@@ -41,7 +41,7 @@ export const AUTH_ERROR_MESSAGES = Object.freeze({
   "auth/user-disabled": "This account has been disabled by a system administrator.",
   PERMISSION_DENIED: "Security Check: You do not have permission to access this data.",
   "db/permission-denied": "Security Check: You do not have permission to access this data.",
-  unavailable: "The database is currently offline. Please check your connection.",
+  unavailable: "The service is currently offline. Please check your connection.",
   default: "An unexpected authentication error occurred.",
 });
 
@@ -121,12 +121,14 @@ export const changeUserPassword = async (
     return { success: true };
   } catch (error) {
     if (error instanceof appError) throw error;
-    // 🔍 Pro-tip: Mas maganda kung itatapon mo ang native Firebase code para mahuli ng AUTH_ERROR_MESSAGES object mo sa UI.
+    
+    // SECURITY: Log technical details internally
+    logger.error("[Auth Service]: Password update failed.", error);
+
     const code = error.code || "default";
     throw new appError(
       AUTH_ERROR_MESSAGES[code] ||
-        error.message ||
-        "Security system encountered an error updating credentials.",
+        "Security system encountered an error updating credentials. Please try again.",
       true,
       code
     );

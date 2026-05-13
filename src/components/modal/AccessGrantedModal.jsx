@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import PropTypes from "prop-types";
 import { RefreshCw } from "lucide-react";
 import confetti from "canvas-confetti";
+import ModalBackdrop from "./ModalBackdrop";
 
 const AccessGrantedModal = ({ isOpen, userData, onFinished }) => {
   const [progress, setProgress] = useState(0);
@@ -14,6 +15,7 @@ const AccessGrantedModal = ({ isOpen, userData, onFinished }) => {
         spread: 70,
         origin: { y: 0.6 },
         colors: ["#003d9b", "#00c1fd", "#42fdd3"],
+        zIndex: 10000,
       });
 
       const duration = 2500; // 2.5 seconds
@@ -38,9 +40,9 @@ const AccessGrantedModal = ({ isOpen, userData, onFinished }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-background/80 backdrop-blur-sm animate-fade-in">
-      <div className="max-w-[480px] w-full glass-panel rounded-[20px] p-10 shadow-[0_40px_80px_rgba(0,82,204,0.12)] flex flex-col items-center text-center animate-zoomIn">
-        {/* User Identity Header (Replacing Checkmark) */}
+    <ModalBackdrop>
+      <div className="max-w-[480px] w-full bg-white glass-panel rounded-[20px] p-10 shadow-[0_40px_80px_rgba(0,82,204,0.12)] flex flex-col items-center text-center animate-zoomIn">
+        {/* User Identity Header (Restored Avatar Design) */}
         <div className="relative mb-8 flex flex-col items-center">
           <div className="relative flex items-center justify-center">
             {/* Profile Avatar */}
@@ -90,7 +92,7 @@ const AccessGrantedModal = ({ isOpen, userData, onFinished }) => {
           </div>
         </div>
 
-        {/* Footer Meta */}
+        {/* Footer Meta (Restored Layout) */}
         <div className="mt-12 pt-8 border-t border-outline-variant/20 w-full">
           <div className="flex justify-center gap-8">
             <div className="flex flex-col items-center">
@@ -118,7 +120,7 @@ const AccessGrantedModal = ({ isOpen, userData, onFinished }) => {
           </div>
         </div>
       </div>
-    </div>
+    </ModalBackdrop>
   );
 };
 
@@ -128,4 +130,4 @@ AccessGrantedModal.propTypes = {
   onFinished: PropTypes.func.isRequired,
 };
 
-export default AccessGrantedModal;
+export default memo(AccessGrantedModal);

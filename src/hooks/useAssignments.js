@@ -22,15 +22,15 @@ export const useAssignments = () => {
         setAssignments(snapshot.val() || {});
         setError(null);
       } catch (err) {
-        logger.error("Error fetching assignments:", err);
-        setError(err);
+        logger.error("[Assignment Hook]: Error processing data:", err);
+        setError(new Error("Data processing error: Could not load assignments."));
       } finally {
         setLoading(false);
       }
     }, (err) => {
       if (!isMounted) return;
-      logger.error("Assignment subscription error:", err);
-      setError(err);
+      logger.error("[Assignment Hook]: Subscription error:", err);
+      setError(new Error("Communications link interrupted. Please check your network."));
       setLoading(false);
     });
 

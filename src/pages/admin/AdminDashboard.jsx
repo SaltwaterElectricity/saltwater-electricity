@@ -9,6 +9,7 @@ import {
 import { MetricCard, AIInsightCard, AnalyticsChart, UserRow, EventItem } from "../../components";
 import { useAuth } from "../../context/useAuth";
 import { Footer } from "../../layout";
+import { SENSOR_CONFIG, METRICS } from "../../constants";
 
 /**
  * MAIN ADMIN DASHBOARD PAGE
@@ -55,11 +56,13 @@ const AdminDashboard = () => {
   // MOCK STATS (Aggregated from real data)
   const stats = useMemo(() => {
     const latestLog = historicalLogs[0] || {};
+    const tdsThreshold = SENSOR_CONFIG[METRICS.TDS].critical;
+
     return {
       voltage: latestLog.voltage ? `${latestLog.voltage}V` : "0V",
       salinity: latestLog.tds_ppm ? `${latestLog.tds_ppm}ppt` : "0ppt",
       activeUsers: users?.length || 0,
-      health: latestLog.tds_ppm < 500 ? "98%" : "72%",
+      health: latestLog.tds_ppm < tdsThreshold ? "98%" : "72%",
     };
   }, [users, historicalLogs]);
 

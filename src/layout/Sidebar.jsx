@@ -93,7 +93,7 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
             S<span className="hidden group-hover/sidebar:inline">altwater Electricity</span>
           </h1>
           <p className="font-display text-[10px] uppercase tracking-widest font-bold text-outline hidden group-hover/sidebar:block">
-            {userRole === ROLES.SUPER_ADMIN ? "SuperAdmin" : "Administrator"}
+            {userRole === ROLES.SUPER_ADMIN ? "SuperAdmin" : (isAdmin ? "Administrator" : "Resident")}
           </p>
         </div>
 
@@ -105,6 +105,12 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
             to={ROUTES.SMART_AQUA_MONITOR}
             icon="visibility"
             label={isAdmin ? "Fleet Monitor" : "Live Monitor"}
+          />
+
+          <SidebarLink
+            to={isAdmin ? ROUTES.ADMIN_REQUEST_MANAGEMENT : ROUTES.DEVICE_REQUESTS}
+            icon="app_registration"
+            label={isAdmin ? "Request Management" : "Device Requests"}
           />
 
           {isAdmin && (

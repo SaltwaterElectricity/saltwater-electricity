@@ -4,6 +4,11 @@ import { ROUTES } from "../../constants/routes";
 import { Footer } from "../../layout";
 import "../../styles/landing.css";
 
+// LOCAL ASSETS
+import pupLogo from "../../assets/landing-page-img/pup-unisan-logo.png";
+import sanAndresLogo from "../../assets/landing-page-img/san-andresQP-logo.png";
+import saltwaterLogo from "../../assets/landing-page-img/saltwater-electricity-logo.png";
+
 /**
  * LandingPage Component
  * A public-facing landing page for the Saltwater Electricity IoT Monitoring System.
@@ -103,7 +108,7 @@ const LandingPage = () => {
               <img
                 alt="PUP Logo"
                 className="h-10 w-auto object-contain mix-blend-multiply"
-                src="https://lh3.googleusercontent.com/aida/ADBb0ujXGa9Kxu_0I92COfBtyRvfT1KxmRWuMue4zC9G8wj8RoGwDyW3HAVeOzmXtnZwYU4JxDL_8i9AxNu061u3Kp__aOF16W51N0cNTZTYgw7B2pS10jxazkdqSjc6uIY-XsuLeB_Rcx41BusHA788_wOgvXXS7d_S7TUYa1kMqvGJmXasZTwfh3Z_fntWs8hwCp8q5qxdtzLyQ0r9O9DMLf1TNbLFHuviUjqDgD9PKku33-q9LULkLF1_Ik4wRdbJXFYgr-SaiPXtdg"
+                src={pupLogo}
               />
               <span className="font-h3 text-h5 font-bold tracking-tight text-on-surface whitespace-nowrap">
                 Polytechnic University of the Philippines - Unisan Campus
@@ -113,7 +118,7 @@ const LandingPage = () => {
               <img
                 alt="San Andres Logo"
                 className="h-10 w-auto object-contain mix-blend-multiply"
-                src="https://lh3.googleusercontent.com/aida/ADBb0ujVShPXChKs9w5j7hCP5v2u6HjbLLPd-jCOrDx_37PseEpVjs9HRYBOpVCmT-AVrOU8xfVeZvySn9v-vg9wgepQE-3otHsmZxc3KixF2hZTIHqqG3o_io1Xyw9yPuRc3ykULT89_KQAm32YzzOaYy3EXGARwcOjtPT5R9m00k1NgDNSQdptY7QuNVlN54vzyLhyvkPgL3Sv0gxw3zw7X_BAjg6jUp7pX8O6eWJvmiJ5N26zO3ZMKTjRzVA-42UxFAC9YgvgTkgo5Q"
+                src={sanAndresLogo}
               />
               <span className="font-h3 text-h5 font-bold tracking-tight text-on-surface whitespace-nowrap">
                 Alibijaban Island, San Andres Municipality
@@ -123,7 +128,7 @@ const LandingPage = () => {
               <img
                 alt="Saltwater Electricity Logo"
                 className="h-10 w-auto object-contain mix-blend-multiply"
-                src="https://lh3.googleusercontent.com/aida/ADBb0uiBW9VxrBJ87zGOeBMOhv_UlLw3atuL9HraUU-8rajJEyUXy6hO1MWfiO9uoZEB_fXnhvL1ubPqhQQBnVYZq12gVv7RC0cIYIDU-g1l4AmDbjKREFbueK0V1d0BM7-O96i05IjuWPoe41VS2BdfkvFhN4F5ucI2zKJulJSscJsEozvtneQ_LcQd3K_8XX4WNhBhWLhMyvf203PG-iBH5aXcMxyAw3mA9x1IZFVIQOsc7MsfYx7X5b1APiTJz1w-yVsBcrJ8rdyAQg"
+                src={saltwaterLogo}
               />
               <span className="font-h3 text-h5 font-bold tracking-tight text-on-surface whitespace-nowrap">
                 Saltwater Electricity Device Monitoring
@@ -136,7 +141,7 @@ const LandingPage = () => {
               <img
                 alt="PUP Logo"
                 className="h-10 w-auto object-contain mix-blend-multiply"
-                src="https://lh3.googleusercontent.com/aida/ADBb0ujXGa9Kxu_0I92COfBtyRvfT1KxmRWuMue4zC9G8wj8RoGwDyW3HAVeOzmXtnZwYU4JxDL_8i9AxNu061u3Kp__aOF16W51N0cNTZTYgw7B2pS10jxazkdqSjc6uIY-XsuLeB_Rcx41BusHA788_wOgvXXS7d_S7TUYa1kMqvGJmXasZTwfh3Z_fntWs8hwCp8q5qxdtzLyQ0r9O9DMLf1TNbLFHuviUjqDgD9PKku33-q9LULkLF1_Ik4wRdbJXFYgr-SaiPXtdg"
+                src={pupLogo}
               />
               <span className="font-h3 text-h5 font-bold tracking-tight text-on-surface whitespace-nowrap">
                 Polytechnic University of the Philippines - Unisan Campus
@@ -146,7 +151,7 @@ const LandingPage = () => {
               <img
                 alt="San Andres Logo"
                 className="h-10 w-auto object-contain mix-blend-multiply"
-                src="https://lh3.googleusercontent.com/aida/ADBb0ujVShPXChKs9w5j7hCP5v2u6HjbLLPd-jCOrDx_37PseEpVjs9HRYBOpVCmT-AVrOU8xfVeZvySn9v-vg9wgepQE-3otHsmZxc3KixF2hZTIHqqG3o_io1Xyw9yPuRc3ykULT89_KQAm32YzzOaYy3EXGARwcOjtPT5R9m00k1NgDNSQdptY7QuNVlN54vzyLhyvkPgL3Sv0gxw3zw7X_BAjg6jUp7pX8O6eWJvmiJ5N26zO3ZMKTjRzVA-42UxFAC9YgvgTkgo5Q"
+                src={sanAndresLogo}
               />
               <span className="font-h3 text-h5 font-bold tracking-tight text-on-surface whitespace-nowrap">
                 Alibijaban Island, San Andres Municipality
@@ -156,7 +161,7 @@ const LandingPage = () => {
               <img
                 alt="Saltwater Electricity Logo"
                 className="h-10 w-auto object-contain mix-blend-multiply"
-                src="https://lh3.googleusercontent.com/aida/ADBb0uiBW9VxrBJ87zGOeBMOhv_UlLw3atuL9HraUU-8rajJEyUXy6hO1MWfiO9uoZEB_fXnhvL1ubPqhQQBnVYZq12gVv7RC0cIYIDU-g1l4AmDbjKREFbueK0V1d0BM7-O96i05IjuWPoe41VS2BdfkvFhN4F5ucI2zKJulJSscJsEozvtneQ_LcQd3K_8XX4WNhBhWLhMyvf203PG-iBH5aXcMxyAw3mA9x1IZFVIQOsc7MsfYx7X5b1APiTJz1w-yVsBcrJ8rdyAQg"
+                src={saltwaterLogo}
               />
               <span className="font-h3 text-h5 font-bold tracking-tight text-on-surface whitespace-nowrap">
                 Saltwater Electricity

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HydroLogic IoT - Device Control</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f7f9fb",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-background": "#191c1e",
+                        "primary": "#003d9b",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#75d1ff",
+                        "on-surface-variant": "#434654",
+                        "surface-container": "#eceef0",
+                        "on-tertiary-container": "#22edc3",
+                        "on-secondary-container": "#004b65",
+                        "on-primary-container": "#c4d2ff",
+                        "tertiary-fixed-dim": "#00e0b8",
+                        "surface-container-low": "#f2f4f6",
+                        "primary-container": "#0052cc",
+                        "tertiary-container": "#006753",
+                        "secondary-container": "#00c1fd",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#42fdd3",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e0e3e5",
+                        "secondary": "#006688",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "tertiary": "#004d3d",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#001e2b",
+                        "on-secondary-fixed-variant": "#004d67",
+                        "outline": "#737685",
+                        "secondary-fixed": "#c2e8ff",
+                        "on-error-container": "#93000a",
+                        "background": "#f7f9fb",
+                        "surface-bright": "#f7f9fb",
+                        "outline-variant": "#c3c6d6",
+                        "on-tertiary-fixed-variant": "#005141",
+                        "on-tertiary-fixed": "#002019",
+                        "primary-fixed": "#dae2ff",
+                        "surface-dim": "#d8dadc",
+                        "surface-container-high": "#e6e8ea",
+                        "on-surface": "#191c1e",
+                        "inverse-primary": "#b2c5ff",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#0040a2",
+                        "surface-tint": "#0c56d0",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "inverse-surface": "#2d3133",
+                        "on-primary-fixed": "#001848"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "margin": "32px",
+                        "unit": "8px",
+                        "sm": "12px",
+                        "md": "24px",
+                        "xl": "80px",
+                        "gutter": "24px",
+                        "lg": "48px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "h2": ["Space Grotesk"],
+                        "body-lg": ["Inter"],
+                        "display": ["Space Grotesk"],
+                        "body-md": ["Inter"],
+                        "h1": ["Space Grotesk"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["13px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .ocean-gradient-text {
+            background: linear-gradient(135deg, #003d9b 0%, #00c1fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glow-blue {
+            box-shadow: 0 0 20px rgba(0, 82, 204, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-8 h-16 bg-white/70 backdrop-blur-md dark:bg-slate-900/70 border-b border-white/40 dark:border-slate-800/40 shadow-[0_4px_30px_rgba(0,82,204,0.08)]">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-blue-700 dark:text-blue-300 font-['Space_Grotesk']">HydroLogic IoT</span>
+<nav class="hidden md:flex gap-6">
+<a class="font-['Space_Grotesk'] text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-blue-500 transition-colors duration-200" href="#">Dashboard</a>
+<a class="font-['Space_Grotesk'] text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-blue-500 transition-colors duration-200" href="#">Grid</a>
+<a class="font-['Space_Grotesk'] text-sm tracking-tight text-blue-700 dark:text-blue-300 border-b-2 border-blue-600 pb-1" href="#">Devices</a>
+<a class="font-['Space_Grotesk'] text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-blue-500 transition-colors duration-200" href="#">Analytics</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-surface-container-low border-none rounded-full text-sm focus:ring-2 focus:ring-primary-container w-64" placeholder="Search devices..." type="text"/>
+</div>
+<button class="material-symbols-outlined text-slate-500 hover:text-blue-500 transition-all" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-slate-500 hover:text-blue-500 transition-all" data-icon="settings">settings</button>
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-primary/20" data-alt="A clean, minimalist user profile avatar with a professional tech-executive aesthetic. The background features a soft, out-of-focus ocean horizon with deep blues and whites, echoing the HydroLogic brand identity. The lighting is bright and high-key, conveying a sense of transparency and leadership in the marine technology sector." src="https://lh3.googleusercontent.com/aida/ADBb0uifwR8PWz_LmtgNF0LsR7-59qs0s06u0WkUWz7jqN03N5Ocf6KrTSWDNa0BNVyQTIUbvuMr6SNXQmOr0J7afjADH45pZFw6R9_xM4gDEFblgNbyltC3arNU1FhX6m3Y6Qshq9Pme9cVg-xcRj85cZnQqZTSNDjmu3QO_7m-J22m4Db5ZcrLB1dzh4JzXsaQmF8PONZMB7DD90MT3SFlfEfpGBA5jw1HPa75IkBrfN7vJJaYZ5rbcwNuW1NUQsNt_9rYEmMXB7Usl7g"/>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col p-6 pt-24 h-screen w-64 border-r border-white/40 bg-white/70 backdrop-blur-xl dark:bg-slate-900/70 shadow-xl z-40">
+<div class="mb-8 px-2">
+<div class="flex items-center gap-3 mb-1">
+<span class="material-symbols-outlined text-blue-700 text-2xl" data-icon="waves" data-weight="fill" style='font-variation-settings: "FILL" 1;'>waves</span>
+<span class="text-lg font-black text-blue-700 font-['Space_Grotesk']">Marine Systems</span>
+</div>
+<p class="text-xs text-slate-500 font-medium ml-9">Vessel-01 Active</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all rounded-lg font-['Space_Grotesk'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Overview
+            </a>
+<a class="flex items-center gap-3 px-4 py-2.5 bg-blue-600/10 text-blue-700 dark:text-blue-300 rounded-lg font-['Space_Grotesk'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="lightbulb">lightbulb</span>
+                Smart Bulbs
+            </a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all rounded-lg font-['Space_Grotesk'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="waves">waves</span>
+                Tidal Flow
+            </a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all rounded-lg font-['Space_Grotesk'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="electrical_services">electrical_services</span>
+                Grid Status
+            </a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all rounded-lg font-['Space_Grotesk'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+                Reports
+            </a>
+</nav>
+<div class="mt-auto space-y-4 pt-6 border-t border-white/20">
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-slate-600 text-sm font-medium font-['Space_Grotesk']" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+                    Support
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-600 text-sm font-medium font-['Space_Grotesk']" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                    Log Out
+                </a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-64 pt-24 px-margin pb-xl min-h-screen bg-[#F7F9FB]">
+<div class="max-w-6xl mx-auto">
+<header class="mb-md flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+<div>
+<h1 class="font-h1 text-h1 text-on-background mb-1">DEVICE OVERVIEW AND CONTROL</h1>
+<p class="font-body-md text-on-surface-variant">Manage active lighting relays and real-time energy flow for Vessel-01.</p>
+</div>
+<button class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary text-white font-['Space_Grotesk'] text-sm font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 rounded-lg to-secondary-container active:scale-95 font-h2">
+<span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+    REQUEST DEVICE</button>
+</header>
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Primary Control Card: BulbToggle -->
+<div class="col-span-12 lg:col-span-8">
+<div class="glass-panel p-md rounded-[20px] shadow-sm relative overflow-hidden h-full flex flex-col justify-center min-h-[320px]">
+<div class="absolute -right-16 -top-16 w-64 h-64 bg-primary-container/5 rounded-full blur-3xl"></div>
+<div class="relative z-10 flex flex-col items-center justify-center space-y-8">
+<div class="text-center">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest mb-2 block">Manual Control</span>
+<h2 class="font-h2 text-h2 text-on-background">DEVICE LIGHT CONTROL SE_Unit-01</h2>
+</div>
+<!-- BulbToggle Component -->
+<div class="bg-white/60 p-6 rounded-full border border-white/80 shadow-[0_8px_32px_rgba(0,61,155,0.1)] flex items-center gap-8 px-10 hover:shadow-[0_12px_40px_rgba(0,61,155,0.15)] transition-all duration-300 cursor-pointer active:scale-[0.98]">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full bg-orange-100 flex items-center justify-center shadow-[0_0_20px_rgba(251,146,60,0.3)]">
+<span class="material-symbols-outlined text-orange-500 text-3xl" data-icon="lightbulb" data-weight="fill" style='font-variation-settings: "FILL" 1;'>lightbulb</span>
+</div>
+<span class="font-h2 text-lg text-slate-700">Bulb Control</span>
+</div>
+<div class="relative w-24 h-12 bg-slate-200 rounded-full p-1 cursor-pointer transition-all hover:bg-slate-300 transition-colors duration-300" id="bulb-toggle">
+<!-- Toggle Thumb -->
+<div class="absolute top-1 w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full shadow-lg flex items-center justify-center transform transition-transform duration-300 translate-x-12" id="toggle-thumb">
+<span class="w-2 h-4 bg-white/30 rounded-full"></span>
+</div>
+</div>
+</div>
+<p class="text-sm text-slate-500 font-medium italic">Active Override: High-Intensity Navigation Beam</p>
+</div>
+</div>
+</div>
+<!-- Secondary Metric Cards -->
+<div class="col-span-12 lg:col-span-4 space-y-gutter">
+<!-- Energy Draw Card -->
+<div class="glass-panel p-md rounded-[20px] shadow-sm">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h3 class="font-h2 text-xl text-on-background">Energy Generate</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Real-time load</p>
+</div>
+<div class="p-2 bg-secondary-container/20 rounded-lg">
+<span class="material-symbols-outlined text-secondary" data-icon="bolt">bolt</span>
+</div>
+</div>
+<div class="mb-4">
+<span class="text-4xl font-bold text-primary font-display tracking-tight">4.2</span>
+<span class="text-lg text-on-surface-variant font-medium ml-1">kWh</span>
+</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden">
+<div class="bg-gradient-to-r from-blue-500 to-sky-400 h-full w-3/4 rounded-full"></div>
+</div>
+<div class="mt-4 flex justify-between text-xs font-semibold text-on-surface-variant">
+<span class="">0% Load</span>
+<span class="text-primary">75% Efficiency</span>
+</div>
+</div>
+<!-- Relay Status Card -->
+<div class="glass-panel p-md rounded-[20px] shadow-sm">
+<h3 class="font-h2 text-xl text-on-background mb-6">Relay Status</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-xl">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-tertiary-fixed shadow-[0_0_8px_rgba(66,253,211,0.8)]"></div>
+<span class="text-sm font-medium">BULB ON</span>
+</div>
+<span class="text-xs font-bold text-tertiary-container px-2 py-1 bg-tertiary-fixed/20 rounded-full font-['Space_Grotesk']">ACTIVE AT 14:02:18</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-xl">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-slate-300"></div>
+<span class="text-sm font-medium">BULB OFF</span>
+</div>
+<span class="text-xs font-bold text-slate-500 px-2 py-1 bg-slate-200 rounded-full font-['Space_Grotesk']">OFF SINCE 12:45:01</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-xl border border-primary/20">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(0,61,155,0.4)] animate-pulse"></div>
+<span class="text-sm font-bold text-primary"><br/></span>
+</div>
+<button class="text-xs font-bold text-primary-container px-3 py-1.5 bg-secondary-fixed/50 hover:bg-secondary-fixed transition-colors rounded-full font-['Space_Grotesk'] text-on-secondary-container">SEE RELAY STATUS HISTORY</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Technical Details Bento Section -->
+<div class="col-span-12 grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Voltage Gauge Card -->
+<div class="glass-panel p-md rounded-[20px] shadow-sm flex flex-col items-center justify-center space-y-4 py-8">
+<div class="relative w-40 h-40 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-highest" cx="80" cy="80" fill="transparent" r="70" stroke="currentColor" stroke-width="12"></circle>
+<circle cx="80" cy="80" fill="transparent" r="70" stroke="url(#voltage-gradient)" stroke-dasharray="440" stroke-dashoffset="110" stroke-linecap="round" stroke-width="12"></circle>
+<defs>
+<lineargradient id="voltage-gradient" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" style="stop-color:#0052cc;stop-opacity:1"></stop>
+<stop offset="100%" style="stop-color:#00c1fd;stop-opacity:1"></stop>
+</lineargradient>
+</defs>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-display font-bold text-on-background">24.2</span>
+<span class="text-xs font-bold text-on-surface-variant uppercase tracking-tighter">VOLTS</span>
+</div>
+</div>
+<p class="text-sm font-bold text-primary font-['Space_Grotesk'] uppercase tracking-widest">DEVICE VOLTAGE</p>
+</div>
+<!-- Salinity Gauge Card -->
+<div class="glass-panel p-md rounded-[20px] shadow-sm flex flex-col items-center justify-center space-y-4 py-8">
+<div class="relative w-40 h-40 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-highest" cx="80" cy="80" fill="transparent" r="70" stroke="currentColor" stroke-width="12"></circle>
+<circle cx="80" cy="80" fill="transparent" r="70" stroke="url(#salinity-gradient)" stroke-dasharray="440" stroke-dashoffset="154" stroke-linecap="round" stroke-width="12"></circle>
+<defs>
+<lineargradient id="salinity-gradient" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" style="stop-color:#0052cc;stop-opacity:1"></stop>
+<stop offset="100%" style="stop-color:#00c1fd;stop-opacity:1"></stop>
+</lineargradient>
+</defs>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-display font-bold text-on-background">35.1</span>
+<span class="text-xs font-bold text-on-surface-variant uppercase tracking-tighter">PPT</span>
+</div>
+</div>
+<p class="text-sm font-bold text-primary font-['Space_Grotesk'] uppercase tracking-widest">SALINITY LEVEL</p>
+</div>
+</div>
+<!-- Footer Image Banner -->
+</div>
+</div>
+</main>
+<script>
+    const toggle = document.getElementById('bulb-toggle');
+    const thumb = document.getElementById('toggle-thumb');
+    let isOn = true; // Initial state based on current HTML
+
+    toggle.addEventListener('click', () => {
+        isOn = !isOn;
+        if (isOn) {
+            toggle.classList.remove('bg-slate-200');
+            toggle.classList.add('bg-primary-container');
+            thumb.style.transform = 'translateX(48px)';
+        } else {
+            toggle.classList.add('bg-slate-200');
+            toggle.classList.remove('bg-primary-container');
+            thumb.style.transform = 'translateX(0px)';
+        }
+    });
+    
+    // Set initial transform for 'on' state if needed
+    thumb.style.transform = 'translateX(48px)';
+    toggle.classList.remove('bg-slate-200');
+    toggle.classList.add('bg-primary-container');
+</script></body></html>

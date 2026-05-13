@@ -23,7 +23,7 @@ import Toast from "../../components/ui/Toast";
  * Restricted to Admin and SuperAdmin roles.
  */
 const AuditLogPage = () => {
-  const { isAdmin, isSuperAdmin } = useAuth();
+  const { isSuperAdmin } = useAuth();
   const { logs, loading } = useAuditLogs(200); // Fetch last 200 for better auditing
 
   // --- UI STATES ---
@@ -46,32 +46,6 @@ const AuditLogPage = () => {
         log.details?.toLowerCase().includes(cleanSearch)
     );
   }, [logs, searchTerm]);
-
-  // --- ACCESS CONTROL (Requirement 1) ---
-  if (!isAdmin) {
-    return (
-      <div className="min-h-[80vh] flex items-center justify-center p-8 text-center animate-in fade-in duration-500">
-        <div className="max-w-md p-12 bg-white/40 backdrop-blur-xl rounded-[40px] border border-white/60 shadow-2xl space-y-6">
-          <div className="w-20 h-20 bg-red-50 text-red-600 rounded-3xl flex items-center justify-center mx-auto shadow-inner">
-            <ShieldAlert size={40} />
-          </div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tighter uppercase italic">
-            403 <span className="text-red-600">Forbidden</span>
-          </h1>
-          <p className="text-slate-500 font-medium leading-relaxed">
-            Unauthorized Access: This security terminal is restricted to{" "}
-            <span className="font-black text-slate-900 uppercase">System Administrators</span>.
-          </p>
-          <button
-            onClick={() => (window.location.href = "/")}
-            className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-[10px] tracking-[0.2em] uppercase transition-all active:scale-95 shadow-lg"
-          >
-            Return to Safety
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   // --- HANDLERS ---
   const triggerToast = (message, type = "success") => {

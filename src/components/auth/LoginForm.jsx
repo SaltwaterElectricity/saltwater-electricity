@@ -9,7 +9,7 @@ import { useBruteForce } from "../../hooks/useBruteForce";
 import { sanitizeForFirebaseKey } from "../../utils/sanitization";
 import { cn } from "../../utils/cn";
 
-const LoginForm = ({ onLoginSuccess }) => {
+const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authError, setAuthError] = useState("");
@@ -31,6 +31,9 @@ const LoginForm = ({ onLoginSuccess }) => {
     setIsSubmitting(true);
     setAuthError("");
 
+    // SYNC: Tell parent we are starting login to block any premature redirects
+    if (onLoginStart) onLoginStart();
+
     try {
       const response = await loginUser(data.email, data.password);
       const { userData } = response;
@@ -50,6 +53,10 @@ const LoginForm = ({ onLoginSuccess }) => {
       }
     } catch (err) {
       setAuthError(err.message);
+      
+      // SYNC: Tell parent login failed so it can unblock redirects if needed
+      if (onLoginError) onLoginError();
+
       if (err.code !== "auth/user-not-found") {
         await recordFailedAttempt();
       }

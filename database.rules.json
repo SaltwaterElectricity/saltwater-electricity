@@ -8,7 +8,7 @@
       ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
       "$uid": {
         ".read": "auth != null && auth.uid == $uid",
-        ".write": "auth != null && (auth.uid == $uid || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && root.child('roles').child($uid).child('role').val() == 'resident'))"
+        ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || auth.uid == $uid || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && newData.parent().child('roles').child($uid).child('role').val() == 'resident'))"
       }
     },
 
@@ -16,7 +16,7 @@
       ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
       "$uid": {
         ".read": "auth != null && auth.uid == $uid",
-        ".write": "auth != null && (auth.uid == $uid || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && root.child('roles').child($uid).child('role').val() == 'resident'))"
+        ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || auth.uid == $uid || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && newData.parent().child('roles').child($uid).child('role').val() == 'resident'))"
       }
     },
 
@@ -25,7 +25,7 @@
       ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
       "$uid": {
         ".read": "auth != null && auth.uid == $uid",
-        ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && !data.exists() && newData.child('role').val() == 'resident'))"
+        ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && newData.child('role').val() == 'resident'))"
       }
     },
 

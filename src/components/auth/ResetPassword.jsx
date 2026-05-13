@@ -43,7 +43,7 @@ const ResetPassword = ({ onSuccess }) => {
       }, 2000);
 
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Failed to update your credentials. Please try again.");
     } finally {
       setLoading(false);
     }

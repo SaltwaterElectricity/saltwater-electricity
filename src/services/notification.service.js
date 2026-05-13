@@ -55,7 +55,7 @@ export const createNotification = async (userId, title, message, type = NOTIFICA
     logger.error("[Notification Service]: Failed to write alert.", error);
     return { 
       success: false, 
-      error: new appError("System Alert failure: Could not deliver notification.", true, "notification/write-failed") 
+      error: new appError("Notification failure: Could not deliver the alert.", true, "notification/write-failed") 
     };
   }
 };

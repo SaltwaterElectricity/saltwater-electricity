@@ -1,6 +1,7 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
-import { getAuth } from "firebase/auth"; 
+import { getAuth } from "firebase/auth";
+import { getFunctions } from "firebase/functions";
 import { appError } from "./utils/appError";
 
 export const FIREBASE_CONFIG = Object.freeze({
@@ -25,5 +26,6 @@ const app = getApps().length > 0 ? getApp() : initializeApp(FIREBASE_CONFIG);
 // Export Instances
 export const auth = getAuth(app);
 export const db = getDatabase(app);
+export const functions = getFunctions(app);
 
 export default app;

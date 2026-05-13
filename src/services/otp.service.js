@@ -92,7 +92,7 @@ export const generateOTP = async (userId_not_used, email) => {
 export const verifyOTP = async (userId, inputCode) => {
   if (!userId || !inputCode) {
     throw new appError(
-      "User ID and code are required for verification.",
+      "Verification parameters are missing.",
       true,
       "otp/invalid-parameters"
     );
@@ -135,7 +135,7 @@ export const verifyOTP = async (userId, inputCode) => {
     if (error instanceof appError) throw error;
     logger.error("OTP Verification Error:", error);
     throw new appError(
-      error.message || "Security verification failed.",
+      "Security verification failed. Please try again.",
       true,
       "otp/verification-failed"
     );

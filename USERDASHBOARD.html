@@ -1,0 +1,345 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>AlonKuryente Dashboard | Eco-Tech Household</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .ocean-gradient {
+            background: linear-gradient(135deg, #0052cc 0%, #00c1fd 100%);
+        }
+        .ocean-glow:hover {
+            box-shadow: 0 0 20px rgba(0, 82, 204, 0.25);
+        }
+        body {
+            background-color: #f7f9fb;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(218, 226, 255, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(194, 232, 255, 0.1) 0px, transparent 50%);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-highest": "#e0e3e5",
+                      "primary-fixed": "#dae2ff",
+                      "inverse-surface": "#2d3133",
+                      "on-surface-variant": "#434654",
+                      "on-primary": "#ffffff",
+                      "on-background": "#191c1e",
+                      "surface-container-high": "#e6e8ea",
+                      "on-secondary-fixed-variant": "#004d67",
+                      "on-primary-fixed-variant": "#0040a2",
+                      "surface-tint": "#0c56d0",
+                      "on-tertiary-fixed-variant": "#005141",
+                      "surface-container-lowest": "#ffffff",
+                      "primary": "#003d9b",
+                      "background": "#f7f9fb",
+                      "secondary": "#006688",
+                      "tertiary-fixed": "#42fdd3",
+                      "secondary-container": "#00c1fd",
+                      "primary-fixed-dim": "#b2c5ff",
+                      "tertiary": "#004d3d",
+                      "tertiary-fixed-dim": "#00e0b8",
+                      "secondary-fixed": "#c2e8ff",
+                      "on-error-container": "#93000a",
+                      "on-tertiary": "#ffffff",
+                      "surface": "#f7f9fb",
+                      "on-secondary": "#ffffff",
+                      "surface-bright": "#f7f9fb",
+                      "secondary-fixed-dim": "#75d1ff",
+                      "on-secondary-fixed": "#001e2b",
+                      "on-primary-container": "#c4d2ff",
+                      "error-container": "#ffdad6",
+                      "on-error": "#ffffff",
+                      "surface-dim": "#d8dadc",
+                      "outline-variant": "#c3c6d6",
+                      "primary-container": "#0052cc",
+                      "outline": "#737685",
+                      "inverse-primary": "#b2c5ff",
+                      "tertiary-container": "#006753",
+                      "surface-variant": "#e0e3e5",
+                      "on-tertiary-container": "#22edc3",
+                      "on-primary-fixed": "#001848",
+                      "inverse-on-surface": "#eff1f3",
+                      "error": "#ba1a1a",
+                      "surface-container": "#eceef0",
+                      "on-tertiary-fixed": "#002019",
+                      "surface-container-low": "#f2f4f6",
+                      "on-secondary-container": "#004b65",
+                      "on-surface": "#191c1e"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "unit": "8px",
+                      "margin": "32px",
+                      "xs": "4px",
+                      "lg": "48px",
+                      "xl": "80px",
+                      "sm": "12px",
+                      "md": "24px"
+              },
+              "fontFamily": {
+                      "display": ["Space Grotesk"],
+                      "body-md": ["Inter"],
+                      "h1": ["Space Grotesk"],
+                      "body-lg": ["Inter"],
+                      "h2": ["Space Grotesk"],
+                      "label-sm": ["Inter"]
+              },
+              "fontSize": {
+                      "display": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "h1": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "h2": ["24px", {"lineHeight": "1.3", "fontWeight": "500"}],
+                      "label-sm": ["13px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="min-h-screen text-on-surface font-body-md overflow-x-hidden">
+<!-- SideNavBar -->
+<aside class="flex flex-col h-full py-8 px-6 bg-white/70 dark:bg-inverse-surface/70 backdrop-blur-md h-screen w-72 fixed left-0 top-0 rounded-r-xl border-r border-white/40 dark:border-outline-variant/20 shadow-xl shadow-primary/5 z-50">
+<div class="mb-12">
+<h1 class="font-display text-h2 font-semibold text-primary dark:text-primary-fixed-dim">AlonKuryente</h1>
+<p class="font-display text-body-md font-medium text-on-surface-variant">Eco-Tech Household</p>
+</div>
+<nav class="flex-1 space-y-2">
+<!-- Active: Dashboard -->
+<a class="flex items-center gap-4 py-3 px-4 rounded-lg text-primary dark:text-primary-fixed-dim font-bold border-r-4 border-primary dark:border-primary-fixed-dim bg-primary/5 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">dashboard</span>
+<span class="font-display text-body-md font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 py-3 px-4 rounded-lg text-on-surface-variant hover:bg-primary/5 hover:text-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="devices">devices</span>
+<span class="font-display text-body-md font-medium">My Devices</span>
+</a>
+<a class="flex items-center gap-4 py-3 px-4 rounded-lg text-on-surface-variant hover:bg-primary/5 hover:text-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="app_registration">app_registration</span>
+<span class="font-display text-body-md font-medium">Device Requests</span>
+</a>
+<a class="flex items-center gap-4 py-3 px-4 rounded-lg text-on-surface-variant hover:bg-primary/5 hover:text-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="font-display text-body-md font-medium">Alerts</span>
+</a>
+<a class="flex items-center gap-4 py-3 px-4 rounded-lg text-on-surface-variant hover:bg-primary/5 hover:text-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-display text-body-md font-medium">Analytics</span>
+</a>
+<a class="flex items-center gap-4 py-3 px-4 rounded-lg text-on-surface-variant hover:bg-primary/5 hover:text-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-display text-body-md font-medium">Reports</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-white/40">
+<a class="flex items-center gap-4 py-3 px-4 rounded-lg text-on-surface-variant hover:bg-primary/5 hover:text-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-display text-body-md font-medium">Settings</span>
+</a>
+<div class="flex items-center gap-3 mt-6 px-4">
+<img alt="User Profile" class="w-10 h-10 rounded-full border-2 border-primary/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9azsVwKXt5PMwmabCa07ONnqMudvaXchG2PfM4GSErJHsqPKCy2BTwlBTC5c-o5QD7_RaYjrLh4eM07SO9LtSCgZUXkAOEafwl1RQkwl5HdD_JDuTzzQlL2Yk87RytHAMYIuhwmtFTsVoH2ecvpZVGG9ZTNGRSor8A4Cf9fETWZUywq7U1iXxF_sqHjRRccpDkW7haifLsO0RtkKlNvIYLFsgM-V-p1ZRF2zNPwIiBzBpvLgURNAU5QAoobuxehPWMUEQGk96sjTE">
+<div>
+<p class="font-display text-body-md font-bold text-on-surface">Alex Rivero</p>
+<p class="text-[12px] text-on-surface-variant">System Admin</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-72 min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-18rem)] z-40 bg-surface/50 dark:bg-surface-dim/50 backdrop-blur-xl flex justify-between items-center h-20 px-margin">
+<div class="flex items-center gap-6">
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline" data-icon="search">search</span>
+<input class="pl-12 pr-6 py-2 bg-white/50 border-none rounded-full w-80 ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary/20 transition-all font-display text-body-md" placeholder="Search parameters..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="relative p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant/30"></div>
+<div class="flex items-center gap-3">
+<span class="font-display text-body-md font-semibold text-primary">Home Hub</span>
+<img alt="User Avatar" class="w-10 h-10 rounded-xl bg-primary-fixed p-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPRWK7io3jIjY6s0hx2pHD773NrKhpKYEbba5LApZd9UAngkJcIN980hAlZOtuNhY2aiJK2StYFunS3BdjscpLMCf2G07pH_mPGQPgIKPeOLth3GHSQde0Shp3iuPe5etwa8eR30REphNUvkrS3BqF-9Y7SF7Tl1IMzFnmFvxRsglcxNfJjScVS3ruBpp0QvtD7oK7CJpVTHHhKuUfTu-ioMzw7iChr4pw2hxK8LsfFZZI2ntqM7l0w_1Vjz0jFeOjzyaQfh5inO7B">
+</div>
+</div>
+</header>
+<!-- Page Canvas -->
+<div class="pt-28 px-margin pb-margin">
+<!-- System Overview Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-margin">
+<div class="glass-panel rounded-xl p-md flex items-center justify-between ocean-glow transition-all duration-300">
+<div>
+<p class="text-on-surface-variant font-display text-label-sm mb-1">VOLTAGE LEVEL</p>
+<h3 class="font-display text-h1 text-primary">24.2V</h3>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-tertiary-fixed-dim/20 text-tertiary text-xs font-bold mt-2">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="check_circle">check_circle</span> stable
+                        </span>
+</div>
+<div class="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="bolt">bolt</span>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-md flex items-center justify-between ocean-glow transition-all duration-300">
+<div>
+<p class="text-on-surface-variant font-display text-label-sm mb-1">SALINITY LEVEL</p>
+<h3 class="font-display text-h1 text-secondary">35.1 <span class="text-h2">ppt</span></h3>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-secondary-fixed/50 text-secondary-container text-xs font-bold mt-2">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="waves">waves</span> optimal
+                        </span>
+</div>
+<div class="w-16 h-16 rounded-full bg-secondary/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="water_drop">water_drop</span>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-md flex items-center justify-between ocean-glow transition-all duration-300">
+<div>
+<p class="text-on-surface-variant font-display text-label-sm mb-1">DEVICE HEALTH</p>
+<h3 class="font-display text-h1 text-tertiary">STABLE</h3>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-tertiary-fixed-dim/20 text-tertiary text-xs font-bold mt-2">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="verified">verified</span> operating
+                        </span>
+</div>
+<div class="w-16 h-16 rounded-full bg-tertiary/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary text-3xl" data-icon="health_and_safety">health_and_safety</span>
+</div>
+</div>
+</section>
+<!-- Main Data Visualizations & AI Guardian -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter mb-margin">
+<!-- System Logs -->
+<div class="lg:col-span-1">
+<div class="glass-panel rounded-xl p-6 h-full">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-display text-h2 font-semibold text-on-surface">System Alerts &amp; Notifications</h3>
+<button class="text-primary font-display text-label-sm">VIEW ALL</button>
+</div>
+<div class="space-y-4"><!-- Alert 1: Critical -->
+<div class="flex gap-4 p-3 rounded-lg hover:bg-surface-container-low transition-colors border-l-4 border-error">
+<span class="material-symbols-outlined text-error mt-1">warning</span>
+<div>
+<p class="font-display text-body-md font-medium text-error">Critical: High Salinity Detected</p>
+<p class="text-xs text-on-surface-variant">10 mins ago</p>
+</div>
+</div>
+<!-- Alert 2: Warning -->
+<div class="flex gap-4 p-3 rounded-lg hover:bg-surface-container-low transition-colors border-l-4 border-amber-500">
+<span class="material-symbols-outlined text-amber-500 mt-1">bolt</span>
+<div>
+<p class="font-display text-body-md font-medium">Warning: Voltage Instability</p>
+<p class="text-xs text-on-surface-variant">45 mins ago</p>
+</div>
+</div>
+<!-- Alert 3: Warning -->
+<div class="flex gap-4 p-3 rounded-lg hover:bg-surface-container-low transition-colors border-l-4 border-amber-500">
+<span class="material-symbols-outlined text-amber-500 mt-1">error_outline</span>
+<div>
+<p class="font-display text-body-md font-medium">Low Salinity Warning</p>
+<p class="text-xs text-on-surface-variant">2 hours ago</p>
+</div>
+</div></div>
+</div>
+</div>
+<!-- Voltage Performance -->
+<div class="lg:col-span-2">
+<div class="glass-panel rounded-xl p-6 h-full">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="font-display text-h2 font-semibold text-on-surface">Voltage Performance</h3>
+<p class="text-on-surface-variant text-body-md">24h Real-time History</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="text-label-sm text-on-surface-variant">Voltage Output</span>
+</div>
+</div>
+</div>
+<div class="h-64 relative flex items-end justify-between gap-2 border-b border-outline-variant/30 pb-4">
+<div class="w-full h-32 bg-primary/10 rounded-t-lg relative">
+<div class="absolute -top-1 left-0 w-full h-[3px] bg-primary shadow-[0_0_10px_rgba(0,61,155,0.5)]"></div>
+</div>
+<div class="w-full h-40 bg-primary/10 rounded-t-lg relative">
+<div class="absolute -top-1 left-0 w-full h-[3px] bg-primary shadow-[0_0_10px_rgba(0,61,155,0.5)]"></div>
+</div>
+<div class="w-full h-36 bg-primary/10 rounded-t-lg relative">
+<div class="absolute -top-1 left-0 w-full h-[3px] bg-primary shadow-[0_0_10px_rgba(0,61,155,0.5)]"></div>
+</div>
+<div class="w-full h-44 bg-primary/10 rounded-t-lg relative">
+<div class="absolute -top-1 left-0 w-full h-[3px] bg-primary shadow-[0_0_10px_rgba(0,61,155,0.5)]"></div>
+</div>
+<div class="w-full h-48 bg-primary/10 rounded-t-lg relative">
+<div class="absolute -top-1 left-0 w-full h-[3px] bg-primary shadow-[0_0_10px_rgba(0,61,155,0.5)]"></div>
+</div>
+<div class="w-full h-42 bg-primary/10 rounded-t-lg relative">
+<div class="absolute -top-1 left-0 w-full h-[3px] bg-primary shadow-[0_0_10px_rgba(0,61,155,0.5)]"></div>
+</div>
+</div>
+<div class="flex justify-between mt-4 text-label-sm text-outline px-2">
+<span class="">00:00</span><span class="">06:00</span><span class="">12:00</span><span class="">18:00</span><span class="">Now</span>
+</div>
+</div>
+</div>
+<!-- Salinity Fluctuations (Full Width Row) -->
+<div class="lg:col-span-3">
+<div class="glass-panel rounded-xl p-6">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="font-display text-h2 font-semibold text-on-surface">Salinity Fluctuations</h3>
+<p class="text-on-surface-variant text-body-md">Weekly Wave Analysis</p>
+</div>
+<div class="px-4 py-2 bg-secondary/5 rounded-full text-secondary font-display text-label-sm border border-secondary/20">
+                    AVG: 34.8 ppt
+                </div>
+</div>
+<div class="h-48 w-full overflow-hidden relative rounded-lg">
+<svg class="w-full h-full" viewBox="0 0 800 200">
+<defs>
+<linearGradient id="waveGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:rgba(0, 193, 253, 0.4);stop-opacity:1"></stop>
+<stop offset="100%" style="stop-color:rgba(0, 193, 253, 0);stop-opacity:0"></stop>
+</linearGradient>
+</defs>
+<path d="M0,100 C150,150 250,50 400,100 C550,150 650,50 800,100 V200 H0 Z" fill="url(#waveGradient)"></path>
+<path d="M0,100 C150,150 250,50 400,100 C550,150 650,50 800,100" fill="none" stroke="#00c1fd" stroke-linecap="round" stroke-width="4"></path>
+</svg>
+</div>
+<div class="flex justify-between mt-4 text-label-sm text-outline">
+<span class="">MON</span><span class="">TUE</span><span class="">WED</span><span class="">THU</span><span class="">FRI</span><span class="">SAT</span><span class="">SUN</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Action Grid (Bento Style) -->
+</div>
+</main>
+<!-- Contextual FAB (Suppressing as per mandate for detailed dashboard) -->
+
+
+</body></html>

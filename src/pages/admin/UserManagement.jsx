@@ -204,7 +204,7 @@ const UserManagement = ({ currentUserRole }) => {
                 onClick={() => navigate(ROUTES.REGISTER_STAFF)}
                 className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white text-[11px] font-black uppercase tracking-[0.1em] rounded-2xl shadow-xl transition-all active:scale-95 whitespace-nowrap"
               >
-                <ShieldPlus size={16} /> Register Staff
+                <ShieldPlus size={16} /> Register Admin
               </button>
             )}
 

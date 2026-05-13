@@ -103,7 +103,7 @@ export const assignDevice = async (deviceId, userId, newDeviceName) => {
  * @param {string} deviceId - ID of the device to release
  */
 export const deprovisionDevice = async (deviceId) => {
-  if (!deviceId) throw new appError("Device ID required.", true, "device/invalid-id");
+  if (!deviceId) throw new appError("Device identifier required.", true, "device/invalid-id");
 
   // 🛡️ SECONDARY ROLE CHECK: Authoritative Token Verification
   await verifyAdminClearance();
@@ -132,7 +132,7 @@ export const deprovisionDevice = async (deviceId) => {
   } catch (error) {
     logInternalError(error);
     throw new appError(
-      "System override failed. Please check network.",
+      "Action failed. Please check your connection.",
       true,
       "device/override-failed"
     );

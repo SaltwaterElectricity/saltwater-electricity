@@ -58,7 +58,12 @@ const UserTableRow = memo(({ user, onActionClick, onEditClick, searchTerm }) => 
           <div className="p-2 bg-slate-100 rounded-lg">
             <MapPin size={12} />
           </div>
-          {address?.baranggay || "Unset Location"}
+          <div className="flex flex-col">
+            <span className="truncate">{address?.municipality || "San Andres"}</span>
+            <span className="text-[10px] text-slate-400 font-normal truncate">
+              {address?.baranggay || "Unset Baranggay"}
+            </span>
+          </div>
         </div>
       </td>
       <td className="px-8 py-6 text-right">

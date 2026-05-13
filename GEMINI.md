@@ -49,6 +49,7 @@ C:\Users\Admin\testcode\
 - **Logging:** Use the `logger` utility (`src/utils/logger.js`) instead of `console.log`. It automatically silences logs in production.
 - **RBAC:** Use `checkRole`, `isAdmin`, etc., from `src/utils/rbac.js` for access control.
 - **Email Service Protocol:** All communications use SendGrid REST API v3.
+- **🛡️ CRITICAL SECURITY MANDATE (Production):** Direct client-side calls to SendGrid are for DEVELOPMENT ONLY. In a production environment, all email logic MUST be migrated to a backend or Firebase Cloud Function. Direct exposure of `VITE_SENDGRID_API_KEY` in the browser is a high-severity security risk.
 - **Environment Variables:** Critical variables (Firebase, SendGrid) are required in `.env`. See `.env.example`. Required SendGrid keys: `VITE_SENDGRID_API_KEY`, `VITE_SENDGRID_SENDER_EMAIL`.
 - **Styling:** Prefer Tailwind CSS utility classes. Custom styles should go in `src/index.css`.
 
@@ -98,6 +99,14 @@ C:\Users\Admin\testcode\
 - **Conditional Registration:** Administrative and sensitive routes MUST NOT be registered in the router tree for unprivileged users. Discovery via client-side routing introspection is prohibited.
 - **Audit Triggers:** Every mount of the `NotFound` component MUST trigger a `POTENTIAL_ENUMERATION` log entry in the `audit-logs` node containing the attempted path.
 - **Neutral UI:** Error messaging MUST be empathetic and non-technical. Avoid technical codes (e.g., "403 Forbidden") that confirm the existence of hidden directories.
+
+### 7. Secure & User-Friendly Error Handling Protocol (SUEP)
+
+- **Mandatory Abstraction:** Internal system errors (Firebase, SendGrid, Axios) MUST NEVER reach the UI. Catch all service-layer exceptions and wrap them in a sanitized `appError`.
+- **Empathetic Messaging:** Use "Human-First" language. Instead of technical jargon (e.g., "Invalid API Key"), use action-oriented guidance (e.g., "The communications link is currently unavailable. Please try again in a few moments.").
+- **Enumeration Defense:** Mask specific authentication failures. Use generic messages for "User Not Found" vs "Wrong Password" (e.g., "Invalid email or password") to prevent identity discovery.
+- **Technical Integrity:** Always log the original, technical error to `logger.error` before sanitizing the message for the user. This ensures traceability without compromising security.
+- **Standardized Signature:** All service methods must return a consistent `{ success, data, error }` object or throw a surgical `appError` that the UI expects.
 
 # Architecture Rules: Clean Architecture
 

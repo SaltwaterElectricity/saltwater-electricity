@@ -1,6 +1,7 @@
 import { useAuth } from "../../context/useAuth";
 import { useNotifications } from "../../hooks/useNotifications";
 import { cn } from "../../utils/cn";
+import { Footer } from "../../layout";
 
 /**
  * Alerts Page
@@ -21,7 +22,7 @@ const Alerts = () => {
           <h2 className="font-h1 text-h1 text-on-surface mb-xs tracking-tight italic uppercase">
             System <span className="text-primary">Alerts</span>
           </h2>
-          <p className="font-['Inter'] text-body-md text-on-surface-variant">
+          <p className="font-body-md text-body-md text-on-surface-variant">
             Real-time monitoring of facility notifications and security events.
           </p>
         </div>
@@ -30,7 +31,7 @@ const Alerts = () => {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary-fixed opacity-75" />
             <span className="relative inline-flex rounded-full h-3 w-3 bg-tertiary-fixed" />
           </span>
-          <span className="font-['Inter'] text-label-sm font-bold text-primary uppercase tracking-widest">
+          <span className="font-label-sm text-label-sm font-bold text-primary uppercase tracking-widest">
             LIVE STREAM ACTIVE
           </span>
         </div>
@@ -42,7 +43,7 @@ const Alerts = () => {
           <h3 className="font-h2 text-h2 text-primary uppercase tracking-tighter italic">
             Alert <span className="text-primary">Feed</span>
           </h3>
-          <button className="text-label-sm font-bold text-primary hover:underline uppercase tracking-widest font-['Inter']">
+          <button className="text-label-sm font-bold text-primary hover:underline uppercase tracking-widest font-label-sm">
             Mark All as Read
           </button>
         </div>
@@ -53,7 +54,7 @@ const Alerts = () => {
               <span className="material-symbols-outlined animate-spin text-4xl text-primary">
                 sync
               </span>
-              <span className="text-label-sm font-bold text-outline uppercase tracking-[0.3em] font-['Inter']">
+              <span className="text-label-sm font-bold text-outline uppercase tracking-[0.3em] font-label-sm">
                 Synchronizing Secure Stream...
               </span>
             </div>
@@ -62,7 +63,7 @@ const Alerts = () => {
               <span className="material-symbols-outlined text-6xl">notifications_off</span>
               <div className="text-center">
                 <h4 className="font-h2 text-h2 text-primary uppercase">No Active Alerts</h4>
-                <p className="text-label-sm font-bold text-on-surface-variant uppercase tracking-widest mt-1 font-['Inter']">
+                <p className="text-label-sm font-bold text-on-surface-variant uppercase tracking-widest mt-1 font-label-sm">
                   Facility status is optimal
                 </p>
               </div>
@@ -101,20 +102,20 @@ const Alerts = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-4 mb-1">
-                      <h4 className="font-h2 text-sm text-primary uppercase tracking-wide truncate group-hover:text-secondary-container transition-colors">
+                      <h4 className="font-h3 text-body-md text-primary uppercase tracking-wide truncate group-hover:text-secondary-container transition-colors">
                         {alert.title}
                       </h4>
-                      <span className="text-label-sm font-bold text-outline whitespace-nowrap uppercase italic font-['Inter']">
+                      <span className="text-label-sm font-bold text-outline whitespace-nowrap uppercase italic font-label-sm">
                         {new Date(alert.timestamp).toLocaleString()}
                       </span>
                     </div>
-                    <p className="text-body-md text-on-surface-variant font-medium leading-relaxed italic font-['Inter']">
+                    <p className="text-body-md text-on-surface-variant font-medium leading-relaxed italic font-body-md">
                       {alert.message}
                     </p>
                     {!alert.isRead && (
                       <div className="mt-3 flex items-center gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                        <span className="text-label-sm font-black text-primary uppercase tracking-widest font-['Inter']">
+                        <span className="text-label-sm font-black text-primary uppercase tracking-widest font-label-sm">
                           New Transmission
                         </span>
                       </div>
@@ -126,13 +127,15 @@ const Alerts = () => {
           )}
         </div>
 
-        {/* FOOTER ACTION */}
+        {/* FEED FOOTER ACTION */}
         <div className="p-md text-center border-t border-white/40 bg-white/30 backdrop-blur-md">
-          <p className="text-label-sm font-bold text-outline uppercase tracking-[0.25em] font-['Inter']">
-            AlonKuryente Intelligence Grid • Security Node 01
+          <p className="text-label-sm font-bold text-outline uppercase tracking-[0.25em] font-label-sm">
+            Saltwater Electricity Intelligence Grid • Security Node 01
           </p>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };

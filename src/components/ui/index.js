@@ -18,3 +18,4 @@ export { default as AccessControlTable } from "./AccessControlTable";
 export { default as EventFeed } from "./EventFeed";
 export { UserRow } from "./UserRow";
 export { EventItem } from "./EventItem";
+export { MiniStat, StatusRow, SectionHeader, NavButton } from "./AuditComponents";

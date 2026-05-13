@@ -59,10 +59,13 @@ export const logActivity = async (action, targetId, details) => {
     await push(auditRef, logEntry);
 
     return { success: true };
-  } catch {
+  } catch (error) {
+    // SECURITY: Log the detailed error internally
+    logger.error("[Audit Service]: Activity logging failed.", error);
+
     // Mask internal DB errors with operational appError
     throw new appError(
-      "Security Audit Failure: Could not record the activity trail.",
+      "Activity log failure: Could not save recent changes.",
       true,
       "audit/log-failed"
     );
