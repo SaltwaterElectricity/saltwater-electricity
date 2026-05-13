@@ -107,7 +107,9 @@ const AdminRegistration = () => {
 
       {/* HEADER SECTION */}
       <header className="mb-10 border-b border-slate-100 pb-8 pr-12">
-        <h1 className="text-2xl font-black text-slate-900 tracking-tight">System Staff Onboarding</h1>
+        <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+          System Staff Onboarding
+        </h1>
         <p className="text-slate-500 mt-2 text-sm">
           Automated registration: Credentials will be sent via email upon confirmation.
         </p>
@@ -116,7 +118,8 @@ const AdminRegistration = () => {
       {/* ERROR DISPLAY */}
       {serverError && (
         <div className="mb-8 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-xs rounded-r-lg animate-pulse">
-          <span className="font-bold uppercase tracking-wider mr-2 text-[10px]">Error:</span> {serverError}
+          <span className="font-bold uppercase tracking-wider mr-2 text-[10px]">Error:</span>{" "}
+          {serverError}
         </div>
       )}
 

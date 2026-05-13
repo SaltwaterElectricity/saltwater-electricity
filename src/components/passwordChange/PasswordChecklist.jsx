@@ -1,8 +1,10 @@
-import { Check, Circle } from 'lucide-react';
+import { Check, Circle } from "lucide-react";
 import { memo } from "react";
 
 const RequirementItem = memo(({ label, isMet }) => (
-  <div className={`flex items-center gap-2 transition-colors duration-300 ${isMet ? 'text-green-600' : 'text-slate-400'}`}>
+  <div
+    className={`flex items-center gap-2 transition-colors duration-300 ${isMet ? "text-green-600" : "text-slate-400"}`}
+  >
     {isMet ? (
       <Check size={12} className="animate-in zoom-in duration-300" strokeWidth={3} />
     ) : (

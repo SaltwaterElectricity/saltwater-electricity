@@ -113,8 +113,12 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
             <User size={16} />
           </div>
           <div>
-            <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider">Account Identity</h3>
-            <p className="text-[10px] font-bold text-slate-400">View or modify your personal profile</p>
+            <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider">
+              Account Identity
+            </h3>
+            <p className="text-[10px] font-bold text-slate-400">
+              View or modify your personal profile
+            </p>
           </div>
         </div>
 
@@ -140,20 +144,60 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
       {/* 👤 Group 1: Identity Profile */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Field label="Email Address" value={formData.email} isEditing={false} />
-        <Field label="First Name" name="firstName" value={formData.firstName} onChange={handleChange} isEditing={isEditing} required />
-        <Field label="Last Name" name="lastName" value={formData.lastName} onChange={handleChange} isEditing={isEditing} required />
-        <Field label="Middle Name" name="middleName" value={formData.middleName} onChange={handleChange} isEditing={isEditing} />
-        <Field label="Suffix" name="suffix" value={formData.suffix} onChange={handleChange} isEditing={isEditing} />
-        <Field label="Birth Date" name="birthDate" type="date" value={formData.birthDate} onChange={handleChange} isEditing={isEditing} />
+        <Field
+          label="First Name"
+          name="firstName"
+          value={formData.firstName}
+          onChange={handleChange}
+          isEditing={isEditing}
+          required
+        />
+        <Field
+          label="Last Name"
+          name="lastName"
+          value={formData.lastName}
+          onChange={handleChange}
+          isEditing={isEditing}
+          required
+        />
+        <Field
+          label="Middle Name"
+          name="middleName"
+          value={formData.middleName}
+          onChange={handleChange}
+          isEditing={isEditing}
+        />
+        <Field
+          label="Suffix"
+          name="suffix"
+          value={formData.suffix}
+          onChange={handleChange}
+          isEditing={isEditing}
+        />
+        <Field
+          label="Birth Date"
+          name="birthDate"
+          type="date"
+          value={formData.birthDate}
+          onChange={handleChange}
+          isEditing={isEditing}
+        />
 
         <div className="flex flex-col space-y-1">
-          <label className="text-[10px] font-black text-slate-500 uppercase tracking-wide">Gender</label>
+          <label className="text-[10px] font-black text-slate-500 uppercase tracking-wide">
+            Gender
+          </label>
           {!isEditing ? (
             <p className="p-3 text-xs font-semibold text-slate-800 bg-slate-50/50 rounded-xl border border-transparent truncate">
               {formData.gender}
             </p>
           ) : (
-            <select name="gender" value={formData.gender} onChange={handleChange} className="w-full p-3 text-xs font-medium bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all cursor-pointer">
+            <select
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              className="w-full p-3 text-xs font-medium bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all cursor-pointer"
+            >
               <option value="Not Specified">Not Specified</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
@@ -161,20 +205,46 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
           )}
         </div>
 
-        <Field label="Mobile Number" name="mobileNum" value={formData.mobileNum} onChange={handleChange} isEditing={isEditing} />
+        <Field
+          label="Mobile Number"
+          name="mobileNum"
+          value={formData.mobileNum}
+          onChange={handleChange}
+          isEditing={isEditing}
+        />
       </div>
 
       {/* 📍 Group 2: Geography & Location Settings */}
       <div className="space-y-4 pt-4 border-t border-slate-100">
         <div className="flex items-center gap-2">
           <MapPin size={14} className="text-slate-400" />
-          <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider">Address Parameters</h3>
+          <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider">
+            Address Parameters
+          </h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Street" name="street" value={formData.street} onChange={handleChange} isEditing={isEditing} />
-          <Field label="Baranggay" name="baranggay" value={formData.baranggay} onChange={handleChange} isEditing={isEditing} />
-          <Field label="Municipality" name="municipality" value={formData.municipality} onChange={handleChange} isEditing={isEditing} />
+          <Field
+            label="Street"
+            name="street"
+            value={formData.street}
+            onChange={handleChange}
+            isEditing={isEditing}
+          />
+          <Field
+            label="Baranggay"
+            name="baranggay"
+            value={formData.baranggay}
+            onChange={handleChange}
+            isEditing={isEditing}
+          />
+          <Field
+            label="Municipality"
+            name="municipality"
+            value={formData.municipality}
+            onChange={handleChange}
+            isEditing={isEditing}
+          />
         </div>
       </div>
 
@@ -186,7 +256,13 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
             disabled={loading}
             className="px-5 py-3 text-xs font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
           >
-            {loading ? "Saving Changes..." : <><Check size={14} /> Save Profile</>}
+            {loading ? (
+              "Saving Changes..."
+            ) : (
+              <>
+                <Check size={14} /> Save Profile
+              </>
+            )}
           </button>
         </div>
       )}

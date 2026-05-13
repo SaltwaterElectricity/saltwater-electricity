@@ -14,7 +14,7 @@ export const logLoginSession = async (uid) => {
 
   const newSession = {
     loginAt: serverTimestamp(),
-    device: parseUserAgent(userAgent), 
+    device: parseUserAgent(userAgent),
     userAgent: userAgent,
   };
 
@@ -27,7 +27,8 @@ export const logLoginSession = async (uid) => {
 
 // Helper: Makes the User Agent string more readable
 const parseUserAgent = (ua) => {
-  if (ua.includes("Mobile") || ua.includes("Android") || ua.includes("iPhone")) return "Mobile Device";
+  if (ua.includes("Mobile") || ua.includes("Android") || ua.includes("iPhone"))
+    return "Mobile Device";
   if (ua.includes("Windows")) return "Windows Desktop";
   if (ua.includes("Macintosh")) return "MacBook / iMac";
   if (ua.includes("Linux")) return "Linux Desktop";

@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from 'react';
-import { subscribeToAllDevices } from '../services/firebaseService';
-import { useIsConnected } from './useIsConnected';
+import { useState, useEffect, useMemo } from "react";
+import { subscribeToAllDevices } from "../services/firebaseService";
+import { useIsConnected } from "./useIsConnected";
 
 const ONLINE_TIMEOUT_MS = 30000; // 30 seconds
 
@@ -11,9 +11,9 @@ const ONLINE_TIMEOUT_MS = 30000; // 30 seconds
 const transformDevice = (deviceData, now) => {
   const latest = deviceData?.latest ?? {};
   const timestamp = latest.timestamp ?? 0;
-  
+
   // Calculate if the device has checked in recently
-  const isOnline = (now - timestamp) < ONLINE_TIMEOUT_MS;
+  const isOnline = now - timestamp < ONLINE_TIMEOUT_MS;
 
   return {
     ...deviceData,
@@ -24,8 +24,8 @@ const transformDevice = (deviceData, now) => {
     lastSeen: timestamp,
     status: {
       text: isOnline ? "Online" : "Offline",
-      color: isOnline ? "bg-emerald-500" : "bg-slate-400"
-    }
+      color: isOnline ? "bg-emerald-500" : "bg-slate-400",
+    },
   };
 };
 
@@ -42,14 +42,14 @@ export const useDashboard = () => {
       setRawDevices(data || {});
       setLoading(false);
     });
-    
+
     return () => {
-      if (typeof unsubscribe === 'function') unsubscribe();
+      if (typeof unsubscribe === "function") unsubscribe();
     };
   }, []);
 
   // 3. STATUS POLLING
-  // Forces a re-render every 10s to toggle "Online" -> "Offline" status 
+  // Forces a re-render every 10s to toggle "Online" -> "Offline" status
   // even if no data is being received from Firebase.
   useEffect(() => {
     const interval = setInterval(() => setCurrentTime(Date.now()), 10000);
@@ -66,14 +66,14 @@ export const useDashboard = () => {
     for (const [mac, data] of entries) {
       processed[mac] = transformDevice(data, currentTime);
     }
-    
+
     return processed;
   }, [rawDevices, currentTime]);
 
-  return { 
-    devices, 
-    loading, 
+  return {
+    devices,
+    loading,
     // isReconnecting is true if the browser loses its own internet connection
-    isReconnecting: !isConnected 
+    isReconnecting: !isConnected,
   };
 };

@@ -107,14 +107,19 @@ const UserRegistration = () => {
 
       {/* HEADER SECTION */}
       <header className="mb-10 border-b border-slate-100 pb-8 pr-12">
-        <h1 className="text-2xl font-black text-slate-900 tracking-tight">User Account Provisioning</h1>
-        <p className="text-slate-500 mt-2 text-sm">Register a new user to the system. Credentials will be sent via email.</p>
+        <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+          User Account Provisioning
+        </h1>
+        <p className="text-slate-500 mt-2 text-sm">
+          Register a new user to the system. Credentials will be sent via email.
+        </p>
       </header>
 
       {/* ERROR DISPLAY */}
       {serverError && (
         <div className="mb-8 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-xs rounded-r-lg animate-pulse">
-          <span className="font-bold uppercase tracking-wider mr-2 text-[10px]">Error:</span> {serverError}
+          <span className="font-bold uppercase tracking-wider mr-2 text-[10px]">Error:</span>{" "}
+          {serverError}
         </div>
       )}
 
@@ -141,7 +146,8 @@ const UserRegistration = () => {
           {/* FOOTER SECURITY NOTE */}
           <div className="p-4 bg-blue-50 border border-blue-100 rounded-xl text-center">
             <p className="text-[11px] text-blue-700 leading-relaxed font-medium">
-              <strong>System Policy:</strong> Users will be required to update their temporary password upon their first login for security compliance.
+              <strong>System Policy:</strong> Users will be required to update their temporary
+              password upon their first login for security compliance.
             </p>
           </div>
         </div>

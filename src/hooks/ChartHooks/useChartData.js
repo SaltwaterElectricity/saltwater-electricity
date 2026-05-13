@@ -1,13 +1,7 @@
-import { useMemo } from 'react';
-import { processLogsInWindows, getFormattedStats } from '../../utils/chartUtils';
-import { useSortedLogs } from './useSortedLogs';
-import { 
-  METRICS, 
-  METRIC_MAP, 
-  METRIC_CONFIG, 
-  EMPTY_STATE, 
-  TIME_FORMATTER 
-} from '../../constants';
+import { useMemo } from "react";
+import { processLogsInWindows, getFormattedStats } from "../../utils/chartUtils";
+import { useSortedLogs } from "./useSortedLogs";
+import { METRICS, METRIC_MAP, METRIC_CONFIG, EMPTY_STATE, TIME_FORMATTER } from "../../constants";
 
 /**
  * HOOK: useChartData
@@ -16,7 +10,7 @@ import {
  */
 export const useChartData = (logs, activeMetric = METRICS.TDS, timeRangeHours = 1) => {
   // 1. Process Raw Logs (Limit entries for initial performance)
-  const { data: cleanLogs, hasData } = useSortedLogs(logs, 1000); 
+  const { data: cleanLogs, hasData } = useSortedLogs(logs, 1000);
 
   return useMemo(() => {
     // --- SAFETY CHECK: Initial Guard ---
@@ -39,10 +33,10 @@ export const useChartData = (logs, activeMetric = METRICS.TDS, timeRangeHours = 
 
       // 2. Windowing Logic: Segmenting into "Now" and "Comparison" periods
       const result = processLogsInWindows(cleanLogs, {
-        metricKey: databaseKey, 
+        metricKey: databaseKey,
         metricId: activeMetric,
         currentWindowStart: now - windowMs,
-        comparisonWindowStart: now - (windowMs * 2)
+        comparisonWindowStart: now - windowMs * 2,
       });
 
       // --- SAFETY CHECK: Window Guard ---
@@ -54,24 +48,20 @@ export const useChartData = (logs, activeMetric = METRICS.TDS, timeRangeHours = 
       const stats = getFormattedStats(result, activeMetric);
 
       // 4. Transform & Slice: Memory Optimization for SVG Rendering
-      const chartData = result.current
-        .slice(-200) 
-        .map(point => ({
-          ...point,
-          displayTime: point.timestamp ? TIME_FORMATTER.format(point.timestamp) : '--:--'
-        }));
+      const chartData = result.current.slice(-200).map((point) => ({
+        ...point,
+        displayTime: point.timestamp ? TIME_FORMATTER.format(point.timestamp) : "--:--",
+      }));
 
       return {
         data: chartData,
-        stats: stats, 
+        stats: stats,
         hasData: true,
-        ui: METRIC_CONFIG[activeMetric] || METRIC_CONFIG.DEFAULT
+        ui: METRIC_CONFIG[activeMetric] || METRIC_CONFIG.DEFAULT,
       };
-      
     } catch (e) {
       console.error("[Hook Error]: Critical Chart Transformation Failure", e);
       return EMPTY_STATE;
     }
-    
   }, [cleanLogs, hasData, activeMetric, timeRangeHours]);
 };

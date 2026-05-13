@@ -4,7 +4,7 @@ import { logoutUser } from "../../services/auth.service";
 import { LogOut, Settings } from "lucide-react"; // 👈 Pinalitan ng Settings icon
 import { cn } from "../../utils/cn";
 import Toast from "../ui/Toast";
-import SpinnerIcon from "../ui/SpinnerIcon"; 
+import SpinnerIcon from "../ui/SpinnerIcon";
 
 export const NavbarProfile = memo(({ currentUid = "" }) => {
   const dropdownRef = useRef(null);
@@ -32,17 +32,15 @@ export const NavbarProfile = memo(({ currentUid = "" }) => {
   // 🛰️ DISPATCH EVENT TO OPEN MODAL (Pumupunta sa SettingsModal)
   const handleOpenSettings = (tabName) => {
     setIsOpen(false); // Isara muna ang dropdown
-    
+
     // Sabihan ang SettingsModal na magbukas sa specific tab
-    window.dispatchEvent(
-      new CustomEvent("open-profile-settings", { detail: tabName })
-    );
+    window.dispatchEvent(new CustomEvent("open-profile-settings", { detail: tabName }));
   };
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      await logoutUser(); 
+      await logoutUser();
     } catch {
       triggerToast("Terminating session... Forcing secure reset.", "warning");
 
@@ -71,15 +69,14 @@ export const NavbarProfile = memo(({ currentUid = "" }) => {
 
   return (
     <div className="relative antialiased" ref={dropdownRef}>
-      
-      <Toast 
-        isOpen={showToast} 
-        message={toastConfig.message} 
-        type={toastConfig.type} 
-        onClose={() => setShowToast(false)} 
+      <Toast
+        isOpen={showToast}
+        message={toastConfig.message}
+        type={toastConfig.type}
+        onClose={() => setShowToast(false)}
       />
 
-      <button 
+      <button
         onClick={handleToggle}
         disabled={isLoggingOut}
         className="h-10 w-10 rounded-2xl bg-slate-900 border border-slate-800 text-white flex items-center justify-center font-bold text-xs shadow-lg hover:bg-slate-800 transition-all uppercase tracking-wider focus:ring-2 focus:ring-blue-500 outline-none"
@@ -104,18 +101,17 @@ export const NavbarProfile = memo(({ currentUid = "" }) => {
           </div>
 
           <div className="space-y-1">
-            
             {/* ⚙️ PINAG-ISANG PROFILE SETTINGS BUTTON */}
-            <button 
-              onClick={() => handleOpenSettings("profile")} 
+            <button
+              onClick={() => handleOpenSettings("profile")}
               disabled={isLoggingOut}
               className="w-full flex items-center gap-3 p-3 text-xs font-bold text-slate-600 hover:bg-slate-50 rounded-xl transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Settings className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors" /> 
+              <Settings className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors" />
               Profile Settings
             </button>
 
-            <button 
+            <button
               onClick={handleLogout}
               disabled={isLoggingOut}
               className={cn(
@@ -125,7 +121,7 @@ export const NavbarProfile = memo(({ currentUid = "" }) => {
               )}
             >
               <div className="flex items-center gap-3">
-                <LogOut className="w-4 h-4 text-red-500 transition-transform group-hover:-translate-x-1" /> 
+                <LogOut className="w-4 h-4 text-red-500 transition-transform group-hover:-translate-x-1" />
                 <span>{isLoggingOut ? "Signing out..." : "Logout Session"}</span>
               </div>
               {isLoggingOut && <SpinnerIcon className="w-4 h-4 animate-spin text-red-500" />}

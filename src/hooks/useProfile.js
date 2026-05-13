@@ -18,23 +18,33 @@ export const useProfile = (uid) => {
 
     let isMounted = true;
     const userRef = ref(db, `users/${uid}`);
-    
+
     // Real-time listener for zero-downtime updates
-    const unsubscribe = onValue(userRef, (snapshot) => {
-      if (!isMounted) return;
-      if (snapshot.exists()) {
-        setProfile(snapshot.val());
-        setError(null);
-      } else {
-        setError(new appError("Profile not found.", true, "db/not-found"));
+    const unsubscribe = onValue(
+      userRef,
+      (snapshot) => {
+        if (!isMounted) return;
+        if (snapshot.exists()) {
+          setProfile(snapshot.val());
+          setError(null);
+        } else {
+          setError(new appError("Profile not found.", true, "db/not-found"));
+        }
+        setLoading(false);
+      },
+      (err) => {
+        if (!isMounted) return;
+        logger.error("Profile fetch error:", err);
+        setError(
+          new appError(
+            "Permission denied or connection lost.",
+            true,
+            err.code || "db/permission-denied"
+          )
+        );
+        setLoading(false);
       }
-      setLoading(false);
-    }, (err) => {
-      if (!isMounted) return;
-      logger.error("Profile fetch error:", err);
-      setError(new appError("Permission denied or connection lost.", true, err.code || "db/permission-denied"));
-      setLoading(false);
-    });
+    );
 
     return () => {
       isMounted = false;

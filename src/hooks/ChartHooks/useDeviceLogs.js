@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { subscribeToDeviceLogs } from '../../services/firebaseService';
-import { useIsConnected } from '../useIsConnected';
+import { useState, useEffect } from "react";
+import { subscribeToDeviceLogs } from "../../services/firebaseService";
+import { useIsConnected } from "../useIsConnected";
 
 /**
  * HOOK: useDeviceLogs
@@ -10,7 +10,7 @@ import { useIsConnected } from '../useIsConnected';
 export const useDeviceLogs = (mac, limit = 50, startDate = null) => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(!!mac);
-  const [error, setError] = useState(null); 
+  const [error, setError] = useState(null);
   const isConnected = useIsConnected();
 
   // Pattern: Adjusting state when a prop changes (Derived State)
@@ -27,21 +27,21 @@ export const useDeviceLogs = (mac, limit = 50, startDate = null) => {
     if (!mac) {
       return;
     }
-    
+
     // Define a cleanup variable for the subscription
     let unsubscribe = () => {};
 
     try {
       // 2. Subscription with Error Handling
       unsubscribe = subscribeToDeviceLogs(
-        mac, 
-        limit, 
+        mac,
+        limit,
         (data) => {
           const incomingData = Array.isArray(data) ? data : [];
           setLogs([...incomingData]);
           setLoading(false);
-          setError(null); 
-        }, 
+          setError(null);
+        },
         startDate,
         (err) => {
           // Firebase errors are already asynchronous callbacks, so this is safe.
@@ -50,7 +50,6 @@ export const useDeviceLogs = (mac, limit = 50, startDate = null) => {
           setLoading(false);
         }
       );
-      
     } catch (err) {
       // Synchronous errors during setup must be handled asynchronously to avoid
       // "set-state-in-effect" lint errors in strict environments.
@@ -64,10 +63,10 @@ export const useDeviceLogs = (mac, limit = 50, startDate = null) => {
     return () => unsubscribe();
   }, [mac, limit, startDate]);
 
-  return { 
-    logs, 
-    loading, 
-    error, 
-    isReconnecting: !isConnected 
+  return {
+    logs,
+    loading,
+    error,
+    isReconnecting: !isConnected,
   };
 };

@@ -12,7 +12,7 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
   });
 
   // 2. Sync Local State kapag nagbago ang piniling User (Derived State)
-  // Note: Standard React practice is to use a `key={user?.uid}` on this component 
+  // Note: Standard React practice is to use a `key={user?.uid}` on this component
   // in the parent to automatically reset state. This useEffect is a fallback.
   const [lastUserId, setLastUserId] = useState(null);
 
@@ -39,10 +39,8 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 antialiased overflow-y-auto custom-scrollbar bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300">
-      
       {/* Modal Container with Animation (pareho sa ConfirmationModal mo) */}
       <div className="relative w-full max-w-lg bg-white border border-slate-100 rounded-3xl shadow-2xl p-8 space-y-8 animate-in fade-in zoom-in-95 duration-200">
-        
         {/* Header */}
         <header className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
@@ -54,12 +52,15 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
                 Update Profile parameter
               </h2>
               <p className="text-sm text-slate-500 font-medium">
-                Editing: <span className="font-bold text-slate-700">{user.firstName} {user.lastName}</span>
+                Editing:{" "}
+                <span className="font-bold text-slate-700">
+                  {user.firstName} {user.lastName}
+                </span>
               </p>
             </div>
           </div>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
           >
             <X size={20} />
@@ -68,12 +69,13 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          
           {/* Name Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">First Name</label>
-              <input 
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
+                First Name
+              </label>
+              <input
                 type="text"
                 name="firstName"
                 value={formData.firstName}
@@ -84,8 +86,10 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Last Name</label>
-              <input 
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
+                Last Name
+              </label>
+              <input
                 type="text"
                 name="lastName"
                 value={formData.lastName}
@@ -99,10 +103,15 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
 
           {/* Location Section */}
           <div className="space-y-2 relative">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Baranggay / Location</label>
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">
+              Baranggay / Location
+            </label>
             <div className="relative">
-              <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input 
+              <MapPin
+                size={16}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+              />
+              <input
                 type="text"
                 name="baranggay"
                 value={formData.baranggay}
@@ -115,15 +124,15 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
 
           {/* Footer Actions */}
           <footer className="flex items-center justify-end gap-3 pt-6 border-t border-slate-100">
-            <button 
-              type="button" 
-              onClick={onClose} 
+            <button
+              type="button"
+              onClick={onClose}
               className="px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest text-slate-600 hover:bg-slate-100 transition-colors"
             >
               Cancel
             </button>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={isLoading}
               className={cn(
                 "flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-black uppercase tracking-widest rounded-xl shadow-sm transition-all",
@@ -144,7 +153,6 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
             </button>
           </footer>
         </form>
-
       </div>
     </div>
   );
