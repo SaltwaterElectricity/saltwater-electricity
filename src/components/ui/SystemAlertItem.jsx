@@ -34,14 +34,28 @@ const SystemAlertItem = memo(({ title, description, time, type = "info" }) => {
   const config = configs[type] || configs.info;
 
   return (
-    <div className={cn("flex gap-4 p-4 rounded-xl border transition-all hover:translate-x-1", config.bg, config.border)}>
-      <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm", config.iconBg, config.iconColor)}>
+    <div
+      className={cn(
+        "flex gap-4 p-4 rounded-xl border transition-all hover:translate-x-1",
+        config.bg,
+        config.border
+      )}
+    >
+      <div
+        className={cn(
+          "w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm",
+          config.iconBg,
+          config.iconColor
+        )}
+      >
         <span className="material-symbols-outlined text-[20px] fill">{config.icon}</span>
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-start">
           <p className="font-bold text-xs text-on-surface truncate pr-2">{title}</p>
-          <span className="text-[9px] font-black text-outline uppercase whitespace-nowrap">{time}</span>
+          <span className="text-[9px] font-black text-outline uppercase whitespace-nowrap">
+            {time}
+          </span>
         </div>
         <p className="text-[10px] text-outline mt-1 leading-relaxed line-clamp-2">{description}</p>
       </div>

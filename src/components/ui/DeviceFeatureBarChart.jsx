@@ -1,13 +1,5 @@
 import { memo } from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 /**
  * DeviceFeatureBarChart Component
@@ -16,12 +8,15 @@ import {
  */
 const DeviceFeatureBarChart = memo(({ data = [] }) => {
   // Default fallback data matching mockup
-  const chartData = data.length > 0 ? data : [
-    { name: "Device 1", voltage: 80, salinity: 60, current: 40 },
-    { name: "Device 2", voltage: 65, salinity: 75, current: 45 },
-    { name: "Device 3", voltage: 90, salinity: 55, current: 65 },
-    { name: "Device 4", voltage: 60, salinity: 80, current: 55 },
-  ];
+  const chartData =
+    data.length > 0
+      ? data
+      : [
+          { name: "Device 1", voltage: 80, salinity: 60, current: 40 },
+          { name: "Device 2", voltage: 65, salinity: 75, current: 45 },
+          { name: "Device 3", voltage: 90, salinity: 55, current: 65 },
+          { name: "Device 4", voltage: 60, salinity: 80, current: 55 },
+        ];
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-sm h-full">
@@ -43,16 +38,12 @@ const DeviceFeatureBarChart = memo(({ data = [] }) => {
             margin={{ top: 10, right: 10, left: -20, bottom: 20 }}
             barGap={6}
           >
-            <CartesianGrid 
-              strokeDasharray="0" 
-              vertical={false} 
-              stroke="#f0f4f9" 
-            />
+            <CartesianGrid strokeDasharray="0" vertical={false} stroke="#f0f4f9" />
             <XAxis
               dataKey="name"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#737686", fontSize: 10, fontWeight: 700, textAnchor: 'middle' }}
+              tick={{ fill: "#737686", fontSize: 10, fontWeight: 700, textAnchor: "middle" }}
               dy={15}
             />
             <YAxis
@@ -62,28 +53,10 @@ const DeviceFeatureBarChart = memo(({ data = [] }) => {
               domain={[0, 100]}
               ticks={[0, 20, 40, 60, 80, 100]}
             />
-            <Tooltip
-              cursor={{ fill: "#f8fafc" }}
-              content={<CustomTooltip />}
-            />
-            <Bar
-              dataKey="voltage"
-              fill="#2563eb"
-              radius={[10, 10, 0, 0]}
-              barSize={20}
-            />
-            <Bar
-              dataKey="salinity"
-              fill="#00A3C4"
-              radius={[10, 10, 0, 0]}
-              barSize={20}
-            />
-            <Bar
-              dataKey="current"
-              fill="#c3c6d7"
-              radius={[10, 10, 0, 0]}
-              barSize={20}
-            />
+            <Tooltip cursor={{ fill: "#f8fafc" }} content={<CustomTooltip />} />
+            <Bar dataKey="voltage" fill="#2563eb" radius={[10, 10, 0, 0]} barSize={20} />
+            <Bar dataKey="salinity" fill="#00A3C4" radius={[10, 10, 0, 0]} barSize={20} />
+            <Bar dataKey="current" fill="#c3c6d7" radius={[10, 10, 0, 0]} barSize={20} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -109,12 +82,13 @@ const CustomTooltip = ({ active, payload, label }) => {
           {payload.map((entry) => (
             <div key={entry.name} className="flex justify-between items-center gap-4">
               <span className="flex items-center gap-1.5 text-[10px] font-bold text-outline uppercase">
-                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: entry.color }} />
+                <span
+                  className="w-1.5 h-1.5 rounded-full"
+                  style={{ backgroundColor: entry.color }}
+                />
                 {entry.name}
               </span>
-              <span className="text-[10px] font-black text-on-surface">
-                {entry.value}
-              </span>
+              <span className="text-[10px] font-black text-on-surface">{entry.value}</span>
             </div>
           ))}
         </div>

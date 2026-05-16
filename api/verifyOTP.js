@@ -3,7 +3,7 @@ import { getDatabase } from "firebase-admin/database";
 
 /**
  * Vercel Serverless Function: verifyOTP
- * 
+ *
  * Securely verifies an OTP for password reset.
  * Used for frontend UX validation (Step 2) before the actual reset.
  */
@@ -40,7 +40,9 @@ export default async function handler(req, res) {
       const privateKey = process.env.FIREBASE_PRIVATE_KEY;
 
       if (!projectId || !clientEmail || !privateKey) {
-        throw new Error("Missing Firebase Admin credentials (PROJECT_ID, CLIENT_EMAIL, or PRIVATE_KEY).");
+        throw new Error(
+          "Missing Firebase Admin credentials (PROJECT_ID, CLIENT_EMAIL, or PRIVATE_KEY)."
+        );
       }
 
       initializeApp({
@@ -58,7 +60,9 @@ export default async function handler(req, res) {
     const snapshot = await otpRef.once("value");
 
     if (!snapshot.exists()) {
-      return res.status(400).json({ error: "No active security code found.", code: "otp/not-found" });
+      return res
+        .status(400)
+        .json({ error: "No active security code found.", code: "otp/not-found" });
     }
 
     const data = snapshot.val();
@@ -67,7 +71,9 @@ export default async function handler(req, res) {
 
     if (isExpired) {
       await otpRef.remove();
-      return res.status(400).json({ error: "This security code has expired.", code: "otp/expired" });
+      return res
+        .status(400)
+        .json({ error: "This security code has expired.", code: "otp/expired" });
     }
 
     if (!isMatch) {
@@ -81,9 +87,9 @@ export default async function handler(req, res) {
     return res.status(200).json({ verified: true, email: data.email });
   } catch (error) {
     console.error("Verify OTP API Error:", error.message);
-    return res.status(500).json({ 
+    return res.status(500).json({
       error: "Verification failed.",
-      details: error.message 
+      details: error.message,
     });
   }
 }

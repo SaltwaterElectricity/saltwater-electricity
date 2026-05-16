@@ -4,7 +4,7 @@ import { getDatabase } from "firebase-admin/database";
 
 /**
  * Vercel Serverless Function: resetPassword
- * 
+ *
  * Securely resets a user's password using a verified OTP.
  * Uses Firebase Admin SDK to perform administrative updates.
  */
@@ -30,14 +30,16 @@ export default async function handler(req, res) {
   const { email, newPassword, otp } = req.body;
 
   if (!email || !newPassword || !otp) {
-    return res.status(400).json({ error: "Missing required parameters (email, newPassword, otp)." });
+    return res
+      .status(400)
+      .json({ error: "Missing required parameters (email, newPassword, otp)." });
   }
 
   // 🛡️ SECURITY: Basic complexity check
   if (newPassword.length < 8) {
-    return res.status(400).json({ 
+    return res.status(400).json({
       error: "Security Check: Password must be at least 8 characters.",
-      code: "auth/weak-password" 
+      code: "auth/weak-password",
     });
   }
 
@@ -49,7 +51,9 @@ export default async function handler(req, res) {
       const privateKey = process.env.FIREBASE_PRIVATE_KEY;
 
       if (!projectId || !clientEmail || !privateKey) {
-        throw new Error("Missing Firebase Admin credentials (PROJECT_ID, CLIENT_EMAIL, or PRIVATE_KEY).");
+        throw new Error(
+          "Missing Firebase Admin credentials (PROJECT_ID, CLIENT_EMAIL, or PRIVATE_KEY)."
+        );
       }
 
       initializeApp({
@@ -69,30 +73,33 @@ export default async function handler(req, res) {
     const userRecord = await auth.getUserByEmail(email);
     const uid = userRecord.uid;
 
-    const trackingId = email.toLowerCase().trim().replace(/[^a-zA-Z0-9]/g, "");
+    const trackingId = email
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-zA-Z0-9]/g, "");
     const otpRef = db.ref(`otp-requests/${trackingId}`);
     const snapshot = await otpRef.once("value");
 
     if (!snapshot.exists()) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: "No active security code found for this account.",
-        code: "auth/otp-not-found"
+        code: "auth/otp-not-found",
       });
     }
 
     const data = snapshot.val();
     if (Date.now() > data.expiresAt) {
       await otpRef.remove();
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: "The security code has expired.",
-        code: "auth/otp-expired"
+        code: "auth/otp-expired",
       });
     }
 
     if (data.code !== otp.toString().trim()) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: "Invalid security code.",
-        code: "auth/invalid-otp"
+        code: "auth/invalid-otp",
       });
     }
 
@@ -103,19 +110,18 @@ export default async function handler(req, res) {
     });
 
     await otpRef.remove();
-    return res.status(200).json({ 
+    return res.status(200).json({
       success: true,
-      message: "Password has been reset successfully."
+      message: "Password has been reset successfully.",
     });
-
   } catch (error) {
     console.error("Reset Password API Error:", error.message);
-    if (error.code === 'auth/user-not-found') {
+    if (error.code === "auth/user-not-found") {
       return res.status(404).json({ error: "Account not found.", code: error.code });
     }
-    return res.status(500).json({ 
+    return res.status(500).json({
       error: "An internal security error occurred during password reset.",
-      details: error.message
+      details: error.message,
     });
   }
 }

@@ -9,7 +9,7 @@ const SystemHealthGauge = memo(({ voltage = 90, salinity = 80, current = 70, ove
   // SVG Calculations
   const size = 100;
   const center = 50;
-  
+
   const rings = [
     { radius: 42, value: voltage, color: "#2563eb", label: "Voltage", dash: 263.8 },
     { radius: 34, value: salinity, color: "#60a5fa", label: "Salinity", dash: 213.6 },
@@ -21,13 +21,13 @@ const SystemHealthGauge = memo(({ voltage = 90, salinity = 80, current = 70, ove
       <h3 className="font-bold text-sm uppercase tracking-wider text-on-surface-variant text-center mb-1">
         System Health
       </h3>
-      
+
       <div className="flex-1 flex flex-col items-center justify-center relative">
         <div className="relative w-48 h-48 md:w-36 md:h-36">
           <svg className="w-full h-full -rotate-90" viewBox={`0 0 ${size} ${size}`}>
             {rings.map((ring) => {
               const offset = ring.dash - (ring.value / 100) * ring.dash;
-              
+
               return (
                 <g key={ring.label}>
                   {/* Background Ring */}
@@ -56,7 +56,7 @@ const SystemHealthGauge = memo(({ voltage = 90, salinity = 80, current = 70, ove
               );
             })}
           </svg>
-          
+
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="font-extrabold tracking-tighter text-4xl text-primary leading-none">
               {overall}%
@@ -72,10 +72,7 @@ const SystemHealthGauge = memo(({ voltage = 90, salinity = 80, current = 70, ove
         {rings.map((ring) => (
           <div key={ring.label} className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span 
-                className="w-2.5 h-2.5 rounded-full" 
-                style={{ backgroundColor: ring.color }} 
-              />
+              <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: ring.color }} />
               <span className="font-bold text-[11px] text-on-surface uppercase tracking-tight">
                 {ring.label}
               </span>

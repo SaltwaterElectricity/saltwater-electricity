@@ -8,7 +8,7 @@ import axios from "axios";
 export default async function handler(req, res) {
   // 1. CORS Configuration
   res.setHeader("Access-Control-Allow-Credentials", true);
-  res.setHeader("Access-Control-Allow-Origin", "*"); 
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT");
   res.setHeader(
     "Access-Control-Allow-Headers",
@@ -28,7 +28,7 @@ export default async function handler(req, res) {
 
   // 3. Initialize Semaphore Configuration
   const apiKey = process.env.SEMAPHORE_API_KEY;
-  
+
   // SEMAPHORE FREE TIER: Custom sender names (Sender ID) require a paid account and approval.
   // Use the default "SEMAPHORE" for free/trial accounts to avoid API errors.
   const senderName = process.env.SEMAPHORE_SENDER_NAME || "SEMAPHORE";
@@ -55,11 +55,10 @@ export default async function handler(req, res) {
     });
 
     // 6. Success Response
-    return res.status(200).json({ 
-      success: true, 
-      data: response.data 
+    return res.status(200).json({
+      success: true,
+      data: response.data,
     });
-
   } catch (error) {
     // SECURITY: Log technical details internally
     console.error("Semaphore API Error:", error.response?.data || error.message);

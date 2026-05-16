@@ -4,8 +4,8 @@ import axios from "axios";
 
 /**
  * Vercel Serverless Function: triggerHardwareAlert
- * 
- * Optimized for ESP32 calls. 
+ *
+ * Optimized for ESP32 calls.
  * Accepts deviceId and tdsValue, finds the owner, and sends an SMS.
  */
 
@@ -16,7 +16,10 @@ export default async function handler(req, res) {
   }
 
   // 2. Input Sanitization & Extraction
-  const deviceId = req.body.deviceId?.toString().trim().replace(/[^a-zA-Z0-9_-]/g, "");
+  const deviceId = req.body.deviceId
+    ?.toString()
+    .trim()
+    .replace(/[^a-zA-Z0-9_-]/g, "");
   const tdsValue = parseFloat(req.body.tdsValue);
   const secretKey = req.body.secretKey;
 
@@ -29,7 +32,9 @@ export default async function handler(req, res) {
   }
 
   if (secretKey !== HARDWARE_SECRET) {
-    console.warn(`[SECURITY] Unauthorized hardware alert attempt. Device: ${deviceId || "Unknown"}`);
+    console.warn(
+      `[SECURITY] Unauthorized hardware alert attempt. Device: ${deviceId || "Unknown"}`
+    );
     return res.status(401).json({ error: "Unauthorized" });
   }
 
@@ -65,9 +70,9 @@ export default async function handler(req, res) {
       const lastSent = metaSnap.val().lastSmsSent || 0;
       if (now - lastSent < COOLDOWN_MS) {
         const remaining = Math.ceil((COOLDOWN_MS - (now - lastSent)) / 60000);
-        return res.status(429).json({ 
-          error: "Rate limit exceeded", 
-          message: `SMS alert already sent recently. Cooldown active for ${remaining} more minutes.` 
+        return res.status(429).json({
+          error: "Rate limit exceeded",
+          message: `SMS alert already sent recently. Cooldown active for ${remaining} more minutes.`,
         });
       }
     }
@@ -92,7 +97,7 @@ export default async function handler(req, res) {
     // 7. Trigger Semaphore SMS
     const apiKey = process.env.SEMAPHORE_API_KEY;
     const senderName = process.env.SEMAPHORE_SENDER_NAME || "SEMAPHORE";
-    
+
     const message = `[SALT-ELEC] ALERT: Unit ${deviceId} detected critical TDS levels: ${tdsValue} PPM. Check dashboard now.`;
 
     const smsResponse = await axios.post("https://api.semaphore.co/api/v4/messages", {
@@ -106,15 +111,14 @@ export default async function handler(req, res) {
     await alertMetaRef.set({
       lastSmsSent: now,
       lastTdsValue: tdsValue,
-      status: "delivered"
+      status: "delivered",
     });
 
-    return res.status(200).json({ 
-      success: true, 
-      message: "Alert delivered.", 
-      message_id: smsResponse.data[0]?.message_id 
+    return res.status(200).json({
+      success: true,
+      message: "Alert delivered.",
+      message_id: smsResponse.data[0]?.message_id,
     });
-
   } catch (error) {
     console.error(`[Hardware Alert Error] Device: ${deviceId}:`, error.message);
     return res.status(500).json({ error: "Failed to process alert." });

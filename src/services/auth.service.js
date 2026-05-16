@@ -379,4 +379,3 @@ export const resetUserPasswordWithOTP = async (email, newPassword, otp) => {
     );
   }
 };
-

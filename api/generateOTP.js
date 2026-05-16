@@ -5,7 +5,7 @@ import sgMail from "@sendgrid/mail";
 
 /**
  * Vercel Serverless Function: generateOTP
- * 
+ *
  * Securely generates an OTP for password reset.
  * Uses Firebase Admin SDK to check user existence and RTDB access.
  */
@@ -42,7 +42,9 @@ export default async function handler(req, res) {
       const privateKey = process.env.FIREBASE_PRIVATE_KEY;
 
       if (!projectId || !clientEmail || !privateKey) {
-        throw new Error("Missing Firebase Admin credentials (PROJECT_ID, CLIENT_EMAIL, or PRIVATE_KEY).");
+        throw new Error(
+          "Missing Firebase Admin credentials (PROJECT_ID, CLIENT_EMAIL, or PRIVATE_KEY)."
+        );
       }
 
       initializeApp({
@@ -57,7 +59,7 @@ export default async function handler(req, res) {
 
     const auth = getAuth();
     const db = getDatabase();
-    
+
     // Set SendGrid key inside handler
     const sgKey = process.env.SENDGRID_API_KEY;
     if (!sgKey) throw new Error("Missing SENDGRID_API_KEY.");
@@ -69,16 +71,19 @@ export default async function handler(req, res) {
     try {
       await auth.getUserByEmail(email);
     } catch (error) {
-      if (error.code === 'auth/user-not-found') {
+      if (error.code === "auth/user-not-found") {
         return res.status(200).json({ success: true });
       }
       throw error;
     }
 
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-    const trackingId = email.toLowerCase().trim().replace(/[^a-zA-Z0-9]/g, "");
+    const trackingId = email
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-zA-Z0-9]/g, "");
     const otpRef = db.ref(`otp-requests/${trackingId}`);
-    
+
     await otpRef.set({
       email,
       code: otpCode,
@@ -111,12 +116,11 @@ export default async function handler(req, res) {
 
     await sgMail.send(msg);
     return res.status(200).json({ success: true });
-
   } catch (error) {
     console.error("Generate OTP API Error:", error.message);
-    return res.status(500).json({ 
+    return res.status(500).json({
       error: "Failed to process security request.",
-      details: error.message
+      details: error.message,
     });
   }
 }

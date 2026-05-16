@@ -6,13 +6,13 @@ import {
   useDevices,
   useHistory,
 } from "../../hooks";
-import { 
-  MetricCard, 
-  AnalyticsChart, 
+import {
+  MetricCard,
+  AnalyticsChart,
   SystemHealthGauge,
   DeviceFeatureBarChart,
   SystemAlertItem,
-  DeviceUsersTable
+  DeviceUsersTable,
 } from "../../components";
 
 /**
@@ -32,10 +32,10 @@ const AdminDashboard = () => {
   const stats = useMemo(() => {
     const total = devices.length;
     let online = 0;
-    
-    devices.forEach(d => {
+
+    devices.forEach((d) => {
       const tel = telemetry[d.device_id];
-      if (tel && tel.timestamp && (now - tel.timestamp < onlineThreshold)) {
+      if (tel && tel.timestamp && now - tel.timestamp < onlineThreshold) {
         online++;
       }
     });
@@ -44,7 +44,7 @@ const AdminDashboard = () => {
       total,
       online,
       offline: total - online,
-      health: total > 0 ? Math.round((online / total) * 100) : 0
+      health: total > 0 ? Math.round((online / total) * 100) : 0,
     };
   }, [devices, telemetry, now]);
 
@@ -58,7 +58,10 @@ const AdminDashboard = () => {
   const voltageData = useMemo(() => {
     if (!historicalLogs) return [];
     return [...historicalLogs].reverse().map((log) => ({
-      timestamp: new Date(log.__normalizedTs).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      timestamp: new Date(log.__normalizedTs).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
       value: log.voltage || 0,
     }));
   }, [historicalLogs]);
@@ -66,33 +69,45 @@ const AdminDashboard = () => {
   const salinityData = useMemo(() => {
     if (!historicalLogs) return [];
     return [...historicalLogs].reverse().map((log) => ({
-      timestamp: new Date(log.__normalizedTs).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      timestamp: new Date(log.__normalizedTs).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
       value: log.tds_ppm || 0,
     }));
   }, [historicalLogs]);
 
   const deviceFeatureData = useMemo(() => {
-    return devices.slice(0, 4).map(d => {
+    return devices.slice(0, 4).map((d) => {
       const tel = telemetry[d.device_id] || {};
       return {
-        name: d.deviceName?.split(' ')[0] || d.device_id.substring(0, 6),
+        name: d.deviceName?.split(" ")[0] || d.device_id.substring(0, 6),
         voltage: tel.voltage || 0,
         salinity: tel.tds_ppm || tel.tds || 0,
-        current: tel.bulb_ma ? (tel.bulb_ma / 10) : 0
+        current: tel.bulb_ma ? tel.bulb_ma / 10 : 0,
       };
     });
   }, [devices, telemetry]);
 
   // DATA CALCULATION: Alerts Mapping
   const systemAlerts = useMemo(() => {
-    return auditLogs?.slice(0, 3).map(log => ({
-      id: log.id,
-      title: log.action.replace(/_/g, ' '),
-      description: log.details || "System activity detected.",
-      time: new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      type: log.action.includes('ERROR') || log.action.includes('FAILURE') ? 'error' : 
-            log.action.includes('WARNING') ? 'warning' : 'info'
-    })) || [];
+    return (
+      auditLogs?.slice(0, 3).map((log) => ({
+        id: log.id,
+        title: log.action.replace(/_/g, " "),
+        description: log.details || "System activity detected.",
+        time: new Date(log.timestamp).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        type:
+          log.action.includes("ERROR") || log.action.includes("FAILURE")
+            ? "error"
+            : log.action.includes("WARNING")
+              ? "warning"
+              : "info",
+      })) || []
+    );
   }, [auditLogs]);
 
   return (
@@ -145,10 +160,10 @@ const AdminDashboard = () => {
           <AnalyticsChart voltageData={voltageData} salinityData={salinityData} />
         </div>
         <div className="lg:col-span-3">
-          <SystemHealthGauge 
-            voltage={Math.min(stats.health + 5, 100)} 
-            salinity={stats.health} 
-            current={Math.max(stats.health - 10, 0)} 
+          <SystemHealthGauge
+            voltage={Math.min(stats.health + 5, 100)}
+            salinity={stats.health}
+            current={Math.max(stats.health - 10, 0)}
             overall={stats.health}
           />
         </div>
@@ -163,7 +178,7 @@ const AdminDashboard = () => {
               System Alerts
             </h3>
             <div className="space-y-4 mb-6">
-              {systemAlerts.map(alert => (
+              {systemAlerts.map((alert) => (
                 <SystemAlertItem key={alert.id} {...alert} />
               ))}
               {systemAlerts.length === 0 && (
@@ -173,7 +188,8 @@ const AdminDashboard = () => {
               )}
             </div>
             <button className="w-full text-primary font-bold text-xs flex items-center justify-center gap-2 py-3 border border-primary/10 bg-primary/5 rounded-lg hover:bg-primary/10 transition-all">
-              View all alerts <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+              View all alerts{" "}
+              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
             </button>
           </div>
 
@@ -182,25 +198,34 @@ const AdminDashboard = () => {
               DEVICE REQUEST
             </h3>
             <div className="space-y-6 flex-1">
-              {requests?.filter(r => r.status === 'pending').slice(0, 2).map(req => (
-                <div key={req.id} className="border border-outline-variant/30 rounded-xl p-4">
-                  <div className="text-center mb-4">
-                    <p className="text-base font-bold text-on-surface">{req.deviceName || "Juan Dela Cruz"}</p>
-                    <p className="text-[11px] text-outline mt-1 font-medium uppercase tracking-widest">
-                      {new Date(req.createdAt).toLocaleDateString()} • {new Date(req.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </p>
+              {requests
+                ?.filter((r) => r.status === "pending")
+                .slice(0, 2)
+                .map((req) => (
+                  <div key={req.id} className="border border-outline-variant/30 rounded-xl p-4">
+                    <div className="text-center mb-4">
+                      <p className="text-base font-bold text-on-surface">
+                        {req.deviceName || "Juan Dela Cruz"}
+                      </p>
+                      <p className="text-[11px] text-outline mt-1 font-medium uppercase tracking-widest">
+                        {new Date(req.createdAt).toLocaleDateString()} •{" "}
+                        {new Date(req.createdAt).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button className="py-2.5 px-4 text-primary font-bold text-[11px] border border-primary/20 rounded-lg hover:bg-primary/5 transition-all">
+                        View Details
+                      </button>
+                      <button className="py-2.5 px-4 bg-primary text-white font-bold text-[11px] rounded-lg shadow-sm hover:brightness-110 transition-all">
+                        Request Review
+                      </button>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button className="py-2.5 px-4 text-primary font-bold text-[11px] border border-primary/20 rounded-lg hover:bg-primary/5 transition-all">
-                      View Details
-                    </button>
-                    <button className="py-2.5 px-4 bg-primary text-white font-bold text-[11px] rounded-lg shadow-sm hover:brightness-110 transition-all">
-                      Request Review
-                    </button>
-                  </div>
-                </div>
-              ))}
-              {requests?.filter(r => r.status === 'pending').length === 0 && (
+                ))}
+              {requests?.filter((r) => r.status === "pending").length === 0 && (
                 <p className="text-center py-10 text-[11px] font-bold text-outline uppercase tracking-widest">
                   No pending requests
                 </p>
@@ -208,7 +233,8 @@ const AdminDashboard = () => {
             </div>
             <div className="mt-6">
               <button className="w-full text-primary font-bold text-xs flex items-center justify-center gap-2 py-3 border border-primary/10 bg-primary/5 rounded-lg hover:bg-primary/10 transition-all">
-                View all requests <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                View all requests{" "}
+                <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
               </button>
             </div>
           </div>

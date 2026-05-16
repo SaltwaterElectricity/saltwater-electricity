@@ -28,13 +28,17 @@ export const generateOTP = async (userId_not_used, email) => {
     // 🛡️ Robust Parsing: Handle empty or non-JSON responses
     const contentType = response.headers.get("content-type");
     let result = {};
-    
+
     if (contentType && contentType.includes("application/json")) {
       result = await response.json();
     } else {
       const text = await response.text();
       logger.error("Non-JSON response from generateOTP:", text);
-      throw new appError("The security service returned an invalid response.", true, "otp/invalid-response");
+      throw new appError(
+        "The security service returned an invalid response.",
+        true,
+        "otp/invalid-response"
+      );
     }
 
     if (!response.ok) {
@@ -76,13 +80,17 @@ export const verifyOTP = async (trackingId, inputCode, shouldDelete = false) => 
     // 🛡️ Robust Parsing: Handle empty or non-JSON responses
     const contentType = response.headers.get("content-type");
     let result = {};
-    
+
     if (contentType && contentType.includes("application/json")) {
       result = await response.json();
     } else {
       const text = await response.text();
       logger.error("Non-JSON response from verifyOTP:", text);
-      throw new appError("Security verification returned an invalid response.", true, "otp/invalid-response");
+      throw new appError(
+        "Security verification returned an invalid response.",
+        true,
+        "otp/invalid-response"
+      );
     }
 
     if (!response.ok) {
