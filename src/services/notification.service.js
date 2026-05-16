@@ -70,6 +70,51 @@ export const createNotification = async (
 };
 
 /**
+ * Triggers a secure SMS alert via the backend serverless function.
+ * Specifically for critical threshold breaches (TDS/PPM).
+ *
+ * @param {string} mobileNum - Recipient's mobile number.
+ * @param {string} message - Content of the SMS alert.
+ * @returns {Promise<Object>} - { success, error }
+ */
+export const sendSMSAlert = async (mobileNum, message) => {
+  if (!mobileNum || mobileNum === "N/A" || !message) {
+    return {
+      success: false,
+      error: new appError("Invalid SMS parameters.", true, "notification/invalid-sms-data"),
+    };
+  }
+
+  try {
+    const response = await fetch("/api/sendSMS", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ number: mobileNum, message }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || "SMS delivery failed.");
+    }
+
+    return { success: true, error: null };
+  } catch (error) {
+    logger.error("[Notification Service]: SMS trigger failed.", error);
+    return {
+      success: false,
+      error: new appError(
+        "SMS Alert failed to deliver. System fallback to in-app notification.",
+        true,
+        "notification/sms-failed"
+      ),
+    };
+  }
+};
+
+/**
  * Specifically logs notifications for security escalations.
  * Part of the Enumeration Prevention Protocol (EPP).
  */

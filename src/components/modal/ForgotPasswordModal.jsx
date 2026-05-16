@@ -11,6 +11,7 @@ import ResetPassword from '../auth/ResetPassword';
 const ForgotPasswordModal = ({ isOpen, onClose }) => {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
   const [isVerified, setIsVerified] = useState(false);
 
   // LOGIC: Reset state when component unmounts
@@ -18,6 +19,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
     return () => {
       setStep(1);
       setEmail("");
+      setOtp("");
       setIsVerified(false);
     };
   }, []);
@@ -28,8 +30,9 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
    * SECURITY HANDSHAKE:
    * Moves to Reset step only after a successful DB transaction.
    */
-  const handleVerifySuccess = (verifiedEmail) => {
+  const handleVerifySuccess = (verifiedEmail, verifiedOtp) => {
     setEmail(verifiedEmail);
+    setOtp(verifiedOtp);
     setIsVerified(true);
     setStep(3);
   };
@@ -51,8 +54,8 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
 
       <div className="relative w-[92%] sm:w-full max-w-[440px] bg-white rounded-[32px] shadow-2xl border border-slate-100 overflow-hidden animate-in zoom-in-95 duration-300">
         
-        {/* STEP INDICATOR (8pt Grid: h-1.5 = 6px) */}
-        <div className="flex h-1.5 bg-slate-100">
+        {/* STEP INDICATOR (8pt Grid: h-2 = 8px) */}
+        <div className="flex h-2 bg-slate-100">
           <div 
             className={`h-full bg-blue-600 transition-all duration-700 ease-in-out ${
               step === 1 ? 'w-1/3' : step === 2 ? 'w-2/3' : 'w-full'
@@ -97,6 +100,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
             {step === 3 && isVerified && (
               <ResetPassword
                 email={email} 
+                otp={otp}
                 onSuccess={handleFinalSuccess} 
               />
             )}

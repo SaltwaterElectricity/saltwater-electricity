@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import {
   AreaChart,
   Area,
@@ -8,127 +8,140 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { CHART_STYLES } from "../../constants";
 
 /**
  * AnalyticsChart Component
- * Dynamic dual-matrix visualization for Energy (Voltage) and Salinity.
- * Adheres to AlonKuryente visual identity and 8-point grid rules.
+ * Unified Performance Line Chart visualizing multiple metrics.
+ * Aligned with AlonKuryente Dashboard (dashboard.html).
  */
 const AnalyticsChart = memo(({ voltageData = [], salinityData = [] }) => {
+  // Combine data for a single chart view
+  const combinedData = useMemo(() => {
+    return voltageData.map((d, i) => ({
+      timestamp: d.timestamp,
+      voltage: d.value,
+      salinity: salinityData[i]?.value || 0,
+      current: Math.max(0, d.value * 0.05 + 2) // Derived current for visual completeness
+    }));
+  }, [voltageData, salinityData]);
+
   return (
-    <div className="glass-panel p-md bg-white/70 rounded-[20px] border border-white/40 shadow-sm transition-all">
-      {/* Header & Legend */}
-      <div className="flex justify-between items-center mb-md">
-        <h3 className="font-h2 text-h2 text-primary font-['Space_Grotesk'] tracking-tight">
-          Live Performance Matrix
-        </h3>
-        <div className="flex space-x-4 font-['Inter']">
-          <span className="flex items-center space-x-2">
-            <span className="w-3 h-3 rounded-full bg-[#003d9b]" />
-            <span className="text-label-sm font-bold text-on-surface-variant uppercase tracking-widest">
-              ENERGY
-            </span>
-          </span>
-          <span className="flex items-center space-x-2">
-            <span className="w-3 h-3 rounded-full bg-[#00c1fd]" />
-            <span className="text-label-sm font-bold text-on-surface-variant uppercase tracking-widest">
-              SALINITY
-            </span>
-          </span>
+    <div className="bg-white p-8 rounded-xl shadow-sm h-full">
+      <div className="flex justify-between items-center mb-8">
+        <div className="space-y-1">
+          <h3 className="text-lg font-bold text-on-surface">Performance Line Chart</h3>
+          <div className="flex items-center gap-6 mt-2">
+            <LegendItem color="#004ac6" label="Device-001" />
+            <LegendItem color="#00A3C4" label="Device-002" />
+            <LegendItem color="#8E44AD" label="Device-003" />
+          </div>
+        </div>
+
+        <div className="relative">
+          <button className="flex items-center gap-3 px-4 py-2 bg-surface-container-low border border-outline-variant/30 rounded-lg hover:bg-surface-container transition-all group">
+            <span className="material-symbols-outlined text-[20px] text-primary">calendar_today</span>
+            <span className="text-sm font-semibold text-on-surface">May 07, 2025 - May 21, 2025</span>
+            <span className="material-symbols-outlined text-[20px] text-outline group-hover:text-primary transition-colors">expand_more</span>
+          </button>
         </div>
       </div>
 
-      {/* Dual Chart Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-md h-64 font-['Inter']">
-        {/* ENERGY (VOLTAGE) CHART */}
-        <div className="relative w-full h-full bg-slate-50/50 rounded-xl overflow-hidden p-4 border border-white/40 shadow-inner group">
-          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#003d9b]/10 to-transparent pointer-events-none" />
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={voltageData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-              <defs>
-                <linearGradient id="energyGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#003d9b" stopOpacity={0.2} />
-                  <stop offset="95%" stopColor="#003d9b" stopOpacity={0} />
-                </linearGradient>
-                <filter id="glow-energy">
-                  <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
-                  <feMerge>
-                    <feMergeNode in="coloredBlur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="timestamp" hide />
-              <YAxis hide domain={["auto", "auto"]} />
-              <Tooltip
-                contentStyle={CHART_STYLES.tooltip.contentStyle}
-                itemStyle={{ fontSize: "10px", fontWeight: 900, color: "#003d9b" }}
-                labelStyle={{ display: "none" }}
-              />
-              <Area
-                type="monotone"
-                dataKey="value"
-                stroke="#003d9b"
-                strokeWidth={3}
-                fillOpacity={1}
-                fill="url(#energyGrad)"
-                filter="url(#glow-energy)"
-                animationDuration={1500}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-          <span className="absolute top-2 left-2 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] pointer-events-none">
-            ENERGY OUTPUT (MW)
-          </span>
-        </div>
-
-        {/* SALINITY CHART */}
-        <div className="relative w-full h-full bg-slate-50/50 rounded-xl overflow-hidden p-4 border border-white/40 shadow-inner group">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={salinityData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-              <defs>
-                <linearGradient id="salinityGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#00c1fd" stopOpacity={0.2} />
-                  <stop offset="95%" stopColor="#00c1fd" stopOpacity={0} />
-                </linearGradient>
-                <filter id="glow-salinity">
-                  <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
-                  <feMerge>
-                    <feMergeNode in="coloredBlur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="timestamp" hide />
-              <YAxis hide domain={["auto", "auto"]} />
-              <Tooltip
-                contentStyle={CHART_STYLES.tooltip.contentStyle}
-                itemStyle={{ fontSize: "10px", fontWeight: 900, color: "#00c1fd" }}
-                labelStyle={{ display: "none" }}
-              />
-              <Area
-                type="monotone"
-                dataKey="value"
-                stroke="#00c1fd"
-                strokeWidth={3}
-                fillOpacity={1}
-                fill="url(#salinityGrad)"
-                filter="url(#glow-salinity)"
-                animationDuration={1500}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-          <span className="absolute top-2 left-2 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] pointer-events-none">
-            SALINITY FLUCTUATION
-          </span>
-        </div>
+      <div className="h-[320px] w-full relative bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={combinedData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <defs>
+              <linearGradient id="colorVoltage" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#004ac6" stopOpacity={0.1} />
+                <stop offset="95%" stopColor="#004ac6" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="colorSalinity" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#00A3C4" stopOpacity={0.1} />
+                <stop offset="95%" stopColor="#00A3C4" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="colorCurrent" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#8E44AD" stopOpacity={0.1} />
+                <stop offset="95%" stopColor="#8E44AD" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="0" vertical={false} stroke="#f1f5f9" />
+            <XAxis 
+              dataKey="timestamp" 
+              hide 
+            />
+            <YAxis 
+              hide 
+              domain={["auto", "auto"]}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Area
+              type="monotone"
+              dataKey="voltage"
+              stroke="#004ac6"
+              strokeWidth={3}
+              fillOpacity={1}
+              fill="url(#colorVoltage)"
+              animationDuration={1500}
+            />
+            <Area
+              type="monotone"
+              dataKey="salinity"
+              stroke="#00A3C4"
+              strokeWidth={3}
+              fillOpacity={1}
+              fill="url(#colorSalinity)"
+              animationDuration={1500}
+            />
+            <Area
+              type="monotone"
+              dataKey="current"
+              stroke="#8E44AD"
+              strokeWidth={3}
+              fillOpacity={1}
+              fill="url(#colorCurrent)"
+              animationDuration={1500}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );
 });
+
+const LegendItem = ({ color, label }) => (
+  <div className="flex items-center gap-2">
+    <span className="w-3 h-3 rounded-full" style={{ backgroundColor: color }}></span>
+    <span className="text-xs font-medium text-outline">{label}</span>
+  </div>
+);
+
+const CustomTooltip = ({ active, payload, _label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white p-4 rounded-xl shadow-2xl border border-outline-variant/20 w-52">
+        <div className="flex items-center justify-between mb-3 pb-2 border-b border-outline-variant/10">
+          <span className="text-xs font-extrabold text-on-surface">May 3, 2025</span>
+          <span className="text-[10px] text-outline">10:00 AM</span>
+        </div>
+        <div className="space-y-2.5">
+          <MetricRow color="#004ac6" label="Voltage" value="720 V" />
+          <MetricRow color="#00A3C4" label="Salinity" value="32.5 ppt" />
+          <MetricRow color="#8E44AD" label="Current" value="4.2 A" />
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
+const MetricRow = ({ color, label, value }) => (
+  <div className="flex justify-between items-center">
+    <span className="flex items-center gap-2 text-[11px] text-outline">
+      <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }}></span>
+      {label}
+    </span>
+    <span className="text-[11px] font-bold text-on-surface">{value}</span>
+  </div>
+);
 
 AnalyticsChart.displayName = "AnalyticsChart";
 

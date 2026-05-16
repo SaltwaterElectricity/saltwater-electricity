@@ -26,12 +26,12 @@ const VerifyOTPStep = ({ email, onSuccess, onBack }) => {
     try {
       const userId = getUserId(email);
 
-      // Step A: Call the service (which now runs a secure transaction)
-      const result = await verifyResetOTP(userId, otp);
+      // Step A: Call the service (verify without deleting yet)
+      const result = await verifyResetOTP(userId, otp, false);
 
-      // Step B: If verified, pass the DB-verified email to the next step
+      // Step B: If verified, pass both the email and the code back
       if (result.verified) {
-        onSuccess(result.email);
+        onSuccess(result.email, otp);
       }
     } catch (err) {
       // Step C: This now catches "Expired", "Invalid (with attempts left)",
