@@ -11,6 +11,7 @@ describe("otp.service.js", () => {
     it("should call the generateOTP API", async () => {
       fetch.mockResolvedValueOnce({
         ok: true,
+        headers: { get: () => "application/json" },
         json: () => Promise.resolve({ success: true }),
       });
 
@@ -30,6 +31,7 @@ describe("otp.service.js", () => {
     it("should call the verifyOTP API", async () => {
       fetch.mockResolvedValueOnce({
         ok: true,
+        headers: { get: () => "application/json" },
         json: () => Promise.resolve({ verified: true, email: "test@example.com" }),
       });
 

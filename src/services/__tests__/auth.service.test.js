@@ -1,8 +1,15 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { validateEmail, validatePassword } from "../auth.service";
-import { appError } from "../../utils/appError";
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { validateEmail, validatePassword } from '../auth.service';
+import { appError } from '../../utils/appError';
 
-describe("auth.service.js validation", () => {
+// Mocking firebaseConfig to avoid Env Var check
+vi.mock('../../firebaseConfig', () => ({
+  auth: {},
+  db: {},
+  default: {}
+}));
+
+describe('auth.service.js validation', () => {
   describe("validateEmail", () => {
     it("should throw error for invalid email formats", () => {
       expect(() => validateEmail("invalid-email")).toThrow(appError);

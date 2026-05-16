@@ -20,11 +20,12 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: "./setupTests.js", // We will create this next
+    exclude: ["**/node_modules/**", "**/dist/**", "**/tests/**", "**/cypress/**"],
   },
 
   base: "./", // 👈 1. Keeps asset paths relative so the phone can find them locally!
   build: {
-    // Vercel looks for 'dist' by default. 
+    // Vercel looks for 'dist' by default.
     // If you need Cordova, use 'npm run build:mobile' (see package.json update next)
     outDir: process.env.BUILD_TARGET === "mobile" ? "../saltwaterelectricity/www" : "dist",
     emptyOutDir: true,

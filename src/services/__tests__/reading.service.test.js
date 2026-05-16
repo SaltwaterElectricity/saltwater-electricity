@@ -3,7 +3,14 @@ import { subscribeToLatestReading, getHistoricalLogs } from '../reading.service'
 
 // Mocking firebase/database and firebaseConfig
 vi.mock('../../firebaseConfig', () => ({
-  db: {}
+  db: {},
+  auth: {
+    currentUser: { uid: 'test-user-id' }
+  }
+}));
+
+vi.mock('../auth.service', () => ({
+  getUserClaims: vi.fn(() => Promise.resolve({ admin: false }))
 }));
 
 vi.mock('firebase/database', () => ({
@@ -18,7 +25,14 @@ vi.mock('firebase/database', () => ({
 describe('reading.service.js', () => {
   describe('Data Transformation (Internal logic via exported methods)', () => {
     it('should format decimals correctly for latest readings', async () => {
-      const { onValue } = await import('firebase/database');
+      const { onValue, get } = await import('firebase/database');
+      
+      // Mock verifyDeviceAccess success (first get call)
+      get.mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({ userId: 'test-user-id' })
+      });
+
       const mockSnapshot = {
         val: () => ({
           voltage: 4.12345,
@@ -30,12 +44,16 @@ describe('reading.service.js', () => {
 
       // Trigger the success callback
       onValue.mockImplementationOnce((ref, successCb) => {
-        successCb(mockSnapshot);
+        // We need to wait a tick for the async verifyDeviceAccess to finish
+        setTimeout(() => successCb(mockSnapshot), 0);
         return vi.fn(); // Unsubscribe
       });
 
       const onSuccess = vi.fn();
       subscribeToLatestReading("TEST_ID", onSuccess, vi.fn());
+
+      // Wait for the async call to complete
+      await new Promise(resolve => setTimeout(resolve, 10));
 
       expect(onSuccess).toHaveBeenCalledWith(expect.objectContaining({
         voltage: 4.12,
@@ -47,11 +65,19 @@ describe('reading.service.js', () => {
 
   describe('Error Handling', () => {
     it('should throw appError when deviceId is missing in subscription', () => {
-      expect(() => subscribeToLatestReading(null)).toThrow(/Device ID is required/);
+      expect(() => subscribeToLatestReading(null)).toThrow(/A valid Device identifier is required/);
     });
 
     it('should wrap Firebase errors in appError for historical logs', async () => {
       const { get } = await import('firebase/database');
+      
+      // 1. Mock verifyDeviceAccess success
+      get.mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({ userId: 'test-user-id' })
+      });
+      
+      // 2. Mock actual historical logs fetch failure
       get.mockRejectedValueOnce(new Error("Firebase failed"));
 
       await expect(getHistoricalLogs("TEST_ID")).rejects.toThrow(/historical data service is currently unavailable/);
