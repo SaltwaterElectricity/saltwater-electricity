@@ -103,8 +103,8 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
 
           <SidebarLink
             to={ROUTES.SMART_AQUA_MONITOR}
-            icon="visibility"
-            label={isAdmin ? "Fleet Monitor" : "Live Monitor"}
+            icon="monitoring"
+            label={isAdmin ? "Realtime Monitor" : "Live Monitor"}
           />
 
           <SidebarLink

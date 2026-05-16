@@ -199,12 +199,12 @@ export const updateBulbState = async (deviceId, newState) => {
     // CRITICAL ALERT CHECK: Trigger notification if TDS exceeds critical threshold
     const tdsConfig = SENSOR_CONFIG[METRICS.TDS];
     if (tds >= tdsConfig.critical) {
-      await createNotification(
-        auth.currentUser?.uid || "system",
-        "CRITICAL: Salinity Alert",
-        `Unit ${deviceId} detected critical TDS levels (${tds} PPM). Please inspect the facility immediately.`,
-        NOTIFICATION_TYPES.CRITICAL
-      );
+      const userId = auth.currentUser?.uid || "system";
+      const alertTitle = "CRITICAL: Salinity Alert";
+      const alertMessage = `Unit ${deviceId} detected critical TDS levels (${tds} PPM). Please inspect the facility immediately.`;
+
+      // 1. In-App Notification (Persistent)
+      await createNotification(userId, alertTitle, alertMessage, NOTIFICATION_TYPES.CRITICAL);
     }
 
     await update(ref(db), updates);

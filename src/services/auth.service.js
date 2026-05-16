@@ -345,3 +345,37 @@ export const getFullUserData = async (uid, firebaseUser = null, forceRefresh = f
     );
   }
 };
+
+/**
+ * RESETS user password using a verified OTP.
+ * This calls a secure backend function to bypass client-side restrictions.
+ */
+export const resetUserPasswordWithOTP = async (email, newPassword, otp) => {
+  try {
+    const response = await fetch("/api/resetPassword", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, newPassword, otp }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new appError(
+        result.error || "Failed to reset password. Please try again.",
+        true,
+        result.code || "auth/reset-failed"
+      );
+    }
+
+    return result;
+  } catch (error) {
+    if (error instanceof appError) throw error;
+    logger.error("Reset Password Error:", error);
+    throw new appError(
+      "The security service is currently unavailable. Please try again later.",
+      true,
+      "auth/reset-service-error"
+    );
+  }
+};

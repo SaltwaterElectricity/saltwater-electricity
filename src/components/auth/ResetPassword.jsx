@@ -1,10 +1,10 @@
 import { useState, useEffect, memo } from "react";
 import { useForm } from "react-hook-form";
-import { changeUserPassword } from "../../services/auth.service";
+import { resetUserPasswordWithOTP } from "../../services/auth.service";
 import { PasswordInput, StrengthMeter, PasswordChecklist } from "../password-change";
 import { calculatePasswordStrength } from "../../utils/passwordMetrics";
 
-const ResetPassword = ({ onSuccess }) => {
+const ResetPassword = ({ email, otp, onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -35,8 +35,8 @@ const ResetPassword = ({ onSuccess }) => {
     setError("");
 
     try {
-      // Step 1: Perform the update in Firebase
-      await changeUserPassword(data.newPassword);
+      // Step 1: Perform the update via backend reset service
+      await resetUserPasswordWithOTP(email, data.newPassword, otp);
 
       // Step 2: Show the success animation
       setSuccess(true);

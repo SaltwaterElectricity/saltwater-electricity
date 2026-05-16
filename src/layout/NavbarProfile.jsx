@@ -72,7 +72,11 @@ export const NavbarProfile = memo(({ currentUid = "" }) => {
         disabled={isLoggingOut}
         className="h-10 w-10 rounded-full bg-slate-200 overflow-hidden border-2 border-blue-100 hover:border-blue-500 transition-all flex items-center justify-center font-bold text-blue-700 shadow-sm active:scale-95"
       >
-        {getInitials().toUpperCase()}
+        {profile?.photoURL ? (
+          <img src={profile.photoURL} alt="" className="w-full h-full object-cover" />
+        ) : (
+          getInitials().toUpperCase()
+        )}
       </button>
 
       {isOpen && (

@@ -1,34 +1,17 @@
-import {
-  ref,
-  get,
-  set,
-  remove,
-  serverTimestamp,
-  query,
-  orderByChild,
-  equalTo,
-} from "firebase/database";
-import { db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
 import { logger } from "../utils/logger";
-import { sendOTPEmail } from "./email.service";
 
 /**
- * OTP SERVICE (Realtime Database)
+ * OTP SERVICE (Backend-Powered)
  *
  * Handles generation and verification of 6-digit security codes.
- * Adheres to One-Time Use policies and secure server-side synchronization.
+ * Migrated to backend serverless functions to support unauthenticated access
+ * while maintaining strict security rules in Firebase.
  */
-
-const OTP_EXPIRY_MS = 300000; // 5 minutes
 
 /**
  * GENERATE OTP
- *
- * 1. Finds user by email to get their Auth UID.
- * 2. Generates a 6-digit numeric code.
- * 3. Saves it to the '/otp-requests/{userId}' node in RTDB.
- * 4. Sends the code via SendGrid (never returned to frontend).
+ * Calls the backend API to handle user lookup and code delivery.
  */
 export const generateOTP = async (userId_not_used, email) => {
   if (!email) {
@@ -36,38 +19,34 @@ export const generateOTP = async (userId_not_used, email) => {
   }
 
   try {
-    // 🛡️ SECURITY: Verify user existence before sending email
-    const usersRef = ref(db, "users");
-    const emailQuery = query(usersRef, orderByChild("email"), equalTo(email.toLowerCase().trim()));
-    const snapshot = await get(emailQuery);
-
-    if (!snapshot.exists()) {
-      logger.warn(`OTP Request blocked: No account for ${email}.`);
-      return { success: true }; // OWASP: Anti-enumeration silent return
-    }
-
-    // Pull the actual UID and data
-    const userEntries = Object.entries(snapshot.val());
-    const [uid] = userEntries[0];
-
-    // 1. Generate a 6-digit numeric code
-    const array = new Uint32Array(1);
-    window.crypto.getRandomValues(array);
-    const otpCode = ((array[0] % 900000) + 100000).toString();
-
-    // 2. Save to RTDB: '/otp-requests/{userId}' using the real UID
-    const otpRef = ref(db, `otp-requests/${uid}`);
-    await set(otpRef, {
-      email,
-      code: otpCode,
-      createdAt: serverTimestamp(),
-      expiresAt: Date.now() + OTP_EXPIRY_MS,
+    const response = await fetch("/api/generateOTP", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
     });
 
-    // 3. Delivery (Secure: Only send via email)
-    const result = await sendOTPEmail(email, otpCode);
-    if (!result.success) {
-      throw result.error;
+    // 🛡️ Robust Parsing: Handle empty or non-JSON responses
+    const contentType = response.headers.get("content-type");
+    let result = {};
+
+    if (contentType && contentType.includes("application/json")) {
+      result = await response.json();
+    } else {
+      const text = await response.text();
+      logger.error("Non-JSON response from generateOTP:", text);
+      throw new appError(
+        "The security service returned an invalid response.",
+        true,
+        "otp/invalid-response"
+      );
+    }
+
+    if (!response.ok) {
+      throw new appError(
+        result.error || "Failed to deliver the security code. Please try again.",
+        true,
+        result.code || "otp/request-failed"
+      );
     }
 
     return { success: true };
@@ -75,58 +54,54 @@ export const generateOTP = async (userId_not_used, email) => {
     if (error instanceof appError) throw error;
     logger.error("OTP Generation Error:", error);
     throw new appError(
-      "Failed to deliver the security code. Please try again.",
+      "The security service is currently unavailable. Please try again.",
       true,
-      "otp/request-failed"
+      "otp/service-unavailable"
     );
   }
 };
 
 /**
  * VERIFY OTP
- *
- * 1. Reads data from '/otp-requests/{userId}'.
- * 2. Logic: Return true if code matches AND it has not expired.
- * 3. Once verified or expired, the function deletes the OTP entry (One-Time use).
+ * Calls the backend API to verify the code without needing RTDB read permissions.
  */
-export const verifyOTP = async (userId, inputCode) => {
-  if (!userId || !inputCode) {
+export const verifyOTP = async (trackingId, inputCode, shouldDelete = false) => {
+  if (!trackingId || !inputCode) {
     throw new appError("Verification parameters are missing.", true, "otp/invalid-parameters");
   }
 
-  const otpRef = ref(db, `otp-requests/${userId}`);
-
   try {
-    const snapshot = await get(otpRef);
+    const response = await fetch("/api/verifyOTP", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ trackingId, code: inputCode, shouldDelete }),
+    });
 
-    if (!snapshot.exists()) {
-      throw new appError("No active security code found for this account.", true, "otp/not-found");
-    }
+    // 🛡️ Robust Parsing: Handle empty or non-JSON responses
+    const contentType = response.headers.get("content-type");
+    let result = {};
 
-    const data = snapshot.val();
-
-    // Logic: Return true if code matches AND not expired
-    const isExpired = Date.now() > data.expiresAt;
-    const isMatch = data.code === inputCode.toString().trim();
-
-    // 🛡️ One-Time Use Policy: Delete if verified or if it has expired
-    if (isMatch || isExpired) {
-      await remove(otpRef);
-    }
-
-    if (isExpired) {
+    if (contentType && contentType.includes("application/json")) {
+      result = await response.json();
+    } else {
+      const text = await response.text();
+      logger.error("Non-JSON response from verifyOTP:", text);
       throw new appError(
-        "This security code has expired. Please request a new one.",
+        "Security verification returned an invalid response.",
         true,
-        "otp/expired"
+        "otp/invalid-response"
       );
     }
 
-    if (!isMatch) {
-      throw new appError("Invalid security code.", true, "otp/invalid-code");
+    if (!response.ok) {
+      throw new appError(
+        result.error || "Security verification failed.",
+        true,
+        result.code || "otp/verification-failed"
+      );
     }
 
-    return { verified: true, email: data.email };
+    return { verified: true, email: result.email };
   } catch (error) {
     if (error instanceof appError) throw error;
     logger.error("OTP Verification Error:", error);
@@ -139,7 +114,7 @@ export const verifyOTP = async (userId, inputCode) => {
 };
 
 /**
- * Wrappers for UI compatibility (RequestOTPStep / VerifyOTPStep)
+ * Wrappers for UI compatibility
  */
 export const requestPasswordResetOTP = async (email, userId) => generateOTP(userId, email);
 export const verifyResetOTP = verifyOTP;
