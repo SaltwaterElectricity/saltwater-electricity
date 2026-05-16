@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:mobile": "cross-env BUILD_TARGET=mobile vite build",
     "lint": "eslint .",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
@@ -15,7 +16,7 @@
     "test:ci": "vitest run",
     "coverage": "vitest run --coverage",
     "preview": "vite preview",
-    "mobile-android": "npm run build && cd ../saltwaterelectricity && cordova run android",
+    "mobile-android": "npm run build:mobile && cd ../saltwaterelectricity && cordova run android",
     "prepare": "husky"
   },
   "dependencies": {
@@ -44,6 +45,7 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
+    "cross-env": "^10.1.0",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",

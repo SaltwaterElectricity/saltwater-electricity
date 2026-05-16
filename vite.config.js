@@ -24,8 +24,10 @@ export default defineConfig({
 
   base: "./", // 👈 1. Keeps asset paths relative so the phone can find them locally!
   build: {
-    outDir: "../saltwaterelectricity/www", // 👈 2. Jumps out of website, into your cordova www
-    emptyOutDir: true, // Automatically cleans out old mobile files before exporting new ones
+    // Vercel looks for 'dist' by default. 
+    // If you need Cordova, use 'npm run build:mobile' (see package.json update next)
+    outDir: process.env.BUILD_TARGET === "mobile" ? "../saltwaterelectricity/www" : "dist",
+    emptyOutDir: true,
     chunkSizeWarningLimit: 1000,
   },
 });
