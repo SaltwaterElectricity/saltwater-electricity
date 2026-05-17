@@ -128,7 +128,17 @@ export default async function handler(req, res) {
       message_id: smsResponse.data[0]?.message_id,
     });
   } catch (error) {
-    console.error(`[Hardware Alert Error] Device: ${deviceId}:`, error.message);
-    return res.status(500).json({ error: "Failed to process alert." });
+    // Detailed logging for debugging
+    console.error(`[Hardware Alert Error] Device: ${deviceId}:`, {
+      message: error.message,
+      stack: error.stack,
+      code: error.code,
+      response: error.response?.data // If it's an axios error
+    });
+
+    return res.status(500).json({ 
+      error: "Failed to process alert.",
+      details: process.env.NODE_ENV === "development" ? error.message : undefined
+    });
   }
 }
