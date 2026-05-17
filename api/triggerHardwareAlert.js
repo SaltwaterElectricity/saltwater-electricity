@@ -50,7 +50,9 @@ export default async function handler(req, res) {
       const privateKey = process.env.FIREBASE_PRIVATE_KEY;
 
       if (!projectId || !clientEmail || !privateKey) {
-        console.error("Missing Firebase Admin credentials (PROJECT_ID, CLIENT_EMAIL, or PRIVATE_KEY).");
+        console.error(
+          "Missing Firebase Admin credentials (PROJECT_ID, CLIENT_EMAIL, or PRIVATE_KEY)."
+        );
         throw new Error("Server configuration error: Missing Firebase credentials.");
       }
 
