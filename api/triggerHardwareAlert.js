@@ -45,13 +45,19 @@ export default async function handler(req, res) {
   try {
     // 4. Initialize Firebase Admin
     if (!getApps().length) {
+      const projectId = process.env.VITE_FIREBASE_PROJECT_ID;
+      const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
       const privateKey = process.env.FIREBASE_PRIVATE_KEY;
-      if (!privateKey) throw new Error("Missing FIREBASE_PRIVATE_KEY");
+
+      if (!projectId || !clientEmail || !privateKey) {
+        console.error("Missing Firebase Admin credentials (PROJECT_ID, CLIENT_EMAIL, or PRIVATE_KEY).");
+        throw new Error("Server configuration error: Missing Firebase credentials.");
+      }
 
       initializeApp({
         credential: cert({
-          projectId: process.env.VITE_FIREBASE_PROJECT_ID,
-          clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+          projectId,
+          clientEmail,
           privateKey: privateKey.replace(/\\n/g, "\n"),
         }),
         databaseURL: process.env.VITE_FIREBASE_DATABASE_URL,
