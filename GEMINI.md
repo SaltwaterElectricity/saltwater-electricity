@@ -56,7 +56,7 @@ C:\Users\Admin\testcode\
 ## Key Files
 
 - `src/firebaseConfig.js`: Entry point for Firebase services.
-- `src/AppRoutes.jsx`: Centralizes all application routing and protection.
+- `src/route/AppRoutes.jsx`: Centralizes all application routing and protection.
 - `src/context/AuthContext.jsx`: Manages user authentication state and session duration.
 - `src/utils/rbac.js`: Central logic for Role-Based Access Control.
 - `vite.config.js`: Contains specific configuration for exporting to Cordova (`../saltwaterelectricity/www`).
