@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import { cn } from "../../utils/cn";
 import { useNotification } from "../../context/useNotification";
+import { useAuth } from "../../context/useAuth";
 
 // Services
 import { registerUserAccount, sendCredentials, deleteAuthUser } from "../../services/auth.service";
@@ -17,7 +18,27 @@ import { RegistrationFields } from "../../components/auth/RegistrationField";
 import { RegistrationSummary } from "../../components/auth/RegistrationSummary";
 import { ConfirmationModal } from "../../components/modal/ConfirmationModal";
 
-const AdminRegistration = () => {
+/**
+ * AccountProvisioning Component
+ * Unified form for registering both Staff (Admins) and standard Residents (Users).
+ * Adapts UI strings and role constraints based on the 'mode' prop and current user's role.
+ */
+const AccountProvisioning = ({ mode = "user" }) => {
+  // Mode-based UI configuration
+  const isStaffMode = mode === "staff";
+  const config = {
+    title: isStaffMode ? "System Staff Onboarding" : "User Account Provisioning",
+    description: isStaffMode 
+      ? "Automated registration: Credentials will be sent via email upon confirmation."
+      : "Register a new user to the system. Credentials will be sent via email.",
+    buttonText: isStaffMode ? "Review & Provision Staff" : "Review & Provision User",
+    successMsg: isStaffMode ? "Staff account has been fully provisioned!" : "User account has been fully provisioned!",
+    modalTitle: isStaffMode ? "Confirm Staff Onboarding" : "Confirm User Registration",
+    modalDesc: isStaffMode 
+      ? "Verify the information below. An automated email will be sent to the staff's work email."
+      : "Please verify the details below. Once confirmed, the system will generate an account and notify the user."
+  };
+
   // STATES
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tempData, setTempData] = useState(null);
@@ -25,6 +46,7 @@ const AdminRegistration = () => {
   const [serverError, setServerError] = useState("");
   const navigate = useNavigate();
   const { showNotification } = useNotification();
+  const { userRole } = useAuth();
 
   // FORM INITIALIZATION
   const {
@@ -34,7 +56,7 @@ const AdminRegistration = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      role: ROLES.ADMIN,
+      role: isStaffMode ? ROLES.ADMIN : ROLES.RESIDENT,
       gender: "male",
       region: "Region IV-A",
       cityProvince: "Quezon",
@@ -44,16 +66,15 @@ const AdminRegistration = () => {
     },
   });
 
-  //PRE-SUBMIT
+  // PRE-SUBMIT: Opens confirmation modal
   const handlePreSubmit = (data) => {
     setServerError("");
     setTempData(data);
     setIsModalOpen(true);
   };
 
-  // FINAL CONFIRMATION
+  // FINAL CONFIRMATION: Execution phase
   const handleFinalConfirm = async () => {
-    // A. INTEGRITY CHECK
     if (!tempData || !tempData.email) {
       setServerError("Critical Error: Registration data is missing. Please restart the process.");
       showNotification("Data integrity check failed", "error");
@@ -76,26 +97,24 @@ const AdminRegistration = () => {
           password: regResult.tempPassword,
         });
       } catch (dbError) {
-        // 🚨 ROLLBACK: Delete the Auth user if DB setup fails to prevent orphaned accounts
+        // ROLLBACK: Delete the Auth user if DB setup fails
         await deleteAuthUser(regResult.tempUser);
         throw new Error(
           `System Provisioning Failed: ${dbError.message || "Database connection error."}`
         );
       }
 
-      // 3. SECURE CREDENTIAL DELIVERY (SendGrid - Only after DB success)
+      // 3. SECURE CREDENTIAL DELIVERY (SendGrid)
       await sendCredentials(tempData, regResult.tempPassword);
 
-      // SUCCESS NOTIFICATION
-      showNotification(
-        `Staff account for ${tempData.firstName} has been fully provisioned!`,
-        "success"
-      );
+      // SUCCESS
+      showNotification(`${tempData.firstName}'s account ${config.successMsg}`, "success");
 
       // CLEANUP
       setIsModalOpen(false);
       setTempData(null);
       reset();
+      navigate(ROUTES.ADMIN_USER_MANAGEMENT);
     } catch (err) {
       // ERROR HANDLING
       const errorMsg = err.message || "An unexpected error occurred.";
@@ -104,7 +123,7 @@ const AdminRegistration = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
       setIsModalOpen(false);
     } finally {
-      // 4. MEMORY MANAGEMENT: Always delete the temporary app instance
+      // 4. MEMORY MANAGEMENT
       if (regResult?.tempApp) {
         try {
           await deleteApp(regResult.tempApp);
@@ -117,7 +136,7 @@ const AdminRegistration = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-8 my-8 bg-white border border-slate-200 rounded-3xl shadow-sm relative">
+    <div className="max-w-4xl mx-auto p-8 my-8 bg-white border border-slate-200 rounded-3xl shadow-sm relative animate-in fade-in slide-in-from-bottom-2 duration-500">
       <button
         onClick={() => navigate(ROUTES.ADMIN_USER_MANAGEMENT)}
         className="absolute top-8 right-8 z-10 p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-all"
@@ -129,17 +148,17 @@ const AdminRegistration = () => {
       {/* HEADER SECTION */}
       <header className="mb-10 border-b border-slate-100 pb-8 pr-12">
         <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-          System Staff Onboarding
+          {config.title}
         </h1>
-        <p className="text-slate-500 mt-2 text-sm">
-          Automated registration: Credentials will be sent via email upon confirmation.
+        <p className="text-slate-500 mt-2 text-sm italic">
+          {config.description}
         </p>
       </header>
 
       {/* ERROR DISPLAY */}
       {serverError && (
-        <div className="mb-8 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-xs rounded-r-lg animate-pulse">
-          <span className="font-bold uppercase tracking-wider mr-2 text-[10px]">Error:</span>{" "}
+        <div className="mb-8 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-xs rounded-r-lg animate-pulse font-medium">
+          <span className="font-bold uppercase tracking-wider mr-2 text-[10px]">Security Alert:</span>{" "}
           {serverError}
         </div>
       )}
@@ -147,28 +166,39 @@ const AdminRegistration = () => {
       {/* REGISTRATION FORM */}
       <form onSubmit={handleSubmit(handlePreSubmit)} className="flex flex-col gap-10">
         {/* REUSABLE FIELDS COMPONENT */}
-        <RegistrationFields register={register} errors={errors} isAdmin={true} />
+        <RegistrationFields 
+          register={register} 
+          errors={errors} 
+          currentUserRole={userRole} 
+        />
 
         {/* SUBMIT BUTTON SECTION */}
         <div className="pt-6 border-t border-slate-100 space-y-6">
           <button
             type="submit"
-            disabled={Object.keys(errors).length > 0}
+            disabled={Object.keys(errors).length > 0 || isSubmitting}
             className={cn(
               "w-full font-bold py-4 rounded-2xl transition-all shadow-xl flex items-center justify-center gap-2",
-              Object.keys(errors).length > 0
-                ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+              Object.keys(errors).length > 0 || isSubmitting
+                ? "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
                 : "bg-slate-900 hover:bg-black text-white active:scale-[0.98]"
             )}
           >
-            Review & Provision Staff
+            {isSubmitting ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                Processing...
+              </>
+            ) : (
+              config.buttonText
+            )}
           </button>
 
           {/* FOOTER SECURITY NOTE */}
           <div className="p-4 bg-blue-50 border border-blue-100 rounded-xl text-center">
-            <p className="text-[11px] text-blue-700 leading-relaxed font-medium">
-              <strong>Security Notice:</strong> Credential provisioning is handled by the server.
-              The staff will be prompted to change their password on first login.
+            <p className="text-[11px] text-blue-700 leading-relaxed font-medium italic">
+              <strong>Data Privacy Notice:</strong> Credential provisioning is handled securely via SendGrid. 
+              Recipients will be required to update their temporary password upon first login.
             </p>
           </div>
         </div>
@@ -180,8 +210,8 @@ const AdminRegistration = () => {
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleFinalConfirm}
         isSubmitting={isSubmitting}
-        title="Confirm Staff Onboarding"
-        description="Verify the information below. An automated email will be sent to the staff's work email."
+        title={config.modalTitle}
+        description={config.modalDesc}
         confirmText="Finalize & Register"
       >
         {/* INJECTED SUMMARY CONTENT */}
@@ -191,4 +221,4 @@ const AdminRegistration = () => {
   );
 };
 
-export default AdminRegistration;
+export default AccountProvisioning;
