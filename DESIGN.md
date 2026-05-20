@@ -88,6 +88,29 @@ Used for data visualizations to suggest "active" energy flow.
 }
 ```
 
+### Premium Interactions (.btn-interaction)
+Physical hardware feedback simulation for buttons.
+```css
+.btn-interaction {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-interaction:hover {
+    transform: translateY(-2px);
+    filter: brightness(110%);
+}
+.btn-interaction:active {
+    transform: translateY(0px) scale(0.98);
+}
+```
+
+### Premium Elevation (.shadow-premium)
+Depth achieved through light and soft colored blurs.
+```css
+.shadow-premium {
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 15px -5px rgba(0, 0, 0, 0.03);
+}
+```
+
 ---
 
 ## 4. Visual Language Rules

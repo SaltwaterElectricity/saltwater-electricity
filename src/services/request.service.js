@@ -1,4 +1,4 @@
-import { ref, push, serverTimestamp, update } from "firebase/database";
+import { ref, push, serverTimestamp, update, get } from "firebase/database";
 import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
 import logger from "../utils/logger";
@@ -87,6 +87,82 @@ export const createDeviceRequest = async (deviceData) => {
       "The request service is currently unavailable. Please try again later.",
       true,
       "request/submission-failed"
+    );
+  }
+};
+
+/**
+ * Cancels a pending device request (User-initiated).
+ * ENFORCES: Ownership, Pending Status, and 24-hour window.
+ *
+ * @param {string} requestId - The ID of the request to cancel.
+ * @param {Object} reasonData - { reason: string, feedback: string }
+ */
+export const cancelDeviceRequest = async (requestId, reasonData) => {
+  const currentUser = auth.currentUser;
+  if (!currentUser) throw new appError("Authentication required.", true, "auth/unauthorized");
+
+  try {
+    // 1. Fetch Request to verify state
+    const requestRef = ref(db, `device-requests/${requestId}`);
+    const snapshot = await get(requestRef);
+
+    if (!snapshot.exists()) {
+      throw new appError("Request not found.", true, "request/not-found");
+    }
+
+    const requestData = snapshot.val();
+
+    // 2. SECURITY GUARD: Ownership
+    if (requestData.userId !== currentUser.uid) {
+      throw new appError("Unauthorized: You do not own this request.", true, "auth/insufficient-clearance");
+    }
+
+    // 3. SECURITY GUARD: Status check (Only pending can be cancelled)
+    if (requestData.status !== "pending") {
+      throw new appError(
+        `Cannot cancel: Request is already ${requestData.status}.`,
+        true,
+        "request/invalid-state"
+      );
+    }
+
+    // 4. SECURITY GUARD: Time-gate (24 Hours)
+    const CANCELLATION_WINDOW = 24 * 60 * 60 * 1000;
+    const elapsed = Date.now() - requestData.createdAt;
+    if (elapsed > CANCELLATION_WINDOW) {
+      throw new appError(
+        "Cancellation window has expired (24h limit).",
+        true,
+        "request/window-expired"
+      );
+    }
+
+    // 5. ATOMIC UPDATE
+    const now = serverTimestamp();
+    const updates = {};
+    updates[`/device-requests/${requestId}/status`] = "cancelled";
+    updates[`/device-requests/${requestId}/cancelledAt`] = now;
+    updates[`/device-requests/${requestId}/cancelReason`] = reasonData.reason;
+    updates[`/device-requests/${requestId}/cancelFeedback`] = reasonData.feedback || "";
+
+    await update(ref(db), updates);
+
+    // 6. LOG TO AUDIT
+    await logActivity(
+      "REQUEST_CANCELLED",
+      requestId,
+      `User cancelled request. Reason: ${reasonData.reason}`
+    );
+
+    return { success: true };
+  } catch (error) {
+    if (error instanceof appError) throw error;
+    logger.error("[Request Service]: Cancellation failed.", error);
+    throw new appError(
+      "Failed to cancel request. Please try again later.",
+      true,
+      "request/cancel-failed"
     );
   }
 };

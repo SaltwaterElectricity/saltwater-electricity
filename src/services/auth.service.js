@@ -136,57 +136,65 @@ export const changeUserPassword = async (
 };
 
 /**
- * Registers a new user account.
+ * Decoupled: Sends credentials via email.
+ * Should only be called AFTER successful database provisioning.
  */
+export const sendCredentials = async (userData, password) => {
+  return await sendOnboardingEmail(userData, password);
+};
 
+/**
+ * Registers a new user account (IDENTITY ONLY).
+ * Returns references for DB provisioning and potential rollback.
+ */
 export const registerUserAccount = async (userData) => {
-  const { email, firstName, role } = userData;
+  const { email } = userData;
   let tempApp = null;
 
   try {
     validateEmail(email);
 
     const autoPassword = generateDefaultPassword();
-
     const appName = `TempApp_${Date.now()}_${Math.random().toString(36).substring(7)}`;
 
     tempApp = initializeApp(FIREBASE_CONFIG, appName);
     const tempAuth = getAuth(tempApp);
 
-    // 5. ATOMIC ACCOUNT CREATION
+    // 1. ATOMIC ACCOUNT CREATION (Auth Node only)
     const userCredential = await createUserWithEmailAndPassword(tempAuth, email, autoPassword);
-    const uid = userCredential.user.uid;
-
-    // 6. SECURE CREDENTIAL DELIVERY (SendGrid)
-    const emailResult = await sendOnboardingEmail({ email, firstName, role }, autoPassword);
-    const emailSent = emailResult.emailSent;
-
-    //Memory Management
-    await deleteApp(tempApp);
-    tempApp = null;
-
-    //MINIMAL DATA RETURN
+    
     return {
-      uid,
+      uid: userCredential.user.uid,
       tempPassword: autoPassword,
-      emailSent,
+      tempUser: userCredential.user,
+      tempApp: tempApp,
     };
   } catch (error) {
-    // EMERGENCY CLEANUP
     if (tempApp) {
       try {
         await deleteApp(tempApp);
       } catch {
-        /* silent cleanup fail */
+        /* silent cleanup */
       }
     }
-
     if (error instanceof appError) throw error;
-
-    // ERROR MASKING
     const code = error.code || "default";
-    const message = AUTH_ERROR_MESSAGES[code] || AUTH_ERROR_MESSAGES.default;
-    throw new appError(message, true, code);
+    throw new appError(AUTH_ERROR_MESSAGES[code] || AUTH_ERROR_MESSAGES.default, true, code);
+  }
+};
+
+/**
+ * ROLLBACK UTILITY: Deletes an Auth user if DB provisioning fails.
+ */
+export const deleteAuthUser = async (user) => {
+  if (!user) return;
+  try {
+    const { deleteUser } = await import("firebase/auth");
+    await deleteUser(user);
+    return { success: true };
+  } catch (error) {
+    logger.error("[Auth Service]: Rollback deletion failed.", error);
+    // Don't throw here, we want the original DB error to be the primary one.
   }
 };
 

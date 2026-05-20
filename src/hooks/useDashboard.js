@@ -19,7 +19,6 @@ const transformDevice = (deviceData, now) => {
     ...deviceData,
     // Add derived UI properties
     displayTDS: Number(Number(latest.tds_ppm ?? 0).toFixed(1)),
-    displayTemp: Number(Number(latest.water_temp ?? 0).toFixed(1)),
     isOnline,
     lastSeen: timestamp,
     status: {

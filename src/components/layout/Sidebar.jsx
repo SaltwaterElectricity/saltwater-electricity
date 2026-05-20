@@ -18,7 +18,7 @@ import {
 } from "lucide-react"; // Note: lucide-react in your original
 import { cn } from "../../utils/cn";
 import { Logo } from "../ui/Logo";
-import { ConfirmationModal } from "../ui/ConfirmationModal";
+import { ConfirmationModal } from "../modal";
 import Toast from "../ui/Toast";
 
 /**

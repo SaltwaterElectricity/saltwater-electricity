@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { db } from '../services/firebaseConfig';
+import { db } from '../firebaseConfig';
 import { ref, get, update, query, orderByChild, equalTo, serverTimestamp } from 'firebase/database';
 
 export const useDeviceRegistration = () => {
@@ -17,7 +17,7 @@ export const useDeviceRegistration = () => {
       const normalizedEmail = email.toLowerCase().trim();
 
       // 2. Fetch Device Data & Safety Check
-      const deviceRef = ref(db, `devices/${macAddress}`);
+      const deviceRef = ref(db, `device_information/${macAddress}`);
       const deviceSnap = await get(deviceRef);
 
       if (!deviceSnap.exists()) {
@@ -27,46 +27,41 @@ export const useDeviceRegistration = () => {
       const deviceData = deviceSnap.val();
 
       // Check if the device is already owned
-      if (deviceData.ownerId) {
+      if (deviceData.availability !== "available") {
         throw new Error("This device is already registered to another account.");
       }
 
-      // 3. Email Uniqueness Check (Server-Side Filtering)
-      const ownersRef = ref(db, 'owners');
-      const emailQuery = query(ownersRef, orderByChild('email'), equalTo(normalizedEmail));
-      const ownerSnapshot = await get(emailQuery);
+      // 3. Authority Check: Find existing user UID by email
+      const usersRef = ref(db, "users");
+      const emailQuery = query(usersRef, orderByChild("email"), equalTo(normalizedEmail));
+      const userSnapshot = await get(emailQuery);
 
-      let ownerId;
-      let existingData = {};
-
-      if (ownerSnapshot.exists()) {
-        const entries = Object.entries(ownerSnapshot.val());
-        ownerId = entries[0][0]; 
-        existingData = entries[0][1];
-      } else {
-        ownerId = `user_${Date.now()}`;
+      if (!userSnapshot.exists()) {
+        throw new Error("No registered user found with this email. Please create an account first.");
       }
 
-      const finalDeviceName = userDeviceName?.trim() || deviceData.deviceName || "Unnamed Node";
+      const entries = Object.entries(userSnapshot.val());
+      const uid = entries[0][0]; // Authority: Get the actual Firebase UID
+
+      const finalDeviceName = userDeviceName?.trim() || deviceData.device_name || "Unnamed Node";
 
       // 4. ATOMIC UPDATE (Multi-Path)
       const updates = {};
-      updates[`/devices/${macAddress}/ownerId`] = ownerId;
-      updates[`/devices/${macAddress}/deviceName`] = finalDeviceName;
-      updates[`/devices/${macAddress}/registeredAt`] = serverTimestamp();
-      updates[`/devices/${macAddress}/isConfigured`] = true;
+      
+      // Metadata in device_information
+      updates[`/device_information/${macAddress}/availability`] = "assigned";
+      updates[`/device_information/${macAddress}/device_name`] = finalDeviceName;
 
-      updates[`/owners/${ownerId}`] = {
-        ...existingData, 
-        ...userInfo, 
-        ownerId,
-        email: normalizedEmail,
-        updatedAt: serverTimestamp()
+      // Normalized Binding in device_assignments
+      updates[`/device_assignments/${macAddress}`] = {
+        userId: uid,
+        assignedAt: serverTimestamp(),
+        status: "active"
       };
 
       await update(ref(db), updates);
 
-      return { success: true, ownerId };
+      return { success: true, ownerId: uid };
 
     } catch (err) {
       console.error("Registration Error:", err);

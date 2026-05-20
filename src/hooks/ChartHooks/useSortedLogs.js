@@ -21,7 +21,7 @@ export const useSortedLogs = (logs, maxEntries = 1000) => {
         .filter(log => {
           // Rule: Ignore logs missing a timestamp or "Blackout" logs (both 0)
           const hasTs = !!log.timestamp;
-          const isNotBlackout = !((log.tds_ppm ?? 0) === 0 && (log.water_temp ?? 0) === 0);
+          const isNotBlackout = (log.tds_ppm ?? 0) !== 0;
           return hasTs && isNotBlackout;
         })
         .map(log => ({

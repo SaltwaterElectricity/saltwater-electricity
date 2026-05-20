@@ -1,50 +1,116 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Maximize2, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "../../utils/cn";
-import { GlowLineChart } from "../ui";
 import { ROUTES } from "../../constants/routes";
-import { useHistory } from "../../hooks";
 import { SENSOR_CONFIG, METRICS } from "../../constants";
 
-const MetricRow = ({ label, value, unit, type, status, history }) => (
-  <div className="flex justify-between items-end">
-    <div>
-      <p className="text-[11px] font-bold text-outline uppercase tracking-widest mb-1 font-body-md">
-        {label}
-      </p>
-      <p className="text-xl font-h2 text-on-surface">
-        {value}
-        <span className="text-xs font-normal text-outline ml-1">{unit}</span>
-      </p>
-    </div>
-    <GlowLineChart type={type} status={status} history={history} />
-  </div>
-);
+/**
+ * MetricCard Component
+ * High-density data visualization with dynamic progress indicators.
+ */
+const MetricCard = ({ label, value, unit, type, colorClass }) => {
+  const config = SENSOR_CONFIG[type] || {};
+  const val = parseFloat(value) || 0;
+  
+  // Calculate progress percentage relative to sensor limits
+  const min = config.min || 0;
+  const max = config.max || 100;
+  const progress = Math.min(Math.max(((val - min) / (max - min)) * 100, 0), 100);
 
-export const UserDeviceLayout = ({ telemetry, deviceName, deviceId, onViewHistory }) => {
+  return (
+    <div className="bg-slate-50/80 p-5 rounded-2xl border border-slate-100 transition-all hover:bg-slate-100/50 flex flex-col items-center text-center">
+      <div className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 font-body-md flex flex-col items-center min-h-[20px] justify-center">
+        {label.split(" ").map((word) => (
+          <span key={`${label}-${word}`} className="leading-none">{word}</span>
+        ))}
+      </div>
+      
+      <div className="mb-4 flex-1 flex flex-col items-center justify-center">
+        <p className="text-2xl font-black text-slate-900 tabular-nums leading-none">
+          {value ?? "--"}
+        </p>
+        <p className="text-primary font-black text-[12px] uppercase tracking-[0.2em] mt-2 leading-none">
+          {unit}
+        </p>
+      </div>
+      
+      {/* Progress Indicator Container */}
+      <div className="metric-progress-bar h-1 mt-auto w-full">
+        <div 
+          className={cn("metric-progress-fill", colorClass || "bg-primary")} 
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+    </div>
+  );
+};
+
+/**
+ * ProvisionDeviceCard Component
+ * High-fidelity mirror of the 'Request for Another Device' section.
+ */
+export const ProvisionDeviceCard = ({ onAction }) => {
+  return (
+    <div 
+      onClick={onAction}
+      className="bg-surface-container-low/50 border-2 border-dashed border-primary/20 rounded-[24px] flex flex-row items-center justify-between gap-4 group cursor-pointer hover:bg-surface-container-low hover:border-primary/40 transition-all p-4 sm:p-6 mb-8 animate-fade-in"
+    >
+      <div className="flex items-center gap-4">
+        <div className="w-10 h-10 rounded-full flex items-center justify-center text-white shrink-0 shadow-[0_4px_12px_rgba(10,46,255,0.3)] bg-primary group-hover:scale-110 transition-transform duration-500">
+          <Plus size={24} strokeWidth={3} />
+        </div>
+        <div className="text-left">
+          <h4 className="font-display text-on-surface text-sm sm:text-base font-bold uppercase tracking-tight italic">Request for Another Device</h4>
+          <p className="font-body-md text-on-surface-variant text-[10px] sm:text-xs mt-0.5">Add your saltwater electricity devices with just a click.</p>
+        </div>
+      </div>
+      <div className="flex-shrink-0 hidden md:block">
+        <button className="px-5 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center gap-2 bg-primary text-white shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300 hover:scale-105 active:scale-95">
+          Request New Device
+          <ArrowRight size={14} />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export const UserDeviceLayout = ({ telemetry, deviceName, deviceId, assignment, onViewHistory }) => {
   const navigate = useNavigate();
-  const { logs: history } = useHistory(deviceId, 10);
 
   const getStatusConfig = (tds) => {
     const config = SENSOR_CONFIG[METRICS.TDS];
-    if (tds < config.warning)
+    const val = Number(tds) || 0;
+    
+    if (val < config.warning)
       return {
-        label: "Online",
-        color: "text-tertiary",
-        bg: "bg-tertiary-fixed-dim/20",
-        ping: "bg-tertiary-fixed-dim",
+        label: "Active",
+        color: "text-green-600",
+        bg: "bg-green-50",
+        dot: "bg-green-500",
+        border: "border-green-100",
       };
-    if (tds < config.critical)
+    if (val < config.critical)
       return {
-        label: "Good",
-        color: "text-primary",
-        bg: "bg-primary-container/10",
-        ping: "bg-primary-container",
+        label: "Check",
+        color: "text-orange-600",
+        bg: "bg-orange-50",
+        dot: "bg-orange-500",
+        border: "border-orange-100",
       };
-    return { label: "Warning", color: "text-error", bg: "bg-error/10", ping: "bg-error" };
+    return { 
+      label: "Critical", 
+      color: "text-red-600", 
+      bg: "bg-red-50", 
+      dot: "bg-red-500",
+      border: "border-red-100",
+    };
   };
 
-  const status = getStatusConfig(telemetry?.tds || 0);
+  // 1. NORMALIZED DATA ACCESS: Use pre-formatted service keys with strict zero fallbacks
+  const voltage = telemetry?.voltage ?? 0;
+  const current = telemetry?.current ?? 0;
+  const tds = telemetry?.tds ?? 0;
+  const status = getStatusConfig(tds);
 
   const handleAnalyticsRedirect = () => {
     if (onViewHistory) {
@@ -55,51 +121,75 @@ export const UserDeviceLayout = ({ telemetry, deviceName, deviceId, onViewHistor
     }
   };
 
+  // 2. TIMING LOGIC: Multi-tier fallback (Latest Sync -> Assignment Date -> Never)
+  const displayTimestamp = telemetry?.timestamp || assignment?.timestamp || assignment?.assignedAt;
+
+  const lastSync = displayTimestamp 
+    ? new Date(displayTimestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' • ' + 
+      new Date(displayTimestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    : "Never";
+
   return (
-    <div className="space-y-6 animate-fadeIn">
-      <div className="flex justify-between items-start">
-        <div className="space-y-1">
-          <h3 className="font-h2 text-xl font-bold text-on-surface tracking-tight leading-tight">
-            {deviceName || "Aqua Unit"}
-          </h3>
-          <p className="text-xs font-mono text-outline">ID: {deviceId}</p>
+    <div className="bg-cardBg rounded-[24px] shadow-premium p-6 sm:p-8 relative overflow-hidden animate-fade-in flex flex-col h-full border border-white/40">
+      {/* Header Section */}
+      <div className="flex items-start justify-between mb-8">
+        <div className="min-w-0">
+          <div className="flex items-center space-x-2 mb-1.5 flex-wrap gap-y-2">
+            <h3 className="text-xl sm:text-2xl font-black text-slate-900 uppercase tracking-tight italic font-display truncate">
+              {deviceName || "Aqua Unit"}
+            </h3>
+            <span className={cn(
+              "flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider border shrink-0",
+              status.bg,
+              status.color,
+              status.border
+            )}>
+              <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", status.dot)} />
+              <span>{status.label}</span>
+            </span>
+          </div>
+          <p className="text-slate-400 text-[10px] font-bold uppercase tracking-tight truncate">{lastSync} • Coastal Hub</p>
         </div>
-        <div
-          className={cn(
-            "px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider",
-            status.bg,
-            status.color
-          )}
+        
+        <button 
+          onClick={handleAnalyticsRedirect}
+          className="w-9 h-9 flex items-center justify-center text-slate-400 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors shrink-0"
         >
-          {status.label}
-        </div>
+          <Maximize2 size={16} />
+        </button>
       </div>
 
-      <div className="space-y-8 py-4">
-        <MetricRow
+      {/* Metrics Grid - 3 Columns (Voltage, Total Current, Salinity) */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-8 flex-1">
+        <MetricCard
           label="Voltage"
-          value={telemetry?.voltage || "--"}
+          value={voltage}
           unit="V"
-          type="voltage"
-          status={status.label === "Warning" ? "Warning" : "Online"}
-          history={history}
+          type={METRICS.VOLTAGE}
+          colorClass="bg-primary"
         />
-        <MetricRow
+        <MetricCard
+          label="Current Total"
+          value={current}
+          unit="A"
+          type={METRICS.CURRENT}
+          colorClass="bg-cyan-400"
+        />
+        <MetricCard
           label="Salinity"
-          value={telemetry?.tds || "--"}
-          unit="PSU"
-          type="salinity"
-          status={status.label === "Warning" ? "Warning" : "Online"}
-          history={history}
+          value={tds}
+          unit="PPM"
+          type={METRICS.TDS}
+          colorClass="bg-teal-400"
         />
       </div>
 
+      {/* Primary Action */}
       <button
         onClick={handleAnalyticsRedirect}
-        className="group w-full py-4 ocean-gradient text-white font-bold text-sm tracking-wide hover:opacity-90 transition-opacity flex items-center justify-center gap-2 rounded-2xl"
+        className="w-full bg-primary text-white py-4 rounded-2xl font-black text-[11px] shadow-xl shadow-primary/20 btn-interaction uppercase tracking-widest mt-auto"
       >
-        View Analytics
-        <ArrowRight size={16} />
+        View Details
       </button>
     </div>
   );

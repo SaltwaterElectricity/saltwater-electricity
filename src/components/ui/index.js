@@ -19,7 +19,4 @@ export { default as MetricCard } from "./MetricCard";
 export { AIInsightCard } from "./AIInsightCard";
 export { default as InsightPanel } from "./InsightPanel";
 export { default as AccessControlTable } from "./AccessControlTable";
-export { default as EventFeed } from "./EventFeed";
-export { UserRow } from "./UserRow";
-export { EventItem } from "./EventItem";
 export { MiniStat, StatusRow, SectionHeader, NavButton } from "./AuditComponents";

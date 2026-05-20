@@ -6,8 +6,9 @@ import { cn } from "../../utils/cn";
 import { useNotification } from "../../context/useNotification";
 
 // Services
-import { registerUserAccount } from "../../services/auth.service";
+import { registerUserAccount, sendCredentials, deleteAuthUser } from "../../services/auth.service";
 import { provisionUserSystem } from "../../services/user.service";
+import { deleteApp } from "firebase/app";
 
 // Constants & Components
 import { ROUTES } from "../../constants/routes";
@@ -62,16 +63,28 @@ const UserRegistration = () => {
 
     setIsSubmitting(true);
     setServerError("");
+    let regResult = null;
 
     try {
-      //AUTHENTICATION (Firebase Auth)
-      const registrationResult = await registerUserAccount(tempData);
+      // 1. AUTHENTICATION (Firebase Auth - Identity Only)
+      regResult = await registerUserAccount(tempData);
 
-      //DATABASE PROVISIONING (Realtime Database)
-      await provisionUserSystem(registrationResult.uid, {
-        ...tempData,
-        password: registrationResult.tempPassword,
-      });
+      // 2. DATABASE PROVISIONING (Realtime Database)
+      try {
+        await provisionUserSystem(regResult.uid, {
+          ...tempData,
+          password: regResult.tempPassword,
+        });
+      } catch (dbError) {
+        // 🚨 ROLLBACK: Delete the Auth user if DB setup fails to prevent orphaned accounts
+        await deleteAuthUser(regResult.tempUser);
+        throw new Error(
+          `System Provisioning Failed: ${dbError.message || "Database connection error."}`
+        );
+      }
+
+      // 3. SECURE CREDENTIAL DELIVERY (SendGrid - Only after DB success)
+      await sendCredentials(tempData, regResult.tempPassword);
 
       //SUCCESS NOTIFICATION
       showNotification(
@@ -91,6 +104,14 @@ const UserRegistration = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
       setIsModalOpen(false);
     } finally {
+      // 4. MEMORY MANAGEMENT: Always delete the temporary app instance
+      if (regResult?.tempApp) {
+        try {
+          await deleteApp(regResult.tempApp);
+        } catch (cleanupErr) {
+          console.error("Temp app cleanup failed:", cleanupErr);
+        }
+      }
       setIsSubmitting(false);
     }
   };

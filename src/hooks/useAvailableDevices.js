@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db } from '../services/firebaseConfig'; // Ensure this points to Realtime Database
+import { db } from '../firebaseConfig'; // Fixed broken import path
 import { ref, onValue, query, orderByChild, equalTo } from 'firebase/database';
 
 /**
@@ -15,12 +15,12 @@ export const useAvailableDevices = () => {
     let isMounted = true;
 
     // 1. Server-Side Filtering Logic
-    // Only fetch nodes where ownerId is explicitly null
-    const devicesRef = ref(db, 'devices');
+    // Only fetch nodes where availability is explicitly 'available'
+    const devicesRef = ref(db, 'device_information');
     const availableQuery = query(
       devicesRef, 
-      orderByChild('ownerId'), 
-      equalTo(null)
+      orderByChild('availability'), 
+      equalTo('available')
     );
 
     // 2. Real-time Subscription

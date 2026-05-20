@@ -11,7 +11,7 @@ export const AccountabilitySection = ({ name, address, assignedAt }) => {
   };
 
   return (
-    <div className="flex flex-col gap-8 animate-fadeIn">
+    <div className="flex flex-col gap-8 animate-fade-in">
       <SectionHeader title="Deployment Data" sub="Chain of custody and installation metadata" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="p-6 bg-blue-50/40 rounded-3xl border border-blue-100/50 backdrop-blur-sm">

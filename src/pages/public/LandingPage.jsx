@@ -2,7 +2,6 @@ import { Link, useNavigate } from "react-router-dom";
 import LoginHero from "../../components/auth/LoginHero";
 import { ROUTES } from "../../constants/routes";
 import { Footer } from "../../layout";
-import "../../styles/landing.css";
 
 // LOCAL ASSETS
 import pupLogo from "../../assets/landing-page-img/pup-unisan-logo.png";

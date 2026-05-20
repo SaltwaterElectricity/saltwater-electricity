@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import { useTimeout } from "../../hooks/useTimeout";
 import { Sidebar } from "./Sidebar";
 import { NavbarProfile } from "./NavbarProfile";
-import { SettingsModal } from "../profile/SettingsModal";
+import { SettingsModal } from "../modal/SettingsModal";
 import { useAuth } from "../../context/AuthContext";
 import { Menu, LayoutDashboard } from "lucide-react";
 import { SpinnerIcon } from "../../components/ui";

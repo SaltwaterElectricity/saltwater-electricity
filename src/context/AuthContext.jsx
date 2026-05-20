@@ -30,59 +30,62 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       logger.error("Auth Sync Error:", error);
+      // SAFETY: If sync fails (e.g. token expired), clear states to trigger fallback redirects
+      setCurrentUser(null);
+      setUser(null);
     } finally {
-      // Only set loading to false. We don't want to set it to true
-      // during background syncs to avoid flickering the global splash.
       setLoading(false);
     }
   }, []);
 
   /**
    * FORCE TOKEN REFRESH
-   * Used to immediately update permissions when a role is changed.
    */
   const forceTokenRefresh = useCallback(async () => {
     if (!currentUser) return;
-    // For background refreshes, we don't set global loading=true
-    // to prevent the app from unmounting and showing the splash screen.
     await syncUserContext(currentUser, true);
   }, [currentUser, syncUserContext]);
 
+  // 2. Auth State Persistence Subscription
   useEffect(() => {
-    const currentListeners = listeners.current;
     const unsubscribeAuth = subscribeToAuthChanges((firebaseUser) => {
-      // We don't call setLoading(true) here because it would trigger
-      // the global splash screen in App.jsx and unmount the current view.
-      // Initial loading is true by default, and syncUserContext will set it to false.
-
-      if (firebaseUser) {
-        syncUserContext(firebaseUser);
-
-        // 2. REAL-TIME RBAC MONITORING
-        // We listen to the DB nodes. If they change, it's likely a claim was updated by a backend process.
-        const roleRef = ref(db, `roles/${firebaseUser.uid}`);
-        const accountRef = ref(db, `accounts/${firebaseUser.uid}`);
-
-        currentListeners.role = onValue(roleRef, (_snapshot) => {
-          // If the role node in DB changes, refresh the token to get new claims
-          forceTokenRefresh();
-        });
-
-        currentListeners.account = onValue(accountRef, (_snapshot) => {
-          // If status changes (e.g. suspended), refresh token or re-sync
-          syncUserContext(firebaseUser);
-        });
-      } else {
-        syncUserContext(null);
-      }
+      syncUserContext(firebaseUser);
     });
+    return () => unsubscribeAuth();
+  }, [syncUserContext]);
+
+  // 3. Real-time DB Monitoring (Scoped to UID to avoid loops)
+  useEffect(() => {
+    if (!currentUser?.uid) {
+      if (listeners.current.role) listeners.current.role();
+      if (listeners.current.account) listeners.current.account();
+      listeners.current = { role: null, account: null };
+      return;
+    }
+
+    const uid = currentUser.uid;
+    const roleRef = ref(db, `roles/${uid}`);
+    const accountRef = ref(db, `accounts/${uid}`);
+
+    // Listen to Role changes
+    listeners.current.role = onValue(
+      roleRef, 
+      () => forceTokenRefresh(),
+      (err) => logger.warn("RBAC Monitor Interrupted:", err)
+    );
+
+    // Listen to Account status changes
+    listeners.current.account = onValue(
+      accountRef, 
+      () => syncUserContext(currentUser),
+      (err) => logger.warn("Status Monitor Interrupted:", err)
+    );
 
     return () => {
-      unsubscribeAuth();
-      if (currentListeners.role) currentListeners.role();
-      if (currentListeners.account) currentListeners.account();
+      if (listeners.current.role) listeners.current.role();
+      if (listeners.current.account) listeners.current.account();
     };
-  }, [syncUserContext, forceTokenRefresh]);
+  }, [currentUser, forceTokenRefresh, syncUserContext]);
 
   // Memoized Helpers for App.jsx and ProtectedRoute
   const value = useMemo(() => {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "./context/useAuth";
-import { AnimatedLogo } from "./components";
+import { AnimatedLogo, GlobalErrorBoundary } from "./components";
 import { AppRoutes } from "./route/AppRoutes";
 
 function App() {
@@ -25,7 +25,11 @@ function App() {
     );
   }
 
-  return <AppRoutes />;
+  return (
+    <GlobalErrorBoundary>
+      <AppRoutes />
+    </GlobalErrorBoundary>
+  );
 }
 
 export default App;

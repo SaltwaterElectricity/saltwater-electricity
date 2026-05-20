@@ -5,7 +5,7 @@ import { db } from "./firebaseConfig";
  * SERVICE: Subscribe to ALL devices (Fleet View)
  */
 export const subscribeToAllDevices = (onUpdate) => {
-  const devicesRef = ref(db, 'devices');
+  const devicesRef = ref(db, 'readings');
   return onValue(devicesRef, (snapshot) => {
     const data = snapshot.val() || {};
     onUpdate(data);
@@ -17,13 +17,12 @@ export const subscribeToAllDevices = (onUpdate) => {
  */
 export const subscribeToDeviceLatest = (deviceId, onUpdate) => {
   if (!deviceId) return () => {}; 
-  const latestRef = ref(db, `devices/${deviceId}/latest`); 
+  const latestRef = ref(db, `readings/${deviceId}/latest`); 
   
   return onValue(latestRef, (snapshot) => {
     const data = snapshot.val();
     onUpdate(data ? {
       tds_ppm: data.tds_ppm ?? 0,
-      water_temp: data.water_temp ?? 0,
       timestamp: data.timestamp || Date.now()
     } : {});
   }, (err) => console.error(`🔥 Latest Data Error:`, err));
@@ -36,7 +35,7 @@ export const subscribeToDeviceLatest = (deviceId, onUpdate) => {
 export const subscribeToDeviceLogs = (deviceId, limit = 50, onUpdate, startDate = null) => {
   if (!deviceId) return () => {};
 
-  const logsRef = ref(db, `devices/${deviceId}/logs`);
+  const logsRef = ref(db, `readings/${deviceId}/logs`);
   let logsQuery;
 
   if (startDate) {
@@ -67,7 +66,6 @@ export const subscribeToDeviceLogs = (deviceId, limit = 50, onUpdate, startDate 
       .map(([id, values]) => ({ 
         id, 
         tds_ppm: Number(values.tds_ppm) || 0,
-        water_temp: Number(values.water_temp) || 0,
         timestamp: values.timestamp || Date.now(),
         __normalizedTs: values.timestamp || Date.now()
       }))

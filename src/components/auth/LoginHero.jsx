@@ -5,7 +5,7 @@ import { cn } from "../../utils/cn";
  * LoginHero Component
  * Ported from landingPage.html branding section.
  * Features a CSS-based 3D animated cube logo and brand typography.
- * Synchronized with landing.css.
+ * Managed via modular CSS (src/styles/components.css).
  */
 const LoginHero = () => {
   const [status, setStatus] = useState("idle"); // idle -> shining -> looping

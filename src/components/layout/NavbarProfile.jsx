@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, memo, useCallback } from "react";
 import { useProfile } from "../../hooks/useProfile";
+import { useUI } from "../../context/useUI";
 import { logoutUser } from "../../services/auth.service";
-import { LogOut, Settings } from "lucide-react"; // 👈 Pinalitan ng Settings icon
+import { LogOut, Settings } from "lucide-react";
 import { cn } from "../../utils/cn";
 import Toast from "../ui/Toast";
 import SpinnerIcon from "../ui/SpinnerIcon";
@@ -10,6 +11,7 @@ export const NavbarProfile = memo(({ currentUid = "" }) => {
   const dropdownRef = useRef(null);
 
   const { profile, loading } = useProfile(currentUid);
+  const { openSettings } = useUI();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -29,12 +31,10 @@ export const NavbarProfile = memo(({ currentUid = "" }) => {
 
   const handleToggle = () => setIsOpen((prev) => !prev);
 
-  // 🛰️ DISPATCH EVENT TO OPEN MODAL (Pumupunta sa SettingsModal)
+  // 🛰️ USE CONTEXT TO OPEN MODAL
   const handleOpenSettings = (tabName) => {
-    setIsOpen(false); // Isara muna ang dropdown
-
-    // Sabihan ang SettingsModal na magbukas sa specific tab
-    window.dispatchEvent(new CustomEvent("open-profile-settings", { detail: tabName }));
+    setIsOpen(false);
+    openSettings(tabName);
   };
 
   const handleLogout = async () => {

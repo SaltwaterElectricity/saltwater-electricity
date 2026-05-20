@@ -10,7 +10,7 @@ export const ConsumptionSection = ({ logs }) => {
   const avgUsage = totalWatts / (logs.length || 1);
 
   return (
-    <div className="flex flex-col gap-8 animate-fadeIn">
+    <div className="flex flex-col gap-8 animate-fade-in">
       <SectionHeader title="Power Audit" sub="Energy usage and efficiency calculations" />
       <div className="flex flex-col items-center justify-center p-12 bg-slate-900 rounded-[32px] text-white shadow-2xl relative overflow-hidden group">
         <div className="absolute inset-0 bg-blue-600/10 blur-3xl group-hover:bg-blue-600/20 transition-colors duration-700" />

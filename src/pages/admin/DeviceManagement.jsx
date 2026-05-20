@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useAuth } from "../../context/useAuth";
 import { useDevices } from "../../hooks";
-import { DeviceCard, AssignDeviceModal, ConfirmationModal } from "../../components";
+import { ManagedDeviceCard, AssignDeviceModal, ConfirmationModal } from "../../components";
 import { useNotification } from "../../context/useNotification";
 import { logger } from "../../utils/logger";
 import { deprovisionDevice } from "../../services/device.service";
@@ -192,12 +192,12 @@ const DeviceSection = ({ title, items, onAction, currentUser, isEmpty, isDimmed 
     ) : (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {items.map((device) => (
-          <DeviceCard
+          <ManagedDeviceCard
             key={device.id || device.device_id}
             device={device}
-            currentUser={currentUser}
-            onAction={onAction}
-            viewMode="management"
+            isAdmin={currentUser?.role === "ADMIN" || currentUser?.role === "SUPER_ADMIN"}
+            onAssignClick={(d) => onAction("ASSIGN_DEVICE", d)}
+            onForceRelease={(id) => onAction("FORCE_DEPROVISION", id)}
           />
         ))}
       </div>
