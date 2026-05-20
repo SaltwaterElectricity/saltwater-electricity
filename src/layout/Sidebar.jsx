@@ -37,10 +37,12 @@ const SidebarLink = memo(({ to, icon, label, badgeCount, isResident }) => (
       {label}
     </span>
     {badgeCount > 0 && (
-      <span className={cn(
-        "absolute right-3 top-3 w-2 h-2 rounded-full ring-2",
-        isResident ? "bg-white ring-primary" : "bg-blue-600 ring-white"
-      )} />
+      <span
+        className={cn(
+          "absolute right-3 top-3 w-2 h-2 rounded-full ring-2",
+          isResident ? "bg-white ring-primary" : "bg-blue-600 ring-white"
+        )}
+      />
     )}
   </NavLink>
 ));
@@ -96,31 +98,42 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
         onClose={() => setShowToast(false)}
       />
 
-      <aside className={cn(
-        "hidden md:flex flex-col h-screen w-20 hover:w-64 transition-all duration-300 fixed left-0 top-0 p-4 z-50 group/sidebar shadow-xl",
-        isResident 
-          ? "sidebar-premium-gradient text-white" 
-          : "bg-white/70 backdrop-blur-md border-r border-white/40 text-slate-800"
-      )}>
+      <aside
+        className={cn(
+          "hidden md:flex flex-col h-screen w-20 hover:w-64 transition-all duration-300 fixed left-0 top-0 p-4 z-50 group/sidebar shadow-xl",
+          isResident
+            ? "sidebar-premium-gradient text-white"
+            : "bg-white/70 backdrop-blur-md border-r border-white/40 text-slate-800"
+        )}
+      >
         {/* Brand Logo Section */}
         <div className="mb-10 px-2 flex flex-col items-center group-hover/sidebar:items-start">
-          <h1 className={cn(
-            "text-xl font-black tracking-tighter",
-            isResident ? "text-white" : "text-primary"
-          )}>
+          <h1
+            className={cn(
+              "text-xl font-black tracking-tighter",
+              isResident ? "text-white" : "text-primary"
+            )}
+          >
             S<span className="hidden group-hover/sidebar:inline">altwater Electricity</span>
           </h1>
-          <p className={cn(
-            "font-display text-[10px] uppercase tracking-widest font-bold hidden group-hover/sidebar:block",
-            isResident ? "text-white/60" : "text-outline"
-          )}>
+          <p
+            className={cn(
+              "font-display text-[10px] uppercase tracking-widest font-bold hidden group-hover/sidebar:block",
+              isResident ? "text-white/60" : "text-outline"
+            )}
+          >
             {userRole === ROLES.SUPER_ADMIN ? "SuperAdmin" : isAdmin ? "Administrator" : "Resident"}
           </p>
         </div>
 
         {/* Primary Navigation */}
         <nav className="flex-1 space-y-1 overflow-y-auto custom-scrollbar-hide">
-          <SidebarLink to={ROUTES.DASHBOARD} icon="dashboard" label="Dashboard" isResident={isResident} />
+          <SidebarLink
+            to={ROUTES.DASHBOARD}
+            icon="dashboard"
+            label="Dashboard"
+            isResident={isResident}
+          />
 
           <SidebarLink
             to={ROUTES.SMART_AQUA_MONITOR}
@@ -144,7 +157,12 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
                 label="Device Management"
                 isResident={isResident}
               />
-              <SidebarLink to={ROUTES.ADMIN_USER_MANAGEMENT} icon="group" label="User Management" isResident={isResident} />
+              <SidebarLink
+                to={ROUTES.ADMIN_USER_MANAGEMENT}
+                icon="group"
+                label="User Management"
+                isResident={isResident}
+              />
             </>
           )}
 
@@ -167,8 +185,18 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
 
           {isAdmin && (
             <>
-              <SidebarLink to={ROUTES.ADMIN_AUDIT_LOGS} icon="insights" label="Audit Logs" isResident={isResident} />
-              <SidebarLink to="/predictive" icon="engineering" label="Predictive Maintenance" isResident={isResident} />
+              <SidebarLink
+                to={ROUTES.ADMIN_AUDIT_LOGS}
+                icon="insights"
+                label="Audit Logs"
+                isResident={isResident}
+              />
+              <SidebarLink
+                to="/predictive"
+                icon="engineering"
+                label="Predictive Maintenance"
+                isResident={isResident}
+              />
             </>
           )}
 
@@ -178,12 +206,14 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
 
         {/* Bottom Actions */}
         <div className="mt-auto pt-6 space-y-1">
-          <button className={cn(
-            "w-full rounded-xl font-bold mb-4 transition-transform active:scale-95 hidden group-hover/sidebar:block whitespace-nowrap overflow-hidden h-12 flex items-center justify-center group-hover/sidebar:px-4 shadow-lg",
-            isResident 
-              ? "bg-white/20 text-white shadow-black/10" 
-              : "ocean-gradient text-white shadow-blue-200"
-          )}>
+          <button
+            className={cn(
+              "w-full rounded-xl font-bold mb-4 transition-transform active:scale-95 hidden group-hover/sidebar:block whitespace-nowrap overflow-hidden h-12 flex items-center justify-center group-hover/sidebar:px-4 shadow-lg",
+              isResident
+                ? "bg-white/20 text-white shadow-black/10"
+                : "ocean-gradient text-white shadow-blue-200"
+            )}
+          >
             <span className="material-symbols-outlined group-hover/sidebar:mr-2">description</span>
             <span className="hidden group-hover/sidebar:inline">Generate Report</span>
           </button>
@@ -191,7 +221,9 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
           <a
             className={cn(
               "flex items-center space-x-3 px-4 py-2 transition-colors justify-center group-hover/sidebar:justify-start rounded-lg",
-              isResident ? "text-white/70 hover:bg-white/10 hover:text-white" : "text-slate-500 hover:text-blue-600"
+              isResident
+                ? "text-white/70 hover:bg-white/10 hover:text-white"
+                : "text-slate-500 hover:text-blue-600"
             )}
             href="#"
           >
@@ -205,7 +237,9 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
             onClick={() => setIsLogoutModalOpen(true)}
             className={cn(
               "w-full flex items-center space-x-3 px-4 py-2 transition-colors justify-center group-hover/sidebar:justify-start rounded-lg",
-              isResident ? "text-white/70 hover:bg-white/10 hover:text-white" : "text-slate-500 hover:text-error"
+              isResident
+                ? "text-white/70 hover:bg-white/10 hover:text-white"
+                : "text-slate-500 hover:text-error"
             )}
           >
             <span className="material-symbols-outlined">logout</span>

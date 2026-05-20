@@ -115,7 +115,11 @@ export const cancelDeviceRequest = async (requestId, reasonData) => {
 
     // 2. SECURITY GUARD: Ownership
     if (requestData.userId !== currentUser.uid) {
-      throw new appError("Unauthorized: You do not own this request.", true, "auth/insufficient-clearance");
+      throw new appError(
+        "Unauthorized: You do not own this request.",
+        true,
+        "auth/insufficient-clearance"
+      );
     }
 
     // 3. SECURITY GUARD: Status check (Only pending can be cancelled)

@@ -88,7 +88,7 @@ export const transformReading = (data) => {
   const bulb = Number(transformed.bulb_ma) || 0;
   const esp = Number(transformed.esp_ma) || 0;
   const sensor = Number(transformed.sensor_ma) || 0;
-  
+
   // Convert total milliamps to Amps
   transformed.current = Number(((bulb + esp + sensor) / 1000).toFixed(2));
 
@@ -200,7 +200,7 @@ export const updateBulbState = async (deviceId, newState) => {
     const latestRef = ref(db, `readings/${deviceId}/latest`);
     const snapshot = await get(latestRef);
     const currentData = snapshot.val() || {};
-    
+
     const clientTs = Date.now();
     const now = serverTimestamp();
     const updates = {};

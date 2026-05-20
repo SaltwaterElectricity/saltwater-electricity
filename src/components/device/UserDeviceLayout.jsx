@@ -11,7 +11,7 @@ import { SENSOR_CONFIG, METRICS } from "../../constants";
 const MetricCard = ({ label, value, unit, type, colorClass }) => {
   const config = SENSOR_CONFIG[type] || {};
   const val = parseFloat(value) || 0;
-  
+
   // Calculate progress percentage relative to sensor limits
   const min = config.min || 0;
   const max = config.max || 100;
@@ -21,10 +21,12 @@ const MetricCard = ({ label, value, unit, type, colorClass }) => {
     <div className="bg-slate-50/80 p-5 rounded-2xl border border-slate-100 transition-all hover:bg-slate-100/50 flex flex-col items-center text-center">
       <div className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 font-body-md flex flex-col items-center min-h-[20px] justify-center">
         {label.split(" ").map((word) => (
-          <span key={`${label}-${word}`} className="leading-none">{word}</span>
+          <span key={`${label}-${word}`} className="leading-none">
+            {word}
+          </span>
         ))}
       </div>
-      
+
       <div className="mb-4 flex-1 flex flex-col items-center justify-center">
         <p className="text-2xl font-black text-slate-900 tabular-nums leading-none">
           {value ?? "--"}
@@ -33,11 +35,11 @@ const MetricCard = ({ label, value, unit, type, colorClass }) => {
           {unit}
         </p>
       </div>
-      
+
       {/* Progress Indicator Container */}
       <div className="metric-progress-bar h-1 mt-auto w-full">
-        <div 
-          className={cn("metric-progress-fill", colorClass || "bg-primary")} 
+        <div
+          className={cn("metric-progress-fill", colorClass || "bg-primary")}
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -51,7 +53,7 @@ const MetricCard = ({ label, value, unit, type, colorClass }) => {
  */
 export const ProvisionDeviceCard = ({ onAction }) => {
   return (
-    <div 
+    <div
       onClick={onAction}
       className="bg-surface-container-low/50 border-2 border-dashed border-primary/20 rounded-[24px] flex flex-row items-center justify-between gap-4 group cursor-pointer hover:bg-surface-container-low hover:border-primary/40 transition-all p-4 sm:p-6 mb-8 animate-fade-in"
     >
@@ -60,8 +62,12 @@ export const ProvisionDeviceCard = ({ onAction }) => {
           <Plus size={24} strokeWidth={3} />
         </div>
         <div className="text-left">
-          <h4 className="font-display text-on-surface text-sm sm:text-base font-bold uppercase tracking-tight italic">Request for Another Device</h4>
-          <p className="font-body-md text-on-surface-variant text-[10px] sm:text-xs mt-0.5">Add your saltwater electricity devices with just a click.</p>
+          <h4 className="font-display text-on-surface text-sm sm:text-base font-bold uppercase tracking-tight italic">
+            Request for Another Device
+          </h4>
+          <p className="font-body-md text-on-surface-variant text-[10px] sm:text-xs mt-0.5">
+            Add your saltwater electricity devices with just a click.
+          </p>
         </div>
       </div>
       <div className="flex-shrink-0 hidden md:block">
@@ -74,13 +80,19 @@ export const ProvisionDeviceCard = ({ onAction }) => {
   );
 };
 
-export const UserDeviceLayout = ({ telemetry, deviceName, deviceId, assignment, onViewHistory }) => {
+export const UserDeviceLayout = ({
+  telemetry,
+  deviceName,
+  deviceId,
+  assignment,
+  onViewHistory,
+}) => {
   const navigate = useNavigate();
 
   const getStatusConfig = (tds) => {
     const config = SENSOR_CONFIG[METRICS.TDS];
     const val = Number(tds) || 0;
-    
+
     if (val < config.warning)
       return {
         label: "Active",
@@ -97,10 +109,10 @@ export const UserDeviceLayout = ({ telemetry, deviceName, deviceId, assignment, 
         dot: "bg-orange-500",
         border: "border-orange-100",
       };
-    return { 
-      label: "Critical", 
-      color: "text-red-600", 
-      bg: "bg-red-50", 
+    return {
+      label: "Critical",
+      color: "text-red-600",
+      bg: "bg-red-50",
       dot: "bg-red-500",
       border: "border-red-100",
     };
@@ -124,9 +136,14 @@ export const UserDeviceLayout = ({ telemetry, deviceName, deviceId, assignment, 
   // 2. TIMING LOGIC: Multi-tier fallback (Latest Sync -> Assignment Date -> Never)
   const displayTimestamp = telemetry?.timestamp || assignment?.timestamp || assignment?.assignedAt;
 
-  const lastSync = displayTimestamp 
-    ? new Date(displayTimestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' • ' + 
-      new Date(displayTimestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  const lastSync = displayTimestamp
+    ? new Date(displayTimestamp).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }) +
+      " • " +
+      new Date(displayTimestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
     : "Never";
 
   return (
@@ -138,20 +155,24 @@ export const UserDeviceLayout = ({ telemetry, deviceName, deviceId, assignment, 
             <h3 className="text-xl sm:text-2xl font-black text-slate-900 uppercase tracking-tight italic font-display truncate">
               {deviceName || "Aqua Unit"}
             </h3>
-            <span className={cn(
-              "flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider border shrink-0",
-              status.bg,
-              status.color,
-              status.border
-            )}>
+            <span
+              className={cn(
+                "flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider border shrink-0",
+                status.bg,
+                status.color,
+                status.border
+              )}
+            >
               <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", status.dot)} />
               <span>{status.label}</span>
             </span>
           </div>
-          <p className="text-slate-400 text-[10px] font-bold uppercase tracking-tight truncate">{lastSync} • Coastal Hub</p>
+          <p className="text-slate-400 text-[10px] font-bold uppercase tracking-tight truncate">
+            {lastSync} • Coastal Hub
+          </p>
         </div>
-        
-        <button 
+
+        <button
           onClick={handleAnalyticsRedirect}
           className="w-9 h-9 flex items-center justify-center text-slate-400 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors shrink-0"
         >

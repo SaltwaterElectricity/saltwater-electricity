@@ -7,10 +7,10 @@
   --shadow-premium: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 15px -5px rgba(0, 0, 0, 0.03);
 
   /* COLORS */
-  --color-primary: #0A2EFF;
-  --color-sidebar: #081AAB;
-  --color-bgMain: #F8FAFC;
-  --color-cardBg: #FFFFFF;
+  --color-primary: #0a2eff;
+  --color-sidebar: #081aab;
+  --color-bgMain: #f8fafc;
+  --color-cardBg: #ffffff;
   --color-on-primary-fixed-variant: #004c6e;
   --color-surface-container-highest: #dee3e9;
   --color-on-secondary-container: #1d3989;
@@ -276,7 +276,7 @@
   }
 
   .sidebar-premium-gradient {
-    background: linear-gradient(180deg, #1032FF 0%, #081AAB 100%);
+    background: linear-gradient(180deg, #1032ff 0%, #081aab 100%);
   }
 }
 

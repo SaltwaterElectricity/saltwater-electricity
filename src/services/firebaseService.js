@@ -1,31 +1,51 @@
-import { ref, onValue, query, limitToLast, orderByChild, startAt, limitToFirst } from "firebase/database";
+import {
+  ref,
+  onValue,
+  query,
+  limitToLast,
+  orderByChild,
+  startAt,
+  limitToFirst,
+} from "firebase/database";
 import { db } from "./firebaseConfig";
 
 /**
  * SERVICE: Subscribe to ALL devices (Fleet View)
  */
 export const subscribeToAllDevices = (onUpdate) => {
-  const devicesRef = ref(db, 'readings');
-  return onValue(devicesRef, (snapshot) => {
-    const data = snapshot.val() || {};
-    onUpdate(data);
-  }, (err) => console.error("🔥 Fleet Subscription Error:", err));
+  const devicesRef = ref(db, "readings");
+  return onValue(
+    devicesRef,
+    (snapshot) => {
+      const data = snapshot.val() || {};
+      onUpdate(data);
+    },
+    (err) => console.error("🔥 Fleet Subscription Error:", err)
+  );
 };
 
 /**
  * SERVICE: Subscribe to a single device's LATEST data
  */
 export const subscribeToDeviceLatest = (deviceId, onUpdate) => {
-  if (!deviceId) return () => {}; 
-  const latestRef = ref(db, `readings/${deviceId}/latest`); 
-  
-  return onValue(latestRef, (snapshot) => {
-    const data = snapshot.val();
-    onUpdate(data ? {
-      tds_ppm: data.tds_ppm ?? 0,
-      timestamp: data.timestamp || Date.now()
-    } : {});
-  }, (err) => console.error(`🔥 Latest Data Error:`, err));
+  if (!deviceId) return () => {};
+  const latestRef = ref(db, `readings/${deviceId}/latest`);
+
+  return onValue(
+    latestRef,
+    (snapshot) => {
+      const data = snapshot.val();
+      onUpdate(
+        data
+          ? {
+              tds_ppm: data.tds_ppm ?? 0,
+              timestamp: data.timestamp || Date.now(),
+            }
+          : {}
+      );
+    },
+    (err) => console.error(`🔥 Latest Data Error:`, err)
+  );
 };
 
 /**
@@ -45,12 +65,7 @@ export const subscribeToDeviceLogs = (deviceId, limit = 50, onUpdate, startDate 
      * 2. Start at the chosen millisecond timestamp
      * 3. Take the first X logs from that point forward
      */
-    logsQuery = query(
-      logsRef, 
-      orderByChild('timestamp'), 
-      startAt(startDate), 
-      limitToFirst(limit)
-    );
+    logsQuery = query(logsRef, orderByChild("timestamp"), startAt(startDate), limitToFirst(limit));
   } else {
     /**
      * LIVE MODE:
@@ -59,19 +74,23 @@ export const subscribeToDeviceLogs = (deviceId, limit = 50, onUpdate, startDate 
     logsQuery = query(logsRef, limitToLast(limit));
   }
 
-  return onValue(logsQuery, (snapshot) => {
-    const data = snapshot.val() || {};
-    
-    const logsArray = Object.entries(data)
-      .map(([id, values]) => ({ 
-        id, 
-        tds_ppm: Number(values.tds_ppm) || 0,
-        timestamp: values.timestamp || Date.now(),
-        __normalizedTs: values.timestamp || Date.now()
-      }))
-      // Always sort so the chart reads left-to-right (Chronological)
-      .sort((a, b) => a.timestamp - b.timestamp);
+  return onValue(
+    logsQuery,
+    (snapshot) => {
+      const data = snapshot.val() || {};
 
-    onUpdate(logsArray);
-  }, (err) => console.error(`Logs Error:`, err));
+      const logsArray = Object.entries(data)
+        .map(([id, values]) => ({
+          id,
+          tds_ppm: Number(values.tds_ppm) || 0,
+          timestamp: values.timestamp || Date.now(),
+          __normalizedTs: values.timestamp || Date.now(),
+        }))
+        // Always sort so the chart reads left-to-right (Chronological)
+        .sort((a, b) => a.timestamp - b.timestamp);
+
+      onUpdate(logsArray);
+    },
+    (err) => console.error(`Logs Error:`, err)
+  );
 };

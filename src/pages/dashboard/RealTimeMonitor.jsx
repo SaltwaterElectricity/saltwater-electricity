@@ -51,15 +51,17 @@ const RealTimeMonitor = () => {
   // 1. GROUPING LOGIC: Separate personal units from global fleet
   const { personalUnits, globalFleet } = React.useMemo(() => {
     if (!devices || assignmentsLoading) return { personalUnits: [], globalFleet: [] };
-    
+
     const myUid = user?.id || user?.uid;
     const personal = devices.filter((d) => assignments[d.device_id]?.userId === myUid);
-    
+
     if (isAdmin) {
-      const global = devices.filter((d) => assignments[d.device_id] && assignments[d.device_id]?.userId !== myUid);
+      const global = devices.filter(
+        (d) => assignments[d.device_id] && assignments[d.device_id]?.userId !== myUid
+      );
       return { personalUnits: personal, globalFleet: global };
     }
-    
+
     return { personalUnits: personal, globalFleet: [] };
   }, [devices, assignments, user, isAdmin, assignmentsLoading]);
 
@@ -72,9 +74,9 @@ const RealTimeMonitor = () => {
       } else if (type === "FORCE_DEPROVISION") {
         logger.log("Super Admin Action: FORCE_DEPROVISION", payload);
         setToastConfig({
-            isOpen: true,
-            message: "System override initiated. Deprovisioning hardware...",
-            type: "success"
+          isOpen: true,
+          message: "System override initiated. Deprovisioning hardware...",
+          type: "success",
         });
       } else {
         logger.log(`Dashboard Action: ${type}`, payload);
@@ -101,9 +103,9 @@ const RealTimeMonitor = () => {
     return (
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
         <div className="xl:col-span-4 space-y-8 animate-pulse">
-           <div className="h-20 bg-white/50 rounded-2xl" />
-           <div className="h-40 bg-white/50 rounded-2xl" />
-           <div className="h-[400px] bg-white/50 rounded-2xl" />
+          <div className="h-20 bg-white/50 rounded-2xl" />
+          <div className="h-40 bg-white/50 rounded-2xl" />
+          <div className="h-[400px] bg-white/50 rounded-2xl" />
         </div>
         <div className="xl:col-span-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
           {["s1", "s2", "s3", "s4"].map((id) => (
@@ -114,7 +116,9 @@ const RealTimeMonitor = () => {
     );
   }
 
-  const totalDevicesFormatted = (personalUnits.length + globalFleet.length).toString().padStart(2, '0');
+  const totalDevicesFormatted = (personalUnits.length + globalFleet.length)
+    .toString()
+    .padStart(2, "0");
 
   return (
     <div className="animate-fade-in antialiased min-h-screen pb-12">
@@ -127,7 +131,6 @@ const RealTimeMonitor = () => {
 
       {/* DASHBOARD GRID (12-column) */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-10">
-        
         {/* LEFT COLUMN: Summary & Alerts (col-span-4) */}
         <div className="xl:col-span-4 space-y-8">
           {/* Title & Subtitle */}
@@ -136,7 +139,7 @@ const RealTimeMonitor = () => {
               {isAdmin ? "Grid Oversight" : "My Devices"}
             </h2>
             <p className="text-slate-500 text-sm mt-1 font-body-md">
-              {isAdmin 
+              {isAdmin
                 ? "Real-time management of decentralized water sensor infrastructure."
                 : "Monitor real-time readings of your saltwater electricity devices."}
             </p>
@@ -145,8 +148,12 @@ const RealTimeMonitor = () => {
           {/* Total Devices Summary Card */}
           <div className="bg-cardBg p-8 rounded-2xl shadow-premium flex items-center justify-between border border-white/40 group hover:border-primary/20 transition-all duration-500">
             <div>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Devices</p>
-              <h3 className="text-5xl font-black text-slate-900 tabular-nums font-display italic">{totalDevicesFormatted}</h3>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                Total Devices
+              </p>
+              <h3 className="text-5xl font-black text-slate-900 tabular-nums font-display italic">
+                {totalDevicesFormatted}
+              </h3>
             </div>
             {/* Sparkline visual placeholder */}
             <div className="flex items-end space-x-1 h-12">
@@ -162,39 +169,61 @@ const RealTimeMonitor = () => {
           {/* Recent Alerts Sidebar Card */}
           <div className="bg-cardBg rounded-3xl shadow-premium flex flex-col h-[520px] border border-white/40 overflow-hidden transition-all hover:shadow-2xl">
             <div className="p-6 flex items-center justify-between border-b border-slate-50 bg-slate-50/30">
-              <h3 className="font-bold text-xs uppercase tracking-[0.2em] text-slate-800">Recent Alerts</h3>
+              <h3 className="font-bold text-xs uppercase tracking-[0.2em] text-slate-800">
+                Recent Alerts
+              </h3>
               <button className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-primary hover:bg-primary/5 transition-all">
                 <Bell size={16} />
               </button>
             </div>
-            
+
             <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
               {auditLogs.length > 0 ? (
                 auditLogs.map((log) => {
-                  const isCritical = log.action.includes("FAILURE") || log.action.includes("CRITICAL") || log.action.includes("DEP");
+                  const isCritical =
+                    log.action.includes("FAILURE") ||
+                    log.action.includes("CRITICAL") ||
+                    log.action.includes("DEP");
                   const isWarning = log.action.includes("WARNING") || log.action.includes("UPDATE");
-                  
+
                   return (
-                    <div key={log.id} className="flex items-start space-x-4 p-3 -m-3 hover:bg-slate-50/80 rounded-2xl transition-all cursor-default group">
-                      <div className={cn(
-                        "w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center border transition-all group-hover:scale-110",
-                        isCritical ? "bg-red-50 text-red-500 border-red-100 shadow-sm shadow-red-100" :
-                        isWarning ? "bg-orange-50 text-orange-500 border-orange-100 shadow-sm shadow-orange-100" :
-                        "bg-blue-50 text-blue-500 border-blue-100 shadow-sm shadow-blue-100"
-                      )}>
-                        {isCritical ? <ShieldAlert size={18} /> : isWarning ? <Clock size={18} /> : <Activity size={18} />}
+                    <div
+                      key={log.id}
+                      className="flex items-start space-x-4 p-3 -m-3 hover:bg-slate-50/80 rounded-2xl transition-all cursor-default group"
+                    >
+                      <div
+                        className={cn(
+                          "w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center border transition-all group-hover:scale-110",
+                          isCritical
+                            ? "bg-red-50 text-red-500 border-red-100 shadow-sm shadow-red-100"
+                            : isWarning
+                              ? "bg-orange-50 text-orange-500 border-orange-100 shadow-sm shadow-orange-100"
+                              : "bg-blue-50 text-blue-500 border-blue-100 shadow-sm shadow-blue-100"
+                        )}
+                      >
+                        {isCritical ? (
+                          <ShieldAlert size={18} />
+                        ) : isWarning ? (
+                          <Clock size={18} />
+                        ) : (
+                          <Activity size={18} />
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
                           <h4 className="text-xs font-bold text-slate-800 truncate uppercase tracking-tighter">
-                            {log.action.replace(/_/g, ' ')}
+                            {log.action.replace(/_/g, " ")}
                           </h4>
                         </div>
                         <p className="text-[10px] text-slate-400 mt-1 font-medium leading-relaxed line-clamp-2">
                           {log.details || "System activity recorded."}
                         </p>
                         <p className="text-[9px] text-slate-300 mt-1.5 font-bold uppercase tracking-widest">
-                          {new Date(log.timestamp).toLocaleDateString()} • {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          {new Date(log.timestamp).toLocaleDateString()} •{" "}
+                          {new Date(log.timestamp).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
                         </p>
                       </div>
                     </div>
@@ -203,13 +232,18 @@ const RealTimeMonitor = () => {
               ) : (
                 <div className="flex flex-col items-center justify-center h-full text-center opacity-30">
                   <Activity size={40} className="mb-4 text-slate-400" />
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">No active alerts recorded.</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+                    No active alerts recorded.
+                  </p>
                 </div>
               )}
             </div>
-            
+
             <div className="p-5 border-t border-slate-50 text-center bg-slate-50/30">
-              <button onClick={() => navigate(ROUTES.ALERTS)} className="text-primary text-[10px] font-black uppercase tracking-widest hover:underline decoration-2 underline-offset-4">
+              <button
+                onClick={() => navigate(ROUTES.ALERTS)}
+                className="text-primary text-[10px] font-black uppercase tracking-widest hover:underline decoration-2 underline-offset-4"
+              >
                 View All Notifications
               </button>
             </div>
@@ -218,7 +252,6 @@ const RealTimeMonitor = () => {
 
         {/* RIGHT COLUMN: Device Cards (col-span-8) */}
         <div className="xl:col-span-8 space-y-12">
-          
           {/* PROVISIONING CTA (Top of grid) - Mirroring Option B from Prototype */}
           <ProvisionDeviceCard onAction={handleRequestDevice} />
 
@@ -265,7 +298,9 @@ const RealTimeMonitor = () => {
                       <AdminMonitoringLayout
                         device={device}
                         telemetry={telemetry?.[device.device_id]}
-                        onViewAnalytics={() => handleDeviceAction("VIEW_ANALYTICS", device.device_id)}
+                        onViewAnalytics={() =>
+                          handleDeviceAction("VIEW_ANALYTICS", device.device_id)
+                        }
                       />
 
                       {/* SUPER ADMIN OVERRIDE */}
@@ -279,7 +314,9 @@ const RealTimeMonitor = () => {
                               </p>
                             </div>
                             <button
-                              onClick={() => handleDeviceAction("FORCE_DEPROVISION", device.device_id)}
+                              onClick={() =>
+                                handleDeviceAction("FORCE_DEPROVISION", device.device_id)
+                              }
                               className="w-full py-2 bg-error/10 hover:bg-error text-error hover:text-on-error border border-error/20 rounded-lg text-[10px] font-bold tracking-widest transition-all uppercase"
                             >
                               Force Release
@@ -297,13 +334,13 @@ const RealTimeMonitor = () => {
           {/* EMPTY STATE */}
           {personalUnits.length === 0 && (!isAdmin || globalFleet.length === 0) && (
             <div className="bg-white/40 backdrop-blur-sm p-32 text-center rounded-[48px] border-2 border-dashed border-slate-200 relative z-10 animate-fade-in flex flex-col items-center">
-               <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-300 mb-6">
-                  <Activity size={32} />
-               </div>
+              <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-300 mb-6">
+                <Activity size={32} />
+              </div>
               <p className="text-slate-400 font-bold uppercase tracking-[0.2em] text-xs">
                 Grid Offline: No active nodes detected.
               </p>
-              <button 
+              <button
                 onClick={handleRequestDevice}
                 className="mt-6 bg-primary/10 text-primary px-8 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-primary hover:text-white transition-all"
               >

@@ -125,7 +125,11 @@ const ProgressTracker = ({ request }) => {
                 <p
                   className={cn(
                     "text-[9px] font-bold uppercase mt-1",
-                    isComplete ? "text-primary" : isActive ? "text-primary animate-pulse" : "text-outline"
+                    isComplete
+                      ? "text-primary"
+                      : isActive
+                        ? "text-primary animate-pulse"
+                        : "text-outline"
                   )}
                 >
                   {isComplete ? "COMPLETE" : isActive ? "IN PROGRESS" : "PENDING"}
@@ -221,7 +225,7 @@ const DeviceRequest = () => {
         <div className="p-8 border-b border-outline-variant/10 flex justify-between items-center">
           <h3 className="font-h2 text-xl uppercase tracking-tight">Request History</h3>
           <div className="flex items-center gap-4 text-outline">
-             <Clock size={18} />
+            <Clock size={18} />
           </div>
         </div>
 
@@ -277,13 +281,18 @@ const DeviceRequest = () => {
                   >
                     <td className="px-8 py-6">
                       <div className="flex items-center gap-4">
-                        <div className={cn(
-                          "w-10 h-10 rounded-xl flex items-center justify-center",
-                          req.status === "approved" ? "bg-green-50 text-green-600" :
-                          req.status === "declined" ? "bg-red-50 text-red-600" :
-                          req.status === "cancelled" ? "bg-slate-100 text-slate-300" :
-                          "bg-primary/5 text-primary"
-                        )}>
+                        <div
+                          className={cn(
+                            "w-10 h-10 rounded-xl flex items-center justify-center",
+                            req.status === "approved"
+                              ? "bg-green-50 text-green-600"
+                              : req.status === "declined"
+                                ? "bg-red-50 text-red-600"
+                                : req.status === "cancelled"
+                                  ? "bg-slate-100 text-slate-300"
+                                  : "bg-primary/5 text-primary"
+                          )}
+                        >
                           <Plus size={18} />
                         </div>
                         <div>
@@ -305,7 +314,10 @@ const DeviceRequest = () => {
                         })}
                       </p>
                       <p className="text-[10px] text-outline mt-0.5">
-                        {new Date(req.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {new Date(req.createdAt).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </p>
                     </td>
                     <td className="px-8 py-6">
@@ -313,7 +325,9 @@ const DeviceRequest = () => {
                         {req.updatedAt ? new Date(req.updatedAt).toLocaleDateString() : "—"}
                       </p>
                       <p className="text-[10px] text-outline mt-0.5">
-                        {req.updatedAt ? new Date(req.updatedAt).toLocaleTimeString() : "Not scheduled"}
+                        {req.updatedAt
+                          ? new Date(req.updatedAt).toLocaleTimeString()
+                          : "Not scheduled"}
                       </p>
                     </td>
                     <td className="px-8 py-6">
@@ -323,21 +337,23 @@ const DeviceRequest = () => {
                           getStatusStyle(req.status)
                         )}
                       >
-                        <span className={cn(
-                          "w-1.5 h-1.5 rounded-full",
-                          req.status === "pending" ? "bg-amber-500 animate-pulse" :
-                          req.status === "approved" ? "bg-emerald-500" :
-                          req.status === "cancelled" ? "bg-slate-300" :
-                          "bg-rose-500"
-                        )} />
+                        <span
+                          className={cn(
+                            "w-1.5 h-1.5 rounded-full",
+                            req.status === "pending"
+                              ? "bg-amber-500 animate-pulse"
+                              : req.status === "approved"
+                                ? "bg-emerald-500"
+                                : req.status === "cancelled"
+                                  ? "bg-slate-300"
+                                  : "bg-rose-500"
+                          )}
+                        />
                         {req.status}
                       </span>
                     </td>
                     <td className="px-8 py-6 text-right">
-                      <RequestAction
-                        request={req}
-                        onCancelTrigger={handleCancelClick}
-                      />
+                      <RequestAction request={req} onCancelTrigger={handleCancelClick} />
                     </td>
                   </tr>
                 ))
@@ -359,9 +375,15 @@ const DeviceRequest = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button className="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-lg font-bold shadow-md shadow-primary/20">1</button>
-            <button className="w-8 h-8 flex items-center justify-center border border-outline-variant/30 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors text-xs">2</button>
-            <button className="w-8 h-8 flex items-center justify-center border border-outline-variant/30 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors text-xs">3</button>
+            <button className="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-lg font-bold shadow-md shadow-primary/20">
+              1
+            </button>
+            <button className="w-8 h-8 flex items-center justify-center border border-outline-variant/30 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors text-xs">
+              2
+            </button>
+            <button className="w-8 h-8 flex items-center justify-center border border-outline-variant/30 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors text-xs">
+              3
+            </button>
           </div>
         </div>
       </section>

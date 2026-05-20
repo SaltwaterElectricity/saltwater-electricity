@@ -74,9 +74,13 @@ const CancelRequestModal = ({ isOpen, onClose, onConfirm, isSubmitting }) => {
                 onChange={(e) => setReason(e.target.value)}
                 className="w-full h-14 bg-slate-50 border border-slate-100 rounded-2xl px-5 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-error/20 focus:bg-white transition-all appearance-none font-body-md"
               >
-                <option value="" disabled>Select a reason...</option>
+                <option value="" disabled>
+                  Select a reason...
+                </option>
                 {CANCEL_REASONS.map((r) => (
-                  <option key={r} value={r}>{r}</option>
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
                 ))}
               </select>
               <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
@@ -102,7 +106,8 @@ const CancelRequestModal = ({ isOpen, onClose, onConfirm, isSubmitting }) => {
           {/* Warning Notice */}
           <div className="p-4 bg-amber-50 border border-amber-100 rounded-xl">
             <p className="text-[10px] text-amber-700 leading-relaxed italic">
-              * Note: Once cancelled, the request record will be moved to the archive and cannot be reactivated.
+              * Note: Once cancelled, the request record will be moved to the archive and cannot be
+              reactivated.
             </p>
           </div>
 

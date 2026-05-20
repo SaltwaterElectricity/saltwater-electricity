@@ -69,14 +69,14 @@ export const AuthProvider = ({ children }) => {
 
     // Listen to Role changes
     listeners.current.role = onValue(
-      roleRef, 
+      roleRef,
       () => forceTokenRefresh(),
       (err) => logger.warn("RBAC Monitor Interrupted:", err)
     );
 
     // Listen to Account status changes
     listeners.current.account = onValue(
-      accountRef, 
+      accountRef,
       () => syncUserContext(currentUser),
       (err) => logger.warn("Status Monitor Interrupted:", err)
     );

@@ -162,7 +162,7 @@ export const registerUserAccount = async (userData) => {
 
     // 1. ATOMIC ACCOUNT CREATION (Auth Node only)
     const userCredential = await createUserWithEmailAndPassword(tempAuth, email, autoPassword);
-    
+
     return {
       uid: userCredential.user.uid,
       tempPassword: autoPassword,

@@ -12,9 +12,7 @@ export const DevicePairingCard = () => {
       </div>
       <div>
         <p className="font-h2 text-xl text-on-surface">New Connection</p>
-        <p className="text-sm text-outline font-body-md">
-          Pair a new sensor node via Bluetooth
-        </p>
+        <p className="text-sm text-outline font-body-md">Pair a new sensor node via Bluetooth</p>
       </div>
     </div>
   );

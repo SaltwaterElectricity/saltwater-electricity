@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { db } from '../firebaseConfig'; // Fixed broken import path
-import { ref, onValue, query, orderByChild, equalTo } from 'firebase/database';
+import { useState, useEffect } from "react";
+import { db } from "../firebaseConfig"; // Fixed broken import path
+import { ref, onValue, query, orderByChild, equalTo } from "firebase/database";
 
 /**
  * useAvailableDevices
@@ -16,43 +16,43 @@ export const useAvailableDevices = () => {
 
     // 1. Server-Side Filtering Logic
     // Only fetch nodes where availability is explicitly 'available'
-    const devicesRef = ref(db, 'device_information');
-    const availableQuery = query(
-      devicesRef, 
-      orderByChild('availability'), 
-      equalTo('available')
-    );
+    const devicesRef = ref(db, "device_information");
+    const availableQuery = query(devicesRef, orderByChild("availability"), equalTo("available"));
 
     // 2. Real-time Subscription
-    const unsubscribe = onValue(availableQuery, (snapshot) => {
-      if (!isMounted) return;
+    const unsubscribe = onValue(
+      availableQuery,
+      (snapshot) => {
+        if (!isMounted) return;
 
-      try {
-        const data = snapshot.val();
-        
-        if (!data) {
-          setDevices([]); 
-        } else {
-          // Transformation: Convert Firebase object-map to a clean UI Array
-          const deviceList = Object.entries(data).map(([id, val]) => ({
-            id, // This is the MAC address/Device ID
-            ...val
-          }));
-          setDevices(deviceList);
+        try {
+          const data = snapshot.val();
+
+          if (!data) {
+            setDevices([]);
+          } else {
+            // Transformation: Convert Firebase object-map to a clean UI Array
+            const deviceList = Object.entries(data).map(([id, val]) => ({
+              id, // This is the MAC address/Device ID
+              ...val,
+            }));
+            setDevices(deviceList);
+          }
+          setError(null);
+        } catch (err) {
+          console.error("RTDB Data Processing Error:", err);
+          setError("Data link established, but failed to parse hardware list.");
+        } finally {
+          setLoading(false);
         }
-        setError(null);
-      } catch (err) {
-        console.error("RTDB Data Processing Error:", err);
-        setError("Data link established, but failed to parse hardware list.");
-      } finally {
+      },
+      (err) => {
+        // Security/Network Error Handling
+        if (!isMounted) return;
+        setError(err.message);
         setLoading(false);
       }
-    }, (err) => {
-      // Security/Network Error Handling
-      if (!isMounted) return;
-      setError(err.message);
-      setLoading(false);
-    });
+    );
 
     // 3. Cleanup: Prevents memory leaks and state updates on unmounted components
     return () => {

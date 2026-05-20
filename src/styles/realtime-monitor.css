@@ -18,7 +18,8 @@
 }
 
 @keyframes status-pulse-animation {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }

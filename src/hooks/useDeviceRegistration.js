@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react';
-import { db } from '../firebaseConfig';
-import { ref, get, update, query, orderByChild, equalTo, serverTimestamp } from 'firebase/database';
+import { useState, useCallback } from "react";
+import { db } from "../firebaseConfig";
+import { ref, get, update, query, orderByChild, equalTo, serverTimestamp } from "firebase/database";
 
 export const useDeviceRegistration = () => {
   const [loading, setLoading] = useState(false);
@@ -37,7 +37,9 @@ export const useDeviceRegistration = () => {
       const userSnapshot = await get(emailQuery);
 
       if (!userSnapshot.exists()) {
-        throw new Error("No registered user found with this email. Please create an account first.");
+        throw new Error(
+          "No registered user found with this email. Please create an account first."
+        );
       }
 
       const entries = Object.entries(userSnapshot.val());
@@ -47,7 +49,7 @@ export const useDeviceRegistration = () => {
 
       // 4. ATOMIC UPDATE (Multi-Path)
       const updates = {};
-      
+
       // Metadata in device_information
       updates[`/device_information/${macAddress}/availability`] = "assigned";
       updates[`/device_information/${macAddress}/device_name`] = finalDeviceName;
@@ -56,13 +58,12 @@ export const useDeviceRegistration = () => {
       updates[`/device_assignments/${macAddress}`] = {
         userId: uid,
         assignedAt: serverTimestamp(),
-        status: "active"
+        status: "active",
       };
 
       await update(ref(db), updates);
 
       return { success: true, ownerId: uid };
-
     } catch (err) {
       console.error("Registration Error:", err);
       setError(err.message);
