@@ -28,15 +28,17 @@ const AccountProvisioning = ({ mode = "user" }) => {
   const isStaffMode = mode === "staff";
   const config = {
     title: isStaffMode ? "System Staff Onboarding" : "User Account Provisioning",
-    description: isStaffMode 
+    description: isStaffMode
       ? "Automated registration: Credentials will be sent via email upon confirmation."
       : "Register a new user to the system. Credentials will be sent via email.",
     buttonText: isStaffMode ? "Review & Provision Staff" : "Review & Provision User",
-    successMsg: isStaffMode ? "Staff account has been fully provisioned!" : "User account has been fully provisioned!",
+    successMsg: isStaffMode
+      ? "Staff account has been fully provisioned!"
+      : "User account has been fully provisioned!",
     modalTitle: isStaffMode ? "Confirm Staff Onboarding" : "Confirm User Registration",
-    modalDesc: isStaffMode 
+    modalDesc: isStaffMode
       ? "Verify the information below. An automated email will be sent to the staff's work email."
-      : "Please verify the details below. Once confirmed, the system will generate an account and notify the user."
+      : "Please verify the details below. Once confirmed, the system will generate an account and notify the user.",
   };
 
   // STATES
@@ -147,18 +149,16 @@ const AccountProvisioning = ({ mode = "user" }) => {
 
       {/* HEADER SECTION */}
       <header className="mb-10 border-b border-slate-100 pb-8 pr-12">
-        <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-          {config.title}
-        </h1>
-        <p className="text-slate-500 mt-2 text-sm italic">
-          {config.description}
-        </p>
+        <h1 className="text-2xl font-black text-slate-900 tracking-tight">{config.title}</h1>
+        <p className="text-slate-500 mt-2 text-sm italic">{config.description}</p>
       </header>
 
       {/* ERROR DISPLAY */}
       {serverError && (
         <div className="mb-8 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-xs rounded-r-lg animate-pulse font-medium">
-          <span className="font-bold uppercase tracking-wider mr-2 text-[10px]">Security Alert:</span>{" "}
+          <span className="font-bold uppercase tracking-wider mr-2 text-[10px]">
+            Security Alert:
+          </span>{" "}
           {serverError}
         </div>
       )}
@@ -166,11 +166,7 @@ const AccountProvisioning = ({ mode = "user" }) => {
       {/* REGISTRATION FORM */}
       <form onSubmit={handleSubmit(handlePreSubmit)} className="flex flex-col gap-10">
         {/* REUSABLE FIELDS COMPONENT */}
-        <RegistrationFields 
-          register={register} 
-          errors={errors} 
-          currentUserRole={userRole} 
-        />
+        <RegistrationFields register={register} errors={errors} currentUserRole={userRole} />
 
         {/* SUBMIT BUTTON SECTION */}
         <div className="pt-6 border-t border-slate-100 space-y-6">
@@ -197,8 +193,9 @@ const AccountProvisioning = ({ mode = "user" }) => {
           {/* FOOTER SECURITY NOTE */}
           <div className="p-4 bg-blue-50 border border-blue-100 rounded-xl text-center">
             <p className="text-[11px] text-blue-700 leading-relaxed font-medium italic">
-              <strong>Data Privacy Notice:</strong> Credential provisioning is handled securely via SendGrid. 
-              Recipients will be required to update their temporary password upon first login.
+              <strong>Data Privacy Notice:</strong> Credential provisioning is handled securely via
+              SendGrid. Recipients will be required to update their temporary password upon first
+              login.
             </p>
           </div>
         </div>
