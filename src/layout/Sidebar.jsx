@@ -36,10 +36,14 @@ const SidebarLink = memo(({ to, icon, label, badgeCount, isResident, onClick }) 
     }
   >
     <span className="material-symbols-outlined">{icon}</span>
-    <span className={cn(
-      "font-medium whitespace-nowrap overflow-hidden transition-all duration-300",
-      isResident ? "text-[14px]" : "text-sm font-['Space_Grotesk'] hidden group-hover/sidebar:block"
-    )}>
+    <span
+      className={cn(
+        "font-medium whitespace-nowrap overflow-hidden transition-all duration-300",
+        isResident
+          ? "text-[14px]"
+          : "text-sm font-['Space_Grotesk'] hidden group-hover/sidebar:block"
+      )}
+    >
       {label}
     </span>
     {badgeCount > 0 && (
@@ -130,7 +134,9 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
             : "hidden md:flex flex-col w-20 hover:w-64 bg-white/70 backdrop-blur-md border-r border-white/40 text-slate-800 p-4",
           // Mobile Responsiveness: Slide out from left (Residents only)
           isResident
-            ? _isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+            ? _isOpen
+              ? "translate-x-0"
+              : "-translate-x-full md:translate-x-0"
             : "md:translate-x-0"
         )}
       >
@@ -139,11 +145,23 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
           {isResident ? (
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary relative">
-                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>water_drop</span>
-                <span className="material-symbols-outlined absolute text-[12px] text-[#0034b5]" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontVariationSettings: "'FILL' 1" }}
+                >
+                  water_drop
+                </span>
+                <span
+                  className="material-symbols-outlined absolute text-[12px] text-[#0034b5]"
+                  style={{ fontVariationSettings: "'FILL' 1" }}
+                >
+                  bolt
+                </span>
               </div>
               <div>
-                <h1 className="font-extrabold text-white text-[20px] leading-tight tracking-tighter">Saltwater</h1>
+                <h1 className="font-extrabold text-white text-[20px] leading-tight tracking-tighter">
+                  Saltwater
+                </h1>
                 <p className="text-[11px] text-white/70 font-medium">Electricity Monitoring</p>
               </div>
             </div>
@@ -289,10 +307,10 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
         {/* Bottom Actions */}
         <div className="mt-auto pt-6 space-y-1">
           {!isResident && (
-            <button
-              className="w-full rounded-xl font-bold mb-4 transition-transform active:scale-95 hidden group-hover/sidebar:block whitespace-nowrap overflow-hidden h-12 flex items-center justify-center group-hover/sidebar:px-4 shadow-lg ocean-gradient text-white shadow-blue-200"
-            >
-              <span className="material-symbols-outlined group-hover/sidebar:mr-2">description</span>
+            <button className="w-full rounded-xl font-bold mb-4 transition-transform active:scale-95 hidden group-hover/sidebar:block whitespace-nowrap overflow-hidden h-12 flex items-center justify-center group-hover/sidebar:px-4 shadow-lg ocean-gradient text-white shadow-blue-200">
+              <span className="material-symbols-outlined group-hover/sidebar:mr-2">
+                description
+              </span>
               <span className="hidden group-hover/sidebar:inline">Generate Report</span>
             </button>
           )}
@@ -308,10 +326,14 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
             onClick={handleLinkClick}
           >
             <span className="material-symbols-outlined">help</span>
-            <span className={cn(
-              "font-medium whitespace-nowrap overflow-hidden",
-              isResident ? "text-[14px]" : "text-sm font-['Space_Grotesk'] hidden group-hover/sidebar:block"
-            )}>
+            <span
+              className={cn(
+                "font-medium whitespace-nowrap overflow-hidden",
+                isResident
+                  ? "text-[14px]"
+                  : "text-sm font-['Space_Grotesk'] hidden group-hover/sidebar:block"
+              )}
+            >
               Support
             </span>
           </a>
@@ -329,10 +351,14 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
             )}
           >
             <span className="material-symbols-outlined">logout</span>
-            <span className={cn(
-              "font-medium whitespace-nowrap overflow-hidden",
-              isResident ? "text-[14px]" : "text-sm font-['Space_Grotesk'] hidden group-hover/sidebar:block"
-            )}>
+            <span
+              className={cn(
+                "font-medium whitespace-nowrap overflow-hidden",
+                isResident
+                  ? "text-[14px]"
+                  : "text-sm font-['Space_Grotesk'] hidden group-hover/sidebar:block"
+              )}
+            >
               Log Out
             </span>
           </button>

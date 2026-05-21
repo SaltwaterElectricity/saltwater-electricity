@@ -15,7 +15,7 @@ export const BottomNav = ({ toggleSidebar }) => {
   return (
     <nav className="fixed bottom-0 left-0 w-full flex justify-around items-center px-2 py-3 pb-safe bg-white/80 backdrop-blur-2xl border-t border-white/40 z-50 md:hidden shadow-lg">
       <BottomNavLink to={ROUTES.DASHBOARD} icon="home" label="Home" />
-      
+
       {isResident ? (
         <>
           <BottomNavLink to={ROUTES.SMART_AQUA_MONITOR} icon="monitor_heart" label="Monitor" />

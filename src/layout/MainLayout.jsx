@@ -24,10 +24,12 @@ const MainLayout = ({ children }) => {
       <Sidebar _isOpen={isSidebarOpen} _toggleSidebar={toggleSidebar} />
 
       {/* Main Content Canvas */}
-      <main className={cn(
-        "flex-1 flex flex-col h-full min-w-0 relative transition-all duration-300",
-        isResident ? "md:ml-64" : "md:ml-20"
-      )}>
+      <main
+        className={cn(
+          "flex-1 flex flex-col h-full min-w-0 relative transition-all duration-300",
+          isResident ? "md:ml-64" : "md:ml-20"
+        )}
+      >
         {/* Top App Bar */}
         <NavbarHeader currentUid={currentUid} />
 
