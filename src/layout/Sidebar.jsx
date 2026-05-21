@@ -15,32 +15,38 @@ import Toast from "../components/ui/Toast";
  * Navigation Link Component
  * Handles active states and hover transitions with role-based theming.
  */
-const SidebarLink = memo(({ to, icon, label, badgeCount, isResident }) => (
+const SidebarLink = memo(({ to, icon, label, badgeCount, isResident, onClick }) => (
   <NavLink
     to={to}
     end={to === ROUTES.DASHBOARD}
+    onClick={onClick}
     className={({ isActive }) =>
       cn(
-        "flex items-center space-x-3 px-4 py-3 rounded-lg transition-all justify-center group-hover/sidebar:justify-start relative",
+        "flex items-center space-x-3 px-4 py-3 transition-all relative",
+        isResident ? "rounded-xl" : "rounded-lg",
         isActive
           ? isResident
-            ? "bg-white/15 text-white border-l-4 border-white shadow-lg shadow-black/5 rounded-xl"
+            ? "bg-white/15 text-white font-semibold shadow-black/5"
             : "bg-blue-50/50 text-blue-700 border-r-4 border-blue-600"
           : isResident
-            ? "opacity-70 hover:opacity-100 hover:bg-white/10 text-white"
-            : "text-slate-500 hover:bg-slate-50/50 hover:translate-x-1"
+            ? "text-white/70 hover:text-white hover:bg-white/10"
+            : "text-slate-500 hover:bg-slate-50/50 hover:translate-x-1",
+        !isResident && "justify-center group-hover/sidebar:justify-start"
       )
     }
   >
     <span className="material-symbols-outlined">{icon}</span>
-    <span className="font-['Space_Grotesk'] text-sm font-medium hidden group-hover/sidebar:block whitespace-nowrap overflow-hidden">
+    <span className={cn(
+      "font-medium whitespace-nowrap overflow-hidden transition-all duration-300",
+      isResident ? "text-[14px]" : "text-sm font-['Space_Grotesk'] hidden group-hover/sidebar:block"
+    )}>
       {label}
     </span>
     {badgeCount > 0 && (
       <span
         className={cn(
           isResident
-            ? "bg-primary text-[10px] px-2 py-0.5 rounded-full border border-white/20 ml-auto hidden group-hover/sidebar:block"
+            ? "bg-primary/50 text-white text-[10px] px-1.5 py-0.5 rounded-full min-w-[20px] text-center ml-auto"
             : "absolute right-3 top-3 w-2 h-2 rounded-full ring-2 bg-blue-600 ring-white"
         )}
       >
@@ -92,6 +98,13 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
     }
   };
 
+  // Close sidebar on link click (mobile only)
+  const handleLinkClick = () => {
+    if (window.innerWidth < 768) {
+      _toggleSidebar();
+    }
+  };
+
   return (
     <>
       <Toast
@@ -101,44 +114,68 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
         onClose={() => setShowToast(false)}
       />
 
+      {/* Mobile Overlay Backdrop (Residents Only) */}
+      {isResident && _isOpen && (
+        <div
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[45] md:hidden transition-all duration-300"
+          onClick={_toggleSidebar}
+        />
+      )}
+
       <aside
         className={cn(
-          "hidden md:flex flex-col h-screen w-20 hover:w-64 transition-all duration-300 fixed left-0 top-0 p-4 z-50 group/sidebar shadow-xl",
+          "h-screen transition-all duration-300 fixed left-0 top-0 z-50 group/sidebar shadow-xl",
           isResident
-            ? "sidebar-premium-gradient text-white"
-            : "bg-white/70 backdrop-blur-md border-r border-white/40 text-slate-800"
+            ? "flex flex-col w-64 bg-gradient-to-b from-[#0034b5] to-[#0047ff] text-white p-gutter"
+            : "hidden md:flex flex-col w-20 hover:w-64 bg-white/70 backdrop-blur-md border-r border-white/40 text-slate-800 p-4",
+          // Mobile Responsiveness: Slide out from left (Residents only)
+          isResident
+            ? _isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+            : "md:translate-x-0"
         )}
       >
         {/* Brand Logo Section */}
-        <div className="mb-10 px-2 flex flex-col items-center group-hover/sidebar:items-start">
-          <h1
-            className={cn(
-              "text-xl font-black tracking-tighter",
-              isResident ? "text-white" : "text-primary"
-            )}
-          >
-            S<span className="hidden group-hover/sidebar:inline">altwater Electricity</span>
-          </h1>
-          <p
-            className={cn(
-              "font-display text-[10px] uppercase tracking-widest font-bold hidden group-hover/sidebar:block",
-              isResident ? "text-white/60" : "text-outline"
-            )}
-          >
-            {userRole === ROLES.SUPER_ADMIN ? "SuperAdmin" : isAdmin ? "Administrator" : "Resident"}
-          </p>
+        <div className="mb-10">
+          {isResident ? (
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary relative">
+                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>water_drop</span>
+                <span className="material-symbols-outlined absolute text-[12px] text-[#0034b5]" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
+              </div>
+              <div>
+                <h1 className="font-extrabold text-white text-[20px] leading-tight tracking-tighter">Saltwater</h1>
+                <p className="text-[11px] text-white/70 font-medium">Electricity Monitoring</p>
+              </div>
+            </div>
+          ) : (
+            <div className="px-2 flex flex-col items-center group-hover/sidebar:items-start">
+              <h1 className={cn("text-xl font-black tracking-tighter", "text-primary")}>
+                S<span className="hidden group-hover/sidebar:inline">altwater Electricity</span>
+              </h1>
+              <p className="font-display text-[10px] uppercase tracking-widest font-bold hidden group-hover/sidebar:block text-outline">
+                {userRole === ROLES.SUPER_ADMIN ? "SuperAdmin" : "Administrator"}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Primary Navigation */}
-        <nav className="flex-1 space-y-1 overflow-y-auto custom-scrollbar-hide">
+        <nav className="flex-1 space-y-2 overflow-y-auto custom-scrollbar-hide">
           {isResident ? (
             <>
-              <SidebarLink to={ROUTES.DASHBOARD} icon="home" label="Dashboard" isResident={true} />
+              <SidebarLink
+                to={ROUTES.DASHBOARD}
+                icon="home"
+                label="Dashboard"
+                isResident={true}
+                onClick={handleLinkClick}
+              />
               <SidebarLink
                 to={ROUTES.SMART_AQUA_MONITOR}
                 icon="monitor_heart"
                 label="Real-Time Monitor"
                 isResident={true}
+                onClick={handleLinkClick}
               />
               <SidebarLink
                 to={ROUTES.ALERTS}
@@ -146,19 +183,22 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
                 label="Device Alerts"
                 badgeCount={unreadCount}
                 isResident={true}
+                onClick={handleLinkClick}
               />
               <SidebarLink
                 to={ROUTES.DEVICE_REQUESTS}
-                icon="add"
+                icon="description"
                 label="Device Request"
                 isResident={true}
+                onClick={handleLinkClick}
               />
               {deviceId && (
                 <SidebarLink
                   to={ROUTES.DEVICE_ANALYTICS.replace(":deviceId", deviceId)}
-                  icon="history"
+                  icon="bar_chart"
                   label="Historical Data"
                   isResident={true}
+                  onClick={handleLinkClick}
                 />
               )}
             </>
@@ -169,36 +209,42 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
                 icon="dashboard"
                 label="Dashboard"
                 isResident={false}
+                onClick={handleLinkClick}
               />
               <SidebarLink
                 to={ROUTES.SMART_AQUA_MONITOR}
                 icon="monitoring"
                 label={isAdmin ? "Realtime Monitor" : "Live Monitor"}
                 isResident={false}
+                onClick={handleLinkClick}
               />
               <SidebarLink
                 to={isAdmin ? ROUTES.ADMIN_REQUEST_MANAGEMENT : ROUTES.DEVICE_REQUESTS}
                 icon="app_registration"
                 label={isAdmin ? "Request Management" : "Device Requests"}
                 isResident={false}
+                onClick={handleLinkClick}
               />
               <SidebarLink
                 to={ROUTES.ADMIN_DEVICE_MANAGEMENT}
                 icon="hub"
                 label="Device Management"
                 isResident={false}
+                onClick={handleLinkClick}
               />
               <SidebarLink
                 to={ROUTES.ADMIN_RESIDENT_MANAGEMENT}
                 icon="person_search"
                 label="Resident Management"
                 isResident={false}
+                onClick={handleLinkClick}
               />
               <SidebarLink
                 to={ROUTES.ADMIN_USER_MANAGEMENT}
                 icon="group"
                 label="User Management"
                 isResident={false}
+                onClick={handleLinkClick}
               />
               <SidebarLink
                 to={ROUTES.ALERTS}
@@ -206,65 +252,87 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
                 label="Alerts"
                 badgeCount={unreadCount}
                 isResident={false}
+                onClick={handleLinkClick}
               />
               <SidebarLink
                 to={ROUTES.ADMIN_AUDIT_LOGS}
                 icon="insights"
                 label="Audit Logs"
                 isResident={false}
+                onClick={handleLinkClick}
               />
               <SidebarLink
                 to="/predictive"
                 icon="engineering"
                 label="Predictive Maintenance"
                 isResident={false}
+                onClick={handleLinkClick}
               />
-              <SidebarLink to="/reports" icon="description" label="Reports" isResident={false} />
-              <SidebarLink to="/settings" icon="settings" label="Settings" isResident={false} />
+              <SidebarLink
+                to="/reports"
+                icon="description"
+                label="Reports"
+                isResident={false}
+                onClick={handleLinkClick}
+              />
+              <SidebarLink
+                to="/settings"
+                icon="settings"
+                label="Settings"
+                isResident={false}
+                onClick={handleLinkClick}
+              />
             </>
           )}
         </nav>
 
         {/* Bottom Actions */}
         <div className="mt-auto pt-6 space-y-1">
-          <button
-            className={cn(
-              "w-full rounded-xl font-bold mb-4 transition-transform active:scale-95 hidden group-hover/sidebar:block whitespace-nowrap overflow-hidden h-12 flex items-center justify-center group-hover/sidebar:px-4 shadow-lg",
-              isResident
-                ? "bg-white/20 text-white shadow-black/10"
-                : "ocean-gradient text-white shadow-blue-200"
-            )}
-          >
-            <span className="material-symbols-outlined group-hover/sidebar:mr-2">description</span>
-            <span className="hidden group-hover/sidebar:inline">Generate Report</span>
-          </button>
+          {!isResident && (
+            <button
+              className="w-full rounded-xl font-bold mb-4 transition-transform active:scale-95 hidden group-hover/sidebar:block whitespace-nowrap overflow-hidden h-12 flex items-center justify-center group-hover/sidebar:px-4 shadow-lg ocean-gradient text-white shadow-blue-200"
+            >
+              <span className="material-symbols-outlined group-hover/sidebar:mr-2">description</span>
+              <span className="hidden group-hover/sidebar:inline">Generate Report</span>
+            </button>
+          )}
 
           <a
             className={cn(
-              "flex items-center space-x-3 px-4 py-2 transition-colors justify-center group-hover/sidebar:justify-start rounded-lg",
+              "flex items-center space-x-3 px-4 py-2 transition-colors rounded-lg",
               isResident
                 ? "text-white/70 hover:bg-white/10 hover:text-white"
-                : "text-slate-500 hover:text-blue-600"
+                : "text-slate-500 hover:text-blue-600 justify-center group-hover/sidebar:justify-start"
             )}
             href="#"
+            onClick={handleLinkClick}
           >
             <span className="material-symbols-outlined">help</span>
-            <span className="font-['Space_Grotesk'] text-sm font-medium hidden group-hover/sidebar:block whitespace-nowrap overflow-hidden">
+            <span className={cn(
+              "font-medium whitespace-nowrap overflow-hidden",
+              isResident ? "text-[14px]" : "text-sm font-['Space_Grotesk'] hidden group-hover/sidebar:block"
+            )}>
               Support
             </span>
           </a>
 
           <button
-            onClick={() => setIsLogoutModalOpen(true)}
+            onClick={() => {
+              handleLinkClick();
+              setIsLogoutModalOpen(true);
+            }}
             className={cn(
-              "w-full flex items-center space-x-3 px-4 py-2 transition-colors justify-center group-hover/sidebar:justify-start rounded-lg",
+              "w-full flex items-center space-x-3 px-4 py-2 transition-colors rounded-lg",
               isResident
                 ? "text-white/70 hover:bg-white/10 hover:text-white"
-                : "text-slate-500 hover:text-error"
+                : "text-slate-500 hover:text-error justify-center group-hover/sidebar:justify-start"
             )}
           >
             <span className="material-symbols-outlined">logout</span>
-            <span className="font-['Space_Grotesk'] text-sm font-medium hidden group-hover/sidebar:block whitespace-nowrap overflow-hidden">
+            <span className={cn(
+              "font-medium whitespace-nowrap overflow-hidden",
+              isResident ? "text-[14px]" : "text-sm font-['Space_Grotesk'] hidden group-hover/sidebar:block"
+            )}>
               Log Out
             </span>
           </button>
