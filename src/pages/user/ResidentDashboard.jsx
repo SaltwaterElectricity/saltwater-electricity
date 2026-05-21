@@ -188,12 +188,8 @@ const ResidentDashboard = () => {
           <h5 className="text-[12px] font-bold text-on-surface tracking-tight uppercase mb-6">
             System Overview
           </h5>
-          
-          <HealthDonutChart 
-            score={healthScore}
-            title="Health"
-            icon="bolt"
-          />
+
+          <HealthDonutChart score={healthScore} title="Health" icon="bolt" />
 
           <div className="grid grid-cols-3 gap-4 pt-6 border-t border-outline-variant/20">
             <div className="text-center">
@@ -275,20 +271,20 @@ const ResidentDashboard = () => {
         </div>
 
         {/* Widget 2: System Logs */}
-        <RecentAlertsFeed 
+        <RecentAlertsFeed
           title="System Logs"
           variant="widget"
-          alerts={logs?.slice(0, 5).map(log => ({
+          alerts={logs?.slice(0, 5).map((log) => ({
             timestamp: log.timestamp,
-            title: `Device Status: ${log.voltage > 0 ? 'ON' : 'OFF'}`,
+            title: `Device Status: ${log.voltage > 0 ? "ON" : "OFF"}`,
             details: log.voltage > 0 ? "Node output active" : "Node output inactive",
-            type: log.voltage > 0 ? "info" : "warning"
+            type: log.voltage > 0 ? "info" : "warning",
           }))}
           loading={logsLoading}
         />
 
         {/* Widget 3: Recent Alerts */}
-        <RecentAlertsFeed 
+        <RecentAlertsFeed
           title="Recent Alerts"
           variant="widget"
           alerts={notifications?.slice(0, 5)}

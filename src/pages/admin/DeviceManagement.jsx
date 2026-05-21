@@ -110,16 +110,16 @@ const DeviceManagement = () => {
 
       {/* STATS OVERVIEW */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-        <SummaryCard 
-          title="Total Capacity" 
-          value={devices.length} 
+        <SummaryCard
+          title="Total Capacity"
+          value={devices.length}
           subtitle="Units"
           icon="inventory_2"
           bgClass="bg-white/60 backdrop-blur-md"
         />
-        <SummaryCard 
-          title="Ready for Setup" 
-          value={availableDevices.length} 
+        <SummaryCard
+          title="Ready for Setup"
+          value={availableDevices.length}
           subtitle="Available"
           icon="add_circle"
           colorClass="text-blue-600"
@@ -131,7 +131,7 @@ const DeviceManagement = () => {
         {/* AVAILABLE SECTION */}
         <section className="space-y-8">
           <DashboardSectionHeader title="Available Inventory" variant="neutral" />
-          
+
           {availableDevices.length === 0 ? (
             <EmptyState title="Empty inventory." icon={Plus} />
           ) : (
@@ -153,7 +153,7 @@ const DeviceManagement = () => {
         {occupiedDevices.length > 0 && (
           <section className="space-y-8 opacity-80 grayscale-[0.2] hover:opacity-100 transition-all duration-500">
             <DashboardSectionHeader title="Deployed Units" variant="neutral" />
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
               {occupiedDevices.map((device) => (
                 <ManagedDeviceCard

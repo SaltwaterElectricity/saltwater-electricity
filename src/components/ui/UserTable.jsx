@@ -19,8 +19,12 @@ const UserTableRow = memo(({ user, onActionClick, onEditClick }) => {
   const isActive = status === "active";
   const isPending = status === "pending";
 
-  const dateJoined = createdAt 
-    ? new Date(createdAt).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
+  const dateJoined = createdAt
+    ? new Date(createdAt).toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      })
     : "N/A";
 
   return (
@@ -29,31 +33,36 @@ const UserTableRow = memo(({ user, onActionClick, onEditClick }) => {
       <td className="px-6 py-5">
         <div className="flex items-center gap-3">
           {photoURL ? (
-            <img src={photoURL} alt="User Avatar" className="w-10 h-10 rounded-lg object-cover shadow-sm" />
+            <img
+              src={photoURL}
+              alt="User Avatar"
+              className="w-10 h-10 rounded-lg object-cover shadow-sm"
+            />
           ) : (
             <div className="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary-container font-bold text-sm">
-              {firstName[0]}{lastName[0]}
+              {firstName[0]}
+              {lastName[0]}
             </div>
           )}
           <div>
             <p className="font-label-md text-label-md text-on-surface leading-tight">
               {firstName} {lastName}
             </p>
-            <p className="text-[12px] text-outline truncate max-w-[180px]">
-              {email}
-            </p>
+            <p className="text-[12px] text-outline truncate max-w-[180px]">{email}</p>
           </div>
         </div>
       </td>
 
       {/* ROLE */}
       <td className="px-6 py-5">
-        <span className={cn(
-          "px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider",
-          role === ROLES.ADMIN 
-            ? "bg-primary/10 text-primary" 
-            : "bg-surface-container-highest text-on-surface-variant"
-        )}>
+        <span
+          className={cn(
+            "px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider",
+            role === ROLES.ADMIN
+              ? "bg-primary/10 text-primary"
+              : "bg-surface-container-highest text-on-surface-variant"
+          )}
+        >
           {role === ROLES.ADMIN ? "Admin" : "Household"}
         </span>
       </td>
@@ -62,27 +71,27 @@ const UserTableRow = memo(({ user, onActionClick, onEditClick }) => {
       <td className="px-6 py-5 font-body-md text-on-surface-variant">
         <div className="flex items-center gap-2">
           <MapPin size={14} className="text-outline" />
-          <span className="truncate max-w-[150px]">
-            {address?.baranggay || "Location unset"}
-          </span>
+          <span className="truncate max-w-[150px]">{address?.baranggay || "Location unset"}</span>
         </div>
       </td>
 
       {/* DATE JOINED */}
-      <td className="px-6 py-5 font-body-md text-on-surface-variant">
-        {dateJoined}
-      </td>
+      <td className="px-6 py-5 font-body-md text-on-surface-variant">{dateJoined}</td>
 
       {/* STATUS */}
       <td className="px-6 py-5">
-        <div className={cn(
-          "flex items-center gap-2 font-label-sm text-label-sm",
-          isActive ? "text-green-600" : isPending ? "text-orange-500" : "text-red-500"
-        )}>
-          <span className={cn(
-            "w-2 h-2 rounded-full",
-            isActive ? "bg-green-500" : isPending ? "bg-orange-400" : "bg-red-500"
-          )} />
+        <div
+          className={cn(
+            "flex items-center gap-2 font-label-sm text-label-sm",
+            isActive ? "text-green-600" : isPending ? "text-orange-500" : "text-red-500"
+          )}
+        >
+          <span
+            className={cn(
+              "w-2 h-2 rounded-full",
+              isActive ? "bg-green-500" : isPending ? "bg-orange-400" : "bg-red-500"
+            )}
+          />
           <span className="capitalize">{status}</span>
         </div>
       </td>
@@ -124,12 +133,24 @@ export const UserTable = ({ users = [], onActionClick, onEditClick, activeView }
       <table className="w-full text-left border-collapse">
         <thead>
           <tr className="bg-surface-container-low border-b border-outline-variant/30">
-            <th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">User</th>
-            <th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Role</th>
-            <th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Location</th>
-            <th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Date Joined</th>
-            <th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Status</th>
-            <th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-right">Action</th>
+            <th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">
+              User
+            </th>
+            <th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">
+              Role
+            </th>
+            <th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">
+              Location
+            </th>
+            <th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">
+              Date Joined
+            </th>
+            <th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">
+              Status
+            </th>
+            <th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-right">
+              Action
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-outline-variant/20">

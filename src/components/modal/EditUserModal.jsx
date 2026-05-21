@@ -30,7 +30,16 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
         baranggay: user.address?.baranggay || "",
       });
     }
-  }, [userUid, isOpen, user?.firstName, user?.lastName, user?.email, user?.role, user?.status, user?.address?.baranggay]);
+  }, [
+    userUid,
+    isOpen,
+    user?.firstName,
+    user?.lastName,
+    user?.email,
+    user?.role,
+    user?.status,
+    user?.address?.baranggay,
+  ]);
 
   if (!isOpen || !user) return null;
 
@@ -129,9 +138,14 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
             </div>
 
             <div className="col-span-2">
-              <label className="block text-label-sm text-outline mb-1.5 ml-1">Assigned Location</label>
+              <label className="block text-label-sm text-outline mb-1.5 ml-1">
+                Assigned Location
+              </label>
               <div className="relative">
-                <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-outline" />
+                <MapPin
+                  size={18}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-outline"
+                />
                 <input
                   type="text"
                   name="baranggay"

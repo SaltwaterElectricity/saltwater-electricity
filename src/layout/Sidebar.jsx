@@ -133,12 +133,7 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
         <nav className="flex-1 space-y-1 overflow-y-auto custom-scrollbar-hide">
           {isResident ? (
             <>
-              <SidebarLink
-                to={ROUTES.DASHBOARD}
-                icon="home"
-                label="Dashboard"
-                isResident={true}
-              />
+              <SidebarLink to={ROUTES.DASHBOARD} icon="home" label="Dashboard" isResident={true} />
               <SidebarLink
                 to={ROUTES.SMART_AQUA_MONITOR}
                 icon="monitor_heart"
@@ -224,18 +219,8 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
                 label="Predictive Maintenance"
                 isResident={false}
               />
-              <SidebarLink
-                to="/reports"
-                icon="description"
-                label="Reports"
-                isResident={false}
-              />
-              <SidebarLink
-                to="/settings"
-                icon="settings"
-                label="Settings"
-                isResident={false}
-              />
+              <SidebarLink to="/reports" icon="description" label="Reports" isResident={false} />
+              <SidebarLink to="/settings" icon="settings" label="Settings" isResident={false} />
             </>
           )}
         </nav>

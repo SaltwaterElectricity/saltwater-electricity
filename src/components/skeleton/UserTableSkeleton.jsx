@@ -2,7 +2,7 @@ export const UserTableSkeleton = () => (
   <div className="bg-white border border-outline-variant/30 rounded-2xl shadow-sm overflow-hidden animate-pulse">
     {/* Header Skeleton */}
     <div className="bg-surface-container-low border-b border-outline-variant/30 p-6 h-14" />
-    
+
     <div className="divide-y divide-outline-variant/20">
       {["u1", "u2", "u3", "u4"].map((id) => (
         <div key={id} className="px-6 py-5 grid grid-cols-6 items-center gap-4">

@@ -21,10 +21,12 @@ export const ConfirmationModal = ({
     <ModalBackdrop>
       <div className="relative w-[92%] sm:w-full max-w-[440px] bg-white rounded-3xl p-8 shadow-2xl border border-outline-variant/30 animate-in fade-in zoom-in-95 duration-200">
         {/* ICON */}
-        <div className={cn(
-          "w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto transition-transform hover:scale-110",
-          isDanger ? "bg-error-container/20 text-error" : "bg-primary/10 text-primary"
-        )}>
+        <div
+          className={cn(
+            "w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto transition-transform hover:scale-110",
+            isDanger ? "bg-error-container/20 text-error" : "bg-primary/10 text-primary"
+          )}
+        >
           {isDanger ? <AlertTriangle size={32} /> : <Info size={32} />}
         </div>
 
@@ -37,11 +39,7 @@ export const ConfirmationModal = ({
         </p>
 
         {/* CUSTOM BODY */}
-        {children && (
-          <div className="mb-8">
-            {children}
-          </div>
-        )}
+        {children && <div className="mb-8">{children}</div>}
 
         {/* FOOTER ACTIONS */}
         <div className="flex items-center gap-4">
@@ -57,8 +55,8 @@ export const ConfirmationModal = ({
             disabled={isSubmitting}
             className={cn(
               "flex-1 px-6 py-3 text-label-md text-white rounded-xl transition-all active:scale-95 font-semibold shadow-lg flex items-center justify-center gap-2",
-              isDanger 
-                ? "bg-error hover:bg-red-700 shadow-error/20" 
+              isDanger
+                ? "bg-error hover:bg-red-700 shadow-error/20"
                 : "primary-gradient-btn hover:opacity-90 shadow-primary/20"
             )}
           >

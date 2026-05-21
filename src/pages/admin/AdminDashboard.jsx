@@ -153,7 +153,7 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Alerts & Requests */}
         <div className="lg:col-span-4 space-y-6">
-          <RecentAlertsFeed 
+          <RecentAlertsFeed
             title="System Alerts"
             variant="widget"
             alerts={auditLogs}

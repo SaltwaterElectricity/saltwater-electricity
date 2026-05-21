@@ -1,13 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
-  ShieldCheck, 
-  Users, 
-  AlertTriangle, 
-  Search, 
-  Home,
-  ChevronDown
-} from "lucide-react";
+import { ShieldCheck, Users, AlertTriangle, Search, Home, ChevronDown } from "lucide-react";
 
 // Services, Hooks, at Utils
 import { useUserSubscription } from "../../hooks";
@@ -47,33 +40,34 @@ const UserManagement = ({ currentUserRole }) => {
 
   // --- DERIVED LOGIC & FIREBASE SYNC ---
   const isSuperAdmin = currentUserRole === ROLES.SUPER_ADMIN;
-  
-  // We subscribe to all users if superAdmin to show global stats, 
+
+  // We subscribe to all users if superAdmin to show global stats,
   // otherwise we might be limited by permissions (subscribing to null might fail if not superAdmin)
   // For now, let's try to get all if superAdmin, or just residents if admin
   const subscriptionTarget = isSuperAdmin ? null : ROLES.RESIDENT;
   const { data: allUsers = [], loading, error } = useUserSubscription(subscriptionTarget);
 
   const stats = useMemo(() => {
-    const admins = allUsers.filter(u => u.role === ROLES.ADMIN).length;
-    const residents = allUsers.filter(u => u.role === ROLES.RESIDENT).length;
+    const admins = allUsers.filter((u) => u.role === ROLES.ADMIN).length;
+    const residents = allUsers.filter((u) => u.role === ROLES.RESIDENT).length;
     return {
       total: allUsers.length,
       admins,
-      residents
+      residents,
     };
   }, [allUsers]);
 
   const filteredUsers = useMemo(() => {
-    return allUsers.filter(u => {
+    return allUsers.filter((u) => {
       // 1. Role/View Filter
-      const matchesView = isSuperAdmin ? (u.role === viewMode) : (u.role === ROLES.RESIDENT);
-      
+      const matchesView = isSuperAdmin ? u.role === viewMode : u.role === ROLES.RESIDENT;
+
       // 2. Search Filter
       const searchLower = searchTerm.toLowerCase();
       const fullName = `${u.firstName || ""} ${u.lastName || ""}`.toLowerCase();
-      const matchesSearch = fullName.includes(searchLower) || (u.email || "").toLowerCase().includes(searchLower);
-      
+      const matchesSearch =
+        fullName.includes(searchLower) || (u.email || "").toLowerCase().includes(searchLower);
+
       // 3. Location Filter
       const userLocation = u.address?.baranggay || "";
       const matchesLocation = locationFilter === "Location" || userLocation === locationFilter;
@@ -189,8 +183,12 @@ const UserManagement = ({ currentUserRole }) => {
 
       {/* Page Header */}
       <div>
-        <h3 className="font-headline-lg text-headline-lg text-on-surface tracking-tight uppercase">User Management</h3>
-        <p className="font-body-md text-body-md text-on-surface-variant">Manage all admin and household users within the monitoring system.</p>
+        <h3 className="font-headline-lg text-headline-lg text-on-surface tracking-tight uppercase">
+          User Management
+        </h3>
+        <p className="font-body-md text-body-md text-on-surface-variant">
+          Manage all admin and household users within the monitoring system.
+        </p>
       </div>
 
       {/* Summary Bento Grid */}
@@ -201,12 +199,18 @@ const UserManagement = ({ currentUserRole }) => {
             <Users className="text-[#3D73FF]" size={28} />
           </div>
           <div className="flex-1">
-            <p className="text-[12px] font-medium text-gray-500 uppercase tracking-tight mb-1">Total Users</p>
+            <p className="text-[12px] font-medium text-gray-500 uppercase tracking-tight mb-1">
+              Total Users
+            </p>
             <h4 className="text-2xl font-bold text-[#0F172A] leading-none mb-2">{stats.total}</h4>
           </div>
           <div className="flex items-end gap-[3px] h-10 self-end mb-1">
             {[15, 25, 45, 65, 90].map((h) => (
-              <div key={`total-bar-${h}`} className="w-1 bg-[#3D73FF] rounded-t-sm" style={{ height: `${h}%`, opacity: h / 100 }} />
+              <div
+                key={`total-bar-${h}`}
+                className="w-1 bg-[#3D73FF] rounded-t-sm"
+                style={{ height: `${h}%`, opacity: h / 100 }}
+              />
             ))}
           </div>
         </div>
@@ -217,12 +221,18 @@ const UserManagement = ({ currentUserRole }) => {
             <ShieldCheck className="text-[#10B981]" size={28} />
           </div>
           <div className="flex-1">
-            <p className="text-[12px] font-medium text-gray-500 uppercase tracking-tight mb-1">Admin Users</p>
+            <p className="text-[12px] font-medium text-gray-500 uppercase tracking-tight mb-1">
+              Admin Users
+            </p>
             <h4 className="text-2xl font-bold text-[#0F172A] leading-none mb-2">{stats.admins}</h4>
           </div>
           <div className="flex items-end gap-[3px] h-10 self-end mb-1">
             {[20, 40, 60, 80, 100].map((h) => (
-              <div key={`admin-bar-${h}`} className="w-1 bg-[#10B981] rounded-t-sm" style={{ height: `${h}%`, opacity: h / 100 }} />
+              <div
+                key={`admin-bar-${h}`}
+                className="w-1 bg-[#10B981] rounded-t-sm"
+                style={{ height: `${h}%`, opacity: h / 100 }}
+              />
             ))}
           </div>
         </div>
@@ -233,12 +243,20 @@ const UserManagement = ({ currentUserRole }) => {
             <Home className="text-[#7C3AED]" size={28} />
           </div>
           <div className="flex-1">
-            <p className="text-[12px] font-medium text-gray-500 uppercase tracking-tight mb-1">Household Users</p>
-            <h4 className="text-2xl font-bold text-[#0F172A] leading-none mb-2">{stats.residents}</h4>
+            <p className="text-[12px] font-medium text-gray-500 uppercase tracking-tight mb-1">
+              Household Users
+            </p>
+            <h4 className="text-2xl font-bold text-[#0F172A] leading-none mb-2">
+              {stats.residents}
+            </h4>
           </div>
           <div className="flex items-end gap-[3px] h-10 self-end mb-1">
             {[10, 30, 50, 75, 95].map((h) => (
-              <div key={`resident-bar-${h}`} className="w-1 bg-[#7C3AED] rounded-t-sm" style={{ height: `${h}%`, opacity: h / 100 }} />
+              <div
+                key={`resident-bar-${h}`}
+                className="w-1 bg-[#7C3AED] rounded-t-sm"
+                style={{ height: `${h}%`, opacity: h / 100 }}
+              />
             ))}
           </div>
         </div>
@@ -250,9 +268,9 @@ const UserManagement = ({ currentUserRole }) => {
           {/* Search */}
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-outline" size={20} />
-            <input 
-              className="w-full pl-12 pr-4 py-3 bg-surface border border-outline-variant/30 rounded-xl focus:ring-2 focus:ring-primary-container/20 focus:border-primary-container outline-none transition-all font-body-md" 
-              placeholder="Search user name or email" 
+            <input
+              className="w-full pl-12 pr-4 py-3 bg-surface border border-outline-variant/30 rounded-xl focus:ring-2 focus:ring-primary-container/20 focus:border-primary-container outline-none transition-all font-body-md"
+              placeholder="Search user name or email"
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -262,7 +280,7 @@ const UserManagement = ({ currentUserRole }) => {
           {/* Role Filter (Only for Super Admin) */}
           {isSuperAdmin && (
             <div className="relative min-w-[160px]">
-              <select 
+              <select
                 className="w-full appearance-none bg-surface border border-outline-variant/30 rounded-xl px-4 py-3 font-body-md outline-none focus:ring-2 focus:ring-primary-container/20 pr-10"
                 value={viewMode}
                 onChange={(e) => setViewMode(e.target.value)}
@@ -270,13 +288,16 @@ const UserManagement = ({ currentUserRole }) => {
                 <option value={ROLES.ADMIN}>Admins</option>
                 <option value={ROLES.RESIDENT}>Residents</option>
               </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none" size={16} />
+              <ChevronDown
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none"
+                size={16}
+              />
             </div>
           )}
 
           {/* Location Dropdown */}
           <div className="relative min-w-[160px]">
-            <select 
+            <select
               className="w-full appearance-none bg-surface border border-outline-variant/30 rounded-xl px-4 py-3 font-body-md outline-none focus:ring-2 focus:ring-primary-container/20 pr-10"
               value={locationFilter}
               onChange={(e) => setLocationFilter(e.target.value)}
@@ -286,12 +307,17 @@ const UserManagement = ({ currentUserRole }) => {
               <option value="San Andres">San Andres</option>
               <option value="Unisan">Unisan</option>
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none" size={16} />
+            <ChevronDown
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none"
+              size={16}
+            />
           </div>
         </div>
 
-        <button 
-          onClick={() => navigate(viewMode === ROLES.ADMIN ? ROUTES.REGISTER_STAFF : ROUTES.REGISTER_USER)}
+        <button
+          onClick={() =>
+            navigate(viewMode === ROLES.ADMIN ? ROUTES.REGISTER_STAFF : ROUTES.REGISTER_USER)
+          }
           className="primary-gradient-btn text-white px-8 py-3 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 hover:opacity-90 transition-opacity active:scale-95"
         >
           <span className="material-symbols-outlined text-[20px]">person_add</span>

@@ -148,17 +148,10 @@ const RealTimeMonitor = () => {
           </div>
 
           {/* Total Devices Summary Card */}
-          <SummaryCard
-            variant="sparkline"
-            title="Total Devices"
-            value={totalDevicesFormatted}
-          />
+          <SummaryCard variant="sparkline" title="Total Devices" value={totalDevicesFormatted} />
 
           {/* Recent Alerts Sidebar Feed */}
-          <RecentAlertsFeed 
-            alerts={auditLogs}
-            onViewAll={() => navigate(ROUTES.ALERTS)}
-          />
+          <RecentAlertsFeed alerts={auditLogs} onViewAll={() => navigate(ROUTES.ALERTS)} />
         </div>
 
         {/* RIGHT COLUMN: Device Cards (col-span-8) */}
@@ -234,7 +227,7 @@ const RealTimeMonitor = () => {
 
           {/* EMPTY STATE */}
           {personalUnits.length === 0 && (!isAdmin || globalFleet.length === 0) && (
-            <EmptyState 
+            <EmptyState
               title="Grid Offline: No active nodes detected."
               actionText="Submit Provisioning Request"
               onAction={handleRequestDevice}

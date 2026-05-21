@@ -79,7 +79,9 @@ const SummaryCard = memo(
                 colorClass
               )}
             >
-              <span className={cn("w-1.5 h-1.5 rounded-full", colorClass.replace("text-", "bg-"))} />
+              <span
+                className={cn("w-1.5 h-1.5 rounded-full", colorClass.replace("text-", "bg-"))}
+              />
               {subtitle}
             </p>
           )}
