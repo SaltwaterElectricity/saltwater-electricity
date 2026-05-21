@@ -1,21 +1,27 @@
-import { useState, useCallback } from "react"; // Added useCallback
+import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserPlus, ShieldPlus, ShieldCheck, Users, AlertTriangle } from "lucide-react";
+import { 
+  ShieldCheck, 
+  Users, 
+  AlertTriangle, 
+  Search, 
+  Home,
+  ChevronDown
+} from "lucide-react";
 
 // Services, Hooks, at Utils
 import { useUserSubscription } from "../../hooks";
 import { updateUserStatus, updateUserProfile, USER_STATUS } from "../../services/user.service";
 import { cn } from "../../utils/cn";
 import { ROUTES } from "../../constants/routes";
+import { ROLES } from "../../constants/roles";
 
 // UI Components
-import { ROLES } from "../../constants/roles";
 import {
   Toast,
   ConfirmationModal,
   EditUserModal,
   UserTable,
-  GlobalSearch,
   UserTableSkeleton,
 } from "../../components";
 
@@ -24,6 +30,7 @@ const UserManagement = ({ currentUserRole }) => {
 
   // --- STATES ---
   const [searchTerm, setSearchTerm] = useState("");
+  const [locationFilter, setLocationFilter] = useState("Location");
   const [showToast, setShowToast] = useState(false);
   const [toastConfig, setToastConfig] = useState({ message: "", type: "success" });
 
@@ -40,12 +47,42 @@ const UserManagement = ({ currentUserRole }) => {
 
   // --- DERIVED LOGIC & FIREBASE SYNC ---
   const isSuperAdmin = currentUserRole === ROLES.SUPER_ADMIN;
-  const activeView = isSuperAdmin ? viewMode : ROLES.RESIDENT;
-  const { data: users = [], loading, error } = useUserSubscription(activeView);
+  
+  // We subscribe to all users if superAdmin to show global stats, 
+  // otherwise we might be limited by permissions (subscribing to null might fail if not superAdmin)
+  // For now, let's try to get all if superAdmin, or just residents if admin
+  const subscriptionTarget = isSuperAdmin ? null : ROLES.RESIDENT;
+  const { data: allUsers = [], loading, error } = useUserSubscription(subscriptionTarget);
+
+  const stats = useMemo(() => {
+    const admins = allUsers.filter(u => u.role === ROLES.ADMIN).length;
+    const residents = allUsers.filter(u => u.role === ROLES.RESIDENT).length;
+    return {
+      total: allUsers.length,
+      admins,
+      residents
+    };
+  }, [allUsers]);
+
+  const filteredUsers = useMemo(() => {
+    return allUsers.filter(u => {
+      // 1. Role/View Filter
+      const matchesView = isSuperAdmin ? (u.role === viewMode) : (u.role === ROLES.RESIDENT);
+      
+      // 2. Search Filter
+      const searchLower = searchTerm.toLowerCase();
+      const fullName = `${u.firstName || ""} ${u.lastName || ""}`.toLowerCase();
+      const matchesSearch = fullName.includes(searchLower) || (u.email || "").toLowerCase().includes(searchLower);
+      
+      // 3. Location Filter
+      const userLocation = u.address?.baranggay || "";
+      const matchesLocation = locationFilter === "Location" || userLocation === locationFilter;
+
+      return matchesView && matchesSearch && matchesLocation;
+    });
+  }, [allUsers, viewMode, searchTerm, locationFilter, isSuperAdmin]);
 
   // --- MEMOIZED HANDLERS ---
-
-  // In-apply ang useCallback dito para hindi mag-recreate ang function sa bawat render
   const triggerToast = useCallback((message, type = "success") => {
     setToastConfig({ message, type });
     setShowToast(true);
@@ -67,7 +104,7 @@ const UserManagement = ({ currentUserRole }) => {
       setIsModalOpen(false);
       setSelectedUser(null);
     }
-  }, [selectedUser, triggerToast]); // Dependencies: selectedUser at triggerToast
+  }, [selectedUser, triggerToast]);
 
   const handleSaveUserData = useCallback(
     async (newFormData) => {
@@ -85,12 +122,12 @@ const UserManagement = ({ currentUserRole }) => {
       }
     },
     [selectedEditUser, triggerToast]
-  ); // Dependency: selectedEditUser at triggerToast
+  );
 
   const isTargetActive = selectedUser?.status === USER_STATUS.ACTIVE;
 
   return (
-    <div className="p-8 space-y-8 max-w-7xl mx-auto antialiased">
+    <div className="p-gutter max-w-[1440px] mx-auto w-full antialiased space-y-8">
       <Toast
         isOpen={showToast || !!error}
         message={error?.message || toastConfig.message}
@@ -114,7 +151,7 @@ const UserManagement = ({ currentUserRole }) => {
         {selectedUser && (
           <div
             className={cn(
-              "flex items-start gap-4 p-4 rounded-2xl border",
+              "flex items-start gap-4 p-4 rounded-2xl border transition-all",
               isTargetActive ? "bg-red-50 border-red-100" : "bg-blue-50 border-blue-100"
             )}
           >
@@ -150,95 +187,140 @@ const UserManagement = ({ currentUserRole }) => {
         isLoading={isEditSaving}
       />
 
-      <header className="glass-card p-6 md:p-8 rounded-[32px] flex flex-col xl:flex-row flex-wrap items-center justify-between gap-6 xl:gap-8">
-        <div className="flex flex-col sm:flex-row items-center sm:items-center gap-4 sm:gap-8 w-full xl:w-auto">
+      {/* Page Header */}
+      <div>
+        <h3 className="font-headline-lg text-headline-lg text-on-surface tracking-tight uppercase">User Management</h3>
+        <p className="font-body-md text-body-md text-on-surface-variant">Manage all admin and household users within the monitoring system.</p>
+      </div>
+
+      {/* Summary Bento Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Total Users Card */}
+        <div className="bg-white rounded-xl p-6 shadow-[0px_4px_20px_rgba(0,0,0,0.05)] border border-gray-50 flex items-center gap-4 relative overflow-hidden group">
+          <div className="w-14 h-14 bg-[#EEF2FF] rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110">
+            <Users className="text-[#3D73FF]" size={28} />
+          </div>
+          <div className="flex-1">
+            <p className="text-[12px] font-medium text-gray-500 uppercase tracking-tight mb-1">Total Users</p>
+            <h4 className="text-2xl font-bold text-[#0F172A] leading-none mb-2">{stats.total}</h4>
+          </div>
+          <div className="flex items-end gap-[3px] h-10 self-end mb-1">
+            {[15, 25, 45, 65, 90].map((h) => (
+              <div key={`total-bar-${h}`} className="w-1 bg-[#3D73FF] rounded-t-sm" style={{ height: `${h}%`, opacity: h / 100 }} />
+            ))}
+          </div>
+        </div>
+
+        {/* Admin Users Card */}
+        <div className="bg-white rounded-xl p-6 shadow-[0px_4px_20px_rgba(0,0,0,0.05)] border border-gray-50 flex items-center gap-4 relative overflow-hidden group">
+          <div className="w-14 h-14 bg-[#ECFDF5] rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110">
+            <ShieldCheck className="text-[#10B981]" size={28} />
+          </div>
+          <div className="flex-1">
+            <p className="text-[12px] font-medium text-gray-500 uppercase tracking-tight mb-1">Admin Users</p>
+            <h4 className="text-2xl font-bold text-[#0F172A] leading-none mb-2">{stats.admins}</h4>
+          </div>
+          <div className="flex items-end gap-[3px] h-10 self-end mb-1">
+            {[20, 40, 60, 80, 100].map((h) => (
+              <div key={`admin-bar-${h}`} className="w-1 bg-[#10B981] rounded-t-sm" style={{ height: `${h}%`, opacity: h / 100 }} />
+            ))}
+          </div>
+        </div>
+
+        {/* Household Users Card */}
+        <div className="bg-white rounded-xl p-6 shadow-[0px_4px_20px_rgba(0,0,0,0.05)] border border-gray-50 flex items-center gap-4 relative overflow-hidden group">
+          <div className="w-14 h-14 bg-[#F5F3FF] rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110">
+            <Home className="text-[#7C3AED]" size={28} />
+          </div>
+          <div className="flex-1">
+            <p className="text-[12px] font-medium text-gray-500 uppercase tracking-tight mb-1">Household Users</p>
+            <h4 className="text-2xl font-bold text-[#0F172A] leading-none mb-2">{stats.residents}</h4>
+          </div>
+          <div className="flex items-end gap-[3px] h-10 self-end mb-1">
+            {[10, 30, 50, 75, 95].map((h) => (
+              <div key={`resident-bar-${h}`} className="w-1 bg-[#7C3AED] rounded-t-sm" style={{ height: `${h}%`, opacity: h / 100 }} />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Filters Section */}
+      <div className="glass-card rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm border border-outline-variant/30 transition-all hover:translate-y-[-2px]">
+        <div className="flex flex-1 flex-col md:flex-row gap-4">
+          {/* Search */}
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-outline" size={20} />
+            <input 
+              className="w-full pl-12 pr-4 py-3 bg-surface border border-outline-variant/30 rounded-xl focus:ring-2 focus:ring-primary-container/20 focus:border-primary-container outline-none transition-all font-body-md" 
+              placeholder="Search user name or email" 
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
+          {/* Role Filter (Only for Super Admin) */}
           {isSuperAdmin && (
-            <div className="inline-flex p-2 bg-slate-900/5 backdrop-blur-sm rounded-2xl border border-slate-200/50 shrink-0">
-              <button
-                onClick={() => setViewMode(ROLES.ADMIN)}
-                className={cn(
-                  "flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all",
-                  activeView === ROLES.ADMIN
-                    ? "bg-white text-blue-600 shadow-md ring-1 ring-slate-200"
-                    : "text-slate-500 hover:text-slate-700"
-                )}
+            <div className="relative min-w-[160px]">
+              <select 
+                className="w-full appearance-none bg-surface border border-outline-variant/30 rounded-xl px-4 py-3 font-body-md outline-none focus:ring-2 focus:ring-primary-container/20 pr-10"
+                value={viewMode}
+                onChange={(e) => setViewMode(e.target.value)}
               >
-                <ShieldCheck size={14} /> Admins
-              </button>
-              <button
-                onClick={() => setViewMode(ROLES.RESIDENT)}
-                className={cn(
-                  "flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all",
-                  activeView === ROLES.RESIDENT
-                    ? "bg-white text-blue-600 shadow-md ring-1 ring-slate-200"
-                    : "text-slate-500 hover:text-slate-700"
-                )}
-              >
-                <Users size={14} /> Residents
-              </button>
+                <option value={ROLES.ADMIN}>Admins</option>
+                <option value={ROLES.RESIDENT}>Residents</option>
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none" size={16} />
             </div>
           )}
 
-          <div className="space-y-1 min-w-0 flex-1">
-            <h1 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight uppercase flex items-center gap-3 truncate">
-              {activeView} <span className="text-blue-600">Directory</span>
-            </h1>
-            <p className="text-slate-500 text-xs lg:text-sm font-medium truncate">
-              Managing system profiles and role-based parameters.
-            </p>
+          {/* Location Dropdown */}
+          <div className="relative min-w-[160px]">
+            <select 
+              className="w-full appearance-none bg-surface border border-outline-variant/30 rounded-xl px-4 py-3 font-body-md outline-none focus:ring-2 focus:ring-primary-container/20 pr-10"
+              value={locationFilter}
+              onChange={(e) => setLocationFilter(e.target.value)}
+            >
+              <option value="Location">All Locations</option>
+              {/* These could be dynamic based on user data */}
+              <option value="San Andres">San Andres</option>
+              <option value="Unisan">Unisan</option>
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none" size={16} />
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full xl:w-auto flex-wrap">
-          <GlobalSearch
+        <button 
+          onClick={() => navigate(viewMode === ROLES.ADMIN ? ROUTES.REGISTER_STAFF : ROUTES.REGISTER_USER)}
+          className="primary-gradient-btn text-white px-8 py-3 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 hover:opacity-90 transition-opacity active:scale-95"
+        >
+          <span className="material-symbols-outlined text-[20px]">person_add</span>
+          Add User
+        </button>
+      </div>
+
+      {/* User Table Section */}
+      <div className="glass-card rounded-2xl overflow-hidden shadow-sm border border-outline-variant/30 transition-all hover:translate-y-[-2px]">
+        {loading && allUsers.length === 0 ? (
+          <UserTableSkeleton />
+        ) : (
+          <UserTable
+            users={filteredUsers}
+            onActionClick={(userData) => {
+              setSelectedUser(userData);
+              setIsModalOpen(true);
+            }}
+            onEditClick={(userData) => {
+              setSelectedEditUser(userData);
+              setIsEditModalOpen(true);
+            }}
             searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            isSearching={loading}
-            placeholder={`Search ${activeView}s...`}
-            className="w-full xl:w-80"
+            activeView={viewMode}
+            currentUserRole={currentUserRole}
+            isLoading={loading}
           />
-
-          <div className="flex items-center gap-3 w-full sm:w-auto shrink-0">
-            {isSuperAdmin && activeView === ROLES.ADMIN && (
-              <button
-                onClick={() => navigate(ROUTES.REGISTER_STAFF)}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white text-[11px] font-black uppercase tracking-[0.1em] rounded-2xl shadow-xl transition-all active:scale-95 whitespace-nowrap"
-              >
-                <ShieldPlus size={16} /> Register Admin
-              </button>
-            )}
-
-            {activeView === ROLES.RESIDENT && (
-              <button
-                onClick={() => navigate(ROUTES.REGISTER_USER)}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-black uppercase tracking-[0.1em] rounded-2xl shadow-xl shadow-blue-900/20 transition-all active:scale-95 whitespace-nowrap"
-              >
-                <UserPlus size={16} /> Register Resident
-              </button>
-            )}
-          </div>
-        </div>
-      </header>
-
-      {loading && users.length === 0 ? (
-        <UserTableSkeleton />
-      ) : (
-        <UserTable
-          users={users}
-          onActionClick={(userData) => {
-            setSelectedUser(userData);
-            setIsModalOpen(true);
-          }}
-          onEditClick={(userData) => {
-            setSelectedEditUser(userData);
-            setIsEditModalOpen(true);
-          }}
-          searchTerm={searchTerm}
-          activeView={activeView}
-          currentUserRole={currentUserRole}
-          isLoading={loading}
-        />
-      )}
+        )}
+      </div>
     </div>
   );
 };

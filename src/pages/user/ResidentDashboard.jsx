@@ -1,10 +1,15 @@
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
 import { useDevices, useHistory, useNotifications, useDeviceRequests } from "../../hooks";
-import { DeviceAnalyticsChart } from "../../components";
+import {
+  DeviceAnalyticsChart,
+  SummaryCard,
+  RecentAlertsFeed,
+  HealthDonutChart,
+} from "../../components";
 import { processLogsInWindows } from "../../utils/chartUtils";
-import { METRICS, METRIC_CONFIG, SENSOR_CONFIG } from "../../constants";
-import { cn } from "../../utils/cn";
+import { METRICS, METRIC_CONFIG, SENSOR_CONFIG, ROUTES } from "../../constants";
 import { Footer } from "../../layout";
 
 /**
@@ -13,6 +18,7 @@ import { Footer } from "../../layout";
  * Aligned with user-dashboard.html design and layout.
  */
 const ResidentDashboard = () => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { devices, loading: devicesLoading } = useDevices();
   const { requests, loading: requestsLoading } = useDeviceRequests(user?.uid);
@@ -106,66 +112,29 @@ const ResidentDashboard = () => {
 
       {/* 2. KPI SECTION */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-        {/* Total Devices */}
-        <div className="bg-white rounded-2xl p-6 flex items-center shadow-[0_12px_32px_4px_rgba(10,46,255,0.04)] border border-[#e4e7ec80]">
-          <div className="flex-shrink-0 w-16 h-16 rounded-full primary-gradient flex items-center justify-center text-white mr-6 shadow-lg">
-            <span className="material-symbols-outlined text-[32px]">router</span>
-          </div>
-          <div className="flex-1">
-            <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
-              Total Devices
-            </p>
-            <p className="flex items-center gap-1.5 text-green-600 text-[12px] font-semibold mb-2 font-body-md">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-              Active
-            </p>
-            <h4 className="text-4xl font-extrabold text-on-surface leading-none font-display">
-              {totalDevices}
-            </h4>
-          </div>
-        </div>
+        <SummaryCard
+          title="Total Devices"
+          value={totalDevices}
+          subtitle="Active"
+          icon="router"
+          colorClass="text-green-600"
+        />
 
-        {/* Request Device */}
-        <div className="bg-white rounded-2xl p-6 flex items-center shadow-[0_12px_32px_4px_rgba(10,46,255,0.04)] border border-[#e4e7ec80]">
-          <div className="flex-shrink-0 w-16 h-16 rounded-full primary-gradient flex items-center justify-center text-white mr-6 shadow-lg">
-            <span className="material-symbols-outlined text-[32px]">event_note</span>
-          </div>
-          <div className="flex-1">
-            <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
-              Request Device
-            </p>
-            <p className="flex items-center gap-1.5 text-orange-500 text-[12px] font-semibold mb-2 font-body-md">
-              <span className="w-1.5 h-1.5 rounded-full bg-orange-400" />
-              Pending
-            </p>
-            <h4 className="text-4xl font-extrabold text-on-surface leading-none font-display">
-              {pendingRequests}
-            </h4>
-          </div>
-        </div>
+        <SummaryCard
+          title="Request Device"
+          value={pendingRequests}
+          subtitle="Pending"
+          icon="event_note"
+          colorClass="text-orange-500"
+        />
 
-        {/* Device Health */}
-        <div className="bg-white rounded-2xl p-6 flex items-center shadow-[0_12px_32px_4px_rgba(10,46,255,0.04)] border border-[#e4e7ec80]">
-          <div className="flex-shrink-0 w-16 h-16 rounded-full primary-gradient flex items-center justify-center text-white mr-6 shadow-lg">
-            <span
-              className="material-symbols-outlined text-[32px]"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
-              security
-            </span>
-          </div>
-          <div className="flex-1">
-            <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
-              Device Health
-            </p>
-            <h4 className="text-4xl font-extrabold text-on-surface leading-none mb-1 font-display">
-              {healthScore}%
-            </h4>
-            <p className="flex items-center gap-1 text-green-600 text-[12px] font-semibold font-body-md">
-              <span className="material-symbols-outlined text-sm">trending_up</span>+ 8%
-            </p>
-          </div>
-        </div>
+        <SummaryCard
+          title="Device Health"
+          value={`${healthScore}%`}
+          icon="security"
+          trend="up"
+          trendValue="8%"
+        />
       </div>
 
       {/* 3. ANALYTICS GRID */}
@@ -219,52 +188,13 @@ const ResidentDashboard = () => {
           <h5 className="text-[12px] font-bold text-on-surface tracking-tight uppercase mb-6">
             System Overview
           </h5>
-          <div className="flex-1 flex items-center justify-center relative">
-            <svg className="w-64 h-64 -rotate-90">
-              <circle
-                cx="128"
-                cy="128"
-                fill="transparent"
-                r="100"
-                stroke="#E4E7EC"
-                strokeWidth="16"
-              />
-              <circle
-                cx="128"
-                cy="128"
-                fill="transparent"
-                r="100"
-                stroke="url(#blueGrad)"
-                strokeDasharray="628"
-                strokeDashoffset={628 * (1 - healthScore / 100)}
-                strokeLinecap="round"
-                strokeWidth="20"
-                className="transition-all duration-1000 ease-out"
-              />
-              <defs>
-                <linearGradient id="blueGrad" x1="0%" x2="100%" y1="0%" y2="0%">
-                  <stop offset="0%" style={{ stopColor: "#0A2EFF", stopOpacity: 1 }} />
-                  <stop offset="100%" style={{ stopColor: "#3D73FF", stopOpacity: 1 }} />
-                </linearGradient>
-              </defs>
-            </svg>
-            <div className="absolute flex flex-col items-center">
-              <div className="w-12 h-12 rounded-full primary-gradient flex items-center justify-center text-white mb-2 shadow-lg">
-                <span
-                  className="material-symbols-outlined"
-                  style={{ fontVariationSettings: "'FILL' 1" }}
-                >
-                  bolt
-                </span>
-              </div>
-              <span className="text-h1 font-extrabold text-on-surface font-display">
-                {healthScore}%
-              </span>
-              <span className="text-label-sm text-on-surface-variant uppercase tracking-widest font-bold">
-                Health
-              </span>
-            </div>
-          </div>
+          
+          <HealthDonutChart 
+            score={healthScore}
+            title="Health"
+            icon="bolt"
+          />
+
           <div className="grid grid-cols-3 gap-4 pt-6 border-t border-outline-variant/20">
             <div className="text-center">
               <p className="text-[10px] text-on-surface-variant uppercase font-bold mb-1">
@@ -345,120 +275,26 @@ const ResidentDashboard = () => {
         </div>
 
         {/* Widget 2: System Logs */}
-        <div className="glass-card rounded-2xl p-6 flex flex-col h-[400px]">
-          <div className="flex justify-between items-center mb-6">
-            <h5 className="text-[12px] font-bold text-on-surface-variant uppercase tracking-tight">
-              System Logs
-            </h5>
-            <button className="text-primary text-[11px] font-bold px-3 py-1 border border-outline-variant/30 rounded-lg bg-white/50 shadow-sm hover:bg-surface-container-low transition-colors uppercase tracking-widest">
-              View All
-            </button>
-          </div>
-          <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-4">
-            {logsLoading ? (
-              <div className="flex items-center justify-center h-40 opacity-30">
-                <span className="material-symbols-outlined animate-spin">sync</span>
-              </div>
-            ) : logs.length === 0 ? (
-              <p className="text-center text-label-sm text-outline py-10 italic">No logs found.</p>
-            ) : (
-              logs.slice(0, 5).map((log) => (
-                <div
-                  key={log.timestamp}
-                  className="flex items-center gap-4 py-3 border-b border-dotted border-outline-variant/30 last:border-0"
-                >
-                  <div
-                    className={cn(
-                      "w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0",
-                      log.voltage > 0 ? "bg-green-50 text-green-500" : "bg-error/5 text-error"
-                    )}
-                  >
-                    <span className="material-symbols-outlined text-[20px]">
-                      power_settings_new
-                    </span>
-                  </div>
-                  <div>
-                    <p className="text-label-md font-bold text-on-surface leading-tight">
-                      Device Status: {log.voltage > 0 ? "ON" : "OFF"}
-                    </p>
-                    <p className="text-[11px] text-on-surface-variant font-medium mt-1 uppercase tracking-tight">
-                      {new Date(log.timestamp).toLocaleString([], {
-                        month: "short",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
+        <RecentAlertsFeed 
+          title="System Logs"
+          variant="widget"
+          alerts={logs?.slice(0, 5).map(log => ({
+            timestamp: log.timestamp,
+            title: `Device Status: ${log.voltage > 0 ? 'ON' : 'OFF'}`,
+            details: log.voltage > 0 ? "Node output active" : "Node output inactive",
+            type: log.voltage > 0 ? "info" : "warning"
+          }))}
+          loading={logsLoading}
+        />
 
         {/* Widget 3: Recent Alerts */}
-        <div className="glass-card rounded-2xl p-6 flex flex-col h-[400px]">
-          <div className="flex justify-between items-center mb-6">
-            <h5 className="text-[12px] font-bold text-on-surface-variant tracking-tight uppercase">
-              Recent Alerts
-            </h5>
-          </div>
-          <div className="flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar">
-            {notificationsLoading ? (
-              <div className="flex items-center justify-center h-40 opacity-30">
-                <span className="material-symbols-outlined animate-spin">sync</span>
-              </div>
-            ) : notifications.length === 0 ? (
-              <p className="text-center text-label-sm text-outline py-10 italic font-body-md">
-                No active alerts.
-              </p>
-            ) : (
-              notifications.slice(0, 5).map((alert) => (
-                <div
-                  key={alert.id}
-                  className="flex items-center gap-4 py-3 border-b border-dashed border-outline-variant/20 last:border-0"
-                >
-                  <div
-                    className={cn(
-                      "w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0",
-                      alert.type === "critical"
-                        ? "bg-error/10 text-error"
-                        : "bg-amber-50 text-amber-500"
-                    )}
-                  >
-                    <span
-                      className="material-symbols-outlined text-[24px]"
-                      style={{
-                        fontVariationSettings: alert.type === "critical" ? "'FILL' 1" : "'FILL' 0",
-                      }}
-                    >
-                      {alert.type === "critical" ? "warning" : "info"}
-                    </span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[14px] font-semibold text-on-surface leading-tight mb-1 truncate">
-                      {alert.title}
-                    </p>
-                    <p className="text-[11px] text-on-surface-variant font-medium uppercase tracking-tight">
-                      {new Date(alert.timestamp).toLocaleString([], {
-                        month: "short",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-          <div className="mt-auto pt-4 border-t border-outline-variant/10">
-            <button className="flex items-center gap-2 text-primary font-bold text-[14px] hover:underline uppercase tracking-widest">
-              See All Alerts
-              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-            </button>
-          </div>
-        </div>
+        <RecentAlertsFeed 
+          title="Recent Alerts"
+          variant="widget"
+          alerts={notifications?.slice(0, 5)}
+          loading={notificationsLoading}
+          onViewAll={() => navigate(ROUTES.ALERTS)}
+        />
       </div>
 
       <Footer />

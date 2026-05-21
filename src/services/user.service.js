@@ -126,23 +126,29 @@ export const subscribeToAllUsers = (callback, targetRole = null, onError = null)
 
         // Privacy Guard
         if (targetRole === "superAdmin" || !roleData.isPrivate) {
-          // 2. Hydrate: Use the UID key to fetch profile details from the /users node
-          const userProfilePromise = get(ref(db, `users/${uid}`))
-            .then((userSnapshot) => {
+          // 2. Hydrate: Use the UID key to fetch profile details and account status
+          const hydrationTask = Promise.all([
+            get(ref(db, `users/${uid}`)),
+            get(ref(db, `accounts/${uid}`)),
+          ])
+            .then(([userSnapshot, accountSnapshot]) => {
               const profileData = userSnapshot.exists() ? userSnapshot.val() : {};
+              const accountData = accountSnapshot.exists() ? accountSnapshot.val() : {};
 
               return {
                 id: uid,
+                uid: uid, // Ensuring both are available
                 ...roleData, // Contains role, isPrivate, updatedAt
                 ...profileData, // Contains firstName, lastName, email, etc.
+                ...accountData, // Contains status, createdAt, userName
               };
             })
             .catch(() => {
-              // Fallback if profile fetch fails: gracefully return just the role data
-              return { id: uid, ...roleData };
+              // Fallback if fetch fails: gracefully return just the role data
+              return { id: uid, uid: uid, ...roleData };
             });
 
-          hydrationPromises.push(userProfilePromise);
+          hydrationPromises.push(hydrationTask);
         }
       });
 

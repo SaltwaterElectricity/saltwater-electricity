@@ -1,7 +1,8 @@
-/**
- * src/constants/index.js
- * Centralized configuration for the SMARTAQUA Dashboard.
- */
+// src/constants/index.js
+
+export * from "./roles";
+export * from "./routes";
+export * from "./ui";
 
 // 1. GLOBAL SETTINGS: Control logic thresholds
 export const APP_SETTINGS = Object.freeze({

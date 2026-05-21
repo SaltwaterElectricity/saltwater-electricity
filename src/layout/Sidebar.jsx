@@ -24,10 +24,10 @@ const SidebarLink = memo(({ to, icon, label, badgeCount, isResident }) => (
         "flex items-center space-x-3 px-4 py-3 rounded-lg transition-all justify-center group-hover/sidebar:justify-start relative",
         isActive
           ? isResident
-            ? "bg-white/20 text-white shadow-lg shadow-black/10"
+            ? "bg-white/15 text-white border-l-4 border-white shadow-lg shadow-black/5 rounded-xl"
             : "bg-blue-50/50 text-blue-700 border-r-4 border-blue-600"
           : isResident
-            ? "text-white/70 hover:bg-white/10 hover:text-white"
+            ? "opacity-70 hover:opacity-100 hover:bg-white/10 text-white"
             : "text-slate-500 hover:bg-slate-50/50 hover:translate-x-1"
       )
     }
@@ -39,10 +39,13 @@ const SidebarLink = memo(({ to, icon, label, badgeCount, isResident }) => (
     {badgeCount > 0 && (
       <span
         className={cn(
-          "absolute right-3 top-3 w-2 h-2 rounded-full ring-2",
-          isResident ? "bg-white ring-primary" : "bg-blue-600 ring-white"
+          isResident
+            ? "bg-primary text-[10px] px-2 py-0.5 rounded-full border border-white/20 ml-auto hidden group-hover/sidebar:block"
+            : "absolute right-3 top-3 w-2 h-2 rounded-full ring-2 bg-blue-600 ring-white"
         )}
-      />
+      >
+        {isResident ? badgeCount : ""}
+      </span>
     )}
   </NavLink>
 ));
@@ -128,80 +131,113 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
 
         {/* Primary Navigation */}
         <nav className="flex-1 space-y-1 overflow-y-auto custom-scrollbar-hide">
-          <SidebarLink
-            to={ROUTES.DASHBOARD}
-            icon="dashboard"
-            label="Dashboard"
-            isResident={isResident}
-          />
-
-          <SidebarLink
-            to={ROUTES.SMART_AQUA_MONITOR}
-            icon="monitoring"
-            label={isAdmin ? "Realtime Monitor" : "Live Monitor"}
-            isResident={isResident}
-          />
-
-          <SidebarLink
-            to={isAdmin ? ROUTES.ADMIN_REQUEST_MANAGEMENT : ROUTES.DEVICE_REQUESTS}
-            icon="app_registration"
-            label={isAdmin ? "Request Management" : "Device Requests"}
-            isResident={isResident}
-          />
-
-          {isAdmin && (
+          {isResident ? (
             <>
+              <SidebarLink
+                to={ROUTES.DASHBOARD}
+                icon="home"
+                label="Dashboard"
+                isResident={true}
+              />
+              <SidebarLink
+                to={ROUTES.SMART_AQUA_MONITOR}
+                icon="monitor_heart"
+                label="Real-Time Monitor"
+                isResident={true}
+              />
+              <SidebarLink
+                to={ROUTES.ALERTS}
+                icon="notifications"
+                label="Device Alerts"
+                badgeCount={unreadCount}
+                isResident={true}
+              />
+              <SidebarLink
+                to={ROUTES.DEVICE_REQUESTS}
+                icon="add"
+                label="Device Request"
+                isResident={true}
+              />
+              {deviceId && (
+                <SidebarLink
+                  to={ROUTES.DEVICE_ANALYTICS.replace(":deviceId", deviceId)}
+                  icon="history"
+                  label="Historical Data"
+                  isResident={true}
+                />
+              )}
+            </>
+          ) : (
+            <>
+              <SidebarLink
+                to={ROUTES.DASHBOARD}
+                icon="dashboard"
+                label="Dashboard"
+                isResident={false}
+              />
+              <SidebarLink
+                to={ROUTES.SMART_AQUA_MONITOR}
+                icon="monitoring"
+                label={isAdmin ? "Realtime Monitor" : "Live Monitor"}
+                isResident={false}
+              />
+              <SidebarLink
+                to={isAdmin ? ROUTES.ADMIN_REQUEST_MANAGEMENT : ROUTES.DEVICE_REQUESTS}
+                icon="app_registration"
+                label={isAdmin ? "Request Management" : "Device Requests"}
+                isResident={false}
+              />
               <SidebarLink
                 to={ROUTES.ADMIN_DEVICE_MANAGEMENT}
                 icon="hub"
                 label="Device Management"
-                isResident={isResident}
+                isResident={false}
+              />
+              <SidebarLink
+                to={ROUTES.ADMIN_RESIDENT_MANAGEMENT}
+                icon="person_search"
+                label="Resident Management"
+                isResident={false}
               />
               <SidebarLink
                 to={ROUTES.ADMIN_USER_MANAGEMENT}
                 icon="group"
                 label="User Management"
-                isResident={isResident}
+                isResident={false}
               />
-            </>
-          )}
-
-          {deviceId && (
-            <SidebarLink
-              to={ROUTES.DEVICE_ANALYTICS.replace(":deviceId", deviceId)}
-              icon="monitoring"
-              label="Device Analytics"
-              isResident={isResident}
-            />
-          )}
-
-          <SidebarLink
-            to={ROUTES.ALERTS}
-            icon="notifications_active"
-            label="Alerts"
-            badgeCount={unreadCount}
-            isResident={isResident}
-          />
-
-          {isAdmin && (
-            <>
+              <SidebarLink
+                to={ROUTES.ALERTS}
+                icon="notifications_active"
+                label="Alerts"
+                badgeCount={unreadCount}
+                isResident={false}
+              />
               <SidebarLink
                 to={ROUTES.ADMIN_AUDIT_LOGS}
                 icon="insights"
                 label="Audit Logs"
-                isResident={isResident}
+                isResident={false}
               />
               <SidebarLink
                 to="/predictive"
                 icon="engineering"
                 label="Predictive Maintenance"
-                isResident={isResident}
+                isResident={false}
+              />
+              <SidebarLink
+                to="/reports"
+                icon="description"
+                label="Reports"
+                isResident={false}
+              />
+              <SidebarLink
+                to="/settings"
+                icon="settings"
+                label="Settings"
+                isResident={false}
               />
             </>
           )}
-
-          <SidebarLink to="/reports" icon="description" label="Reports" isResident={isResident} />
-          <SidebarLink to="/settings" icon="settings" label="Settings" isResident={isResident} />
         </nav>
 
         {/* Bottom Actions */}

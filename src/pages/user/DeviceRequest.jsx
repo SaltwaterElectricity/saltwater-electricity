@@ -68,7 +68,7 @@ const ProgressTracker = ({ request }) => {
   const steps = [
     { id: 1, label: "Requested" },
     { id: 2, label: "Review" },
-    { id: 3, label: "Approved" },
+    { id: 3, label: "Request Validation" },
     { id: 4, label: "Device Ready" },
   ];
 

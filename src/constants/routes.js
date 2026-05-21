@@ -7,6 +7,7 @@ export const ROUTES = Object.freeze({
 
   // Admin & User Management
   ADMIN_USER_MANAGEMENT: "/admin/user-management",
+  ADMIN_RESIDENT_MANAGEMENT: "/admin/resident-management",
   REGISTER_USER: "/admin/register-user",
   REGISTER_STAFF: "/admin/register-staff",
   ADMIN_DEVICE_MANAGEMENT: "/admin/device-management",

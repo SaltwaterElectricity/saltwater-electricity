@@ -1,4 +1,5 @@
 import { cn } from "../../utils/cn";
+import { AlertTriangle, Info, ChevronRight, X } from "lucide-react";
 import ModalBackdrop from "./ModalBackdrop";
 
 export const ConfirmationModal = ({
@@ -10,49 +11,44 @@ export const ConfirmationModal = ({
   description = "Are you sure you want to proceed?",
   confirmText = "Confirm",
   variant = "primary", // primary (blue), danger (red), etc.
-  icon = null,
   children,
 }) => {
   if (!isOpen) return null;
 
-  // Resolve default icon based on variant if none provided
-  const displayIcon = icon || (variant === "danger" ? "logout" : "info");
+  const isDanger = variant === "danger";
 
   return (
     <ModalBackdrop>
-      <div className="glass-panel w-[92%] sm:w-full max-w-[440px] rounded-[32px] shadow-[0_40px_80px_rgba(0,82,204,0.12)] overflow-hidden animate-zoomIn flex flex-col border border-white/40">
+      <div className="relative w-[92%] sm:w-full max-w-[440px] bg-white rounded-3xl p-8 shadow-2xl border border-outline-variant/30 animate-in fade-in zoom-in-95 duration-200">
+        {/* ICON */}
+        <div className={cn(
+          "w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto transition-transform hover:scale-110",
+          isDanger ? "bg-error-container/20 text-error" : "bg-primary/10 text-primary"
+        )}>
+          {isDanger ? <AlertTriangle size={32} /> : <Info size={32} />}
+        </div>
+
         {/* HEADER */}
-        <div className="bg-surface-container-low/50 p-8 border-b border-outline-variant/20 text-center backdrop-blur-md">
-          <h2 className="text-xl font-black text-on-surface tracking-tight uppercase font-display italic">
-            {title}
-          </h2>
-          <p className="text-[11px] font-semibold text-outline uppercase tracking-[0.12em] mt-3 font-body-md leading-relaxed">
-            {description}
-          </p>
-        </div>
+        <h4 className="font-headline-md text-headline-md text-center text-on-surface mb-2 tracking-tight uppercase">
+          {title}
+        </h4>
+        <p className="text-on-surface-variant text-center font-body-md mb-8 leading-relaxed">
+          {description}
+        </p>
 
-        {/* BODY */}
-        <div className="p-8 max-h-[60vh] overflow-y-auto custom-scrollbar flex flex-col gap-6 font-body-md text-on-surface-variant">
-          {children || (
-            <div className="flex items-center justify-center p-4">
-              <div
-                className={cn(
-                  "w-20 h-20 rounded-full flex items-center justify-center shadow-inner border border-white/40",
-                  variant === "danger" ? "bg-error/10 text-error" : "bg-primary/10 text-primary"
-                )}
-              >
-                <span className="material-symbols-outlined text-[40px]">{displayIcon}</span>
-              </div>
-            </div>
-          )}
-        </div>
+        {/* CUSTOM BODY */}
+        {children && (
+          <div className="mb-8">
+            {children}
+          </div>
+        )}
 
-        {/* FOOTER */}
-        <div className="p-8 bg-surface-container-low/50 flex gap-4 border-t border-outline-variant/20">
+        {/* FOOTER ACTIONS */}
+        <div className="flex items-center gap-4">
           <button
             onClick={onClose}
             disabled={isSubmitting}
-            className="flex-1 px-4 py-3.5 rounded-xl text-xs font-black uppercase tracking-[0.1em] text-outline hover:text-on-surface hover:bg-white/40 transition-all disabled:opacity-50 font-body-md border border-outline-variant/10"
+            className="flex-1 px-6 py-3 text-label-md text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors font-semibold border border-outline-variant/30 active:scale-95 disabled:opacity-50"
           >
             Cancel
           </button>
@@ -60,25 +56,30 @@ export const ConfirmationModal = ({
             onClick={onConfirm}
             disabled={isSubmitting}
             className={cn(
-              "flex-[2] px-4 py-3.5 rounded-xl text-xs font-black uppercase tracking-[0.15em] text-white shadow-lg transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 font-body-md",
-              variant === "danger"
-                ? "bg-error hover:bg-error/90 shadow-error/20"
-                : "ocean-gradient hover:opacity-90 shadow-primary/20"
+              "flex-1 px-6 py-3 text-label-md text-white rounded-xl transition-all active:scale-95 font-semibold shadow-lg flex items-center justify-center gap-2",
+              isDanger 
+                ? "bg-error hover:bg-red-700 shadow-error/20" 
+                : "primary-gradient-btn hover:opacity-90 shadow-primary/20"
             )}
           >
             {isSubmitting ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Validating...
-              </>
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : (
               <>
                 <span>{confirmText}</span>
-                <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+                {!isDanger && <ChevronRight size={18} />}
               </>
             )}
           </button>
         </div>
+
+        {/* CLOSE BUTTON */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-2 text-outline hover:text-on-surface hover:bg-surface-container-low rounded-full transition-colors"
+        >
+          <X size={20} />
+        </button>
       </div>
     </ModalBackdrop>
   );

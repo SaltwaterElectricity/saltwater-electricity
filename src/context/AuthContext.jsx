@@ -138,7 +138,7 @@ export const AuthProvider = ({ children }) => {
             Access <span className="text-red-600">Denied</span>
           </h1>
           <p className="text-slate-500 font-medium leading-relaxed">
-            Your <strong>SmartAqua</strong> account has been suspended. <br />
+            Your <strong>Saltwater Electricity</strong> account has been suspended. <br />
             Contact your Facility Manager for San Andres to restore access.
           </p>
           <button

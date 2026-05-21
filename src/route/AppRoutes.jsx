@@ -10,6 +10,7 @@ import { MainLayout } from "../layout";
 import AccountProvisioning from "../pages/admin/AccountProvisioning";
 import LoginPage from "../pages/auth/LoginPage";
 import UserManagement from "../pages/admin/UserManagement";
+import ResidentManagement from "../pages/admin/ResidentManagement";
 import DashboardController from "../pages/dashboard";
 import RealTimeMonitor from "../pages/dashboard/RealTimeMonitor";
 import DeviceManagement from "../pages/admin/DeviceManagement";
@@ -85,6 +86,10 @@ export const AppRoutes = () => {
               <Route
                 path={ROUTES.ADMIN_USER_MANAGEMENT}
                 element={<UserManagement currentUserRole={userRole} />}
+              />
+              <Route
+                path={ROUTES.ADMIN_RESIDENT_MANAGEMENT}
+                element={<ResidentManagement currentUserRole={userRole} />}
               />
               <Route path={ROUTES.ADMIN_DEVICE_MANAGEMENT} element={<DeviceManagement />} />
               <Route path={ROUTES.ADMIN_REQUEST_MANAGEMENT} element={<RequestManagement />} />
