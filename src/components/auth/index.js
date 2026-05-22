@@ -1,4 +1,3 @@
-export { default as AuthSplashScreen } from "./AuthSplashScreen";
 export { default as LoginForm } from "./LoginForm";
 export { default as ForgotPasswordModal } from "../modal/ForgotPasswordModal";
 export { default as RequestOTPStep } from "./RequestOTPStep";

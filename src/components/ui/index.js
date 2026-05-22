@@ -16,7 +16,6 @@ export { default as SystemAlertItem } from "./SystemAlertItem";
 export { default as DeviceUsersTable } from "./DeviceUsersTable";
 export { UserTable } from "./UserTable";
 export { default as MetricCard } from "./MetricCard";
-export { AIInsightCard } from "./AIInsightCard";
 export { default as InsightPanel } from "./InsightPanel";
 export { default as SummaryCard } from "./SummaryCard";
 export { default as RecentAlertsFeed } from "./RecentAlertsFeed";
