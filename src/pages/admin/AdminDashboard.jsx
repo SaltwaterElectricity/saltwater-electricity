@@ -12,7 +12,10 @@ import {
   SystemHealthGauge,
   DeviceFeatureBarChart,
   DeviceUsersTable,
-  SummaryCard,
+  TotalDevicesAdminCard,
+  OnlineDevicesCard,
+  OfflineDevicesCard,
+  SystemHealthCard,
   RecentAlertsFeed,
 } from "../../components";
 import { ROUTES } from "../../constants/routes";
@@ -96,42 +99,10 @@ const AdminDashboard = () => {
     <div className="mx-auto space-y-6 max-w-[1800px] animate-in fade-in duration-700">
       {/* 1. METRICS GRID */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <SummaryCard
-          title="Total Devices"
-          value={stats.total || 0}
-          subtitle="Since last month"
-          icon="router"
-          trend="up"
-          trendValue="12%"
-        />
-        <SummaryCard
-          title="online Device"
-          value={stats.online || 0}
-          subtitle="Active warnings"
-          icon="sensors"
-          colorClass="text-orange-500"
-          iconBgClass="bg-orange-500 shadow-orange-200"
-          trend="up"
-          trendValue="+2"
-        />
-        <SummaryCard
-          title="Offline Devices"
-          value={stats.offline || 0}
-          subtitle="Network status"
-          icon="signal_wifi_off"
-          colorClass="text-red-500"
-          iconBgClass="bg-red-500 shadow-red-200"
-          trend="down"
-          trendValue="-1"
-        />
-        <SummaryCard
-          title="System Health"
-          value={`${stats.health}%`}
-          subtitle="Overall efficiency"
-          icon="ecg_heart"
-          colorClass="text-teal-600"
-          iconBgClass="bg-teal-500 shadow-teal-200"
-        />
+        <TotalDevicesAdminCard value={stats.total || 0} trendValue="12%" trend="up" />
+        <OnlineDevicesCard value={stats.online || 0} trendValue="+2" trend="up" />
+        <OfflineDevicesCard value={stats.offline || 0} trendValue="-1" trend="down" />
+        <SystemHealthCard value={stats.health} status="Optimal" />
       </div>
 
       {/* 2. PERFORMANCE & HEALTH SECTION */}

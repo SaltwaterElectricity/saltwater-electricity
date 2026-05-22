@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { Zap } from "lucide-react";
 import { cn } from "../../utils/cn";
 
 /**
@@ -9,7 +10,7 @@ const HealthDonutChart = memo(
   ({
     score = 0,
     title = "Health",
-    icon = "bolt",
+    icon: Icon = Zap,
     colorStart = "#0A2EFF",
     colorEnd = "#3D73FF",
     className,
@@ -51,12 +52,7 @@ const HealthDonutChart = memo(
         </svg>
         <div className="absolute flex flex-col items-center">
           <div className="w-12 h-12 rounded-full primary-gradient flex items-center justify-center text-white mb-2 shadow-lg">
-            <span
-              className="material-symbols-outlined"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
-              {icon}
-            </span>
+            <Icon size={24} fill="currentColor" fillOpacity={0.2} />
           </div>
           <span className="text-h1 font-extrabold text-on-surface font-display">{score}%</span>
           <span className="text-label-sm text-on-surface-variant uppercase tracking-widest font-bold">

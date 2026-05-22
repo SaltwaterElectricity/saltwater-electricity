@@ -1,10 +1,13 @@
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { Zap, Calendar, RefreshCw, Router, Activity } from "lucide-react";
 import { useAuth } from "../../context/useAuth";
 import { useDevices, useHistory, useNotifications, useDeviceRequests } from "../../hooks";
 import {
   DeviceAnalyticsChart,
-  SummaryCard,
+  TotalDevicesCard,
+  RequestDeviceCard,
+  DeviceHealthCard,
   RecentAlertsFeed,
   HealthDonutChart,
 } from "../../components";
@@ -86,7 +89,7 @@ const ResidentDashboard = () => {
       <div className="min-h-[60vh] flex items-center justify-center text-center px-6">
         <div className="max-w-md p-12 glass-card rounded-2xl shadow-xl animate-in fade-in zoom-in-95 duration-500">
           <div className="w-20 h-20 primary-gradient rounded-full flex items-center justify-center mx-auto mb-6 text-white shadow-lg">
-            <span className="material-symbols-outlined text-4xl">router</span>
+            <Router size={40} />
           </div>
           <h2 className="text-h2 font-h2 font-bold text-primary tracking-tight">No Active Node</h2>
           <p className="text-body-md text-on-surface-variant mt-4 leading-relaxed font-body-md">
@@ -112,29 +115,11 @@ const ResidentDashboard = () => {
 
       {/* 2. KPI SECTION */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-        <SummaryCard
-          title="Total Devices"
-          value={totalDevices}
-          subtitle="Active"
-          icon="router"
-          colorClass="text-green-600"
-        />
+        <TotalDevicesCard value={totalDevices} />
 
-        <SummaryCard
-          title="Request Device"
-          value={pendingRequests}
-          subtitle="Pending"
-          icon="event_note"
-          colorClass="text-orange-500"
-        />
+        <RequestDeviceCard value={pendingRequests} />
 
-        <SummaryCard
-          title="Device Health"
-          value={`${healthScore}%`}
-          icon="security"
-          trend="up"
-          trendValue="8%"
-        />
+        <DeviceHealthCard value={healthScore} trendValue="8%" trend="up" />
       </div>
 
       {/* 3. ANALYTICS GRID */}
@@ -146,9 +131,7 @@ const ResidentDashboard = () => {
               Device Performance
             </h5>
             <div className="flex items-center gap-2 px-3 py-2 border border-outline-variant/30 rounded-lg bg-white/50 shadow-sm">
-              <span className="material-symbols-outlined text-[18px] text-on-surface-variant">
-                calendar_today
-              </span>
+              <Calendar className="w-[18px] h-[18px] text-on-surface-variant" />
               <span className="text-label-sm text-on-surface font-semibold">
                 {new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" })}
               </span>
@@ -157,7 +140,7 @@ const ResidentDashboard = () => {
           <div className="flex-1 relative">
             {logsLoading ? (
               <div className="flex items-center justify-center h-full opacity-30">
-                <span className="material-symbols-outlined animate-spin text-4xl">sync</span>
+                <RefreshCw className="animate-spin w-10 h-10" />
               </div>
             ) : (
               <DeviceAnalyticsChart
@@ -189,7 +172,7 @@ const ResidentDashboard = () => {
             System Overview
           </h5>
 
-          <HealthDonutChart score={healthScore} title="Health" icon="bolt" />
+          <HealthDonutChart score={healthScore} title="Health" icon={Zap} />
 
           <div className="grid grid-cols-3 gap-4 pt-6 border-t border-outline-variant/20">
             <div className="text-center">
@@ -230,7 +213,7 @@ const ResidentDashboard = () => {
             <div className="flex items-center justify-between p-3 rounded-2xl border border-outline-variant/10 bg-surface-bright/50">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                  <span className="material-symbols-outlined text-[20px]">bolt</span>
+                  <Zap size={20} />
                 </div>
                 <span className="text-label-md text-on-surface-variant font-medium font-body-md">
                   Voltage
@@ -249,7 +232,7 @@ const ResidentDashboard = () => {
             <div className="flex items-center justify-between p-3 rounded-2xl border border-outline-variant/10 bg-surface-bright/50">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
-                  <span className="material-symbols-outlined text-[20px]">water_drop</span>
+                  <Activity size={20} />
                 </div>
                 <span className="text-label-md text-on-surface-variant font-medium font-body-md">
                   Salinity
