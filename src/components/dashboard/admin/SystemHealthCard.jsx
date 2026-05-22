@@ -9,7 +9,10 @@ const SystemHealthCard = memo(({ value, status = "Optimal" }) => {
     <div className="bg-white rounded-xl shadow-sm p-6 flex flex-col min-h-[180px] relative overflow-hidden group">
       <div className="flex justify-between items-start w-full">
         <div className="p-2.5 bg-teal-50 text-teal-600 rounded-lg">
-          <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+          <span
+            className="material-symbols-outlined text-[24px]"
+            style={{ fontVariationSettings: "'FILL' 1" }}
+          >
             ecg_heart
           </span>
         </div>
@@ -28,10 +31,10 @@ const SystemHealthCard = memo(({ value, status = "Optimal" }) => {
           <span className="text-[11px] font-bold text-teal-600">{status}</span>
         </div>
         <div className="w-full h-1.5 bg-teal-100 rounded-full overflow-hidden">
-          <div 
-            className="h-full bg-teal-500 rounded-full transition-all duration-1000" 
+          <div
+            className="h-full bg-teal-500 rounded-full transition-all duration-1000"
             style={{ width: `${value}%` }}
-           />
+          />
         </div>
       </div>
     </div>

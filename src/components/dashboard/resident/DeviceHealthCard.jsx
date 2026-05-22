@@ -19,13 +19,21 @@ const DeviceHealthCard = memo(({ value, trendValue = "8%", trend = "up" }) => {
         <h4 className="text-4xl font-extrabold text-on-surface leading-none mb-1 font-display truncate">
           {value}%
         </h4>
-        <div className={cn(
-          "flex items-center gap-1 text-[12px] font-semibold",
-          trend === "up" ? "text-green-600" : "text-red-600"
-        )}>
-          {trend === "up" ? <TrendingUp size={14} className="flex-shrink-0" /> : <TrendingDown size={14} className="flex-shrink-0" />}
+        <div
+          className={cn(
+            "flex items-center gap-1 text-[12px] font-semibold",
+            trend === "up" ? "text-green-600" : "text-red-600"
+          )}
+        >
+          {trend === "up" ? (
+            <TrendingUp size={14} className="flex-shrink-0" />
+          ) : (
+            <TrendingDown size={14} className="flex-shrink-0" />
+          )}
           <span className="truncate">
-            {trend === trendValue.startsWith("+") || trendValue.startsWith("-") ? trendValue : `${trend === "up" ? "+" : "-"} ${trendValue}`}
+            {trend === trendValue.startsWith("+") || trendValue.startsWith("-")
+              ? trendValue
+              : `${trend === "up" ? "+" : "-"} ${trendValue}`}
           </span>
         </div>
       </div>
