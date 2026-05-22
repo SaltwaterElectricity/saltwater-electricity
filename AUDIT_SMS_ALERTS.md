@@ -28,49 +28,52 @@ To evaluate and recommend a strategy for implementing real-time SMS alerts when 
 | **Cost**        | Small fee per SMS + monthly number fee.                | Cost of SIM card + local prepaid load.                            |
 | **Scalability** | Can send thousands of alerts simultaneously.           | Limited to one SMS at a time per hardware unit.                   |
 
-### **Recommendation: Use an SMS Provider (Twilio)**
+### **Recommendation: Use an SMS Provider (PhilSMS)**
 
-For a system monitoring critical parameters like water salinity, **reliability is the top priority**. A DIY GSM module adds multiple hardware failure points and increases the power consumption of the IoT node.
+For a system monitoring critical parameters like water salinity, **reliability and local accessibility are top priorities**. **PhilSMS (philsms.com)** is recommended as it provides:
+- **GCash Payment Support:** Seamless top-ups via the Philippines' most popular mobile wallet.
+- **Local Pricing:** Competitive rates (approx. ₱0.35 per SMS).
+- **Ease of Use:** Simple REST API that integrates perfectly with our Vercel Serverless environment.
+
+A DIY GSM module adds multiple hardware failure points and increases the power consumption of the IoT node.
 
 ---
 
 ## 4. Proposed Architecture (Cloud-Native)
 
-To adhere to the **CRITICAL SECURITY MANDATE** (no client-side API keys), the following flow is recommended:
+To adhere to the **CRITICAL SECURITY MANDATE** (no client-side API keys), the following flow is implemented:
 
-1.  **Hardware (ESP32):** Continues to push data to Firebase as usual. No hardware changes needed.
-2.  **Trigger (Firebase Cloud Function):** A background function watches for changes in `readings/{deviceId}/latest`.
+1.  **Hardware (ESP32):** Pushes data to Firebase. Can also directly call the `triggerHardwareAlert` API for immediate delivery.
+2.  **Backend Proxy (Vercel):** `api/sendSMS.js` and `api/triggerHardwareAlert.js` handle the PhilSMS API calls securely using `PHILSMS_API_TOKEN`.
 3.  **Logic:**
-    - Function checks if `tds_ppm >= 500`.
-    - Function fetches the `mobileNum` of the user assigned to that `deviceId`.
-    - Function calls the SMS Provider API.
-4.  **Backend Proxy:** A Vercel Serverless Function (similar to the current email service) handles the Twilio API call securely.
+    - Checks for critical thresholds (TDS/PPM).
+    - Fetches the `mobileNum` of the assigned user.
+    - Triggers the SMS via PhilSMS.
 
 ---
 
 ## 5. Implementation Roadmap
 
-### Phase 1: Backend Setup
+### Phase 1: Backend Setup (Completed)
 
-- Create `api/sendSMSAlert.js` using the Twilio Node.js SDK.
-- Store `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN` in environment variables.
+- Integrated PhilSMS via `api/sendSMS.js` and `api/triggerHardwareAlert.js`.
+- Configured environment variables: `PHILSMS_API_TOKEN` and `PHILSMS_SENDER_ID`.
 
 ### Phase 2: Notification Service Extension
 
-- Add `sendSMSAlert` to `src/services/notification.service.js` (bridging to the API).
+- Updated `src/services/notification.service.js` to point to the new backend endpoint.
 
 ### Phase 3: Trigger Integration
 
-- **Option A (Client-Side):** In `reading.service.js`, after a reading is detected, trigger the SMS. (Note: Only works if the app is open).
-- **Option B (Recommended):** Deploy a Firebase Cloud Function to handle this 24/7 without the app being open.
+- Hardware alerts can now trigger SMS directly via `triggerHardwareAlert` endpoint.
 
 ### Phase 4: UI Updates
 
 - Add an "SMS Alerts" toggle in the User Profile/Settings.
-- Ensure the `mobileNum` field is validated for E.164 format (e.g., `+639...`).
+- Ensure the `mobileNum` field is validated (e.g., `639...`).
 
 ---
 
 ## 6. Audit Conclusion
 
-Implementing SMS via a provider like **Twilio** is the most robust and secure approach. It leverages existing project patterns (Serverless APIs) and ensures that critical alerts are delivered even when the user is offline.
+Implementing SMS via a provider like **PhilSMS** is the most robust and secure approach for the Philippine context. It leverages existing project patterns (Serverless APIs), ensures critical alerts are delivered offline, and simplifies billing via GCash.

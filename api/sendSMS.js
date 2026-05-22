@@ -2,7 +2,7 @@ import axios from "axios";
 
 /**
  * Vercel Serverless Function: sendSMS
- * Securely triggers Semaphore SMS alerts from the backend.
+ * Securely triggers PhilSMS alerts from the backend.
  * Adheres to the SUEP Protocol (Secure & User-Friendly Error Handling).
  */
 export default async function handler(req, res) {
@@ -26,15 +26,12 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  // 3. Initialize Semaphore Configuration
-  const apiKey = process.env.SEMAPHORE_API_KEY;
+  // 3. Initialize PhilSMS Configuration
+  const apiToken = process.env.PHILSMS_API_TOKEN;
+  const senderId = process.env.PHILSMS_SENDER_ID || "PhilSMS";
 
-  // SEMAPHORE FREE TIER: Custom sender names (Sender ID) require a paid account and approval.
-  // Use the default "SEMAPHORE" for free/trial accounts to avoid API errors.
-  const senderName = process.env.SEMAPHORE_SENDER_NAME || "SEMAPHORE";
-
-  if (!apiKey) {
-    console.error("Server Configuration Error: SEMAPHORE_API_KEY environment variable missing.");
+  if (!apiToken) {
+    console.error("Server Configuration Error: PHILSMS_API_TOKEN environment variable missing.");
     return res.status(500).json({ error: "SMS service unavailable." });
   }
 
@@ -46,13 +43,24 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Missing recipient number or message content." });
     }
 
-    // 5. Trigger Semaphore API (POST)
-    const response = await axios.post("https://api.semaphore.co/api/v4/messages", {
-      apikey: apiKey,
-      number: number,
-      message: message,
-      sendername: senderName,
-    });
+    // 5. Trigger PhilSMS API (POST)
+    // Documentation: https://philsms.com/api/v3/sms/send
+    const response = await axios.post(
+      "https://philsms.com/api/v3/sms/send",
+      {
+        recipient: number,
+        sender_id: senderId,
+        type: "plain",
+        message: message,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    );
 
     // 6. Success Response
     return res.status(200).json({
@@ -61,7 +69,7 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     // SECURITY: Log technical details internally
-    console.error("Semaphore API Error:", error.response?.data || error.message);
+    console.error("PhilSMS API Error:", error.response?.data || error.message);
 
     // UX: Mask technical failure with a sanitized response
     return res.status(500).json({

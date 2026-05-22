@@ -102,18 +102,33 @@ export default async function handler(req, res) {
 
     const mobileNum = userSnap.val().mobileNum;
 
-    // 7. Trigger Semaphore SMS
-    const apiKey = process.env.SEMAPHORE_API_KEY;
-    const senderName = process.env.SEMAPHORE_SENDER_NAME || "SEMAPHORE";
+    // 7. Trigger PhilSMS SMS
+    const apiToken = process.env.PHILSMS_API_TOKEN;
+    const senderId = process.env.PHILSMS_SENDER_ID || "PhilSMS";
+
+    if (!apiToken) {
+      console.error("Server Configuration Error: PHILSMS_API_TOKEN environment variable missing.");
+      throw new Error("SMS service configuration error.");
+    }
 
     const message = `[SALT-ELEC] ALERT: Unit ${deviceId} detected critical TDS levels: ${tdsValue} PPM. Check dashboard now.`;
 
-    const smsResponse = await axios.post("https://api.semaphore.co/api/v4/messages", {
-      apikey: apiKey,
-      number: mobileNum,
-      message: message,
-      sendername: senderName,
-    });
+    const smsResponse = await axios.post(
+      "https://philsms.com/api/v3/sms/send",
+      {
+        recipient: mobileNum,
+        sender_id: senderId,
+        type: "plain",
+        message: message,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    );
 
     // 8. Update Cooldown Timestamp
     await alertMetaRef.set({
@@ -125,7 +140,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       success: true,
       message: "Alert delivered.",
-      message_id: smsResponse.data[0]?.message_id,
+      uid: smsResponse.data.data?.uid,
     });
   } catch (error) {
     console.error(`[Hardware Alert Error] Device: ${deviceId}:`, error.message);
