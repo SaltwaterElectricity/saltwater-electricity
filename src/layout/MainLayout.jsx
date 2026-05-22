@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import { useTimeout } from "../hooks/useTimeout";
 import Sidebar from "./Sidebar";
 import { NavbarHeader } from "./NavbarHeader";
-import { BottomNav } from "./BottomNav";
+import { BottomNav } from "./BottomNavLink";
 import { useAuth } from "../context/useAuth";
 import { useUI } from "../context/useUI";
 import { SettingsModal } from "../components/modal/SettingsModal";
