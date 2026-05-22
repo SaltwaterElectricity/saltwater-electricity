@@ -29,7 +29,7 @@ const MainLayout = ({ children }) => {
       <main
         className={cn(
           "flex-1 flex flex-col h-full min-w-0 relative transition-all duration-300",
-          isResident ? "md:ml-64" : (isSidebarCollapsed ? "md:ml-16" : "md:ml-64")
+          isResident ? "md:ml-64" : isSidebarCollapsed ? "md:ml-16" : "md:ml-64"
         )}
       >
         {/* Top App Bar */}

@@ -36,13 +36,18 @@ const SidebarLink = memo(({ to, icon, label, badgeCount, isResident, isCollapsed
       )
     }
   >
-    <span className={cn("material-symbols-outlined flex-shrink-0 transition-transform duration-300", isCollapsed && !isResident && "scale-110")}>{icon}</span>
+    <span
+      className={cn(
+        "material-symbols-outlined flex-shrink-0 transition-transform duration-300",
+        isCollapsed && !isResident && "scale-110"
+      )}
+    >
+      {icon}
+    </span>
     <span
       className={cn(
         "font-medium whitespace-nowrap overflow-hidden transition-all duration-300",
-        isResident
-          ? "text-[14px]"
-          : "text-sm font-['Space_Grotesk']",
+        isResident ? "text-[14px]" : "text-sm font-['Space_Grotesk']",
         !isResident && (isCollapsed ? "w-0 opacity-0 ml-0" : "w-auto opacity-100 ml-3")
       )}
     >
@@ -55,14 +60,16 @@ const SidebarLink = memo(({ to, icon, label, badgeCount, isResident, isCollapsed
             ? "bg-primary/50 text-white text-[10px] px-1.5 py-0.5 rounded-full min-w-[20px] text-center ml-auto"
             : cn(
                 "absolute rounded-full ring-2 ring-white transition-all duration-300",
-                isCollapsed ? "right-1 top-1 w-2 h-2 bg-blue-600" : "right-3 top-3 w-2 h-2 bg-blue-600"
+                isCollapsed
+                  ? "right-1 top-1 w-2 h-2 bg-blue-600"
+                  : "right-3 top-3 w-2 h-2 bg-blue-600"
               )
         )}
       >
         {isResident ? badgeCount : ""}
       </span>
     )}
-    
+
     {/* Tooltip for collapsed state (Admin Only) */}
     {isCollapsed && !isResident && (
       <div className="absolute left-14 ml-2 px-3 py-2 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-[100] shadow-2xl border border-white/10 pointer-events-none">
@@ -160,22 +167,33 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
       >
         {/* Brand Logo & Toggle Section (Admin Only Requirement) */}
         {!isResident ? (
-          <div className={cn(
-            "h-16 flex items-center mb-10 relative transition-all duration-300 overflow-visible",
-            isExpanded ? "justify-between px-2" : "justify-center group/top-section"
-          )}>
+          <div
+            className={cn(
+              "h-16 flex items-center mb-10 relative transition-all duration-300 overflow-visible",
+              isExpanded ? "justify-between px-2" : "justify-center group/top-section"
+            )}
+          >
             {/* Logo View */}
-            <div className={cn(
-              "flex items-center gap-2 transition-all duration-300",
-              !isExpanded && "group-hover/top-section:opacity-0 group-hover/top-section:invisible"
-            )}>
+            <div
+              className={cn(
+                "flex items-center gap-2 transition-all duration-300",
+                !isExpanded && "group-hover/top-section:opacity-0 group-hover/top-section:invisible"
+              )}
+            >
               <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary flex-shrink-0 shadow-sm">
-                <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
+                <span
+                  className="material-symbols-outlined text-[20px]"
+                  style={{ fontVariationSettings: "'FILL' 1" }}
+                >
+                  bolt
+                </span>
               </div>
-              <h1 className={cn(
-                "text-xl font-black tracking-tighter text-primary whitespace-nowrap overflow-hidden transition-all duration-300",
-                !isExpanded ? "w-0 opacity-0" : "w-auto opacity-100"
-              )}>
+              <h1
+                className={cn(
+                  "text-xl font-black tracking-tighter text-primary whitespace-nowrap overflow-hidden transition-all duration-300",
+                  !isExpanded ? "w-0 opacity-0" : "w-auto opacity-100"
+                )}
+              >
                 Saltwater
               </h1>
             </div>
@@ -220,17 +238,21 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
                 <h1 className="font-extrabold text-white text-[20px] leading-tight tracking-tighter whitespace-nowrap">
                   Saltwater
                 </h1>
-                <p className="text-[11px] text-white/70 font-medium whitespace-nowrap">Electricity Monitoring</p>
+                <p className="text-[11px] text-white/70 font-medium whitespace-nowrap">
+                  Electricity Monitoring
+                </p>
               </div>
             </div>
           </div>
         )}
 
         {/* Primary Navigation */}
-        <nav className={cn(
-          "flex-1 space-y-2 overflow-y-auto custom-scrollbar-hide",
-          !isResident ? "overflow-y-visible" : "overflow-y-auto overflow-x-hidden"
-        )}>
+        <nav
+          className={cn(
+            "flex-1 space-y-2 overflow-y-auto custom-scrollbar-hide",
+            !isResident ? "overflow-y-visible" : "overflow-y-auto overflow-x-hidden"
+          )}
+        >
           {isResident ? (
             <>
               <SidebarLink
@@ -377,14 +399,23 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
         {/* Bottom Actions */}
         <div className="mt-auto pt-6 space-y-1 overflow-x-hidden">
           {!isResident && (
-            <button className={cn(
-              "w-full rounded-xl font-bold mb-4 transition-all active:scale-95 h-12 flex items-center shadow-lg ocean-gradient text-white shadow-blue-200 overflow-hidden",
-              !isExpanded ? "justify-center p-0" : "justify-center px-4"
-            )}>
+            <button
+              className={cn(
+                "w-full rounded-xl font-bold mb-4 transition-all active:scale-95 h-12 flex items-center shadow-lg ocean-gradient text-white shadow-blue-200 overflow-hidden",
+                !isExpanded ? "justify-center p-0" : "justify-center px-4"
+              )}
+            >
               <span className={cn("material-symbols-outlined", isExpanded && "mr-2")}>
                 description
               </span>
-              <span className={cn("transition-all duration-300 whitespace-nowrap", !isExpanded ? "w-0 opacity-0 overflow-hidden" : "w-auto opacity-100")}>Generate Report</span>
+              <span
+                className={cn(
+                  "transition-all duration-300 whitespace-nowrap",
+                  !isExpanded ? "w-0 opacity-0 overflow-hidden" : "w-auto opacity-100"
+                )}
+              >
+                Generate Report
+              </span>
             </button>
           )}
 
@@ -393,7 +424,10 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
               "flex items-center space-x-3 px-4 py-2 transition-colors rounded-lg",
               isResident
                 ? "text-white/70 hover:bg-white/10 hover:text-white"
-                : cn("text-slate-500 hover:text-blue-600", !isExpanded ? "justify-center px-2" : "justify-start")
+                : cn(
+                    "text-slate-500 hover:text-blue-600",
+                    !isExpanded ? "justify-center px-2" : "justify-start"
+                  )
             )}
             href="#"
             onClick={handleLinkClick}
@@ -404,7 +438,10 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
                 "font-medium whitespace-nowrap overflow-hidden transition-all duration-300",
                 isResident
                   ? "text-[14px]"
-                  : cn("text-sm font-['Space_Grotesk']", !isExpanded ? "w-0 opacity-0" : "w-auto opacity-100 ml-3")
+                  : cn(
+                      "text-sm font-['Space_Grotesk']",
+                      !isExpanded ? "w-0 opacity-0" : "w-auto opacity-100 ml-3"
+                    )
               )}
             >
               Support
@@ -420,7 +457,10 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
               "w-full flex items-center space-x-3 px-4 py-2 transition-colors rounded-lg",
               isResident
                 ? "text-white/70 hover:bg-white/10 hover:text-white"
-                : cn("text-slate-500 hover:text-error", !isExpanded ? "justify-center px-2" : "justify-start")
+                : cn(
+                    "text-slate-500 hover:text-error",
+                    !isExpanded ? "justify-center px-2" : "justify-start"
+                  )
             )}
           >
             <span className="material-symbols-outlined flex-shrink-0">logout</span>
@@ -429,7 +469,10 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
                 "font-medium whitespace-nowrap overflow-hidden transition-all duration-300",
                 isResident
                   ? "text-[14px]"
-                  : cn("text-sm font-['Space_Grotesk']", !isExpanded ? "w-0 opacity-0" : "w-auto opacity-100 ml-3")
+                  : cn(
+                      "text-sm font-['Space_Grotesk']",
+                      !isExpanded ? "w-0 opacity-0" : "w-auto opacity-100 ml-3"
+                    )
               )}
             >
               Log Out

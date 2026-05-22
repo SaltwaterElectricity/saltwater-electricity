@@ -9,11 +9,11 @@ export const UIProvider = ({ children }) => {
 
   const [settingsModal, setSettingsModal] = useState({
     isOpen: false,
-    activeTab: "profile"
+    activeTab: "profile",
   });
 
   const toggleSidebarCollapse = useCallback(() => {
-    setIsSidebarCollapsed(prev => {
+    setIsSidebarCollapsed((prev) => {
       const newState = !prev;
       localStorage.setItem("sidebar_collapsed", JSON.stringify(newState));
       return newState;
@@ -25,7 +25,7 @@ export const UIProvider = ({ children }) => {
   }, []);
 
   const closeSettings = useCallback(() => {
-    setSettingsModal(prev => ({ ...prev, isOpen: false }));
+    setSettingsModal((prev) => ({ ...prev, isOpen: false }));
   }, []);
 
   const value = {
@@ -33,12 +33,8 @@ export const UIProvider = ({ children }) => {
     toggleSidebarCollapse,
     settingsModal,
     openSettings,
-    closeSettings
+    closeSettings,
   };
 
-  return (
-    <UIContext.Provider value={value}>
-      {children}
-    </UIContext.Provider>
-  );
+  return <UIContext.Provider value={value}>{children}</UIContext.Provider>;
 };
