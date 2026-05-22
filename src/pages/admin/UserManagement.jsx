@@ -1,12 +1,10 @@
 import { useState, useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import { ShieldCheck, Users, AlertTriangle, Search, Home, ChevronDown } from "lucide-react";
 
 // Services, Hooks, at Utils
 import { useUserSubscription } from "../../hooks";
 import { updateUserStatus, updateUserProfile, USER_STATUS } from "../../services/user.service";
 import { cn } from "../../utils/cn";
-import { ROUTES } from "../../constants/routes";
 import { ROLES } from "../../constants/roles";
 
 // UI Components
@@ -14,13 +12,12 @@ import {
   Toast,
   ConfirmationModal,
   EditUserModal,
+  AccountProvisioningModal,
   UserTable,
   UserTableSkeleton,
 } from "../../components";
 
 const UserManagement = ({ currentUserRole }) => {
-  const navigate = useNavigate();
-
   // --- STATES ---
   const [searchTerm, setSearchTerm] = useState("");
   const [locationFilter, setLocationFilter] = useState("Location");
@@ -33,6 +30,8 @@ const UserManagement = ({ currentUserRole }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedEditUser, setSelectedEditUser] = useState(null);
   const [isEditSaving, setIsEditSaving] = useState(false);
+
+  const [isProvisioningModalOpen, setIsProvisioningModalOpen] = useState(false);
 
   const [viewMode, setViewMode] = useState(
     currentUserRole === ROLES.SUPER_ADMIN ? ROLES.ADMIN : ROLES.RESIDENT
@@ -315,9 +314,7 @@ const UserManagement = ({ currentUserRole }) => {
         </div>
 
         <button
-          onClick={() =>
-            navigate(viewMode === ROLES.ADMIN ? ROUTES.REGISTER_STAFF : ROUTES.REGISTER_USER)
-          }
+          onClick={() => setIsProvisioningModalOpen(true)}
           className="primary-gradient-btn text-white px-8 py-3 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 hover:opacity-90 transition-opacity active:scale-95"
         >
           <span className="material-symbols-outlined text-[20px]">person_add</span>
@@ -347,6 +344,13 @@ const UserManagement = ({ currentUserRole }) => {
           />
         )}
       </div>
+
+      {/* Provisioning Modal */}
+      <AccountProvisioningModal
+        isOpen={isProvisioningModalOpen}
+        onClose={() => setIsProvisioningModalOpen(false)}
+        mode={viewMode === ROLES.ADMIN ? "staff" : "user"}
+      />
     </div>
   );
 };

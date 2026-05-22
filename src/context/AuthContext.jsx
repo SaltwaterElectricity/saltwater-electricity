@@ -11,6 +11,7 @@ import { isSuperAdmin, isAdmin } from "../utils/rbac";
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null); // Firebase Auth User
   const [user, setUser] = useState(null); // Flattened DB Data + Token Claims
+  const [isSessionExpired, setIsSessionExpired] = useState(false);
   const [loading, setLoading] = useState(true);
 
   // Use refs to track listeners for cleanup
@@ -24,6 +25,7 @@ export const AuthProvider = ({ children }) => {
         const data = await getFullUserData(firebaseUser.uid, firebaseUser, forceRefresh);
         setCurrentUser(firebaseUser);
         setUser(data || null);
+        setIsSessionExpired(false); // Reset on active session
       } else {
         setCurrentUser(null);
         setUser(null);
@@ -108,10 +110,13 @@ export const AuthProvider = ({ children }) => {
       isSuperAdmin: isSuperAdmin(user),
       isAdmin: isAdmin(user),
 
+      isSessionExpired,
+      setIsSessionExpired,
+
       forceTokenRefresh,
       loading,
     };
-  }, [currentUser, user, loading, forceTokenRefresh]);
+  }, [currentUser, user, loading, forceTokenRefresh, isSessionExpired]);
 
   // 2. SECURITY KILL-SWITCH: Rendered if account status changes to disabled in real-time
   if (user?.status === USER_STATUS.DISABLED) {

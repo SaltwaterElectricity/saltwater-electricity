@@ -257,13 +257,15 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
                 isResident={false}
                 onClick={handleLinkClick}
               />
-              <SidebarLink
-                to={ROUTES.ADMIN_USER_MANAGEMENT}
-                icon="group"
-                label="User Management"
-                isResident={false}
-                onClick={handleLinkClick}
-              />
+              {userRole === ROLES.SUPER_ADMIN && (
+                <SidebarLink
+                  to={ROUTES.ADMIN_USER_MANAGEMENT}
+                  icon="group"
+                  label="User Management"
+                  isResident={false}
+                  onClick={handleLinkClick}
+                />
+              )}
               <SidebarLink
                 to={ROUTES.ALERTS}
                 icon="notifications_active"

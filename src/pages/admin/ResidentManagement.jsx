@@ -1,5 +1,4 @@
 import { useState, useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Users,
   AlertTriangle,
@@ -15,15 +14,18 @@ import {
 import { useUserSubscription, useAssignments, useDevices } from "../../hooks";
 import { updateUserStatus, updateUserProfile, USER_STATUS } from "../../services/user.service";
 import { cn } from "../../utils/cn";
-import { ROUTES } from "../../constants/routes";
 import { ROLES } from "../../constants/roles";
 
 // UI Components
-import { Toast, ConfirmationModal, EditUserModal, UserTableSkeleton } from "../../components";
+import {
+  Toast,
+  ConfirmationModal,
+  EditUserModal,
+  AccountProvisioningModal,
+  UserTableSkeleton,
+} from "../../components";
 
 const ResidentManagement = () => {
-  const navigate = useNavigate();
-
   // --- STATES ---
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All Users");
@@ -37,6 +39,8 @@ const ResidentManagement = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedEditUser, setSelectedEditUser] = useState(null);
   const [isEditSaving, setIsEditSaving] = useState(false);
+
+  const [isProvisioningModalOpen, setIsProvisioningModalOpen] = useState(false);
 
   // --- DATA FETCHING ---
   const {
@@ -336,7 +340,7 @@ const ResidentManagement = () => {
         </div>
 
         <button
-          onClick={() => navigate(ROUTES.REGISTER_USER)}
+          onClick={() => setIsProvisioningModalOpen(true)}
           className="primary-gradient-btn text-white px-8 py-3 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 hover:opacity-90 transition-opacity active:scale-95"
         >
           <span className="material-symbols-outlined text-[20px]">person_add</span>
@@ -362,6 +366,13 @@ const ResidentManagement = () => {
           />
         )}
       </div>
+
+      {/* Provisioning Modal */}
+      <AccountProvisioningModal
+        isOpen={isProvisioningModalOpen}
+        onClose={() => setIsProvisioningModalOpen(false)}
+        mode="user"
+      />
     </div>
   );
 };

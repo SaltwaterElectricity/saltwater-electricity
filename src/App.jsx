@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "./context/useAuth";
-import { AnimatedLogo, GlobalErrorBoundary } from "./components";
+import { AnimatedLogo, GlobalErrorBoundary, SessionExpiredModal } from "./components";
 import { AppRoutes } from "./route/AppRoutes";
 
 function App() {
@@ -28,6 +28,7 @@ function App() {
   return (
     <GlobalErrorBoundary>
       <AppRoutes />
+      <SessionExpiredModal />
     </GlobalErrorBoundary>
   );
 }

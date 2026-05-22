@@ -1,4 +1,5 @@
 export { default as AccessGrantedModal } from "./AccessGrantedModal";
+export { default as AccountProvisioningModal } from "./AccountProvisioningModal";
 export { default as AssignDeviceModal } from "./AssignDeviceModal";
 export { default as CancelRequestModal } from "./CancelRequestModal";
 export { ConfirmationModal } from "./ConfirmationModal";
@@ -6,5 +7,6 @@ export { default as DeviceRequestModal } from "./DeviceRequestModal";
 export { default as EditUserModal } from "./EditUserModal";
 export { default as ForgotPasswordModal } from "./ForgotPasswordModal";
 export { default as ModalBackdrop } from "./ModalBackdrop";
+export { default as SessionExpiredModal } from "./SessionExpiredModal";
 export { SettingsModal } from "./SettingsModal";
 export { default as SystemAuditModal } from "./SystemAuditModal";
