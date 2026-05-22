@@ -150,9 +150,7 @@ const AccountProvisioningModal = ({ isOpen, onClose, mode = "user" }) => {
           <h1 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight uppercase">
             {config.title}
           </h1>
-          <p className="text-slate-500 mt-2 text-xs md:text-sm font-medium">
-            {config.description}
-          </p>
+          <p className="text-slate-500 mt-2 text-xs md:text-sm font-medium">{config.description}</p>
         </header>
 
         {/* ERROR DISPLAY */}
@@ -165,7 +163,11 @@ const AccountProvisioningModal = ({ isOpen, onClose, mode = "user" }) => {
 
         {/* REGISTRATION FORM */}
         <div className="max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
-          <form id="provision-form" onSubmit={handleSubmit(handlePreSubmit)} className="flex flex-col gap-8">
+          <form
+            id="provision-form"
+            onSubmit={handleSubmit(handlePreSubmit)}
+            className="flex flex-col gap-8"
+          >
             <RegistrationFields register={register} errors={errors} currentUserRole={userRole} />
           </form>
         </div>

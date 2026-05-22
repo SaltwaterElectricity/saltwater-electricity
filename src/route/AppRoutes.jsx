@@ -97,9 +97,7 @@ export const AppRoutes = () => {
           )}
 
           {/* Super Admin Module */}
-          {isSuperAdmin && (
-            <Route element={<PrivateRoute requiredRole={ROLES.SUPER_ADMIN} />} />
-          )}
+          {isSuperAdmin && <Route element={<PrivateRoute requiredRole={ROLES.SUPER_ADMIN} />} />}
 
           {/* Shared Application Views */}
           <Route path={ROUTES.ALERTS} element={<Alerts />} />

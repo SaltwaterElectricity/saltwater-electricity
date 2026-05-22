@@ -20,7 +20,7 @@ const SessionExpiredModal = () => {
     try {
       // 1. Perform secure logout and local cleanup
       await logoutUser();
-      
+
       // 2. Clear state and redirect
       setIsSessionExpired(false);
       window.location.href = "/login";
@@ -33,7 +33,6 @@ const SessionExpiredModal = () => {
   return (
     <ModalBackdrop>
       <div className="relative w-[90%] max-w-md bg-white rounded-[32px] p-8 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-300">
-        
         {/* ICON HEADER */}
         <div className="flex justify-center mb-6">
           <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center relative">
@@ -50,7 +49,8 @@ const SessionExpiredModal = () => {
             Session <span className="text-amber-600">Expired</span>
           </h2>
           <p className="text-slate-500 font-medium leading-relaxed">
-            For your security, you have been logged out due to inactivity. Please sign in again to continue monitoring.
+            For your security, you have been logged out due to inactivity. Please sign in again to
+            continue monitoring.
           </p>
         </div>
 
@@ -60,8 +60,8 @@ const SessionExpiredModal = () => {
           disabled={isProcessing}
           className={cn(
             "w-full py-4 rounded-2xl font-bold transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2",
-            isProcessing 
-              ? "bg-slate-100 text-slate-400 cursor-wait" 
+            isProcessing
+              ? "bg-slate-100 text-slate-400 cursor-wait"
               : "bg-slate-900 hover:bg-black text-white"
           )}
         >
