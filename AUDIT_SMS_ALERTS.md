@@ -31,6 +31,7 @@ To evaluate and recommend a strategy for implementing real-time SMS alerts when 
 ### **Recommendation: Use an SMS Provider (PhilSMS)**
 
 For a system monitoring critical parameters like water salinity, **reliability and local accessibility are top priorities**. **PhilSMS (philsms.com)** is recommended as it provides:
+
 - **GCash Payment Support:** Seamless top-ups via the Philippines' most popular mobile wallet.
 - **Local Pricing:** Competitive rates (approx. ₱0.35 per SMS).
 - **Ease of Use:** Simple REST API that integrates perfectly with our Vercel Serverless environment.
