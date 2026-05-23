@@ -1,4 +1,4 @@
-export { default as TotalDevicesAdminCard } from "./TotalDevicesAdminCard";
-export { default as OnlineDevicesCard } from "./OnlineDevicesCard";
-export { default as OfflineDevicesCard } from "./OfflineDevicesCard";
-export { default as SystemHealthCard } from "./SystemHealthCard";
+export { default as TotalDevicesAdminCard } from "./TotalDevicesAdminCard.jsx";
+export { default as OnlineDevicesCard } from "./OnlineDevicesCard.jsx";
+export { default as OfflineDevicesCard } from "./OfflineDevicesCard.jsx";
+export { default as SystemHealthCard } from "./SystemHealthCard.jsx";

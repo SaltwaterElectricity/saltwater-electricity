@@ -1,5 +1,5 @@
-export { AdminMonitoringLayout } from "./AdminMonitoringLayout";
-export { DeviceInfoRow } from "./DeviceInfoRow";
-export { ManagedDeviceCard } from "./ManagedDeviceCard";
-export { UserDeviceLayout, ProvisionDeviceCard } from "./UserDeviceLayout";
-export { DevicePairingCard } from "./DevicePairingCard";
+export { AdminMonitoringLayout } from "./AdminMonitoringLayout.jsx";
+export { DeviceInfoRow } from "./DeviceInfoRow.jsx";
+export { ManagedDeviceCard } from "./ManagedDeviceCard.jsx";
+export { UserDeviceLayout, ProvisionDeviceCard } from "./UserDeviceLayout.jsx";
+export { DevicePairingCard } from "./DevicePairingCard.jsx";

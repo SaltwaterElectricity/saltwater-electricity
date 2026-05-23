@@ -1,5 +1,5 @@
-export { default as RequestManagementHeader } from "./RequestManagementHeader";
-export { default as RequestManagementStats } from "./RequestManagementStats";
-export { default as RequestTable } from "./RequestTable";
-export { default as RequestTableRow } from "./RequestTableRow";
-export { default as ProcessRequestModal } from "./ProcessRequestModal";
+export { default as RequestManagementHeader } from "./RequestManagementHeader.jsx";
+export { default as RequestManagementStats } from "./RequestManagementStats.jsx";
+export { default as RequestTable } from "./RequestTable.jsx";
+export { default as RequestTableRow } from "./RequestTableRow.jsx";
+export { default as ProcessRequestModal } from "./ProcessRequestModal.jsx";

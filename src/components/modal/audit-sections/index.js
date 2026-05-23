@@ -1,6 +1,6 @@
-export { AnalyticsSection } from "./AnalyticsSection";
-export { ConnectivitySection } from "./ConnectivitySection";
-export { RawTelemetrySection } from "./RawTelemetrySection";
-export { AccountabilitySection } from "./AccountabilitySection";
-export { ConsumptionSection } from "./ConsumptionSection";
-export { ControlSection } from "./ControlSection";
+export { AnalyticsSection } from "./AnalyticsSection.jsx";
+export { ConnectivitySection } from "./ConnectivitySection.jsx";
+export { RawTelemetrySection } from "./RawTelemetrySection.jsx";
+export { AccountabilitySection } from "./AccountabilitySection.jsx";
+export { ConsumptionSection } from "./ConsumptionSection.jsx";
+export { ControlSection } from "./ControlSection.jsx";

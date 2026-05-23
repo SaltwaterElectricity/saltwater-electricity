@@ -1,3 +1,3 @@
-export { default as UserManagementHeader } from "./UserManagementHeader";
-export { default as UserManagementStats } from "./UserManagementStats";
-export { default as UserManagementFilters } from "./UserManagementFilters";
+export { default as UserManagementHeader } from "./UserManagementHeader.jsx";
+export { default as UserManagementStats } from "./UserManagementStats.jsx";
+export { default as UserManagementFilters } from "./UserManagementFilters.jsx";
