@@ -1,3 +1,4 @@
+export { default as ResidentManagementHeader } from "./ResidentManagementHeader";
 export { default as ResidentStats } from "./ResidentStats";
 export { default as ResidentFilters } from "./ResidentFilters";
 export { default as ResidentTable } from "./ResidentTable";

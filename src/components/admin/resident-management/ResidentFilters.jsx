@@ -17,8 +17,8 @@ const ResidentFilters = memo(({ filters, onAddClick }) => {
   } = filters;
 
   return (
-    <div className="glass-card rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm border border-outline-variant/30 transition-all hover:translate-y-[-2px]">
-      <div className="flex flex-1 flex-col md:flex-row gap-4 items-center">
+    <div className="glass-card rounded-2xl p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4 shadow-sm border border-outline-variant/30 transition-all hover:translate-y-[-2px]">
+      <div className="flex flex-1 flex-col lg:flex-row gap-4 items-center">
         {/* Search */}
         <div className="flex-1 max-w-md w-full">
           <GlobalSearch
@@ -30,7 +30,7 @@ const ResidentFilters = memo(({ filters, onAddClick }) => {
         </div>
 
         {/* Online/Offline Filter */}
-        <div className="relative min-w-[180px]">
+        <div className="relative w-full lg:min-w-[180px] lg:w-auto">
           <select
             className="w-full appearance-none bg-surface border border-outline-variant/30 rounded-xl px-4 py-3 font-body-md outline-none focus:ring-2 focus:ring-primary-container/20 pr-10"
             value={statusFilter}
@@ -47,7 +47,7 @@ const ResidentFilters = memo(({ filters, onAddClick }) => {
         </div>
 
         {/* Location Dropdown */}
-        <div className="relative min-w-[160px]">
+        <div className="relative w-full lg:min-w-[160px] lg:w-auto">
           <select
             className="w-full appearance-none bg-surface border border-outline-variant/30 rounded-xl px-4 py-3 font-body-md outline-none focus:ring-2 focus:ring-primary-container/20 pr-10"
             value={locationFilter}
@@ -67,7 +67,7 @@ const ResidentFilters = memo(({ filters, onAddClick }) => {
 
       <button
         onClick={onAddClick}
-        className="primary-gradient-btn text-white px-8 py-3 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 hover:opacity-90 transition-opacity active:scale-95"
+        className="primary-gradient-btn text-white px-8 py-3 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 hover:opacity-90 transition-opacity active:scale-95 whitespace-nowrap lg:w-auto w-full"
       >
         <span className="material-symbols-outlined text-[20px]">person_add</span>
         Add Resident

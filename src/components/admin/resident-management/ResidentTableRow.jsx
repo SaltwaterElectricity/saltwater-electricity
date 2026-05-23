@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { MapPin, Edit3, Trash2, RotateCcw } from "lucide-react";
-import { cn } from "../../../../utils/cn";
+import { cn } from "../../../utils/cn";
 
 /**
  * ResidentTableRow Component

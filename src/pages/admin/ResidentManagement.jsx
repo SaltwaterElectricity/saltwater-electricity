@@ -15,8 +15,8 @@ import {
   UserTableSkeleton,
 } from "../../components";
 
-// Local Components
 import {
+  ResidentManagementHeader,
   ResidentStats,
   ResidentFilters,
   ResidentTable,
@@ -151,14 +151,7 @@ const ResidentManagement = () => {
       />
 
       {/* Page Header */}
-      <div>
-        <h3 className="font-headline-lg text-headline-lg text-on-surface tracking-tight uppercase">
-          RESIDENT Management
-        </h3>
-        <p className="font-body-md text-body-md text-on-surface-variant">
-          Manage all admin and household users within the monitoring system.
-        </p>
-      </div>
+      <ResidentManagementHeader />
 
       {/* Summary Stats */}
       <ResidentStats stats={stats} />
