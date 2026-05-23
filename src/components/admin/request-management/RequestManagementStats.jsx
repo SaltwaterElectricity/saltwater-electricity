@@ -46,9 +46,7 @@ const RequestManagementStats = memo(({ requests }) => {
     total: requests.length,
     pending: requests.filter((r) => r.status === "pending").length,
     resolutionRate: requests.length
-      ? Math.round(
-          (requests.filter((r) => r.status !== "pending").length / requests.length) * 100
-        )
+      ? Math.round((requests.filter((r) => r.status !== "pending").length / requests.length) * 100)
       : 0,
   };
 

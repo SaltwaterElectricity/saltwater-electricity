@@ -38,9 +38,7 @@ const RequestTableRow = memo(({ request, onApprove, onDecline }) => {
         </div>
       </td>
       <td className="px-8 py-6">
-        <p className="text-xs font-black text-slate-700 leading-none mb-1">
-          {request.deviceName}
-        </p>
+        <p className="text-xs font-black text-slate-700 leading-none mb-1">{request.deviceName}</p>
         <p className="text-[10px] font-bold text-blue-500 uppercase tracking-tight">
           {request.requestType?.replace("_", " ")}
         </p>
@@ -89,9 +87,7 @@ const RequestTableRow = memo(({ request, onApprove, onDecline }) => {
           ) : (
             <div className="flex items-center gap-2 text-slate-300">
               <CheckCircle2 size={14} />
-              <span className="text-[9px] font-black uppercase tracking-widest">
-                Resolved
-              </span>
+              <span className="text-[9px] font-black uppercase tracking-widest">Resolved</span>
             </div>
           )}
         </div>

@@ -61,9 +61,7 @@ const UserManagementStats = memo(({ stats }) => {
           <p className="text-[12px] font-medium text-gray-500 uppercase tracking-tight mb-1">
             Household Users
           </p>
-          <h4 className="text-2xl font-bold text-[#0F172A] leading-none mb-2">
-            {stats.residents}
-          </h4>
+          <h4 className="text-2xl font-bold text-[#0F172A] leading-none mb-2">{stats.residents}</h4>
         </div>
         <div className="flex items-end gap-[3px] h-10 self-end mb-1">
           {[10, 30, 50, 75, 95].map((h) => (

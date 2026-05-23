@@ -2,10 +2,7 @@ import { useState, useMemo, useCallback } from "react";
 import { useAuth } from "../../context/useAuth";
 import { useDeviceRequests } from "../../hooks";
 import { CancelRequestModal, Toast } from "../../components";
-import {
-  DeviceRequestProgress,
-  RequestHistoryTable,
-} from "../../components/device/device-request";
+import { DeviceRequestProgress, RequestHistoryTable } from "../../components/device/device-request";
 import { cancelDeviceRequest } from "../../services/request.service";
 
 const DeviceRequest = () => {
@@ -87,5 +84,5 @@ const DeviceRequest = () => {
     </div>
   );
 };
- 
+
 export default DeviceRequest;
