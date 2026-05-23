@@ -16,7 +16,11 @@ import {
 } from "../../components";
 
 // Local Components
-import { ResidentStats, ResidentFilters, ResidentTable } from "../../components/admin/resident-management";
+import {
+  ResidentStats,
+  ResidentFilters,
+  ResidentTable,
+} from "../../components/admin/resident-management";
 
 /**
  * ResidentManagement Page (Refactored)
@@ -24,14 +28,7 @@ import { ResidentStats, ResidentFilters, ResidentTable } from "../../components/
  */
 const ResidentManagement = () => {
   // --- CUSTOM HOOK ---
-  const {
-    residents,
-    allResidents,
-    stats,
-    loading,
-    error,
-    filters
-  } = useResidentManagement();
+  const { residents, allResidents, stats, loading, error, filters } = useResidentManagement();
 
   // --- LOCAL UI STATES ---
   const [showToast, setShowToast] = useState(false);
@@ -167,10 +164,7 @@ const ResidentManagement = () => {
       <ResidentStats stats={stats} />
 
       {/* Filter Toolbar */}
-      <ResidentFilters 
-        filters={filters} 
-        onAddClick={() => setIsProvisioningModalOpen(true)} 
-      />
+      <ResidentFilters filters={filters} onAddClick={() => setIsProvisioningModalOpen(true)} />
 
       {/* Data Table */}
       <div className="glass-card rounded-2xl overflow-hidden shadow-sm border border-outline-variant/30 transition-all hover:translate-y-[-2px]">

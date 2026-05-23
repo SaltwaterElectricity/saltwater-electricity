@@ -1,13 +1,13 @@
-import { Search, X, Loader2 } from 'lucide-react';
+import { Search, X, Loader2 } from "lucide-react";
 import { cn } from "../../utils/cn";
 
-const GlobalSearch = ({ 
-  searchTerm, 
-  setSearchTerm, 
-  isSearching, 
+const GlobalSearch = ({
+  searchTerm,
+  setSearchTerm,
+  isSearching,
   placeholder = "Search...",
   className = "",
-  variant = "glass" // "glass" | "solid"
+  variant = "glass", // "glass" | "solid"
 }) => {
   return (
     <div className={cn("relative w-full group", className)}>
@@ -16,10 +16,14 @@ const GlobalSearch = ({
         {isSearching ? (
           <Loader2 className="w-5 h-5 text-blue-500 animate-spin" />
         ) : (
-          <Search className={cn(
-            "w-5 h-5 transition-colors",
-            variant === "glass" ? "text-gray-400 group-focus-within:text-blue-500" : "text-outline group-focus-within:text-primary"
-          )} />
+          <Search
+            className={cn(
+              "w-5 h-5 transition-colors",
+              variant === "glass"
+                ? "text-gray-400 group-focus-within:text-blue-500"
+                : "text-outline group-focus-within:text-primary"
+            )}
+          />
         )}
       </div>
 
@@ -35,7 +39,7 @@ const GlobalSearch = ({
         placeholder={placeholder}
         className={cn(
           "w-full h-12 pl-12 pr-12 transition-all duration-300 outline-none font-body-md",
-          variant === "glass" 
+          variant === "glass"
             ? "bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white/40 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 shadow-sm"
             : "bg-surface border border-outline-variant/30 rounded-xl text-on-surface placeholder:text-on-surface-variant/50 focus:ring-2 focus:ring-primary-container/20 focus:border-primary-container"
         )}
