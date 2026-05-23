@@ -1,11 +1,12 @@
 import { useEffect, useRef, useCallback } from "react";
-import { logoutUser } from "../services/auth.service";
+import { useAuth } from "../context/useAuth";
 
 /**
  * PRODUCTION-READY TIMEOUT HOOK
  * Features: Event Throttling, Cross-Tab Sync, and Background Resilience.
  */
 export const useTimeout = (timeoutLimit) => {
+  const { setIsSessionExpired } = useAuth();
   const timeoutRef = useRef(null);
   const lastResetRef = useRef(null);
 
@@ -14,15 +15,11 @@ export const useTimeout = (timeoutLimit) => {
     lastResetRef.current = Date.now();
   }, []);
 
-  // 1. CENTRALIZED LOGOUT LOGIC
-  const handleLogout = useCallback(async () => {
-    try {
-      localStorage.removeItem("last_activity");
-      await logoutUser();
-    } catch {
-      window.location.href = "/login";
-    }
-  }, []);
+  // 1. TRIGGER EXPIRY STATE
+  const triggerExpiry = useCallback(() => {
+    localStorage.removeItem("last_activity");
+    setIsSessionExpired(true);
+  }, [setIsSessionExpired]);
 
   // 2. MEMOIZED RESET LOGIC WITH THROTTLING
   const resetTimer = useCallback(
@@ -39,9 +36,9 @@ export const useTimeout = (timeoutLimit) => {
 
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
-      timeoutRef.current = setTimeout(handleLogout, timeoutLimit);
+      timeoutRef.current = setTimeout(triggerExpiry, timeoutLimit);
     },
-    [timeoutLimit, handleLogout]
+    [timeoutLimit, triggerExpiry]
   );
 
   // 3. VISIBILITY & EVENT LISTENER MANAGEMENT
@@ -59,7 +56,7 @@ export const useTimeout = (timeoutLimit) => {
         const timeElapsed = Date.now() - lastActivity;
 
         if (timeElapsed >= timeoutLimit) {
-          handleLogout();
+          triggerExpiry();
         } else {
           // I-recompute ang timer batay sa natitirang oras
           resetTimer();
@@ -84,5 +81,5 @@ export const useTimeout = (timeoutLimit) => {
       window.removeEventListener("focus", checkInactivityOnFocus);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [resetTimer, timeoutLimit, handleLogout]);
+  }, [resetTimer, timeoutLimit, triggerExpiry]);
 };

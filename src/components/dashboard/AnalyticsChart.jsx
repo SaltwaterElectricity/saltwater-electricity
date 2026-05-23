@@ -1,4 +1,5 @@
 import { memo, useMemo } from "react";
+import { Calendar, ChevronDown } from "lucide-react";
 import {
   AreaChart,
   Area,
@@ -39,15 +40,11 @@ const AnalyticsChart = memo(({ voltageData = [], salinityData = [] }) => {
 
         <div className="relative">
           <button className="flex items-center gap-3 px-4 py-2 bg-surface-container-low border border-outline-variant/30 rounded-lg hover:bg-surface-container transition-all group">
-            <span className="material-symbols-outlined text-[20px] text-primary">
-              calendar_today
-            </span>
+            <Calendar className="w-5 h-5 text-primary" />
             <span className="text-sm font-semibold text-on-surface">
               May 07, 2025 - May 21, 2025
             </span>
-            <span className="material-symbols-outlined text-[20px] text-outline group-hover:text-primary transition-colors">
-              expand_more
-            </span>
+            <ChevronDown className="w-5 h-5 text-outline group-hover:text-primary transition-colors" />
           </button>
         </div>
       </div>

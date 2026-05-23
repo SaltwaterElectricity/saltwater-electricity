@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   useUserSubscription,
   useAuditLogs,
@@ -7,21 +8,26 @@ import {
   useHistory,
 } from "../../hooks";
 import {
-  MetricCard,
   AnalyticsChart,
   SystemHealthGauge,
   DeviceFeatureBarChart,
-  SystemAlertItem,
   DeviceUsersTable,
+  TotalDevicesAdminCard,
+  OnlineDevicesCard,
+  OfflineDevicesCard,
+  SystemHealthCard,
+  RecentAlertsFeed,
 } from "../../components";
+import { ROUTES } from "../../constants/routes";
 
 /**
  * MAIN ADMIN DASHBOARD PAGE
  * Synchronized with dashboard.html main content.
  */
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const { data: users, loading: usersLoading } = useUserSubscription();
-  const { logs: auditLogs } = useAuditLogs(10);
+  const { logs: auditLogs, loading: auditLoading } = useAuditLogs(10);
   const { requests } = useDeviceRequests();
   const { devices, telemetry } = useDevices();
 
@@ -89,69 +95,14 @@ const AdminDashboard = () => {
     });
   }, [devices, telemetry]);
 
-  // DATA CALCULATION: Alerts Mapping
-  const systemAlerts = useMemo(() => {
-    return (
-      auditLogs?.slice(0, 3).map((log) => ({
-        id: log.id,
-        title: log.action.replace(/_/g, " "),
-        description: log.details || "System activity detected.",
-        time: new Date(log.timestamp).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        type:
-          log.action.includes("ERROR") || log.action.includes("FAILURE")
-            ? "error"
-            : log.action.includes("WARNING")
-              ? "warning"
-              : "info",
-      })) || []
-    );
-  }, [auditLogs]);
-
   return (
     <div className="mx-auto space-y-6 max-w-[1800px] animate-in fade-in duration-700">
-      {/* 1. METRICS BENTO GRID */}
+      {/* 1. METRICS GRID */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <MetricCard
-          title="Total Devices"
-          value={stats.total || 128}
-          status="Since last month"
-          icon="router"
-          trend="up"
-          trendValue="12%"
-        />
-        <MetricCard
-          title="online Device"
-          value={stats.online || 8}
-          status="Active warnings"
-          icon="sensors"
-          colorClass="text-orange-500"
-          bgIconClass="bg-orange-50"
-          trend="up"
-          trendValue="+2"
-        />
-        <MetricCard
-          title="Offline Devices"
-          value={stats.offline || 4}
-          status="Network status"
-          icon="signal_wifi_off"
-          colorClass="text-red-500"
-          bgIconClass="bg-red-50"
-          trend="down"
-          trendValue="-1"
-        />
-        <MetricCard
-          title="System Health"
-          value={`${stats.health}%`}
-          status="Overall efficiency"
-          statusValue="Optimal"
-          icon="ecg_heart"
-          colorClass="text-teal-600"
-          bgIconClass="bg-teal-50"
-          isHealth
-        />
+        <TotalDevicesAdminCard value={stats.total || 0} trendValue="12%" trend="up" />
+        <OnlineDevicesCard value={stats.online || 0} trendValue="+2" trend="up" />
+        <OfflineDevicesCard value={stats.offline || 0} trendValue="-1" trend="down" />
+        <SystemHealthCard value={stats.health} status="Optimal" />
       </div>
 
       {/* 2. PERFORMANCE & HEALTH SECTION */}
@@ -173,25 +124,13 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Alerts & Requests */}
         <div className="lg:col-span-4 space-y-6">
-          <div className="bg-white p-6 rounded-xl shadow-sm flex flex-col">
-            <h3 className="font-bold text-sm uppercase tracking-wider text-on-surface-variant mb-6">
-              System Alerts
-            </h3>
-            <div className="space-y-4 mb-6">
-              {systemAlerts.map((alert) => (
-                <SystemAlertItem key={alert.id} {...alert} />
-              ))}
-              {systemAlerts.length === 0 && (
-                <p className="text-center py-10 text-[10px] font-black text-outline uppercase tracking-widest">
-                  No active alerts
-                </p>
-              )}
-            </div>
-            <button className="w-full text-primary font-bold text-xs flex items-center justify-center gap-2 py-3 border border-primary/10 bg-primary/5 rounded-lg hover:bg-primary/10 transition-all">
-              View all alerts{" "}
-              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-            </button>
-          </div>
+          <RecentAlertsFeed
+            title="System Alerts"
+            variant="widget"
+            alerts={auditLogs}
+            loading={auditLoading}
+            onViewAll={() => navigate(ROUTES.ADMIN_AUDIT_LOGS)}
+          />
 
           <div className="bg-white p-6 rounded-xl shadow-sm flex flex-col">
             <h3 className="font-bold text-sm uppercase tracking-wider text-on-surface-variant mb-6 text-center">

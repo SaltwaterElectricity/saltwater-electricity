@@ -1,21 +1,20 @@
-import { initializeApp, cert, getApps } from "firebase-admin/app";
-import { getDatabase } from "firebase-admin/database";
+import { initFirebaseAdmin } from "./_utils/firebase.js";
+import { sendSuccess, sendError, handleOptions } from "./_utils/response.js";
 import axios from "axios";
 
 /**
  * Vercel Serverless Function: triggerHardwareAlert
- *
- * Optimized for ESP32 calls.
- * Accepts deviceId and tdsValue, finds the owner, and sends an SMS.
+ * Optimized for ESP32 hardware calls.
  */
-
 export default async function handler(req, res) {
-  // 1. Security: Only allow POST requests
+  // ESP32 usually doesn't do OPTIONS, but good for testing/web calls
+  if (handleOptions(req, res)) return;
+
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method Not Allowed" });
+    return sendError(res, "Method Not Allowed", 405, "hw/method-not-allowed");
   }
 
-  // 2. Input Sanitization & Extraction
+  // 1. Input Sanitization
   const deviceId = req.body.deviceId
     ?.toString()
     .trim()
@@ -23,116 +22,104 @@ export default async function handler(req, res) {
   const tdsValue = parseFloat(req.body.tdsValue);
   const secretKey = req.body.secretKey;
 
-  // 3. Strict Authentication: NO DEFAULT SECRET
+  // 2. Strict Authentication
   const HARDWARE_SECRET = process.env.HARDWARE_SECRET_KEY;
-
   if (!HARDWARE_SECRET) {
-    console.error("CRITICAL: HARDWARE_SECRET_KEY environment variable is missing.");
-    return res.status(500).json({ error: "Server configuration error." });
+    return sendError(res, "Server configuration error.", 500, "hw/config-missing");
   }
 
   if (secretKey !== HARDWARE_SECRET) {
     console.warn(
       `[SECURITY] Unauthorized hardware alert attempt. Device: ${deviceId || "Unknown"}`
     );
-    return res.status(401).json({ error: "Unauthorized" });
+    return sendError(res, "Unauthorized", 401, "hw/unauthorized");
   }
 
   if (!deviceId || isNaN(tdsValue)) {
-    return res.status(400).json({ error: "Invalid deviceId or tdsValue." });
+    return sendError(res, "Invalid deviceId or tdsValue.", 400, "hw/invalid-input");
   }
 
   try {
-    // 4. Initialize Firebase Admin
-    if (!getApps().length) {
-      const project_id = process.env.VITE_FIREBASE_PROJECT_ID || process.env.FIREBASE_PROJECT_ID;
-      const client_email = process.env.FIREBASE_CLIENT_EMAIL;
-      const private_key = process.env.FIREBASE_PRIVATE_KEY;
+    const { db } = initFirebaseAdmin();
 
-      if (!project_id || !client_email || !private_key) {
-        console.error(
-          "Missing Firebase Admin credentials (PROJECT_ID, CLIENT_EMAIL, or PRIVATE_KEY)."
-        );
-        throw new Error("Server configuration error: Missing Firebase credentials.");
-      }
-
-      initializeApp({
-        credential: cert({
-          project_id,
-          client_email,
-          private_key: private_key.replace(/\\n/g, "\n"),
-        }),
-        databaseURL: process.env.VITE_FIREBASE_DATABASE_URL,
-      });
-    }
-
-    const db = getDatabase();
-
-    // 5. ANTI-SPAM PROTECTION: 15-Minute Cooldown per Device
+    // 3. Anti-Spam / Rate Limiting (15-Minute Cooldown)
     const alertMetaRef = db.ref(`system_metadata/alerts/${deviceId}`);
     const metaSnap = await alertMetaRef.get();
     const now = Date.now();
-    const COOLDOWN_MS = 15 * 60 * 1000; // 15 Minutes
+    const COOLDOWN_MS = 15 * 60 * 1000;
 
     if (metaSnap.exists()) {
       const lastSent = metaSnap.val().lastSmsSent || 0;
       if (now - lastSent < COOLDOWN_MS) {
         const remaining = Math.ceil((COOLDOWN_MS - (now - lastSent)) / 60000);
-        return res.status(429).json({
-          error: "Rate limit exceeded",
-          message: `SMS alert already sent recently. Cooldown active for ${remaining} more minutes.`,
-        });
+        return sendError(
+          res,
+          `Rate limit exceeded. Cooldown active for ${remaining} minutes.`,
+          429,
+          "hw/rate-limit"
+        );
       }
     }
 
-    // 6. Data Lookup: Find Owner & Mobile Number
+    // 4. Data Lookup: Find Owner
     const assignmentRef = db.ref(`device_assignments/${deviceId}`);
     const assignmentSnap = await assignmentRef.get();
 
     if (!assignmentSnap.exists()) {
-      return res.status(404).json({ error: "Device not assigned to any user." });
+      return sendError(res, "Device not assigned to any user.", 404, "hw/unassigned");
     }
 
     const { userId } = assignmentSnap.val();
     const userSnap = await db.ref(`users/${userId}`).get();
 
     if (!userSnap.exists() || !userSnap.val().mobileNum || userSnap.val().mobileNum === "N/A") {
-      return res.status(404).json({ error: "No valid mobile number found for device owner." });
+      return sendError(
+        res,
+        "No valid mobile number found for device owner.",
+        404,
+        "hw/missing-contact"
+      );
     }
 
     const mobileNum = userSnap.val().mobileNum;
 
-    // 7. Trigger Semaphore SMS
-    const apiKey = process.env.SEMAPHORE_API_KEY;
-    const senderName = process.env.SEMAPHORE_SENDER_NAME || "SEMAPHORE";
+    // 5. Trigger PhilSMS
+    const apiToken = process.env.PHILSMS_API_TOKEN;
+    const senderId = process.env.PHILSMS_SENDER_ID || "PhilSMS";
+
+    if (!apiToken) {
+      throw new Error("SMS service configuration error (missing token).");
+    }
 
     const message = `[SALT-ELEC] ALERT: Unit ${deviceId} detected critical TDS levels: ${tdsValue} PPM. Check dashboard now.`;
 
-    const smsResponse = await axios.post("https://api.semaphore.co/api/v4/messages", {
-      apikey: apiKey,
-      number: mobileNum,
-      message: message,
-      sendername: senderName,
-    });
+    const smsResponse = await axios.post(
+      "https://philsms.com/api/v3/sms/send",
+      {
+        recipient: mobileNum,
+        sender_id: senderId,
+        type: "plain",
+        message: message,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    );
 
-    // 8. Update Cooldown Timestamp
+    // 6. Update Metadata
     await alertMetaRef.set({
       lastSmsSent: now,
       lastTdsValue: tdsValue,
       status: "delivered",
+      smsUid: smsResponse.data.data?.uid,
     });
 
-    return res.status(200).json({
-      success: true,
-      message: "Alert delivered.",
-      message_id: smsResponse.data[0]?.message_id,
-    });
+    return sendSuccess(res, { message: "Alert delivered." });
   } catch (error) {
-    // SECURITY: Log technical details internally without exposing them to the client
-    console.error(`[Hardware Alert Error] Device: ${deviceId}:`, error.message);
-
-    return res.status(500).json({
-      error: "Failed to process alert.",
-    });
+    return sendError(res, error, 500, "hw/process-failed");
   }
 }

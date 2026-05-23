@@ -46,7 +46,7 @@ export const AdminMonitoringLayout = ({ device, telemetry, onViewAnalytics }) =>
   const { logs: history } = useHistory(device.device_id, 10);
 
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-6">
       <div className="flex justify-between items-start">
         <div className="space-y-1">
           <div className="flex items-center gap-2">

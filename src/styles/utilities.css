@@ -1,0 +1,11 @@
+/* src/styles/utilities.css */
+
+.text-gradient-blue {
+  background: linear-gradient(135deg, #006591 0%, #00abc2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glow-soft {
+  box-shadow: 0 0 40px 0 rgba(0, 101, 145, 0.08);
+}

@@ -1,78 +1,44 @@
-import { initializeApp, cert, getApps } from "firebase-admin/app";
-import { getAuth } from "firebase-admin/auth";
-import { getDatabase } from "firebase-admin/database";
+import { initFirebaseAdmin } from "./_utils/firebase.js";
+import { sendSuccess, sendError, handleOptions } from "./_utils/response.js";
 import sgMail from "@sendgrid/mail";
 
 /**
  * Vercel Serverless Function: generateOTP
- *
  * Securely generates an OTP for password reset.
- * Uses Firebase Admin SDK to check user existence and RTDB access.
  */
-
 export default async function handler(req, res) {
-  // 1. Diagnostic Ping
-  if (req.query.ping) {
-    return res.status(200).json({ status: "ok", message: "API is reachable" });
+  if (handleOptions(req, res)) return;
+
+  if (req.method === "GET" && req.query.ping) {
+    return sendSuccess(res, { message: "API is reachable" });
   }
 
-  // 2. CORS Configuration
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
-  );
-
-  if (req.method === "OPTIONS") return res.status(200).end();
-  if (req.method !== "POST") return res.status(405).json({ error: "Method Not Allowed" });
+  if (req.method !== "POST") {
+    return sendError(res, "Method Not Allowed", 405, "auth/method-not-allowed");
+  }
 
   const { email } = req.body;
-
   if (!email) {
-    return res.status(400).json({ error: "Email is required." });
+    return sendError(res, "Email is required.", 400, "auth/missing-email");
   }
 
   try {
-    // 3. Modular Initialization
-    if (!getApps().length) {
-      const project_id = process.env.VITE_FIREBASE_PROJECT_ID || process.env.FIREBASE_PROJECT_ID;
-      const client_email = process.env.FIREBASE_CLIENT_EMAIL;
-      const private_key = process.env.FIREBASE_PRIVATE_KEY;
+    const { auth, db } = initFirebaseAdmin();
 
-      if (!project_id || !client_email || !private_key) {
-        throw new Error(
-          "Missing Firebase Admin credentials (PROJECT_ID, CLIENT_EMAIL, or PRIVATE_KEY)."
-        );
-      }
-
-      initializeApp({
-        credential: cert({
-          project_id,
-          client_email,
-          private_key: private_key.replace(/\\n/g, "\n"),
-        }),
-        databaseURL: process.env.VITE_FIREBASE_DATABASE_URL,
-      });
-    }
-
-    const auth = getAuth();
-    const db = getDatabase();
-
-    // Set SendGrid key inside handler
+    // Set SendGrid key
     const sgKey = process.env.SENDGRID_API_KEY;
     if (!sgKey) throw new Error("Missing SENDGRID_API_KEY.");
     sgMail.setApiKey(sgKey);
 
     const OTP_EXPIRY_MS = 900000; // 15 minutes
 
-    // 4. Logic Execution
+    // Enumeration Prevention Protocol (EPP)
     try {
       await auth.getUserByEmail(email);
     } catch (error) {
       if (error.code === "auth/user-not-found") {
-        return res.status(200).json({ success: true });
+        // Return success even if user not found to prevent identity discovery
+        return sendSuccess(res);
       }
       throw error;
     }
@@ -87,18 +53,17 @@ export default async function handler(req, res) {
     await otpRef.set({
       email,
       code: otpCode,
-      createdAt: new Date().toISOString(), // Fallback for ServerValue
+      createdAt: new Date().toISOString(),
       expiresAt: Date.now() + OTP_EXPIRY_MS,
     });
 
-    if (!process.env.SENDGRID_SENDER_EMAIL) {
-      throw new Error("Missing SENDGRID_SENDER_EMAIL.");
-    }
+    const senderEmail = process.env.SENDGRID_SENDER_EMAIL;
+    if (!senderEmail) throw new Error("Missing SENDGRID_SENDER_EMAIL.");
 
     const msg = {
       to: email,
       from: {
-        email: process.env.SENDGRID_SENDER_EMAIL,
+        email: senderEmail,
         name: "Saltwater Electricity System",
       },
       subject: "Your Security Code",
@@ -115,12 +80,8 @@ export default async function handler(req, res) {
     };
 
     await sgMail.send(msg);
-    return res.status(200).json({ success: true });
+    return sendSuccess(res);
   } catch (error) {
-    console.error("Generate OTP API Error:", error.message);
-    return res.status(500).json({
-      error: "Failed to process security request.",
-      details: error.message,
-    });
+    return sendError(res, error, 500, "auth/generate-otp-failed");
   }
 }

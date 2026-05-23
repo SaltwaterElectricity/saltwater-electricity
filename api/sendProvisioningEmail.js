@@ -1,3 +1,4 @@
+import { sendSuccess, sendError, handleOptions } from "./_utils/response.js";
 import sgMail from "@sendgrid/mail";
 
 /**
@@ -5,33 +6,17 @@ import sgMail from "@sendgrid/mail";
  * Securely triggers SendGrid emails from the backend.
  */
 export default async function handler(req, res) {
-  // 1. CORS Configuration: Allow requests from your frontend origin
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  res.setHeader("Access-Control-Allow-Origin", "*"); // Update this to your production domain for extra security
-  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
-  );
+  if (handleOptions(req, res)) return;
 
-  // Handle preflight OPTIONS request
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
-  // 2. Security: Only allow POST requests
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method Not Allowed" });
+    return sendError(res, "Method Not Allowed", 405, "mail/method-not-allowed");
   }
 
-  // 3. Initialize SendGrid
   const apiKey = process.env.SENDGRID_API_KEY;
   const senderEmail = process.env.SENDGRID_SENDER_EMAIL;
 
   if (!apiKey || !senderEmail) {
-    console.error("Server Configuration Error: SendGrid environment variables missing.");
-    return res.status(500).json({ error: "Mail service unavailable." });
+    return sendError(res, "Mail service unavailable.", 500, "mail/config-missing");
   }
 
   sgMail.setApiKey(apiKey);
@@ -39,12 +24,10 @@ export default async function handler(req, res) {
   try {
     const { to, subject, templateType, templateData, htmlContent } = req.body;
 
-    // 4. Validation
     if (!to || !subject) {
-      return res.status(400).json({ error: "Missing recipient or subject." });
+      return sendError(res, "Missing recipient or subject.", 400, "mail/missing-fields");
     }
 
-    // 5. Construct Email Body (Supports Templates or Raw HTML)
     let finalHtml = htmlContent;
 
     if (templateType === "onboarding") {
@@ -84,15 +67,9 @@ export default async function handler(req, res) {
       html: finalHtml,
     };
 
-    // 6. Send
     await sgMail.send(msg);
-
-    return res.status(200).json({ success: true });
+    return sendSuccess(res);
   } catch (error) {
-    console.error("SendGrid Error:", error.response?.body || error.message);
-    return res.status(500).json({
-      error: "Failed to deliver message.",
-      details: process.env.NODE_ENV === "development" ? error.message : undefined,
-    });
+    return sendError(res, error, 500, "mail/delivery-failed");
   }
 }

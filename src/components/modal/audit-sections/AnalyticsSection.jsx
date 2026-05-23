@@ -6,7 +6,7 @@ export const AnalyticsSection = ({ logs }) => {
   const salinityData = logs.map((l) => ({ timestamp: l.__normalizedTs, value: l.tds_ppm || 0 }));
 
   return (
-    <div className="flex flex-col gap-8 animate-fadeIn">
+    <div className="flex flex-col gap-8 animate-fade-in">
       <SectionHeader title="Performance Analytics" sub="Time-series monitoring for key metrics" />
       <div className="h-48 md:h-64 bg-slate-50/50 rounded-3xl border border-slate-100 p-6">
         <DeviceAnalyticsChart data={salinityData} metricConfig={METRIC_CONFIG[METRICS.TDS]} />

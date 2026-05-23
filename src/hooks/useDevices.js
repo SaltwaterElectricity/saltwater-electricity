@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { db } from "../firebaseConfig";
 import { ref, onValue, query, orderByChild, equalTo } from "firebase/database";
 import { appError } from "../utils/appError";
+import { logger } from "../utils/logger";
+import { transformReading } from "../services/reading.service";
 
 /**
  * Hook: useDevices
@@ -14,16 +16,15 @@ export const useDevices = (onlyAvailable = false) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // 1. Subscribe to Device Information
   useEffect(() => {
     let isMounted = true;
     const devicesRef = ref(db, "device_information");
-    const telemetryRef = ref(db, "telemetry");
 
     const finalQuery = onlyAvailable
       ? query(devicesRef, orderByChild("availability"), equalTo("available"))
       : devicesRef;
 
-    // 1. Subscribe to Device Information
     const unsubDevices = onValue(
       finalQuery,
       (snapshot) => {
@@ -53,18 +54,50 @@ export const useDevices = (onlyAvailable = false) => {
       }
     );
 
-    // 2. Subscribe to Telemetry
-    const unsubTelemetry = onValue(telemetryRef, (snapshot) => {
-      if (!isMounted) return;
-      setTelemetry(snapshot.val() || {});
-    });
-
     return () => {
       isMounted = false;
       unsubDevices();
-      unsubTelemetry();
     };
   }, [onlyAvailable]);
+
+  // 2. Subscribe to Readings (Mapped to telemetry for UI compatibility)
+  useEffect(() => {
+    let isMounted = true;
+    const telemetryRef = ref(db, "readings");
+
+    const unsubTelemetry = onValue(
+      telemetryRef,
+      (snapshot) => {
+        if (!isMounted) return;
+        const readings = snapshot.val() || {};
+
+        // MAPPING: Ensure every known device has a telemetry entry (Default to Standby Zeros)
+        const normalizedTelemetry = {};
+
+        // First, initialize all current devices with default standby data
+        devices.forEach((device) => {
+          normalizedTelemetry[device.device_id] = transformReading(null);
+        });
+
+        // Then, overwrite with actual 'latest' data if it exists
+        Object.keys(readings).forEach((id) => {
+          if (readings[id]?.latest) {
+            normalizedTelemetry[id] = transformReading(readings[id].latest);
+          }
+        });
+
+        setTelemetry(normalizedTelemetry);
+      },
+      (err) => {
+        logger.error("[useDevices] Telemetry Stream Error:", err);
+      }
+    );
+
+    return () => {
+      isMounted = false;
+      unsubTelemetry();
+    };
+  }, [devices]);
 
   return { devices, telemetry, loading, error };
 };

@@ -65,6 +65,7 @@ C:\Users\Admin\testcode\
 
 ### 1. Data Integrity & NoSQL Protection
 
+- **Normalization Rule:** User-device bindings MUST be stored in the `device_assignments` node. The `device_information` node should only maintain device metadata (`device_name`, `availability`) and technical specifications. Discovery or owner tracking via `device_information` is prohibited.
 - **Mandatory Schema:** Every write operation to `/readings` and `/logs` MUST include `timestamp` (serverTimestamp) and `tds_ppm`. Partial records are schema violations.
 - **PoLP:** No global `.read` or `.write`. All access scoped to `auth.uid` or administrative roles.
 - **Auto-Reset:** Account lockouts (Brute Force) must automatically reset in the database after the cooldown period to ensure availability.

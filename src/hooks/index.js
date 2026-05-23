@@ -13,3 +13,4 @@ export { useReadings } from "./useReadings";
 export { useSearch } from "./useSearch";
 export { useTimeout } from "./useTimeout";
 export { useUserSubscription } from "./useUserSubscription";
+export { useResidentManagement } from "./useResidentManagement";

@@ -46,7 +46,9 @@ const InputField = ({
   );
 };
 
-export const RegistrationFields = ({ register, errors, isAdmin = false }) => {
+export const RegistrationFields = ({ register, errors, currentUserRole = ROLES.RESIDENT }) => {
+  const isSuperAdmin = currentUserRole === ROLES.SUPER_ADMIN;
+
   return (
     <div className="space-y-10">
       {/* 1. PERSONAL INFORMATION SECTION */}
@@ -167,7 +169,7 @@ export const RegistrationFields = ({ register, errors, isAdmin = false }) => {
         <h2 className="text-xs font-bold text-slate-700 uppercase tracking-widest">
           Access Credentials
         </h2>
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <InputField
             label="Work Email"
             name="email"
@@ -179,20 +181,24 @@ export const RegistrationFields = ({ register, errors, isAdmin = false }) => {
               pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Invalid email" },
             }}
           />
-        </div>
 
-        {/* HIDDEN ROLE FIELD: Kinukuha ang value base sa isAdmin prop */}
-        <input type="hidden" value={isAdmin ? ROLES.ADMIN : ROLES.RESIDENT} {...register("role")} />
-
-        {/* VISUAL INDICATOR: Confirmation para sa Admin */}
-        <div className="flex items-center gap-2 mt-4 px-4 py-2 bg-white rounded-lg border border-slate-100 w-fit">
-          <div className={cn("w-2 h-2 rounded-full", isAdmin ? "bg-blue-500" : "bg-slate-400")} />
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-            Auto-assigned Role:{" "}
-            <span className={isAdmin ? "text-blue-600" : "text-slate-600"}>
-              {isAdmin ? "Admin" : "Resident"}
-            </span>
-          </span>
+          {/* DYNAMIC ROLE FIELD: Select for Super Admin, Hidden for Admin */}
+          {isSuperAdmin ? (
+            <div className="flex flex-col">
+              <label className="text-[10px] font-bold uppercase text-slate-400 mb-2">
+                Assigned Role
+              </label>
+              <select
+                {...register("role")}
+                className="p-3 border border-slate-200 rounded-lg text-sm bg-white outline-none cursor-pointer transition-all focus:border-blue-500"
+              >
+                <option value={ROLES.ADMIN}>Administrator (Staff)</option>
+                <option value={ROLES.RESIDENT}>Resident (User)</option>
+              </select>
+            </div>
+          ) : (
+            <input type="hidden" value={ROLES.RESIDENT} {...register("role")} />
+          )}
         </div>
       </section>
     </div>

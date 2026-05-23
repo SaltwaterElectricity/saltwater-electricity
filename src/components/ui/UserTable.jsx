@@ -4,84 +4,117 @@ import { memo } from "react";
 import { MapPin, Edit3, Trash2, RotateCcw, Users } from "lucide-react";
 
 // 🧬 MOLECULE: Individual Real-Time Row
-const UserTableRow = memo(({ user, onActionClick, onEditClick, searchTerm }) => {
+const UserTableRow = memo(({ user, onActionClick, onEditClick }) => {
   const {
     firstName = "",
     lastName = "",
     email = "",
+    role = "",
     status = "disabled",
     address = {},
+    createdAt,
+    photoURL,
   } = user || {};
 
-  const fullName = `${firstName} ${lastName}`.trim().toLowerCase();
-  const searchMatch =
-    fullName.includes(searchTerm?.toLowerCase() || "") ||
-    email.toLowerCase().includes(searchTerm?.toLowerCase() || "");
-
-  if (!searchMatch || !user) return null;
-
   const isActive = status === "active";
+  const isPending = status === "pending";
+
+  const dateJoined = createdAt
+    ? new Date(createdAt).toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      })
+    : "N/A";
 
   return (
-    <tr className="hover:bg-blue-50/30 transition-colors group border-b border-slate-50 last:border-b-0">
-      <td className="px-8 py-6">
-        <div className="flex items-center gap-4">
-          <div className="h-12 w-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-sm font-bold shadow-lg uppercase relative">
-            {firstName[0]}
-            {lastName[0]}
-            <div
-              className={cn(
-                "absolute -top-1 -right-1 h-3.5 w-3.5 rounded-full border-2 border-white",
-                isActive ? "bg-emerald-500" : "bg-slate-400"
-              )}
+    <tr className="hover:bg-primary/5 transition-colors group border-b border-outline-variant/20 last:border-b-0 transition-all duration-200 ease-in-out">
+      {/* USER */}
+      <td className="px-6 py-5">
+        <div className="flex items-center gap-3">
+          {photoURL ? (
+            <img
+              src={photoURL}
+              alt="User Avatar"
+              className="w-10 h-10 rounded-lg object-cover shadow-sm"
             />
-          </div>
+          ) : (
+            <div className="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary-container font-bold text-sm">
+              {firstName[0]}
+              {lastName[0]}
+            </div>
+          )}
           <div>
-            <p className="font-bold text-slate-900 leading-none mb-1">
+            <p className="font-label-md text-label-md text-on-surface leading-tight">
               {firstName} {lastName}
             </p>
-            <span
-              className={cn(
-                "text-[9px] px-2 py-0.5 rounded-full font-black uppercase tracking-tighter border",
-                isActive
-                  ? "bg-emerald-50 text-emerald-600 border-emerald-100"
-                  : "bg-slate-100 text-slate-500 border-slate-200"
-              )}
-            >
-              {status}
-            </span>
+            <p className="text-[12px] text-outline truncate max-w-[180px]">{email}</p>
           </div>
         </div>
       </td>
-      <td className="px-8 py-6">
-        <div className="flex items-center gap-3 text-xs font-bold text-slate-600">
-          <div className="p-2 bg-slate-100 rounded-lg">
-            <MapPin size={12} />
-          </div>
-          <div className="flex flex-col">
-            <span className="truncate">{address?.municipality || "San Andres"}</span>
-            <span className="text-[10px] text-slate-400 font-normal truncate">
-              {address?.baranggay || "Unset Baranggay"}
-            </span>
-          </div>
+
+      {/* ROLE */}
+      <td className="px-6 py-5">
+        <span
+          className={cn(
+            "px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider",
+            role === ROLES.ADMIN
+              ? "bg-primary/10 text-primary"
+              : "bg-surface-container-highest text-on-surface-variant"
+          )}
+        >
+          {role === ROLES.ADMIN ? "Admin" : "Household"}
+        </span>
+      </td>
+
+      {/* LOCATION */}
+      <td className="px-6 py-5 font-body-md text-on-surface-variant">
+        <div className="flex items-center gap-2">
+          <MapPin size={14} className="text-outline" />
+          <span className="truncate max-w-[150px]">{address?.baranggay || "Location unset"}</span>
         </div>
       </td>
-      <td className="px-8 py-6 text-right">
-        <div className="flex justify-end gap-2">
+
+      {/* DATE JOINED */}
+      <td className="px-6 py-5 font-body-md text-on-surface-variant">{dateJoined}</td>
+
+      {/* STATUS */}
+      <td className="px-6 py-5">
+        <div
+          className={cn(
+            "flex items-center gap-2 font-label-sm text-label-sm",
+            isActive ? "text-green-600" : isPending ? "text-orange-500" : "text-red-500"
+          )}
+        >
+          <span
+            className={cn(
+              "w-2 h-2 rounded-full",
+              isActive ? "bg-green-500" : isPending ? "bg-orange-400" : "bg-red-500"
+            )}
+          />
+          <span className="capitalize">{status}</span>
+        </div>
+      </td>
+
+      {/* ACTION */}
+      <td className="px-6 py-5 text-right">
+        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={() => onEditClick(user)}
-            className="h-10 w-10 flex items-center justify-center bg-white border border-slate-200 rounded-xl text-slate-600 hover:text-blue-600 shadow-sm transition-all"
+            className="p-2 hover:bg-surface-container-high rounded-lg text-outline transition-all active:scale-90"
+            title="Edit User"
           >
             <Edit3 size={18} />
           </button>
           <button
             onClick={() => onActionClick(user)}
             className={cn(
-              "h-10 w-10 flex items-center justify-center bg-white border rounded-xl transition-all shadow-sm",
+              "p-2 rounded-lg transition-all active:scale-90",
               isActive
-                ? "text-slate-400 hover:text-red-600 border-slate-200"
-                : "text-emerald-600 border-emerald-100 bg-emerald-50/50"
+                ? "text-outline hover:text-red-600 hover:bg-red-50"
+                : "text-green-600 hover:bg-green-50"
             )}
+            title={isActive ? "Disable User" : "Enable User"}
           >
             {isActive ? <Trash2 size={18} /> : <RotateCcw size={18} />}
           </button>
@@ -94,60 +127,63 @@ const UserTableRow = memo(({ user, onActionClick, onEditClick, searchTerm }) => 
 UserTableRow.displayName = "UserTableRow";
 
 // 🏢 ORGANISM: Master User Table Component
-export const UserTable = ({ users = [], onActionClick, onEditClick, searchTerm, activeView }) => {
+export const UserTable = ({ users = [], onActionClick, onEditClick, activeView }) => {
   return (
-    <div className="bg-white border border-slate-100 rounded-3xl shadow-sm overflow-hidden">
-      <div className="overflow-x-auto custom-scrollbar">
-        <table className="w-full text-left">
-          <thead className="bg-slate-50/50 border-b border-slate-100">
+    <div className="w-full overflow-x-auto">
+      <table className="w-full text-left border-collapse">
+        <thead>
+          <tr className="bg-surface-container-low border-b border-outline-variant/30">
+            <th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">
+              User
+            </th>
+            <th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">
+              Role
+            </th>
+            <th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">
+              Location
+            </th>
+            <th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">
+              Date Joined
+            </th>
+            <th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">
+              Status
+            </th>
+            <th className="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-right">
+              Action
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-outline-variant/20">
+          {users.length > 0 ? (
+            users.map((user) => (
+              <UserTableRow
+                key={user.uid || user.id}
+                user={user}
+                onEditClick={onEditClick}
+                onActionClick={onActionClick}
+              />
+            ))
+          ) : (
             <tr>
-              <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                Identity
-              </th>
-              <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                Location
-              </th>
-              <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-50">
-            {users.length > 0 ? (
-              users.map((user) => (
-                <UserTableRow
-                  key={user.uid || user.id}
-                  user={user}
-                  onEditClick={onEditClick}
-                  onActionClick={onActionClick}
-                  searchTerm={searchTerm}
-                />
-              ))
-            ) : (
-              <tr>
-                <td colSpan="3" className="px-8 py-16 text-center antialiased">
-                  <div className="flex flex-col items-center justify-center max-w-sm mx-auto space-y-4">
-                    <div className="p-4 bg-slate-100 rounded-2xl text-slate-400">
-                      <Users size={32} />
-                    </div>
-
-                    <div>
-                      <h3 className="text-sm font-black text-slate-900 uppercase tracking-tight">
-                        No {activeView}s Registered Yet
-                      </h3>
-                      <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed">
-                        {activeView === ROLES.ADMIN
-                          ? "There are no administrators in the system facility yet."
-                          : "Get started by adding your first resident to the SmartAqua tracking system."}
-                      </p>
-                    </div>
+              <td colSpan="6" className="px-8 py-20 text-center">
+                <div className="flex flex-col items-center justify-center max-w-sm mx-auto space-y-4">
+                  <div className="p-6 bg-surface-container-low rounded-3xl text-outline border border-outline-variant/20">
+                    <Users size={40} />
                   </div>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+                  <div>
+                    <h3 className="text-lg font-black text-on-surface uppercase tracking-tight">
+                      No {activeView}s Found
+                    </h3>
+                    <p className="text-sm text-on-surface-variant font-medium mt-1 leading-relaxed">
+                      Your search or filter criteria didn&apos;t match any system profiles.
+                    </p>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
     </div>
   );
 };

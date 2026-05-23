@@ -7,10 +7,9 @@ import { ROLES } from "../constants/roles";
 import NotFound from "../pages/NotFound";
 import { ForcePasswordChange } from "../components";
 import { MainLayout } from "../layout";
-import AdminRegistration from "../pages/admin/AdminRegistration";
-import UserRegistration from "../pages/admin/UserRegistration";
 import LoginPage from "../pages/auth/LoginPage";
 import UserManagement from "../pages/admin/UserManagement";
+import ResidentManagement from "../pages/admin/ResidentManagement";
 import DashboardController from "../pages/dashboard";
 import RealTimeMonitor from "../pages/dashboard/RealTimeMonitor";
 import DeviceManagement from "../pages/admin/DeviceManagement";
@@ -87,19 +86,18 @@ export const AppRoutes = () => {
                 path={ROUTES.ADMIN_USER_MANAGEMENT}
                 element={<UserManagement currentUserRole={userRole} />}
               />
+              <Route
+                path={ROUTES.ADMIN_RESIDENT_MANAGEMENT}
+                element={<ResidentManagement currentUserRole={userRole} />}
+              />
               <Route path={ROUTES.ADMIN_DEVICE_MANAGEMENT} element={<DeviceManagement />} />
               <Route path={ROUTES.ADMIN_REQUEST_MANAGEMENT} element={<RequestManagement />} />
               <Route path={ROUTES.ADMIN_AUDIT_LOGS} element={<AuditLogPage />} />
-              <Route path={ROUTES.REGISTER_USER} element={<UserRegistration />} />
             </Route>
           )}
 
           {/* Super Admin Module */}
-          {isSuperAdmin && (
-            <Route element={<PrivateRoute requiredRole={ROLES.SUPER_ADMIN} />}>
-              <Route path={ROUTES.REGISTER_STAFF} element={<AdminRegistration />} />
-            </Route>
-          )}
+          {isSuperAdmin && <Route element={<PrivateRoute requiredRole={ROLES.SUPER_ADMIN} />} />}
 
           {/* Shared Application Views */}
           <Route path={ROUTES.ALERTS} element={<Alerts />} />

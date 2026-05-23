@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "./context/useAuth";
-import { AnimatedLogo } from "./components";
+import { AnimatedLogo, GlobalErrorBoundary, SessionExpiredModal } from "./components";
 import { AppRoutes } from "./route/AppRoutes";
 
 function App() {
@@ -25,7 +25,12 @@ function App() {
     );
   }
 
-  return <AppRoutes />;
+  return (
+    <GlobalErrorBoundary>
+      <AppRoutes />
+      <SessionExpiredModal />
+    </GlobalErrorBoundary>
+  );
 }
 
 export default App;

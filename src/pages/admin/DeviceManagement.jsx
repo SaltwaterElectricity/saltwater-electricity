@@ -1,11 +1,19 @@
 import { useState, useMemo } from "react";
 import { useAuth } from "../../context/useAuth";
 import { useDevices } from "../../hooks";
-import { DeviceCard, AssignDeviceModal, ConfirmationModal } from "../../components";
+import {
+  ManagedDeviceCard,
+  AssignDeviceModal,
+  ConfirmationModal,
+  SummaryCard,
+  DashboardSectionHeader,
+  EmptyState,
+  LoadingSpinner,
+} from "../../components";
 import { useNotification } from "../../context/useNotification";
 import { logger } from "../../utils/logger";
 import { deprovisionDevice } from "../../services/device.service";
-import { ShieldAlert } from "lucide-react";
+import { ShieldAlert, Plus } from "lucide-react";
 
 // Clean Code: Move Constants outside to avoid re-creation
 const STATUS_AVAILABLE = "available";
@@ -102,29 +110,62 @@ const DeviceManagement = () => {
 
       {/* STATS OVERVIEW */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-        <StatCard label="Total Capacity" value={devices.length} subLabel="Units" />
-        <StatCard label="Ready for Setup" value={availableDevices.length} isHighlight />
+        <SummaryCard
+          title="Total Capacity"
+          value={devices.length}
+          subtitle="Units"
+          icon="inventory_2"
+          bgClass="bg-white/60 backdrop-blur-md"
+        />
+        <SummaryCard
+          title="Ready for Setup"
+          value={availableDevices.length}
+          subtitle="Available"
+          icon="add_circle"
+          colorClass="text-blue-600"
+          bgClass="bg-white/60 backdrop-blur-md"
+        />
       </div>
 
       <div className="space-y-20 relative z-10">
         {/* AVAILABLE SECTION */}
-        <DeviceSection
-          title="Available Inventory"
-          items={availableDevices}
-          onAction={handleDeviceAction}
-          currentUser={currentUser}
-          isEmpty={availableDevices.length === 0}
-        />
+        <section className="space-y-8">
+          <DashboardSectionHeader title="Available Inventory" variant="neutral" />
+
+          {availableDevices.length === 0 ? (
+            <EmptyState title="Empty inventory." icon={Plus} />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {availableDevices.map((device) => (
+                <ManagedDeviceCard
+                  key={device.id || device.device_id}
+                  device={device}
+                  isAdmin={currentUser?.role === "ADMIN" || currentUser?.role === "SUPER_ADMIN"}
+                  onAssignClick={(d) => handleDeviceAction("ASSIGN_DEVICE", d)}
+                  onForceRelease={(id) => handleDeviceAction("FORCE_DEPROVISION", id)}
+                />
+              ))}
+            </div>
+          )}
+        </section>
 
         {/* DEPLOYED SECTION */}
         {occupiedDevices.length > 0 && (
-          <DeviceSection
-            title="Deployed Units"
-            items={occupiedDevices}
-            onAction={handleDeviceAction}
-            currentUser={currentUser}
-            isDimmed
-          />
+          <section className="space-y-8 opacity-80 grayscale-[0.2] hover:opacity-100 transition-all duration-500">
+            <DashboardSectionHeader title="Deployed Units" variant="neutral" />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {occupiedDevices.map((device) => (
+                <ManagedDeviceCard
+                  key={device.id || device.device_id}
+                  device={device}
+                  isAdmin={currentUser?.role === "ADMIN" || currentUser?.role === "SUPER_ADMIN"}
+                  onAssignClick={(d) => handleDeviceAction("ASSIGN_DEVICE", d)}
+                  onForceRelease={(id) => handleDeviceAction("FORCE_DEPROVISION", id)}
+                />
+              ))}
+            </div>
+          </section>
         )}
       </div>
 
@@ -159,63 +200,11 @@ const DeviceManagement = () => {
   );
 };
 
-// --- Sub-Components for Clean Code ---
-
-const StatCard = ({ label, value, subLabel, isHighlight }) => (
-  <div className="bg-white/60 backdrop-blur-md p-6 rounded-[28px] border border-white/80 shadow-sm">
-    <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">{label}</p>
-    <p className={`text-3xl font-black ${isHighlight ? "text-blue-600" : "text-slate-900"}`}>
-      {value} {subLabel && <span className="text-sm text-slate-400">{subLabel}</span>}
-    </p>
-  </div>
-);
-
-const DeviceSection = ({ title, items, onAction, currentUser, isEmpty, isDimmed }) => (
-  <section
-    className={
-      isDimmed ? "opacity-80 grayscale-[0.2] hover:opacity-100 transition-all duration-500" : ""
-    }
-  >
-    <div className="flex items-center gap-4 mb-8">
-      <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 bg-white/50 px-4 py-2 rounded-full border border-slate-100 backdrop-blur-sm">
-        {title}
-      </h2>
-      <div className="h-[1px] flex-1 bg-slate-200/50" />
-    </div>
-
-    {isEmpty ? (
-      <div className="bg-white/40 backdrop-blur-sm p-16 text-center rounded-[32px] border-2 border-dashed border-slate-200">
-        <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">
-          Empty inventory.
-        </p>
-      </div>
-    ) : (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {items.map((device) => (
-          <DeviceCard
-            key={device.id || device.device_id}
-            device={device}
-            currentUser={currentUser}
-            onAction={onAction}
-            viewMode="management"
-          />
-        ))}
-      </div>
-    )}
-  </section>
-);
-
 const BackgroundDecor = () => (
   <>
     <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-200/30 rounded-full blur-[120px] pointer-events-none" />
     <div className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-200/30 rounded-full blur-[120px] pointer-events-none" />
   </>
-);
-
-const LoadingSpinner = () => (
-  <div className="flex h-screen items-center justify-center bg-[#f8fafc]">
-    <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-600" />
-  </div>
 );
 
 const ErrorMessage = ({ message }) => (

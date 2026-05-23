@@ -1,21 +1,30 @@
 import { useMemo } from "react";
-import { History, ShieldCheck, Zap, Droplets, Activity } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Zap, Calendar, RefreshCw, Router, Activity } from "lucide-react";
 import { useAuth } from "../../context/useAuth";
-import { useDevices, useHistory, useNotifications } from "../../hooks";
-import { DeviceAnalyticsChart } from "../../components";
+import { useDevices, useHistory, useNotifications, useDeviceRequests } from "../../hooks";
+import {
+  DeviceAnalyticsChart,
+  TotalDevicesCard,
+  RequestDeviceCard,
+  DeviceHealthCard,
+  RecentAlertsFeed,
+  HealthDonutChart,
+} from "../../components";
 import { processLogsInWindows } from "../../utils/chartUtils";
-import { METRICS, METRIC_CONFIG, SENSOR_CONFIG } from "../../constants";
-import { cn } from "../../utils/cn";
+import { METRICS, METRIC_CONFIG, SENSOR_CONFIG, ROUTES } from "../../constants";
 import { Footer } from "../../layout";
 
 /**
  * ResidentDashboard Component
  * High-fidelity personal monitoring hub for residents.
- * Refactored using the AlonKuryente "Page Canvas" structure from USERDASHBOARD.html.
+ * Aligned with user-dashboard.html design and layout.
  */
 const ResidentDashboard = () => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { devices, loading: devicesLoading } = useDevices();
+  const { requests, loading: requestsLoading } = useDeviceRequests(user?.uid);
 
   // Find the device assigned to the current resident
   const userDevice = useMemo(() => {
@@ -29,10 +38,33 @@ const ResidentDashboard = () => {
   const { logs, loading: logsLoading } = useHistory(deviceId);
   const { notifications, loading: notificationsLoading } = useNotifications(user?.uid);
 
-  // Latest entry for the overview grid
+  // Latest entry for calculations
   const latestLog = useMemo(() => (logs && logs.length > 0 ? logs[0] : null), [logs]);
 
-  // Process data for charts
+  // KPI Calculations
+  const totalDevices = userDevice ? 1 : 0;
+  const pendingRequests = useMemo(
+    () => requests.filter((r) => r.status === "pending").length,
+    [requests]
+  );
+
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good Morning";
+    if (hour < 18) return "Good Afternoon";
+    return "Good Evening";
+  }, []);
+
+  const healthScore = useMemo(() => {
+    if (!latestLog) return 0;
+    const tds = latestLog.tds_ppm || 0;
+    const config = SENSOR_CONFIG[METRICS.TDS];
+    if (tds < config.warning) return 98;
+    if (tds < config.critical) return 85;
+    return 45;
+  }, [latestLog]);
+
+  // Chart Data Processing
   const voltageChartData = useMemo(() => {
     if (!logs || logs.length === 0) return [];
     return processLogsInWindows(logs, {
@@ -41,27 +73,7 @@ const ResidentDashboard = () => {
     }).current;
   }, [logs]);
 
-  const salinityChartData = useMemo(() => {
-    if (!logs || logs.length === 0) return [];
-    return processLogsInWindows(logs, {
-      metricKey: "tds_ppm",
-      metricId: METRICS.TDS,
-    }).current;
-  }, [logs]);
-
-  // Derived Health Status
-  const healthStatus = useMemo(() => {
-    if (!latestLog) return { label: "Unknown", color: "text-outline", bg: "bg-surface-container" };
-    const tds = latestLog.tds_ppm;
-    const config = SENSOR_CONFIG[METRICS.TDS];
-    if (tds < config.warning)
-      return { label: "Optimal", color: "text-tertiary", bg: "bg-tertiary-fixed-dim/20" };
-    if (tds < config.critical)
-      return { label: "Stable", color: "text-primary", bg: "bg-primary-container/10" };
-    return { label: "Critical", color: "text-error", bg: "bg-error/10" };
-  }, [latestLog]);
-
-  if (devicesLoading) {
+  if (devicesLoading || requestsLoading) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center">
         <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
@@ -72,19 +84,17 @@ const ResidentDashboard = () => {
     );
   }
 
-  if (!userDevice) {
+  if (!userDevice && totalDevices === 0) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center text-center">
-        <div className="max-w-md p-12 glass-panel shadow-xl animate-in fade-in zoom-in-95 duration-500 rounded-xl">
-          <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-6 text-primary shadow-inner">
-            <History size={32} />
+      <div className="min-h-[60vh] flex items-center justify-center text-center px-6">
+        <div className="max-w-md p-12 glass-card rounded-2xl shadow-xl animate-in fade-in zoom-in-95 duration-500">
+          <div className="w-20 h-20 primary-gradient rounded-full flex items-center justify-center mx-auto mb-6 text-white shadow-lg">
+            <Router size={40} />
           </div>
-          <h2 className="text-h2 font-h2 font-bold text-primary tracking-tight italic">
-            No Active Node
-          </h2>
+          <h2 className="text-h2 font-h2 font-bold text-primary tracking-tight">No Active Node</h2>
           <p className="text-body-md text-on-surface-variant mt-4 leading-relaxed font-body-md">
             Your account doesn&apos;t have an assigned monitoring unit yet. Contact the facility
-            administrator to provision your hardware.
+            administrator to provision your hardware or submit a device request.
           </p>
         </div>
       </div>
@@ -92,200 +102,178 @@ const ResidentDashboard = () => {
   }
 
   return (
-    <div className="animate-in fade-in duration-700 space-y-margin antialiased text-on-surface">
-      {/* 1. SYSTEM OVERVIEW GRID (3 Columns) */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-        {/* Voltage Card */}
-        <div className="glass-panel rounded-xl p-md flex items-center justify-between ocean-glow transition-all duration-300">
-          <div>
-            <p className="text-on-surface-variant font-display text-label-sm mb-1 uppercase tracking-widest">
-              Voltage Level
-            </p>
-            <h3 className="font-display text-h1 text-primary">
-              {latestLog?.voltage ? `${latestLog.voltage}V` : "0.00V"}
-            </h3>
-            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-tertiary-fixed-dim/20 text-tertiary text-xs font-bold mt-2">
-              <Zap size={14} className="mr-1" /> active
-            </span>
-          </div>
-          <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center text-primary">
-            <span className="material-symbols-outlined text-3xl">bolt</span>
-          </div>
-        </div>
-
-        {/* Salinity Card */}
-        <div className="glass-panel rounded-xl p-md flex items-center justify-between ocean-glow transition-all duration-300">
-          <div>
-            <p className="text-on-surface-variant font-display text-label-sm mb-1 uppercase tracking-widest">
-              Salinity Level
-            </p>
-            <h3 className="font-display text-h1 text-secondary">
-              {latestLog?.tds_ppm ? `${latestLog.tds_ppm}` : "0"}{" "}
-              <span className="text-h2">ppt</span>
-            </h3>
-            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-secondary-fixed/50 text-secondary-container text-xs font-bold mt-2">
-              <Droplets size={14} className="mr-1" /> {healthStatus.label.toLowerCase()}
-            </span>
-          </div>
-          <div className="w-16 h-16 rounded-full bg-secondary/5 flex items-center justify-center text-secondary">
-            <span className="material-symbols-outlined text-3xl">water_drop</span>
-          </div>
-        </div>
-
-        {/* Device Health Card */}
-        <div className="glass-panel rounded-xl p-md flex items-center justify-between ocean-glow transition-all duration-300">
-          <div>
-            <p className="text-on-surface-variant font-display text-label-sm mb-1 uppercase tracking-widest">
-              Device Health
-            </p>
-            <h3 className={cn("font-display text-h1 uppercase", healthStatus.color)}>
-              {healthStatus.label}
-            </h3>
-            <span
-              className={cn(
-                "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold mt-2",
-                healthStatus.bg,
-                healthStatus.color
-              )}
-            >
-              <ShieldCheck size={14} className="mr-1" /> operating
-            </span>
-          </div>
-          <div className="w-16 h-16 rounded-full bg-tertiary/5 flex items-center justify-center text-tertiary">
-            <span className="material-symbols-outlined text-3xl">health_and_safety</span>
-          </div>
-        </div>
+    <div className="animate-in fade-in duration-700 space-y-stack-lg antialiased text-on-surface max-w-[1440px] mx-auto">
+      {/* 1. WELCOME SECTION */}
+      <section className="mb-stack-lg">
+        <h3 className="text-h2 font-bold text-on-surface">
+          {greeting}, {user?.firstName || "Resident"}!
+        </h3>
+        <p className="text-body-lg text-on-surface-variant mt-1 font-body-lg">
+          Here’s what’s happening with your saltwater electricity system today.
+        </p>
       </section>
 
-      {/* 2. MAIN DATA VISUALIZATIONS & ALERTS */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
-        {/* System Logs / Alerts */}
-        <div className="lg:col-span-1">
-          <div className="glass-panel rounded-xl p-6 h-full flex flex-col min-h-[400px]">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="font-display text-h2 font-semibold text-on-surface">System Alerts</h3>
-              <button className="text-primary font-display text-label-sm font-bold hover:underline uppercase tracking-widest">
-                View All
-              </button>
-            </div>
+      {/* 2. KPI SECTION */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+        <TotalDevicesCard value={totalDevices} />
 
-            <div className="space-y-4 flex-1 overflow-y-auto custom-scrollbar-hide pr-1">
-              {notificationsLoading ? (
-                <div className="flex items-center justify-center h-40 opacity-50">
-                  <Activity size={20} className="animate-spin text-primary" />
-                </div>
-              ) : notifications.length === 0 ? (
-                <p className="text-center text-label-sm text-outline py-10 italic">
-                  No active notifications.
-                </p>
-              ) : (
-                notifications.slice(0, 5).map((alert) => (
-                  <div
-                    key={alert.id}
-                    className={cn(
-                      "flex gap-4 p-4 rounded-xl hover:bg-surface-container-low transition-colors border-l-4",
-                      alert.type === "critical"
-                        ? "border-error bg-error/5"
-                        : "border-amber-500 bg-amber-50/50"
-                    )}
-                  >
-                    <span
-                      className={cn(
-                        "material-symbols-outlined mt-1",
-                        alert.type === "critical" ? "text-error" : "text-amber-500"
-                      )}
-                    >
-                      {alert.type === "critical" ? "warning" : "error_outline"}
-                    </span>
-                    <div className="min-w-0">
-                      <p
-                        className={cn(
-                          "font-display text-body-md font-medium truncate",
-                          alert.type === "critical" ? "text-error" : "text-on-surface"
-                        )}
-                      >
-                        {alert.title}
-                      </p>
-                      <p className="text-xs text-on-surface-variant font-medium opacity-60">
-                        {new Date(alert.timestamp).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </p>
-                    </div>
-                  </div>
-                ))
-              )}
+        <RequestDeviceCard value={pendingRequests} />
+
+        <DeviceHealthCard value={healthScore} trendValue="8%" trend="up" />
+      </div>
+
+      {/* 3. ANALYTICS GRID */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+        {/* Device Performance Chart */}
+        <div className="glass-card rounded-2xl p-6 flex flex-col h-[400px]">
+          <div className="flex justify-between items-center mb-6">
+            <h5 className="text-[12px] font-bold text-on-surface tracking-tight uppercase">
+              Device Performance
+            </h5>
+            <div className="flex items-center gap-2 px-3 py-2 border border-outline-variant/30 rounded-lg bg-white/50 shadow-sm">
+              <Calendar className="w-[18px] h-[18px] text-on-surface-variant" />
+              <span className="text-label-sm text-on-surface font-semibold">
+                {new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+              </span>
+            </div>
+          </div>
+          <div className="flex-1 relative">
+            {logsLoading ? (
+              <div className="flex items-center justify-center h-full opacity-30">
+                <RefreshCw className="animate-spin w-10 h-10" />
+              </div>
+            ) : (
+              <DeviceAnalyticsChart
+                data={voltageChartData}
+                metricConfig={METRIC_CONFIG[METRICS.VOLTAGE]}
+              />
+            )}
+          </div>
+          {/* Stylized Legend */}
+          <div className="flex items-center justify-center gap-6 pt-4 mt-auto">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-primary" />
+              <span className="text-[11px] text-on-surface-variant font-semibold uppercase tracking-wider">
+                Voltage (V)
+              </span>
+            </div>
+            <div className="flex items-center gap-2 opacity-50">
+              <div className="w-3 h-3 rounded-full bg-secondary" />
+              <span className="text-[11px] text-on-surface-variant font-semibold uppercase tracking-wider">
+                Salinity (ppt)
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Voltage Performance Chart */}
-        <div className="lg:col-span-2">
-          <div className="glass-panel rounded-xl p-6 h-full min-h-[400px]">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h3 className="font-display text-h2 font-semibold text-on-surface">
-                  Voltage Performance
-                </h3>
-                <p className="text-on-surface-variant text-body-md font-body-md">
-                  24h Real-time History
-                </p>
+        {/* System Overview Donut Chart */}
+        <div className="glass-card rounded-2xl p-6 flex flex-col h-[400px]">
+          <h5 className="text-[12px] font-bold text-on-surface tracking-tight uppercase mb-6">
+            System Overview
+          </h5>
+
+          <HealthDonutChart score={healthScore} title="Health" icon={Zap} />
+
+          <div className="grid grid-cols-3 gap-4 pt-6 border-t border-outline-variant/20">
+            <div className="text-center">
+              <p className="text-[10px] text-on-surface-variant uppercase font-bold mb-1">
+                Efficiency
+              </p>
+              <p className="text-body-md font-bold text-green-600">92%</p>
+            </div>
+            <div className="text-center border-x border-outline-variant/20">
+              <p className="text-[10px] text-on-surface-variant uppercase font-bold mb-1">
+                System Load
+              </p>
+              <p className="text-body-md font-bold text-primary">24%</p>
+            </div>
+            <div className="text-center">
+              <p className="text-[10px] text-on-surface-variant uppercase font-bold mb-1">Active</p>
+              <p className="text-body-md font-bold text-on-surface">{totalDevices}/1</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 4. BOTTOM WIDGETS */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+        {/* Widget 1: Device Status Card */}
+        <div className="glass-card rounded-2xl p-6 flex flex-col hover:border-primary/30 transition-all duration-300 group">
+          <div className="flex justify-between items-center mb-6">
+            <span className="text-[14px] font-bold text-on-surface tracking-tight uppercase">
+              Device - {userDevice?.device_name || "Unknown"}
+            </span>
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-600 text-[12px] font-bold">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+              Active
+            </div>
+          </div>
+          <div className="space-y-3 mb-6">
+            {/* Voltage Row */}
+            <div className="flex items-center justify-between p-3 rounded-2xl border border-outline-variant/10 bg-surface-bright/50">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <Zap size={20} />
+                </div>
+                <span className="text-label-md text-on-surface-variant font-medium font-body-md">
+                  Voltage
+                </span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-primary animate-pulse" />
-                <span className="text-label-sm text-on-surface-variant uppercase tracking-widest font-bold">
-                  Node Output
+              <div className="flex items-center gap-4">
+                <span className="font-bold text-on-surface font-display">
+                  {latestLog?.voltage || "0.00"} V
+                </span>
+                <span className="text-[11px] font-bold text-green-600 uppercase tracking-tight">
+                  Normal
                 </span>
               </div>
             </div>
-
-            <div className="h-[300px]">
-              {logsLoading ? (
-                <div className="flex items-center justify-center h-full opacity-30">
-                  <Activity size={40} className="animate-spin" />
+            {/* Salinity Row */}
+            <div className="flex items-center justify-between p-3 rounded-2xl border border-outline-variant/10 bg-surface-bright/50">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+                  <Activity size={20} />
                 </div>
-              ) : (
-                <DeviceAnalyticsChart
-                  data={voltageChartData}
-                  metricConfig={METRIC_CONFIG[METRICS.VOLTAGE]}
-                />
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Salinity Performance (Wave/Full Width Chart) */}
-        <div className="lg:col-span-3">
-          <div className="glass-panel rounded-xl p-6 h-full min-h-[400px]">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h3 className="font-display text-h2 font-semibold text-on-surface">
-                  Salinity Fluctuations
-                </h3>
-                <p className="text-on-surface-variant text-body-md font-body-md">
-                  Weekly Trend Analysis
-                </p>
+                <span className="text-label-md text-on-surface-variant font-medium font-body-md">
+                  Salinity
+                </span>
               </div>
-              <div className="px-4 py-2 bg-secondary/5 rounded-full text-secondary font-display text-label-sm border border-secondary/20 font-bold uppercase tracking-widest">
-                AVG: {latestLog?.tds_ppm || "0"} ppt
+              <div className="flex items-center gap-4">
+                <span className="font-bold text-on-surface font-display">
+                  {latestLog?.tds_ppm || "0"} ppt
+                </span>
+                <span className="text-[11px] font-bold text-green-600 uppercase tracking-tight">
+                  Normal
+                </span>
               </div>
             </div>
-
-            <div className="h-[300px]">
-              {logsLoading ? (
-                <div className="flex items-center justify-center h-full opacity-30">
-                  <Activity size={40} className="animate-spin" />
-                </div>
-              ) : (
-                <DeviceAnalyticsChart
-                  data={salinityChartData}
-                  metricConfig={METRIC_CONFIG[METRICS.TDS]}
-                />
-              )}
-            </div>
           </div>
+          <button className="w-full py-3.5 primary-gradient rounded-xl text-label-md font-bold text-white shadow-lg mt-auto transition-all duration-300 hover:scale-[1.02] hover:brightness-110">
+            View Real-Time
+          </button>
         </div>
+
+        {/* Widget 2: System Logs */}
+        <RecentAlertsFeed
+          title="System Logs"
+          variant="widget"
+          alerts={logs?.slice(0, 5).map((log) => ({
+            timestamp: log.timestamp,
+            title: `Device Status: ${log.voltage > 0 ? "ON" : "OFF"}`,
+            details: log.voltage > 0 ? "Node output active" : "Node output inactive",
+            type: log.voltage > 0 ? "info" : "warning",
+          }))}
+          loading={logsLoading}
+        />
+
+        {/* Widget 3: Recent Alerts */}
+        <RecentAlertsFeed
+          title="Recent Alerts"
+          variant="widget"
+          alerts={notifications?.slice(0, 5)}
+          loading={notificationsLoading}
+          onViewAll={() => navigate(ROUTES.ALERTS)}
+        />
       </div>
 
       <Footer />

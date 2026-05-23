@@ -61,31 +61,57 @@ const PRECISION_CONFIG = {
   voltage: 2,
   tds_ppm: 1,
   bulb_ma: 2,
+  esp_ma: 2,
+  sensor_ma: 2,
 };
 
 /**
  * Internal helper to format numeric readings according to PRECISION_CONFIG.
  * @param {Object} data - Raw reading data from Firebase
- * @returns {Object|null} - Transformed data
+ * @returns {Object} - Transformed data (guaranteed to have voltage, tds, current)
  */
-const transformReading = (data) => {
-  if (!data) return null;
+export const transformReading = (data) => {
+  // If no data, return default standby state
+  if (!data || typeof data !== "object") {
+    return {
+      voltage: 0,
+      tds: 0,
+      current: 0,
+      timestamp: Date.now(),
+      relay_active: false,
+    };
+  }
 
   const transformed = { ...data };
 
-  // Clean data transformation: format decimals while keeping them as numbers
+  // 1. CALCULATE DERIVED METRICS: Total Current in Amps
+  const bulb = Number(transformed.bulb_ma) || 0;
+  const esp = Number(transformed.esp_ma) || 0;
+  const sensor = Number(transformed.sensor_ma) || 0;
+
+  // Convert total milliamps to Amps
+  transformed.current = Number(((bulb + esp + sensor) / 1000).toFixed(2));
+
+  // 2. PRECISION FORMATTING: Ensure numbers and apply toFixed
   Object.keys(PRECISION_CONFIG).forEach((key) => {
-    if (typeof transformed[key] === "number") {
-      transformed[key] = Number(transformed[key].toFixed(PRECISION_CONFIG[key]));
+    const val = transformed[key];
+    if (val !== undefined && val !== null) {
+      const num = Number(val);
+      transformed[key] = isNaN(num) ? 0 : Number(num.toFixed(PRECISION_CONFIG[key]));
     }
   });
 
-  // NORMALIZATION: Map hardware-specific keys to UI-standard keys
+  // 3. NORMALIZATION: Map hardware-specific keys to UI-standard keys
   Object.entries(METRIC_MAP).forEach(([uiKey, dbKey]) => {
-    if (transformed[dbKey] !== undefined && uiKey !== dbKey) {
+    if (transformed[dbKey] !== undefined && transformed[uiKey] === undefined) {
       transformed[uiKey] = transformed[dbKey];
     }
   });
+
+  // 4. FINAL SAFETY LAYER: Ensure UI metrics are numeric zeros if still missing
+  transformed.voltage = transformed.voltage ?? 0;
+  transformed.tds = transformed.tds ?? 0;
+  transformed.current = transformed.current ?? 0;
 
   return transformed;
 };
@@ -170,33 +196,34 @@ export const updateBulbState = async (deviceId, newState) => {
   await verifyDeviceAccess(deviceId);
 
   try {
-    // SCHEMA HARDENING: Fetch current tds_ppm and voltage to ensure mandatory fields are present in all writes
+    // SCHEMA HARDENING: Fetch FULL current state to preserve all telemetry fields (esp_ma, power_mode, etc.)
     const latestRef = ref(db, `readings/${deviceId}/latest`);
     const snapshot = await get(latestRef);
     const currentData = snapshot.val() || {};
-    const tds = currentData.tds_ppm || 0;
-    const voltage = currentData.voltage || 0;
 
     const clientTs = Date.now();
     const now = serverTimestamp();
     const updates = {};
 
-    // 1. Update Latest Reading Node (Removed bulb_ma)
-    updates[`readings/${deviceId}/latest/relay_active`] = newState;
-    updates[`readings/${deviceId}/latest/tds_ppm`] = tds;
-    updates[`readings/${deviceId}/latest/voltage`] = voltage;
-    updates[`readings/${deviceId}/latest/timestamp`] = now;
+    // 1. Prepare base reading for both latest and logs
+    const baseReading = {
+      ...currentData,
+      relay_active: newState,
+      timestamp: now,
+    };
 
-    // 2. Add to Historical Logs
-    updates[`logs/${deviceId}/${clientTs}/relay_active`] = newState;
-    updates[`logs/${deviceId}/${clientTs}/tds_ppm`] = tds;
-    updates[`logs/${deviceId}/${clientTs}/timestamp`] = now;
+    // 2. Update Latest Reading Node (Preserves all fields: esp_ma, sensor_ma, power_mode, etc.)
+    updates[`readings/${deviceId}/latest`] = baseReading;
 
-    // 3. Hardware Command Node (Anti-Replay Protection)
+    // 3. Add to Historical Logs
+    updates[`readings/${deviceId}/logs/${clientTs}`] = baseReading;
+
+    // 4. Hardware Command Node (Anti-Replay Protection)
     updates[`commands/${deviceId}/relay`] = newState;
     updates[`commands/${deviceId}/lastUpdated`] = now;
 
     // CRITICAL ALERT CHECK: Trigger notification if TDS exceeds critical threshold
+    const tds = currentData.tds_ppm || 0;
     const tdsConfig = SENSOR_CONFIG[METRICS.TDS];
     if (tds >= tdsConfig.critical) {
       const userId = auth.currentUser?.uid || "system";
@@ -238,7 +265,7 @@ export const getHistoricalLogs = async (deviceId, limit = 50) => {
   // IDOR DEFENSE: Verify access before fetching logs
   await verifyDeviceAccess(deviceId);
 
-  const logsRef = query(ref(db, `logs/${deviceId}`), orderByKey(), limitToLast(limit));
+  const logsRef = query(ref(db, `readings/${deviceId}/logs`), orderByKey(), limitToLast(limit));
 
   try {
     const snapshot = await get(logsRef);

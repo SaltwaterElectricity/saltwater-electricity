@@ -1,7 +1,8 @@
-/**
- * src/constants/index.js
- * Centralized configuration for the SMARTAQUA Dashboard.
- */
+// src/constants/index.js
+
+export * from "./roles";
+export * from "./routes";
+export * from "./ui";
 
 // 1. GLOBAL SETTINGS: Control logic thresholds
 export const APP_SETTINGS = Object.freeze({
@@ -12,15 +13,15 @@ export const APP_SETTINGS = Object.freeze({
 // 2. METRIC KEYS: Single source of truth for internal keys
 export const METRICS = Object.freeze({
   TDS: "tds",
-  TEMP: "temp",
   VOLTAGE: "voltage",
+  CURRENT: "current",
 });
 
 // 3. DATABASE MAP: Decouples UI keys from API response keys
 export const METRIC_MAP = Object.freeze({
   [METRICS.TDS]: "tds_ppm",
-  [METRICS.TEMP]: "water_temp",
   [METRICS.VOLTAGE]: "voltage",
+  [METRICS.CURRENT]: "total_ma",
 });
 
 // 4. UI CONFIGURATION: The "Brain" of your UI components
@@ -33,14 +34,6 @@ export const METRIC_CONFIG = Object.freeze({
     chartColor: "#3b82f6",
     colorClass: "text-blue-500",
   },
-  [METRICS.TEMP]: {
-    id: METRICS.TEMP,
-    label: "Temp",
-    icon: "🌡️",
-    unit: "°C",
-    chartColor: "#f43f5e",
-    colorClass: "text-rose-500",
-  },
   [METRICS.VOLTAGE]: {
     id: METRICS.VOLTAGE,
     label: "Voltage",
@@ -48,6 +41,14 @@ export const METRIC_CONFIG = Object.freeze({
     unit: "V",
     chartColor: "#00c1fd",
     colorClass: "text-blue-400",
+  },
+  [METRICS.CURRENT]: {
+    id: METRICS.CURRENT,
+    label: "Total Current",
+    icon: "🔌",
+    unit: "A",
+    chartColor: "#22d3ee",
+    colorClass: "text-cyan-400",
   },
   DEFAULT: {
     id: "unknown",
@@ -135,15 +136,6 @@ export const SENSOR_CONFIG = Object.freeze({
     critical: 500, // UI Alert Zone
     precision: 0, // TDS usually doesn't need decimals
   },
-  [METRICS.TEMP]: {
-    unit: "°C",
-    icon: "🌡️",
-    min: 0,
-    max: 50,
-    warning: 28,
-    critical: 32,
-    precision: 1, // Temp needs one decimal (e.g., 25.4°C)
-  },
   [METRICS.VOLTAGE]: {
     unit: "V",
     icon: "⚡",
@@ -151,6 +143,15 @@ export const SENSOR_CONFIG = Object.freeze({
     max: 15,
     warning: 3.2,
     critical: 2.8,
+    precision: 2,
+  },
+  [METRICS.CURRENT]: {
+    unit: "A",
+    icon: "🔌",
+    min: 0,
+    max: 5, // Estimated limit based on total load
+    warning: 3.5,
+    critical: 4.5,
     precision: 2,
   },
 });

@@ -6,7 +6,7 @@ export const ControlSection = ({ deviceId, logs }) => {
   const latestLog = logs[0] || {};
 
   return (
-    <div className="flex flex-col gap-8 animate-fadeIn min-w-0">
+    <div className="flex flex-col gap-8 animate-fade-in min-w-0">
       <SectionHeader
         title="DEVICE OVERVIEW AND CONTROL"
         sub={`Manage active lighting relays and real-time energy flow for ${deviceId}.`}

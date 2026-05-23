@@ -2,7 +2,7 @@ import { cn } from "../../../utils/cn";
 import { SectionHeader } from "../../ui";
 
 export const RawTelemetrySection = ({ logs }) => (
-  <div className="flex flex-col gap-8 animate-fadeIn min-w-0">
+  <div className="flex flex-col gap-8 animate-fade-in min-w-0">
     <SectionHeader title="Raw Logs" sub="Unfiltered telemetry data audit trail" />
     <div className="overflow-x-auto overflow-y-hidden custom-scrollbar rounded-2xl border border-slate-100 bg-white shadow-sm w-full">
       <table className="w-full min-w-[500px] text-left border-collapse">

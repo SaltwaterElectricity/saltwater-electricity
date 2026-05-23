@@ -77,17 +77,17 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
 
     // I-reconstruct ang flattened structure pabalik sa nested address object
     const payload = {
-      firstName: formData.firstName.trim(),
-      middleName: formData.middleName.trim(),
-      lastName: formData.lastName.trim(),
-      suffix: formData.suffix.trim(),
+      firstName: String(formData.firstName || "").trim(),
+      middleName: String(formData.middleName || "").trim(),
+      lastName: String(formData.lastName || "").trim(),
+      suffix: String(formData.suffix || "").trim(),
       birthDate: formData.birthDate,
       gender: formData.gender,
-      mobileNum: formData.mobileNum.trim(),
+      mobileNum: String(formData.mobileNum || "").trim(),
       address: {
-        street: formData.street.trim(),
-        baranggay: formData.baranggay.trim(),
-        municipality: formData.municipality.trim(),
+        street: String(formData.street || "").trim(),
+        baranggay: String(formData.baranggay || "").trim(),
+        municipality: String(formData.municipality || "").trim(),
       },
     };
 

@@ -118,7 +118,7 @@ const AssignDeviceModal = ({ device, isOpen, onClose, onShowToast }) => {
             />
 
             {searchTerm.length > 0 && (
-              <div className="absolute left-0 right-0 z-50 w-full max-h-48 overflow-y-auto custom-scrollbar border border-gray-100 rounded-xl divide-y divide-gray-50 shadow-2xl bg-white mt-1 ring-1 ring-black/5 animate-fadeIn">
+              <div className="absolute left-0 right-0 z-50 w-full max-h-48 overflow-y-auto custom-scrollbar border border-gray-100 rounded-xl divide-y divide-gray-50 shadow-2xl bg-white mt-1 ring-1 ring-black/5 animate-fade-in">
                 {filteredUsers.length > 0
                   ? filteredUsers.map((user) => (
                       <button
@@ -184,7 +184,7 @@ const AssignDeviceModal = ({ device, isOpen, onClose, onShowToast }) => {
         {/* Selected State Indicator */}
         <div className="px-8 h-14">
           {selectedUser ? (
-            <div className="h-full px-4 bg-green-50 border border-green-100 rounded-xl flex items-center gap-3 animate-fadeIn">
+            <div className="h-full px-4 bg-green-50 border border-green-100 rounded-xl flex items-center gap-3 animate-fade-in">
               <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center text-white text-[10px] font-bold shrink-0">
                 ✓
               </div>
