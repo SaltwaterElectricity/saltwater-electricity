@@ -9,4 +9,4 @@ export * from "./profile";
 export * from "./skeleton";
 export * from "./error-boundary";
 export * from "./device";
-export { default as DeviceAnalyticsChart } from "./charts/DeviceAnalyticsChart";
+export * from "./charts";
