@@ -29,7 +29,9 @@ export default async function handler(req, res) {
   }
 
   if (secretKey !== HARDWARE_SECRET) {
-    console.warn(`[SECURITY] Unauthorized hardware alert attempt. Device: ${deviceId || "Unknown"}`);
+    console.warn(
+      `[SECURITY] Unauthorized hardware alert attempt. Device: ${deviceId || "Unknown"}`
+    );
     return sendError(res, "Unauthorized", 401, "hw/unauthorized");
   }
 
@@ -50,7 +52,12 @@ export default async function handler(req, res) {
       const lastSent = metaSnap.val().lastSmsSent || 0;
       if (now - lastSent < COOLDOWN_MS) {
         const remaining = Math.ceil((COOLDOWN_MS - (now - lastSent)) / 60000);
-        return sendError(res, `Rate limit exceeded. Cooldown active for ${remaining} minutes.`, 429, "hw/rate-limit");
+        return sendError(
+          res,
+          `Rate limit exceeded. Cooldown active for ${remaining} minutes.`,
+          429,
+          "hw/rate-limit"
+        );
       }
     }
 
@@ -66,7 +73,12 @@ export default async function handler(req, res) {
     const userSnap = await db.ref(`users/${userId}`).get();
 
     if (!userSnap.exists() || !userSnap.val().mobileNum || userSnap.val().mobileNum === "N/A") {
-      return sendError(res, "No valid mobile number found for device owner.", 404, "hw/missing-contact");
+      return sendError(
+        res,
+        "No valid mobile number found for device owner.",
+        404,
+        "hw/missing-contact"
+      );
     }
 
     const mobileNum = userSnap.val().mobileNum;

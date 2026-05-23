@@ -19,11 +19,21 @@ export default async function handler(req, res) {
   const { email, newPassword, otp } = req.body;
 
   if (!email || !newPassword || !otp) {
-    return sendError(res, "Missing required parameters (email, newPassword, otp).", 400, "auth/missing-parameters");
+    return sendError(
+      res,
+      "Missing required parameters (email, newPassword, otp).",
+      400,
+      "auth/missing-parameters"
+    );
   }
 
   if (newPassword.length < 8) {
-    return sendError(res, "Security Check: Password must be at least 8 characters.", 400, "auth/weak-password");
+    return sendError(
+      res,
+      "Security Check: Password must be at least 8 characters.",
+      400,
+      "auth/weak-password"
+    );
   }
 
   try {

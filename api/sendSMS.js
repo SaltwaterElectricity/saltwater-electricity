@@ -23,7 +23,12 @@ export default async function handler(req, res) {
     const { number, message } = req.body;
 
     if (!number || !message) {
-      return sendError(res, "Missing recipient number or message content.", 400, "sms/missing-fields");
+      return sendError(
+        res,
+        "Missing recipient number or message content.",
+        400,
+        "sms/missing-fields"
+      );
     }
 
     const response = await axios.post(

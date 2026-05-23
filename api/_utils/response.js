@@ -32,7 +32,7 @@ export function sendError(res, error, status = 500, code = "internal-error") {
 
   // Mask specific internal errors for security (SUEP)
   let sanitizedMessage = "An unexpected error occurred. Please try again later.";
-  
+
   if (status < 500 || isDev) {
     sanitizedMessage = message;
   }
