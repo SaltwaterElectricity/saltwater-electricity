@@ -1,3 +1,4 @@
+import { initFirebaseAdmin } from "./_utils/firebase.js";
 import { sendSuccess, sendError, handleOptions } from "./_utils/response.js";
 import axios from "axios";
 
@@ -12,14 +13,25 @@ export default async function handler(req, res) {
     return sendError(res, "Method Not Allowed", 405, "sms/method-not-allowed");
   }
 
-  const apiToken = process.env.PHILSMS_API_TOKEN;
-  const senderId = process.env.PHILSMS_SENDER_ID || "PhilSMS";
-
-  if (!apiToken) {
-    return sendError(res, "SMS service unavailable.", 500, "sms/config-missing");
+  // 🛡️ SECURITY: Verify Firebase ID Token
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return sendError(res, "Unauthorized", 401, "sms/unauthorized");
   }
 
+  const idToken = authHeader.split("Bearer ")[1];
+
   try {
+    const { auth } = initFirebaseAdmin();
+    await auth.verifyIdToken(idToken);
+
+    const apiToken = process.env.PHILSMS_API_TOKEN;
+    const senderId = process.env.PHILSMS_SENDER_ID || "PhilSMS";
+
+    if (!apiToken) {
+      return sendError(res, "SMS service unavailable.", 500, "sms/config-missing");
+    }
+
     let { number, message } = req.body;
 
     if (!number || !message) {
@@ -43,7 +55,7 @@ export default async function handler(req, res) {
     }
 
     const response = await axios.post(
-      "https://api.philsms.com/v3/sms/send",
+      "https://dashboard.philsms.com/api/v3/sms/send",
       {
         recipient: formattedNumber,
         sender_id: senderId,
@@ -61,6 +73,9 @@ export default async function handler(req, res) {
 
     return sendSuccess(res, { data: response.data });
   } catch (error) {
+    if (error.code === "auth/id-token-expired") {
+      return sendError(res, "Session expired.", 401, "sms/token-expired");
+    }
     return sendError(res, error, 500, "sms/delivery-failed");
   }
 }

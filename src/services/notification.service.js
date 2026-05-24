@@ -1,5 +1,5 @@
 import { ref, push, serverTimestamp } from "firebase/database";
-import { db } from "../firebaseConfig";
+import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
 import { logger } from "../utils/logger";
 
@@ -86,11 +86,20 @@ export const sendSMSAlert = async (mobileNum, message) => {
   }
 
   try {
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    // 🛡️ SECURITY: Attach ID Token if available to authenticate the request
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      const token = await currentUser.getIdToken();
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
     const response = await fetch("/api/sendSMS", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify({ number: mobileNum, message }),
     });
 
