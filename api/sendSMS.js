@@ -43,7 +43,7 @@ export default async function handler(req, res) {
     }
 
     const response = await axios.post(
-      "https://api.philsms.com/api/v3/send-sms",
+      "https://api.philsms.com/v3/sms/send",
       {
         recipient: formattedNumber,
         sender_id: senderId,
