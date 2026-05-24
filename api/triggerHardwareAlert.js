@@ -94,7 +94,7 @@ export default async function handler(req, res) {
     const message = `[SALT-ELEC] ALERT: Unit ${deviceId} detected critical TDS levels: ${tdsValue} PPM. Check dashboard now.`;
 
     const smsResponse = await axios.post(
-      "https://api.philsms.com/v3/sms/send",
+      "https://api.philsms.com/v3/send",
       {
         recipient: mobileNum,
         sender_id: senderId,
