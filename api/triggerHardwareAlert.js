@@ -83,6 +83,14 @@ export default async function handler(req, res) {
 
     const mobileNum = userSnap.val().mobileNum;
 
+    // Format number for PhilSMS (ensure 639... format)
+    let formattedNumber = mobileNum.toString().trim().replace(/[^0-9]/g, "");
+    if (formattedNumber.startsWith("09")) {
+      formattedNumber = "63" + formattedNumber.substring(1);
+    } else if (formattedNumber.startsWith("9") && formattedNumber.length === 10) {
+      formattedNumber = "63" + formattedNumber;
+    }
+
     // 5. Trigger PhilSMS
     const apiToken = process.env.PHILSMS_API_TOKEN;
     const senderId = process.env.PHILSMS_SENDER_ID || "PhilSMS";
@@ -96,7 +104,7 @@ export default async function handler(req, res) {
     const smsResponse = await axios.post(
       "https://api.philsms.com/api/v3/send-sms",
       {
-        recipient: mobileNum,
+        recipient: formattedNumber,
         sender_id: senderId,
         type: "plain",
         message: message,

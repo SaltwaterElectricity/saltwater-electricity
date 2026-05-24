@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { number, message } = req.body;
+    let { number, message } = req.body;
 
     if (!number || !message) {
       return sendError(
@@ -31,10 +31,18 @@ export default async function handler(req, res) {
       );
     }
 
+    // Format number for PhilSMS (ensure 639... format)
+    let formattedNumber = number.toString().trim().replace(/[^0-9]/g, "");
+    if (formattedNumber.startsWith("09")) {
+      formattedNumber = "63" + formattedNumber.substring(1);
+    } else if (formattedNumber.startsWith("9") && formattedNumber.length === 10) {
+      formattedNumber = "63" + formattedNumber;
+    }
+
     const response = await axios.post(
       "https://api.philsms.com/api/v3/send-sms",
       {
-        recipient: number,
+        recipient: formattedNumber,
         sender_id: senderId,
         type: "plain",
         message: message,
