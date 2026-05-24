@@ -84,7 +84,10 @@ export default async function handler(req, res) {
     const mobileNum = userSnap.val().mobileNum;
 
     // Format number for PhilSMS (ensure 639... format)
-    let formattedNumber = mobileNum.toString().trim().replace(/[^0-9]/g, "");
+    let formattedNumber = mobileNum
+      .toString()
+      .trim()
+      .replace(/[^0-9]/g, "");
     if (formattedNumber.startsWith("09")) {
       formattedNumber = "63" + formattedNumber.substring(1);
     } else if (formattedNumber.startsWith("9") && formattedNumber.length === 10) {
