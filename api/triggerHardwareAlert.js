@@ -115,7 +115,8 @@ export default async function handler(req, res) {
       lastSmsSent: now,
       lastTdsValue: tdsValue,
       status: "delivered",
-      smsUid: smsResponse.data.data?.id || smsResponse.data.data?.uid || smsResponse.data.message_id,
+      smsUid:
+        smsResponse.data.data?.id || smsResponse.data.data?.uid || smsResponse.data.message_id,
     });
 
     return sendSuccess(res, { message: "Alert delivered." });
