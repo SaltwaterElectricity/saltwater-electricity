@@ -48,7 +48,8 @@ const RequestManagement = () => {
         ...req,
         residentName: resident ? `${resident.firstName} ${resident.lastName}` : "Unknown Resident",
         residentEmail: resident?.email || "",
-        residentLocation: resident?.address?.street || resident?.address?.baranggay || "Unknown Location",
+        residentLocation:
+          resident?.address?.street || resident?.address?.baranggay || "Unknown Location",
       };
     });
   }, [requests, users]);
@@ -56,13 +57,14 @@ const RequestManagement = () => {
   // FILTERING LOGIC
   const filteredRequests = useMemo(() => {
     return hydratedRequests.filter((req) => {
-      const matchesSearch = 
+      const matchesSearch =
         req.residentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         req.residentEmail.toLowerCase().includes(searchTerm.toLowerCase());
-      
+
       const matchesStatus = statusFilter === "all" || req.status === statusFilter;
-      
-      const matchesLocation = locationFilter === "all" || 
+
+      const matchesLocation =
+        locationFilter === "all" ||
         req.residentLocation.toLowerCase().includes(locationFilter.toLowerCase());
 
       return matchesSearch && matchesStatus && matchesLocation;
@@ -103,11 +105,7 @@ const RequestManagement = () => {
       // Map 'approve' to 'approved' and 'decline' to 'declined' for the service
       const targetStatus = modalType === "approve" ? "approved" : "declined";
 
-      await updateRequestStatus(
-        selectedRequest.id,
-        targetStatus,
-        extraData
-      );
+      await updateRequestStatus(selectedRequest.id, targetStatus, extraData);
 
       triggerToast(`Request ${targetStatus} successfully.`);
       handleCloseModal();
@@ -123,14 +121,14 @@ const RequestManagement = () => {
   // But since the current modal is binary (approve OR decline), we'll default to 'approve' for View
   // unless we want a new 'View' modal. Let's stick to 'approve' as the entry point for viewing/processing.
   const handleViewRequest = (req) => {
-    if (req.status === 'pending') {
-      handleOpenModal(req, 'approve');
+    if (req.status === "pending") {
+      handleOpenModal(req, "approve");
     } else {
       // If already processed, we just show the details (could be a read-only view)
-      // For now, let's just open the modal in its processed state if possible, 
+      // For now, let's just open the modal in its processed state if possible,
       // but the current ProcessRequestModal is for processing.
       // We'll just trigger the toast if it's already resolved for now, or open as 'approve' with disabled fields.
-      handleOpenModal(req, req.status === 'approved' ? 'approve' : 'decline');
+      handleOpenModal(req, req.status === "approved" ? "approve" : "decline");
     }
   };
 

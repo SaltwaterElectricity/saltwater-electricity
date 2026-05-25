@@ -13,7 +13,8 @@ const RequestManagementHeader = memo(() => {
         <span className="text-blue-600">VALIDATION</span>
       </h2>
       <p className="text-slate-500 mt-2 max-w-2xl font-medium text-sm md:text-base">
-        Monitor and manage incoming device and user requests with Saltwater Electricity Monitoring System.
+        Monitor and manage incoming device and user requests with Saltwater Electricity Monitoring
+        System.
       </p>
     </div>
   );

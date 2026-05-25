@@ -10,7 +10,13 @@ const StatCard = ({ label, value, percentage, icon: Icon, colorClass, shadowClas
   return (
     <div className="bg-white p-6 rounded-2xl shadow-[0_4px_20px_0_rgba(0,0,0,0.05)] border border-slate-50 flex items-start justify-between min-h-[140px] transition-all hover:shadow-lg">
       <div className="flex gap-4">
-        <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg shrink-0", colorClass, shadowClass)}>
+        <div
+          className={cn(
+            "w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg shrink-0",
+            colorClass,
+            shadowClass
+          )}
+        >
           <Icon className="text-white" size={30} />
         </div>
         <div>

@@ -45,7 +45,7 @@ const ProcessRequestModal = memo(
                 Resident: {request.residentName}
               </p>
             </div>
-            
+
             {/* ACTION TOGGLE (Only if pending) */}
             {request.status === "pending" && (
               <div className="flex bg-slate-100 p-1 rounded-xl">
@@ -54,7 +54,9 @@ const ProcessRequestModal = memo(
                   onClick={() => setModalType("approve")}
                   className={cn(
                     "px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
-                    modalType === "approve" ? "bg-white text-emerald-600 shadow-sm" : "text-slate-400 hover:text-slate-600"
+                    modalType === "approve"
+                      ? "bg-white text-emerald-600 shadow-sm"
+                      : "text-slate-400 hover:text-slate-600"
                   )}
                 >
                   Approve
@@ -64,7 +66,9 @@ const ProcessRequestModal = memo(
                   onClick={() => setModalType("decline")}
                   className={cn(
                     "px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
-                    modalType === "decline" ? "bg-white text-rose-600 shadow-sm" : "text-slate-400 hover:text-slate-600"
+                    modalType === "decline"
+                      ? "bg-white text-rose-600 shadow-sm"
+                      : "text-slate-400 hover:text-slate-600"
                   )}
                 >
                   Decline

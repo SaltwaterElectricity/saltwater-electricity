@@ -35,7 +35,7 @@ const RequestTableRow = memo(({ request, onView }) => {
       "from-orange-400 to-red-500",
       "from-emerald-400 to-teal-600",
       "from-pink-400 to-rose-600",
-      "from-purple-400 to-violet-600"
+      "from-purple-400 to-violet-600",
     ];
     return gradients[hash % gradients.length];
   };
@@ -46,7 +46,7 @@ const RequestTableRow = memo(({ request, onView }) => {
     return date.toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
-      year: "numeric"
+      year: "numeric",
     });
   };
 
@@ -55,7 +55,7 @@ const RequestTableRow = memo(({ request, onView }) => {
     const date = new Date(timestamp);
     return date.toLocaleTimeString("en-US", {
       hour: "2-digit",
-      minute: "2-digit"
+      minute: "2-digit",
     });
   };
 
@@ -63,31 +63,40 @@ const RequestTableRow = memo(({ request, onView }) => {
     <tr className="hover:bg-slate-50/50 transition-colors">
       <td className="px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className={cn(
-            "w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-sm shrink-0 bg-gradient-to-br",
-            getAvatarGradient(request.residentName)
-          )}>
+          <div
+            className={cn(
+              "w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-sm shrink-0 bg-gradient-to-br",
+              getAvatarGradient(request.residentName)
+            )}
+          >
             {getInitials(request.residentName)}
           </div>
           <div className="overflow-hidden">
             <p className="text-sm font-bold text-slate-900 truncate">{request.residentName}</p>
-            <p className="text-[11px] text-slate-500 truncate">{request.residentEmail || "No Email Provided"}</p>
+            <p className="text-[11px] text-slate-500 truncate">
+              {request.residentEmail || "No Email Provided"}
+            </p>
           </div>
         </div>
       </td>
       <td className="px-6 py-4">
         <p className="text-sm text-slate-700 font-medium">
-          {request.requestType?.split("_").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ") || "General Request"}
+          {request.requestType
+            ?.split("_")
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+            .join(" ") || "General Request"}
         </p>
         <p className="text-[10px] text-slate-400 font-medium uppercase tracking-tighter">
           Device: {request.deviceName}
         </p>
       </td>
       <td className="px-6 py-4">
-        <span className={cn(
-          "px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider",
-          getStatusStyle(request.status)
-        )}>
+        <span
+          className={cn(
+            "px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider",
+            getStatusStyle(request.status)
+          )}
+        >
           {request.status === "declined" ? "Denied" : request.status}
         </span>
       </td>
@@ -98,7 +107,7 @@ const RequestTableRow = memo(({ request, onView }) => {
         </div>
       </td>
       <td className="px-6 py-4">
-        <button 
+        <button
           onClick={() => onView(request)}
           className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg border border-blue-600 text-blue-600 hover:bg-blue-50 transition-all text-xs font-bold active:scale-95 shadow-sm"
         >
