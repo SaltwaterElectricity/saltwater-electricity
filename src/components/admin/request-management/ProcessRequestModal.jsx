@@ -13,6 +13,7 @@ const ProcessRequestModal = memo(
     onClose,
     request,
     modalType,
+    setModalType,
     isSubmitting,
     onSubmit,
     approveForm,
@@ -28,7 +29,7 @@ const ProcessRequestModal = memo(
           <div className="flex items-center gap-4 mb-8">
             <div
               className={cn(
-                "w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-xl",
+                "w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-xl transition-all duration-300",
                 modalType === "approve"
                   ? "bg-emerald-500 shadow-emerald-900/20"
                   : "bg-rose-500 shadow-rose-900/20"
@@ -36,7 +37,7 @@ const ProcessRequestModal = memo(
             >
               {modalType === "approve" ? <Settings size={22} /> : <AlertCircle size={22} />}
             </div>
-            <div className="space-y-1">
+            <div className="flex-1 space-y-1">
               <h2 className="text-xl font-black italic tracking-tighter uppercase">
                 {modalType} <span className="text-slate-900 text-opacity-40">Request</span>
               </h2>
@@ -44,6 +45,32 @@ const ProcessRequestModal = memo(
                 Resident: {request.residentName}
               </p>
             </div>
+            
+            {/* ACTION TOGGLE (Only if pending) */}
+            {request.status === "pending" && (
+              <div className="flex bg-slate-100 p-1 rounded-xl">
+                <button
+                  type="button"
+                  onClick={() => setModalType("approve")}
+                  className={cn(
+                    "px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
+                    modalType === "approve" ? "bg-white text-emerald-600 shadow-sm" : "text-slate-400 hover:text-slate-600"
+                  )}
+                >
+                  Approve
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setModalType("decline")}
+                  className={cn(
+                    "px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
+                    modalType === "decline" ? "bg-white text-rose-600 shadow-sm" : "text-slate-400 hover:text-slate-600"
+                  )}
+                >
+                  Decline
+                </button>
+              </div>
+            )}
           </div>
 
           <form onSubmit={onSubmit} className="space-y-6">

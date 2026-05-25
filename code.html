@@ -1,219 +1,462 @@
-<!DOCTYPE html>
-
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!DOCTYPE html><html class="light" lang="en" style="width: 1280px; height: 1024px; overflow: hidden; position: relative;"><head></head><body class="bg-[#F8FAFC] font-body-md text-on-background antialiased overflow-hidden"><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Request Validation Dashboard - Saltwater Electricity</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
 <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     "colors": {
-                        "outline-variant": "#c3c6d6",
-                        "secondary-fixed-dim": "#75d1ff",
-                        "primary-container": "#0052cc",
-                        "surface-container-lowest": "#ffffff",
-                        "surface-container-low": "#f2f4f6",
-                        "on-tertiary": "#ffffff",
-                        "on-error": "#ffffff",
-                        "surface-bright": "#f7f9fb",
-                        "on-secondary-fixed": "#001e2b",
-                        "surface-tint": "#0c56d0",
-                        "secondary-fixed": "#c2e8ff",
-                        "surface-container-high": "#e6e8ea",
-                        "tertiary-fixed-dim": "#00e0b8",
-                        "tertiary": "#004d3d",
-                        "surface-container-highest": "#e0e3e5",
-                        "on-secondary-fixed-variant": "#004d67",
-                        "primary": "#003d9b",
-                        "outline": "#737685",
-                        "on-tertiary-container": "#22edc3",
-                        "error": "#ba1a1a",
-                        "primary-fixed-dim": "#b2c5ff",
-                        "on-primary-container": "#c4d2ff",
-                        "on-background": "#191c1e",
-                        "primary-fixed": "#dae2ff",
-                        "surface-container": "#eceef0",
-                        "on-surface": "#191c1e",
+                        "surface-container-highest": "#e1e2ee",
+                        "on-primary-fixed-variant": "#003fa4",
+                        "primary-fixed-dim": "#b3c5ff",
+                        "outline": "#727687",
+                        "on-tertiary-fixed": "#390c00",
                         "on-primary": "#ffffff",
-                        "on-secondary-container": "#004b65",
-                        "surface-variant": "#e0e3e5",
-                        "surface": "#f7f9fb",
-                        "on-tertiary-fixed-variant": "#005141",
-                        "background": "#f7f9fb",
+                        "on-background": "#191b24",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#faf8ff",
+                        "secondary-fixed": "#d3e4fe",
+                        "outline-variant": "#c2c6d8",
+                        "inverse-primary": "#b3c5ff",
+                        "tertiary": "#a33200",
+                        "surface-variant": "#e1e2ee",
+                        "on-secondary-container": "#54647a",
+                        "on-primary-fixed": "#001849",
+                        "on-surface-variant": "#424656",
+                        "primary-container": "#0066ff",
+                        "background": "#faf8ff",
+                        "surface-dim": "#d8d9e6",
+                        "inverse-surface": "#2e303a",
+                        "inverse-on-surface": "#eff0fd",
+                        "tertiary-container": "#cc4204",
+                        "on-primary-container": "#f8f7ff",
+                        "tertiary-fixed": "#ffdbd0",
+                        "surface": "#faf8ff",
                         "error-container": "#ffdad6",
-                        "tertiary-container": "#006753",
-                        "on-primary-fixed-variant": "#0040a2",
-                        "surface-dim": "#d8dadc",
-                        "tertiary-fixed": "#42fdd3",
-                        "on-tertiary-fixed": "#002019",
-                        "inverse-primary": "#b2c5ff",
-                        "inverse-on-surface": "#eff1f3",
-                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-tertiary-fixed-variant": "#832600",
+                        "error": "#ba1a1a",
+                        "primary": "#0050cb",
+                        "surface-container-low": "#f2f3ff",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#0054d6",
+                        "primary-fixed": "#dae1ff",
+                        "surface-container-high": "#e6e7f4",
                         "on-error-container": "#93000a",
-                        "inverse-surface": "#2d3133",
-                        "secondary": "#006688",
-                        "secondary-container": "#00c1fd",
-                        "on-surface-variant": "#434654",
-                        "on-primary-fixed": "#001848"
+                        "on-secondary-fixed-variant": "#38485d",
+                        "tertiary-fixed-dim": "#ffb59d",
+                        "on-surface": "#191b24",
+                        "on-secondary": "#ffffff",
+                        "secondary": "#505f76",
+                        "on-tertiary-container": "#fff6f4",
+                        "on-secondary-fixed": "#0b1c30",
+                        "secondary-container": "#d0e1fb",
+                        "surface-container": "#ecedfa"
                     },
                     "borderRadius": {
                         "DEFAULT": "0.25rem",
                         "lg": "0.5rem",
                         "xl": "0.75rem",
-                        "full": "9999px"
+                        "full": "9999px",
+                        "premium": "20px"
                     },
                     "spacing": {
-                        "xl": "80px",
-                        "margin": "32px",
                         "gutter": "24px",
-                        "unit": "8px",
-                        "md": "24px",
-                        "xs": "4px",
-                        "sm": "12px",
-                        "lg": "48px"
+                        "margin-desktop": "48px",
+                        "container-max": "1280px",
+                        "unit": "4px",
+                        "margin-mobile": "16px"
                     },
                     "fontFamily": {
-                        "label-sm": ["Inter"],
-                        "h1": ["Space Grotesk"],
-                        "h2": ["Space Grotesk"],
-                        "display": ["Space Grotesk"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
                         "body-md": ["Inter"],
-                        "body-lg": ["Inter"]
-                    },
-                    "fontSize": {
-                        "label-sm": ["13px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
-                        "h1": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
-                        "h2": ["24px", {"lineHeight": "1.3", "fontWeight": "500"}],
-                        "display": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
-                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
-                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                        "label-sm": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"]
                     }
-                },
-            },
+                }
+            }
         }
     </script>
 <style>
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        .ocean-gradient-text {
-            background: linear-gradient(to right, #0052cc, #00c1fd);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .glass-sidebar {
+            background: linear-gradient(180deg, #021B3A 0%, #01214A 100%);
         }
-        .glow-line {
-            box-shadow: 0 0 15px rgba(0, 193, 253, 0.3);
+        .linear-shadow {
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05), 0 15px 30px -5px rgba(0,0,0,0.04);
         }
-        .progress-shimmer {
-            background: linear-gradient(90deg, #0052cc 0%, #00c1fd 50%, #0052cc 100%);
-            background-size: 200% 100%;
+        .accent-blue-glow:focus {
+            box-shadow: 0 0 0 2px #0066ff33;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+        .active-nav-pill {
+            background: #0066ff;
+            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.4);
         }
     </style>
-</head>
-<body class="bg-background font-body-md text-on-background overflow-hidden h-screen w-screen relative">
-<!-- Background: Blurred Dashboard Canvas -->
-<div class="absolute inset-0 z-0 blur-xl opacity-40 flex flex-col pointer-events-none scale-105">
-<!-- Top Nav Placeholder -->
-<div class="h-16 w-full border-b border-outline-variant/30 flex items-center px-8">
-<div class="w-32 h-6 bg-primary/20 rounded-full"></div>
-<div class="flex-1"></div>
-<div class="flex gap-4">
-<div class="w-8 h-8 rounded-full bg-outline-variant/40"></div>
-<div class="w-8 h-8 rounded-full bg-outline-variant/40"></div>
+
+
+<!-- Sidebar Navigation -->
+<aside class="glass-sidebar h-screen w-72 flex-col fixed left-0 top-0 shadow-2xl flex z-50 text-white border-r border-white/10 transition-all duration-300">
+<div class="flex flex-col h-full p-6 space-y-6">
+<!-- Brand Header -->
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center font-bold text-headline-md shadow-lg shadow-primary/20">SM</div>
+<div>
+<h1 class="font-headline-md text-[14px] leading-tight font-bold tracking-tight text-white uppercase">Device Monitoring</h1>
+<p class="text-[10px] tracking-widest text-white/50 font-medium">SALTWATER ELECTRICITY</p>
 </div>
 </div>
-<div class="flex flex-1 overflow-hidden">
-<!-- Sidebar Placeholder -->
-<div class="w-64 border-r border-outline-variant/30 p-6 flex flex-col gap-6">
-<div class="h-10 w-full bg-primary/10 rounded-lg"></div>
-<div class="h-10 w-full bg-primary/5 rounded-lg"></div>
-<div class="h-10 w-full bg-primary/5 rounded-lg"></div>
-<div class="h-10 w-full bg-primary/5 rounded-lg"></div>
-</div>
-<!-- Bento Grid Content Placeholder -->
-<div class="flex-1 p-8 grid grid-cols-12 grid-rows-6 gap-6">
-<div class="col-span-8 row-span-3 glass-panel rounded-[20px] shadow-sm"></div>
-<div class="col-span-4 row-span-3 glass-panel rounded-[20px] shadow-sm overflow-hidden">
-<img class="w-full h-full object-cover" data-alt="A sprawling offshore energy farm featuring sleek, futuristic wave energy converters and wind turbines rising from a deep cerulean ocean. The scene is bathed in a bright, ethereal daylight that highlights the crystalline water and high-tech engineering structures. This represents a modern grid operation center's live telemetry view, characterized by scientific minimalism and eco-tech aesthetics." src="https://lh3.googleusercontent.com/aida/ADBb0ujV0kQSsDAs3M0R_38ype9Lf8kzt2CluhU2OQbBTe7nzl9XBUnTJs6A_N4MeRoiK3Le-c8c6IRbzCfWxAabyAKvYfNNHMhW3JjtwNlSBQqduBqnzL4SUzCkywQ0MlrGOyvg4TzxlpxKyX0CrT8XbtTt13NAq7SnrcP7j840PMOk_FWnExYMrldws44aTPKbVIEQlu9Nao8py4uMkz2BGRpZyUaZsYfunCq9KUtjofvdIGmbfvA2S2iqi3ULkt488kzd-ydBq4zrOds"/>
-</div>
-<div class="col-span-4 row-span-3 glass-panel rounded-[20px] shadow-sm"></div>
-<div class="col-span-8 row-span-3 glass-panel rounded-[20px] shadow-sm"></div>
+<!-- Profile Section -->
+<div class="flex items-center gap-3 p-3 bg-white/5 backdrop-blur-md rounded-premium border border-white/10">
+<img alt="John Doe - Administrator" class="w-10 h-10 rounded-full bg-surface-container" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRQcJbXZP_P09Z6dWdsWpk4qIhBTu3p6-XYs8d5mNgqP61rFml6nThzPjib6MV6cFe0LQXUcbIQNFiZ-zIj3eu7uqk8IApjXMgnSWLZAuC9rQYjDUsTy8sfIA6pjynzw6Z1cFJNdiVk-UoaEYtT59u91oGhTzF1v4Ub41ruFPMZqDymmjieJjvFx3Lg0FH1ulN9b1C72zkQht93IbWJeMl91C7C7iXHqC__UHPku2SeZpqUB_xuQqfqTzNZb1w6dXyq2s8hD5a5hc">
+<div class="overflow-hidden">
+<p class="text-sm font-bold truncate">John Doe</p>
+<p class="text-[11px] text-white/50 truncate">Administrator</p>
 </div>
 </div>
+<!-- Nav Links -->
+<nav class="flex-1 space-y-1 overflow-y-auto custom-scrollbar pr-2">
+<a class="flex items-center gap-3 px-4 py-3 active-nav-pill text-white rounded-lg font-bold transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined text-white" data-icon="dashboard">dashboard</span>
+<span class="text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span class="text-label-md">Realtime Monitor</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="notification_important">notification_important</span>
+<span class="text-label-md">Device Alerts</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="text-label-md">Historical Data</span>
+</a>
+<div class="pt-4 pb-2">
+<p class="px-4 text-[11px] font-bold tracking-widest text-white/30">OPERATIONS</p>
 </div>
-<!-- Background Decorative Elements (Maritime Vibe) -->
-<div class="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-secondary-container/10 rounded-full blur-[120px] z-0"></div>
-<div class="absolute bottom-[-5%] left-[-5%] w-[40%] h-[40%] bg-primary-container/10 rounded-full blur-[100px] z-0"></div>
-<!-- Main Success Modal Overlay -->
-<main class="relative z-10 w-full h-full flex items-center justify-center p-gutter">
-<div class="max-w-[480px] w-full glass-panel rounded-[20px] p-10 shadow-[0_40px_80px_rgba(0,82,204,0.12)] flex flex-col items-center text-center">
-<!-- Brand Logo Header -->
-<!-- Animated Checkmark Circle -->
-<div class="relative mb-6">
-<div class="w-24 h-24 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary shadow-[0_0_30px_rgba(66,253,211,0.4)]">
-<span class="material-symbols-outlined text-[48px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-label-md">Household User Management</span>
+</a>
+<div class="group">
+<button class="w-full flex items-center justify-between px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-all rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="devices">devices</span>
+<span class="text-label-md">Device Management</span>
 </div>
-<!-- Subtle Orbiting Particle -->
-<div class="absolute inset-0 border-2 border-dashed border-tertiary-fixed/30 rounded-full animate-[spin_10s_linear_infinite]"></div>
+<span class="material-symbols-outlined text-sm text-white" data-icon="expand_more">expand_more</span>
+</button>
 </div>
-<!-- Status Text -->
-<h1 class="font-display text-h1 ocean-gradient-text mb-2">Access Granted</h1>
-<p class="font-body-md text-on-surface-variant mb-10 max-w-[320px]">
-                Authentication successful. Synchronizing your environment with the regional grid control nodes.
-            </p>
-<!-- User Context -->
-<div class="flex items-center gap-4 bg-surface-container-low px-4 py-3 rounded-xl mb-10 w-full border border-white/40">
-<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary-container/20">
-<img class="w-full h-full object-cover" data-alt="A professional portrait of a tech-focused administrator with a calm and confident expression. The lighting is soft and directional, typical of a high-end corporate setting. The background is a clean, minimalist blue gradient that aligns with the AlonKuryente eco-tech visual identity. The image is cropped in a vertical aspect ratio suited for profile identifiers." src="https://lh3.googleusercontent.com/aida/ADBb0ui2QDFw1imG6VMr9yL1kfDto3MhPjSsHEHTEvP1Y9Ox90ZXE1-xYs312eEC7SABJ6KvZ99ruQtuEApTpuVslIKvbTHIh9HGb5yzcYeJdvuwcZdQKr5OjfrE5H4Voai_CSNXGYGAEe9nHDwP8pHAexBelGifzoRmIwWOOv5xzA-u2XkdQizd4DLpGH_I7TqbQ77ef6dGEih-4dval7ytHWaFZAN9eQq36-GCLYqO-xuV0ickkg4NkGyifavBlLzeyNan3zc33ZY4pUs"/>
+<div class="pt-4 pb-2">
+<p class="px-4 text-[11px] font-bold tracking-widest text-white/30">ACCOUNT</p>
 </div>
-<div class="text-left">
-<div class="font-h2 text-body-md font-semibold text-on-surface">Administrator</div>
-</div>
-<div class="ml-auto">
-<div class="px-2 py-1 bg-tertiary-container/10 text-tertiary-container text-[10px] font-bold uppercase tracking-widest rounded border border-tertiary-container/20">Secure</div>
-</div>
-</div>
-<!-- Progress Redirect Section -->
-<div class="w-full space-y-3">
-<div class="flex justify-between items-center text-label-sm font-label-sm">
-<span class="text-on-surface-variant flex items-center gap-2">
-<span class="material-symbols-outlined text-[16px] animate-spin">refresh</span>
-                        Redirecting...
-                    </span>
-<span class="text-primary font-bold">85%</span>
-</div>
-<!-- Progress Bar Container -->
-<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
-<div class="h-full w-[85%] progress-shimmer rounded-full glow-line transition-all duration-700 ease-out"></div>
-</div>
-</div>
-<!-- Footer Meta -->
-<div class="mt-12 pt-8 border-t border-outline-variant/20 w-full">
-<div class="flex justify-center gap-8">
-<div class="flex flex-col items-center">
-<span class="text-label-sm font-label-sm text-outline uppercase tracking-tighter">Latency</span>
-<span class="text-body-md font-semibold text-primary">12ms</span>
-</div>
-<div class="flex flex-col items-center">
-<span class="text-label-sm font-label-sm text-outline uppercase tracking-tighter">Node</span>
-<span class="text-body-md font-semibold text-primary">SG-EAST-01</span>
-</div>
-<div class="flex flex-col items-center">
-<span class="text-label-sm font-label-sm text-outline uppercase tracking-tighter">Status</span>
-<span class="text-body-md font-semibold text-tertiary">Active</span>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-label-md">Profile</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="text-label-md">Sign Out</span>
+</a>
+</nav>
+<!-- Bottom Actions -->
+<div class="pt-4 border-t border-white/10">
+<button class="flex w-full items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all">
+<span class="material-symbols-outlined" data-icon="light_mode">light_mode</span>
+<span class="text-label-md">Light Mode</span>
+</button>
 </div>
 </div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-72 flex flex-col h-screen overflow-y-auto bg-[#F8FAFC]">
+<!-- 1. Top Utility Header -->
+<header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md flex justify-end items-center h-16 px-8 border-b border-outline-variant/30">
+<div class="flex items-center gap-6">
+<div class="relative cursor-pointer active:opacity-70 transition-colors hover:text-primary">
+<span class="material-symbols-outlined text-[24px] text-on-surface-variant" data-icon="notifications">notifications</span>
+<span class="absolute -top-1 -right-1 w-4 h-4 bg-primary text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-white">3</span>
+</div>
+<div class="flex items-center gap-3 pl-6 border-l border-outline-variant/30 cursor-pointer group">
+<div class="text-right">
+<p class="text-label-md font-bold text-on-surface group-hover:text-primary transition-colors">Super Admin</p>
+<p class="text-[10px] text-on-surface-variant font-medium">Administrator</p>
+</div>
+<div class="relative">
+<img alt="Super Admin" class="w-9 h-9 rounded-full border border-outline-variant/50 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHw_9BEGirL9Ady4dFWAE-Ev2hUHHRvcQ-LtKSvZEFkJT9jtuOi-Cb_3iFeq5rieufFkAQstupu7wzbprkhnGjPy1DNaiSjwIjDnpbUi3HgNOydqxpDys0EJhnzSK1LGTQWbxos2zw-gknkQFsxvOL2zK3fmfyItF46dJj7ikCYBYzaBg7tqU0Q-NbWK6A0uoR3Erjc8hjlqr-vyrqskeXtcjNXjLrdKgJqTxnSt8DP_-6zUK4772nvlinkw19VPQy-HBkRhPAIII">
+<div class="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 border border-outline-variant/20">
+<span class="material-symbols-outlined text-[12px] block text-on-surface-variant" data-icon="expand_more">expand_more</span>
 </div>
 </div>
+</div>
+</div>
+</header>
+<div class="max-w-[1400px] mx-auto w-full px-8 pt-8 pb-12 space-y-8">
+<!-- 2. Page Title Section -->
+<div class="flex flex-col">
+<h2 class="font-headline-lg text-3xl text-on-background font-extrabold tracking-tight text-primary"><span class="text-[#000000]">REQUEST</span> <span class="text-[#0066ff]">VALIDATION</span></h2>
+<p class="text-body-md text-on-surface-variant mt-2 max-w-2xl font-medium">Monitor and manage incoming device and user requests with Saltwater Electricity Monitoring System.</p>
+</div>
+<!-- 3. Statistic Summary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Card 1: All Requests -->
+    <div class="bg-white p-6 rounded-2xl shadow-[0_4px_20px_0_rgba(0,0,0,0.05)] border border-slate-50 flex items-start justify-between min-h-[140px] transition-all hover:shadow-lg">
+        <div class="flex gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-[#0066ff] flex items-center justify-center shadow-lg shadow-blue-500/30 shrink-0">
+                <span class="material-symbols-outlined text-white text-3xl">assignment</span>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-slate-500 mb-1">All Requests</p>
+                <h3 class="text-3xl font-extrabold text-slate-900">20</h3>
+                <p class="text-xs text-slate-400 mt-2">100% of total</p>
+            </div>
+        </div>
+        <div class="self-end mb-1 w-20">
+            
+        </div>
+    </div>
+    <!-- Card 2: Approved -->
+    <div class="bg-white p-6 rounded-2xl shadow-[0_4px_20px_0_rgba(0,0,0,0.05)] border border-slate-50 flex items-start justify-between min-h-[140px] transition-all hover:shadow-lg">
+        <div class="flex gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-[#10b981] flex items-center justify-center shadow-lg shadow-emerald-500/30 shrink-0">
+                <span class="material-symbols-outlined text-white text-3xl">check_circle</span>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-slate-500 mb-1"><span style="font-size: 0.875rem;" class="">Approved Request</span></p>
+                <h3 class="text-3xl font-extrabold text-slate-900">10</h3>
+                <p class="text-xs text-slate-400 mt-2">50% of total</p>
+            </div>
+        </div>
+        <div class="self-end mb-1 w-20">
+            
+        </div>
+    </div>
+    <!-- Card 3: Pending -->
+    <div class="bg-white p-6 rounded-2xl shadow-[0_4px_20px_0_rgba(0,0,0,0.05)] border border-slate-50 flex items-start justify-between min-h-[140px] transition-all hover:shadow-lg">
+        <div class="flex gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-[#f97316] flex items-center justify-center shadow-lg shadow-orange-500/30 shrink-0">
+                <span class="material-symbols-outlined text-white text-3xl">schedule</span>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-slate-500 mb-1">Pending Request</p>
+                <h3 class="text-3xl font-extrabold text-slate-900">5</h3>
+                <p class="text-xs text-slate-400 mt-2">25% of total</p>
+            </div>
+        </div>
+        <div class="self-end mb-1 w-20">
+            
+        </div>
+    </div>
+    <!-- Card 4: Denied -->
+    <div class="bg-white p-6 rounded-2xl shadow-[0_4px_20px_0_rgba(0,0,0,0.05)] border border-slate-50 flex items-start justify-between min-h-[140px] transition-all hover:shadow-lg">
+        <div class="flex gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-[#ef4444] flex items-center justify-center shadow-lg shadow-rose-500/30 shrink-0">
+                <span class="material-symbols-outlined text-white text-3xl">cancel</span>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-slate-500 mb-1">Denied Request</p><p></p><p></p>
+                <h3 class="text-3xl font-extrabold text-slate-900">5</h3>
+                <p class="text-xs text-slate-400 mt-2">25% of total</p>
+            </div>
+        </div>
+        <div class="self-end mb-1 w-20">
+            
+        </div>
+    </div>
+</div>
+<!-- 4. Filter Section -->
+<div class="bg-white p-4 rounded-premium linear-shadow border border-[#F1F5F9] flex flex-wrap items-center justify-between gap-4">
+<div class="flex items-center gap-4 flex-1 min-w-[300px]">
+<div class="relative flex-1 max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2.5 bg-[#F8FAFC] border-outline-variant/30 rounded-xl text-body-sm focus:ring-primary focus:border-primary transition-all" placeholder="Search resident name or email" type="text">
+</div>
+<div class="relative">
+<select class="appearance-none pl-4 pr-10 py-2.5 border-outline-variant/30 rounded-xl text-body-sm focus:ring-primary focus:border-primary transition-all cursor-pointer bg-primary-container text-white"><option class="">All Locations</option><option class="">Purok 1, Alibijaban Island San Andes, Quezon</option><option class="">Purok 2, Alibijaban Island San Andes, Quezon</option></select>
+
+</div>
+<div class="relative">
+<select class="appearance-none pl-4 pr-10 py-2.5 border-outline-variant/30 rounded-xl text-body-sm focus:ring-primary focus:border-primary transition-all cursor-pointer bg-primary-container text-white"><option class="">All Status</option><option class="">Approved</option><option class="">Pending</option><option class="">Denied</option></select>
+
+</div>
+</div>
+
+</div>
+<!-- Table Section -->
+<div class="bg-white rounded-premium linear-shadow border border-[#F1F5F9] overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-outline-variant/20 bg-surface-container-low/30">
+<th class="px-6 py-4 text-label-sm text-on-surface-variant uppercase font-bold">Resident Information</th>
+<th class="px-6 py-4 text-label-sm text-on-surface-variant uppercase font-bold">Type of Request</th>
+<th class="px-6 py-4 text-label-sm text-on-surface-variant uppercase font-bold">Status</th>
+<th class="px-6 py-4 text-label-sm text-on-surface-variant uppercase font-bold">Timestamp</th>
+<th class="px-6 py-4 text-label-sm text-on-surface-variant uppercase font-bold">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low/20 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white font-bold text-sm">JH</div>
+<div>
+<p class="text-body-md font-bold text-on-surface">Jasmin Hernandez</p>
+<p class="text-[11px] text-on-surface-variant">jasmin.h@example.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant font-medium">Request for Another Device</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-[11px] font-bold">Approved</span>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">May 12, 2026<br>10:00 AM</td>
+<td class="px-6 py-4">
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary text-primary hover:bg-primary/5 transition-all text-label-sm font-bold">
+
+                                    View
+                                </button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low/20 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-white font-bold text-sm">JV</div>
+<div>
+<p class="text-body-md font-bold text-on-surface">Joshua Vasquez</p>
+<p class="text-[11px] text-on-surface-variant">joshua.v@example.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant font-medium">Request for Another Device</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-[11px] font-bold">Pending</span>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">May 12, 2026 <br>10:00 AM</td>
+<td class="px-6 py-4">
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary text-primary hover:bg-primary/5 transition-all text-label-sm font-bold">
+
+                                    View
+                                </button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low/20 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-white font-bold text-sm">MB</div>
+<div>
+<p class="text-body-md font-bold text-on-surface">Mark Briones</p>
+<p class="text-[11px] text-on-surface-variant">mark.b@example.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant font-medium">Request for Another Device</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-red-100 text-red-700 text-[11px] font-bold">Denied</span>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">May 12, 2026 <br>10:00 AM</td>
+<td class="px-6 py-4">
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary text-primary hover:bg-primary/5 transition-all text-label-sm font-bold">
+
+                                    View
+                                </button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low/20 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-rose-600 flex items-center justify-center text-white font-bold text-sm">RG</div>
+<div>
+<p class="text-body-md font-bold text-on-surface">Rhea Garcia</p>
+<p class="text-[11px] text-on-surface-variant">rhea.g@example.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant font-medium">Request for Another Device</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-[11px] font-bold">Approved</span>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">May 12, 2026 <br>10:00 AM</td>
+<td class="px-6 py-4">
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary text-primary hover:bg-primary/5 transition-all text-label-sm font-bold">
+
+                                    View
+                                </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="p-6 border-t border-outline-variant/10 flex items-center justify-between">
+<p class="text-body-sm text-on-surface-variant">Showing <span class="font-bold text-on-surface">1 to 4</span> of 20 requests</p>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/30 text-on-surface-variant hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white font-bold text-sm shadow-md">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/30 text-on-surface-variant hover:bg-surface-container transition-all text-sm">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/30 text-on-surface-variant hover:bg-surface-container transition-all text-sm">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/30 text-on-surface-variant hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Info -->
+<footer class="p-8 text-center text-[12px] text-on-surface-variant/50 border-t border-outline-variant/10 mt-auto">
+        © 2026 Saltwater Electricity Monitoring System. Precision Analytics for Modern Grid Management.
+    </footer>
 </main>
-<!-- Decoration: Floating Glass Shards -->
-<div class="absolute top-20 left-[15%] w-32 h-32 glass-panel rounded-xl rotate-12 opacity-30 z-0"></div>
-<div class="absolute bottom-40 right-[12%] w-48 h-24 glass-panel rounded-full -rotate-6 opacity-20 z-0"></div>
+<script>
+    // Micro-interactions
+    document.querySelectorAll('button, a').forEach(el => {
+        el.addEventListener('mousedown', function() {
+            this.classList.add('scale-[0.98]');
+        });
+        el.addEventListener('mouseup', function() {
+            this.classList.remove('scale-[0.98]');
+        });
+        el.addEventListener('mouseleave', function() {
+            this.classList.remove('scale-[0.98]');
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
 </body></html>

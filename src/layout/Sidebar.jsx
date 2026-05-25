@@ -320,7 +320,7 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
               <SidebarLink
                 to={isAdmin ? ROUTES.ADMIN_REQUEST_MANAGEMENT : ROUTES.DEVICE_REQUESTS}
                 icon="app_registration"
-                label={isAdmin ? "Request Management" : "Device Requests"}
+                label={isAdmin ? "Request Validation" : "Device Requests"}
                 isResident={false}
                 isCollapsed={!isExpanded}
                 onClick={handleLinkClick}
