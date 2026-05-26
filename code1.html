@@ -1,447 +1,454 @@
-<!DOCTYPE html>
-
-<html class="light" lang="en" style=""><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Device Management | Saltwater Electricity</title>
+<!DOCTYPE html><html class="light" lang="en" style="width: 1280px; height: 1024px; overflow: hidden; position: relative;"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Request Validation - Device Monitoring</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "on-tertiary-fixed": "#390c00",
-                        "inverse-primary": "#b3c5ff",
-                        "on-background": "#191b24",
-                        "background": "#faf8ff",
-                        "primary-fixed-dim": "#b3c5ff",
-                        "surface-dim": "#d8d9e6",
-                        "on-secondary-fixed-variant": "#38485d",
-                        "primary": "#0050cb",
-                        "outline-variant": "#c2c6d8",
-                        "on-primary": "#ffffff",
-                        "surface-container-highest": "#e1e2ee",
-                        "on-secondary": "#ffffff",
-                        "surface": "#faf8ff",
-                        "surface-container-low": "#f2f3ff",
-                        "inverse-on-surface": "#eff0fd",
-                        "surface-container-lowest": "#ffffff",
-                        "on-tertiary-fixed-variant": "#832600",
-                        "on-tertiary-container": "#fff6f4",
-                        "inverse-surface": "#2e303a",
-                        "on-primary-container": "#f8f7ff",
-                        "error-container": "#ffdad6",
-                        "on-tertiary": "#ffffff",
-                        "surface-container": "#ecedfa",
-                        "secondary-container": "#d0e1fb",
-                        "surface-bright": "#faf8ff",
-                        "secondary-fixed-dim": "#b7c8e1",
-                        "primary-container": "#0066ff",
-                        "tertiary-fixed-dim": "#ffb59d",
-                        "tertiary": "#a33200",
-                        "secondary-fixed": "#d3e4fe",
-                        "on-error-container": "#93000a",
-                        "secondary": "#505f76",
-                        "on-primary-fixed": "#001849",
-                        "surface-container-high": "#e6e7f4",
-                        "on-surface": "#191b24",
-                        "outline": "#727687",
-                        "on-error": "#ffffff",
-                        "surface-variant": "#e1e2ee",
-                        "tertiary-fixed": "#ffdbd0",
-                        "surface-tint": "#0054d6",
-                        "error": "#ba1a1a",
-                        "on-primary-fixed-variant": "#003fa4",
-                        "on-surface-variant": "#424656",
-                        "on-secondary-container": "#54647a",
-                        "tertiary-container": "#cc4204",
-                        "primary-fixed": "#dae1ff",
-                        "on-secondary-fixed": "#0b1c30"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "2xl": "1.25rem",
-                        "3xl": "1.5rem",
-                        "full": "9999px"
-                    },
-                    "spacing": {
-                        "container-max": "1280px",
-                        "unit": "4px",
-                        "margin-mobile": "16px",
-                        "gutter": "24px",
-                        "margin-desktop": "48px"
-                    },
-                    "fontFamily": {
-                        "display-lg": ["Inter"],
-                        "body-sm": ["Inter"],
-                        "label-md": ["Inter"],
-                        "label-sm": ["Inter"],
-                        "headline-md": ["Inter"],
-                        "headline-lg-mobile": ["Inter"],
-                        "body-lg": ["Inter"],
-                        "body-md": ["Inter"],
-                        "headline-lg": ["Inter"]
-                    },
-                    "fontSize": {
-                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
-                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
-                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
-                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
-                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
-                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
-                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
-                    }
-                },
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#390c00",
+                    "tertiary-fixed": "#ffdbd0",
+                    "inverse-surface": "#2e303a",
+                    "on-surface": "#191b24",
+                    "on-surface-variant": "#424656",
+                    "tertiary-fixed-dim": "#ffb59d",
+                    "surface-tint": "#0054d6",
+                    "on-error-container": "#93000a",
+                    "on-background": "#191b24",
+                    "error-container": "#ffdad6",
+                    "primary": "#0050cb",
+                    "on-tertiary-fixed-variant": "#832600",
+                    "on-secondary": "#ffffff",
+                    "background": "#faf8ff",
+                    "tertiary-container": "#cc4204",
+                    "on-secondary-fixed": "#0b1c30",
+                    "outline": "#727687",
+                    "on-primary": "#ffffff",
+                    "surface-bright": "#faf8ff",
+                    "primary-fixed-dim": "#b3c5ff",
+                    "surface-container-high": "#e6e7f4",
+                    "primary-fixed": "#dae1ff",
+                    "outline-variant": "#c2c6d8",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#ecedfa",
+                    "primary-container": "#0066ff",
+                    "on-primary-fixed": "#001849",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "surface": "#faf8ff",
+                    "inverse-primary": "#b3c5ff",
+                    "surface-container-highest": "#e1e2ee",
+                    "on-error": "#ffffff",
+                    "secondary-container": "#d0e1fb",
+                    "inverse-on-surface": "#eff0fd",
+                    "surface-dim": "#d8d9e6",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "on-primary-container": "#f8f7ff",
+                    "error": "#ba1a1a",
+                    "surface-variant": "#e1e2ee",
+                    "surface-container-low": "#f2f3ff",
+                    "secondary": "#505f76",
+                    "on-secondary-container": "#54647a",
+                    "tertiary": "#a33200",
+                    "secondary-fixed": "#d3e4fe",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#fff6f4",
+                    "on-primary-fixed-variant": "#003fa4"
             },
-        }
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "margin-mobile": "16px",
+                    "margin-desktop": "48px",
+                    "container-max": "1280px",
+                    "unit": "4px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
     </script>
 <style>
-        body { background-color: #F8FAFC; font-family: 'Inter', sans-serif; }
-        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid #E2E8F0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.03); }
-        .sidebar-glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border-right: 1px solid rgba(226, 232, 240, 0.3); }
-        .linear-shadow { box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05), 0 15px 30px -5px rgba(0,0,0,0.04); }
-        .status-pill { padding: 4px 12px; border-radius: 9999px; font-weight: 600; font-size: 12px; }
-        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .modal-shadow {
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05), 0 15px 30px -5px rgba(0, 0, 0, 0.06);
+        }
+        .linear-border {
+            border: 1px solid #e2e8f0;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+
+        /* Animation Definitions */
+        @keyframes overlayFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes modalEntrance {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-overlay {
+            animation: overlayFade 300ms ease-out forwards;
+        }
+
+        .animate-modal {
+            animation: modalEntrance 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            @keyframes modalEntranceReduced {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            .animate-modal {
+                animation: modalEntranceReduced 400ms ease-out forwards;
+                transform: none !important;
+            }
+        }
     </style>
 </head>
-<body class="text-on-surface">
-<!-- Side Navigation Sidebar (Anchor Component) -->
-<aside class="fixed left-0 top-0 h-full w-64 z-50 bg-white/80 dark:bg-inverse-surface/80 backdrop-blur-2xl border-r border-outline-variant/20 shadow-lg flex flex-col p-6 space-y-2 hidden md:flex">
-<div class="flex items-center gap-3 mb-8">
-<img alt="Saltwater Electricity Logo" class="w-12 h-12 rounded-lg" src="https://lh3.googleusercontent.com/aida/ADBb0ugvj1fRUZ1bu0_pnvwBZic-ct36gpfGtzFQnyH5NRtm2pVi2UeQT_EP2znT7GDvgbzQQOt3w8XJE0As6tb1XWDkH_xgfwUnmZEGPV5EK61J3trVjhx6nCj1irTppZFWM9kTwljIuIYDmFDl4vVH6iTxXbVT-nFAacMTUB19loQoSDoruznRIjFiiSegy8os_AO0ewVlZc8oc11EEfrmiox3u_mhCuOuMgL4JvXSzUgGEAigVbsEiErQV1k"/>
-<div>
-<h1 class="font-headline-md text-headline-md text-primary font-bold">Saltwater</h1>
-<p class="text-on-surface-variant text-label-sm">Utility Control</p>
+<body class="bg-background text-on-surface antialiased min-h-screen overflow-hidden">
+<!-- NAVIGATION SHELL (SIDENAVBAR) -->
+<aside class="fixed left-0 top-0 h-full flex flex-col justify-between py-8 bg-inverse-surface dark:bg-on-background shadow-xl w-64 z-40 bg-gradient-to-b from-inverse-surface to-on-background">
+<div class="px-6 mb-8">
+<h1 class="font-headline-md text-headline-md font-bold text-surface-bright dark:text-surface-container-lowest leading-tight">DEVICE MONITORING</h1>
+<p class="font-body-sm text-body-sm text-outline-variant tracking-wider uppercase opacity-80">SALTWATER ELECTRICITY</p>
 </div>
-</div>
-<nav class="flex-1 space-y-1">
-<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-high transition-all duration-300 hover:translate-x-1 cursor-pointer active:scale-95" href="#">
-<span class="material-symbols-outlined">dashboard</span>
+<nav class="flex-grow flex flex-col gap-1">
+<a class="text-outline-variant hover:text-surface-bright flex items-center gap-4 px-6 py-3 hover:bg-surface-variant/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
 <span class="font-label-md text-label-md">Dashboard</span>
 </a>
-<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-high transition-all duration-300 hover:translate-x-1 cursor-pointer active:scale-95" href="#">
-<span class="material-symbols-outlined">monitoring</span>
+<a class="text-primary-fixed font-bold border-l-4 border-primary-fixed bg-surface-variant/10 flex items-center gap-4 px-6 py-3 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
 <span class="font-label-md text-label-md">Realtime Monitor</span>
 </a>
-<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-high transition-all duration-300 hover:translate-x-1 cursor-pointer active:scale-95" href="#">
-<span class="material-symbols-outlined">warning</span>
+<a class="text-outline-variant hover:text-surface-bright flex items-center gap-4 px-6 py-3 hover:bg-surface-variant/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
 <span class="font-label-md text-label-md">Device Alerts</span>
 </a>
-<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-high transition-all duration-300 hover:translate-x-1 cursor-pointer active:scale-95" href="#">
-<span class="material-symbols-outlined">history</span>
+<a class="text-outline-variant hover:text-surface-bright flex items-center gap-4 px-6 py-3 hover:bg-surface-variant/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
 <span class="font-label-md text-label-md">Historical Data</span>
 </a>
-<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-high transition-all duration-300 hover:translate-x-1 cursor-pointer active:scale-95" href="#">
-<span class="material-symbols-outlined">group</span>
+<a class="text-outline-variant hover:text-surface-bright flex items-center gap-4 px-6 py-3 hover:bg-surface-variant/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
 <span class="font-label-md text-label-md">User Management</span>
 </a>
-<!-- Active Tab Mapping: Device Management -->
-<a class="bg-secondary-container text-on-secondary-container rounded-xl font-bold flex items-center gap-3 px-4 py-3 transition-all duration-300 cursor-pointer active:scale-95" href="#">
-<span class="material-symbols-outlined">settings_remote</span>
+<a class="text-outline-variant hover:text-surface-bright flex items-center gap-4 px-6 py-3 hover:bg-surface-variant/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
 <span class="font-label-md text-label-md">Device Management</span>
 </a>
 </nav>
-<div class="pt-6 border-t border-outline-variant/20 space-y-1">
-<button class="w-full bg-primary-container text-on-primary-container py-3 rounded-xl font-bold mb-4 hover:shadow-lg transition-all active:scale-95">
-                Add Device
-            </button>
-<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-high transition-colors" href="#">
-<span class="material-symbols-outlined">help</span>
-<span class="font-label-md text-label-md">Support</span>
-</a>
-<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-error-container/20 hover:text-error transition-colors" href="#">
-<span class="material-symbols-outlined">logout</span>
+<div class="px-6 pt-8 border-t border-outline-variant/10 flex flex-col gap-2">
+<button class="text-outline-variant hover:text-surface-bright flex items-center gap-4 py-3 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
 <span class="font-label-md text-label-md">Sign Out</span>
-</a>
+</button>
+<button class="text-outline-variant hover:text-surface-bright flex items-center gap-4 py-3 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="light_mode">light_mode</span>
+<span class="font-label-md text-label-md">Light Mode</span>
+</button>
 </div>
 </aside>
-<!-- Main Content Canvas -->
-<main class="md:ml-64 min-h-screen">
-<!-- Top Navigation Bar (Anchor Component) -->
-<header class="w-full h-16 sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm flex items-center justify-between px-margin-mobile md:px-margin-desktop">
-<div class="flex items-center gap-4">
-<h2 class="font-headline-md text-headline-md text-primary font-bold">Device Management</h2>
-</div>
+<!-- MAIN CONTENT AREA -->
+<main class="ml-64 min-h-screen">
+<!-- TOP NAVBAR -->
+<header class="flex justify-between items-center px-8 py-4 w-full bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 sticky top-0 z-30">
 <div class="flex items-center gap-6">
-<div class="hidden lg:flex items-center bg-surface-container px-4 py-2 rounded-full border border-outline-variant/20">
-<span class="material-symbols-outlined text-on-surface-variant text-[20px] mr-2">search</span>
-<input class="bg-transparent border-none focus:ring-0 text-label-md w-64" placeholder="Search devices..." type="text"/>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full text-label-md font-label-md focus:ring-2 focus:ring-primary/20 w-64 transition-all" placeholder="Search validations..." type="text">
 </div>
-<div class="flex items-center gap-4">
-<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70">
-<span class="material-symbols-outlined">notifications</span>
-</button>
-<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70">
-<span class="material-symbols-outlined">settings</span>
-</button>
-<div class="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
-<img alt="User profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAEvHLG7EMxP_rFgjlLF4MxwiWbYnCqPhsS_Z9KA0wrCMenZWCM8_IGQhOF0MLkshvu4D7OyQs8Hpo0Kbfl56AUCOawQY0bV5mnceMmMc4448rDOjWGc2kFBL0uBIPUfOWgE_7Jh0z0G486idtjMjcY8KipKutE0krjaOWeYqy2qn5EWgY48agStJQq63C2KuM5KiZSIWVX8ngphb9DBah8r1qcZVVSkwkPPfwF9SImSQsOBOS9MHTrNtWdvM88WHEUaNoDj3JQlg"/>
 </div>
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-secondary hover:text-primary cursor-pointer transition-colors" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-secondary hover:text-primary cursor-pointer transition-colors" data-icon="help">help</span>
+</div>
+<div class="flex items-center gap-3 pl-6 border-l border-outline-variant/30">
+<div class="w-8 h-8 rounded-full bg-primary-fixed-dim flex items-center justify-center overflow-hidden">
+<img alt="John Doe" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAc4wWOULHq5Q475ArXd_PEvyqV4hHAqy83wZSTOIV_6pumnS_cvkQy_DbMitvUTKuaQqzqk9nK6CD7nizd-qN9MgrZ3MvSSzPNvN5Oorlk64zaV9MIMK8nLyOy-t0yW-8EClWXIqmSdugm2KaZg20TVtMYpVFSubk3b93tGtmRajxlTQkWYhUH-HNd6jNRn-n0xxrwOCO0JDKbiq7D2pDFoWkUep2Ib2uPd5-Bp2SwQkM6YtlkkRGv2k6fyChdmxbIaFcVLf8TLI4">
+</div>
+<span class="font-label-md text-label-md text-on-surface">John Doe</span>
 </div>
 </div>
 </header>
-<div class="p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto space-y-8">
-<!-- Header Section -->
-<section class="space-y-2">
-<h1 class="font-display-lg text-display-lg text-on-surface">Device Management</h1>
-<p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">Manage all Saltwater Electricity devices, assign available units, and monitor deployed devices across household users with precision monitoring.</p>
-</section>
-<!-- Summary Section Cards -->
-<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-<!-- Total Devices Card -->
-<div class="bg-white rounded-2xl p-6 flex items-center gap-4 shadow-sm border border-outline-variant/10">
-<div class="w-16 h-16 shrink-0 rounded-2xl bg-gradient-to-br from-[#4d7fff] to-[#0050cb] flex items-center justify-center text-white shadow-[0_8px_16px_-4px_rgba(0,80,203,0.3)]">
-<span class="material-symbols-outlined text-[32px]">devices</span>
+<!-- DASHBOARD BACKGROUND CANVAS -->
+<div class="p-12">
+<div class="grid grid-cols-12 gap-8">
+<!-- Decorative Dashboard Elements to simulate a background -->
+<div class="col-span-8 bg-surface border border-outline-variant/20 rounded-[20px] h-64 p-8 flex flex-col justify-end relative overflow-hidden">
+<div class="absolute top-0 right-0 p-8">
+<span class="material-symbols-outlined text-primary/10 text-[120px]" data-icon="monitoring">monitoring</span>
 </div>
-<div class="flex-1">
-<p class="text-[13px] font-medium text-on-surface-variant">Total Devices</p>
-<h3 class="text-3xl font-bold text-on-surface leading-tight">70</h3>
-<p class="text-[12px] text-on-surface-variant/70">Registered Devices</p>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Welcome back, Administrator</h2>
+<p class="font-body-md text-body-md text-secondary">System monitoring is currently stable across all saltwater nodes.</p>
 </div>
+<div class="col-span-4 bg-primary-container text-on-primary-container rounded-[20px] h-64 p-8 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div class="p-3 bg-white/20 rounded-xl">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
 </div>
-<!-- Available Devices Card -->
-<div class="bg-white rounded-2xl p-6 flex items-center gap-4 shadow-sm border border-outline-variant/10">
-<div class="w-16 h-16 shrink-0 rounded-2xl bg-gradient-to-br from-[#4ade80] to-[#16a34a] flex items-center justify-center text-white shadow-[0_8px_16px_-4px_rgba(22,163,74,0.3)]">
-<span class="material-symbols-outlined text-[32px]">inventory_2</span>
+<span class="font-label-md text-label-md bg-white/20 px-3 py-1 rounded-full">+12.5%</span>
 </div>
-<div class="flex-1">
-<p class="text-[13px] font-medium text-on-surface-variant">Available Devices</p>
-<h3 class="text-3xl font-bold text-on-surface leading-tight">5</h3>
-<p class="text-[12px] text-on-surface-variant/70">Ready for Assignment</p>
-</div>
-</div>
-<!-- Assigned Devices Card -->
-<div class="bg-white rounded-2xl p-6 flex items-center gap-4 shadow-sm border border-outline-variant/10">
-<div class="w-16 h-16 shrink-0 rounded-2xl bg-gradient-to-br from-[#fbbf24] to-[#ea580c] flex items-center justify-center text-white shadow-[0_8px_16px_-4px_rgba(234,88,12,0.3)]">
-<span class="material-symbols-outlined text-[32px]">folder_shared</span>
-</div>
-<div class="flex-1">
-<p class="text-[13px] font-medium text-on-surface-variant">Assigned Devices</p>
-<h3 class="text-3xl font-bold text-on-surface leading-tight">65</h3>
-<p class="text-[12px] text-on-surface-variant/70">Currently Assigned</p>
-</div>
-</div>
-</section>
-<!-- Toolbar -->
-<section class="flex flex-col lg:flex-row items-center justify-between gap-4 p-4 glass-card rounded-2xl">
-<div class="flex flex-col md:flex-row items-center gap-4 w-full flex-1">
-<div class="relative w-full flex-1">
-<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary">search</span>
-<input class="w-full pl-12 pr-4 py-2.5 rounded-xl border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 bg-white text-primary" placeholder="Search device name or ID" type="text"/>
-</div>
-<select class="w-full md:w-40 rounded-xl border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 bg-white font-label-md text-primary">
-<option>All Status</option>
-<option>Available</option>
-<option>Assigned</option>
-<option>Disabled</option>
-</select>
-<select class="w-full md:w-48 rounded-xl border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 bg-white font-label-md text-primary">
-<option>All Locations</option>
-<option>Metro Manila</option>
-<option>Cebu City</option>
-<option>Davao City</option>
-</select>
-</div>
-</section>
-<!-- Device Grid -->
-<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"><div class="rounded-2xl border-[1.5px] p-6 relative overflow-hidden flex flex-col items-center hover:shadow-xl transition-all duration-300 bg-white border-blue-200">
-<div class="absolute top-4 left-4">
-<div class="bg-white border border-green-100 flex flex-col items-center justify-center shadow-sm w-12 h-12 p-2 rounded-xl">
-<img alt="Logo" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUDfiBeldQ_VR_ACyg5kToBbfu8cYVsSY8LzrhRwvMaCDqX8cu6NnvpU1LSNvfI1QxxkRRrX5cy-R_Wxq1LhajmUi_iX1_UW8B6QtjkiQ9XvoP_IxdyZ7147XwjNRh0vif3OZEBDQeeUh-anwgX5kHbTUB1_w3qtHIxx4j37RXi4LlsB-_cDW6bfA2Duoj4rQu5neJIPQBfAmJspgUvS5si0goEjbBuLO6-18JvyQs_XWBKBL55MrzF6UvThPkOW5-En5044hkicBzyA"/>
-</div>
-</div>
-<div class="flex flex-col items-center w-full pt-12 space-y-6">
-<div class="mt-2"><span class="inline-flex items-center gap-2 px-4 py-1 bg-[#e7f6ed] text-[#2d8a4e] rounded-full font-bold text-sm border border-[#c1e8d0]"><span class="w-2 h-2 bg-[#2d8a4e] rounded-full"></span>Available !</span></div>
-<div class="text-center space-y-1"><h2 class="text-3xl font-bold text-[#1e293b] leading-tight">DEVICE-0001</h2><p class="text-xl text-[#64748b]">ID: SW-01-0891-1</p></div>
-<div class="w-full flex items-center gap-4">
-<div class="flex-1 h-[1.5px] bg-blue-100"></div>
-<div class="w-2 h-2 bg-blue-600 rounded-full"></div>
-<div class="flex-1 h-[1.5px] bg-blue-100"></div>
-</div>
-<button class="w-full py-4 bg-[#1d63ff] text-white text-lg font-bold rounded-xl shadow-lg shadow-blue-200 hover:bg-blue-700 transition-colors uppercase tracking-wider">ASSIGN NOW</button>
-</div>
-</div>
-<!-- Device 1: Available -->
-<div class="bg-white rounded-2xl border-[1.5px] border-blue-200 p-6 relative overflow-hidden flex flex-col items-center hover:shadow-xl transition-all duration-300"><div class="absolute top-4 left-4">
-<div class="bg-white border border-blue-100 flex flex-col items-center justify-center shadow-sm w-12 h-12 p-2 rounded-xl">
-<img alt="Logo" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUDfiBeldQ_VR_ACyg5kToBbfu8cYVsSY8LzrhRwvMaCDqX8cu6NnvpU1LSNvfI1QxxkRRrX5cy-R_Wxq1LhajmUi_iX1_UW8B6QtjkiQ9XvoP_IxdyZ7147XwjNRh0vif3OZEBDQeeUh-anwgX5kHbTUB1_w3qtHIxx4j37RXi4LlsB-_cDW6bfA2Duoj4rQu5neJIPQBfAmJspgUvS5si0goEjbBuLO6-18JvyQs_XWBKBL55MrzF6UvThPkOW5-En5044hkicBzyA"/>
-</div>
-</div>
-<div class="flex flex-col items-center w-full pt-12 space-y-6">
-<div class="mt-2">
-<span class="inline-flex items-center gap-2 px-4 py-1 bg-[#e7f6ed] text-[#2d8a4e] rounded-full font-bold text-sm border border-[#c1e8d0]">
-<span class="w-2 h-2 bg-[#2d8a4e] rounded-full"></span>
-            Available !
-        </span>
-</div>
-<div class="text-center space-y-1">
-<h2 class="text-3xl font-bold text-[#1e293b] leading-tight">DEVICE-0002</h2>
-<p class="text-xl text-[#64748b]">ID: SW-01-0891-1</p>
-</div>
-<div class="w-full flex items-center gap-4">
-<div class="flex-1 h-[1.5px] bg-blue-100"></div>
-<div class="w-2 h-2 bg-blue-600 rounded-full"></div>
-<div class="flex-1 h-[1.5px] bg-blue-100"></div>
-</div>
-<button class="w-full py-4 bg-[#1d63ff] text-white text-lg font-bold rounded-xl shadow-lg shadow-blue-200 hover:bg-blue-700 transition-colors uppercase tracking-wider">
-        ASSIGN NOW
-    </button>
-</div></div>
-<!-- Device 2: Assigned -->
-<div class="bg-white rounded-2xl border-[1.5px] border-blue-200 p-6 relative overflow-hidden flex flex-col items-center hover:shadow-xl transition-all duration-300">
-<div class="absolute top-4 left-4">
-<div class="bg-white border border-blue-100 flex flex-col items-center justify-center shadow-sm w-12 h-12 p-2 rounded-xl">
-<img alt="Logo" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUDfiBeldQ_VR_ACyg5kToBbfu8cYVsSY8LzrhRwvMaCDqX8cu6NnvpU1LSNvfI1QxxkRRrX5cy-R_Wxq1LhajmUi_iX1_UW8B6QtjkiQ9XvoP_IxdyZ7147XwjNRh0vif3OZEBDQeeUh-anwgX5kHbTUB1_w3qtHIxx4j37RXi4LlsB-_cDW6bfA2Duoj4rQu5neJIPQBfAmJspgUvS5si0goEjbBuLO6-18JvyQs_XWBKBL55MrzF6UvThPkOW5-En5044hkicBzyA"/>
-</div>
-</div>
-<div class="flex flex-col items-center w-full pt-12 space-y-6"><div class="mt-2"><span class="inline-flex items-center gap-2 px-4 py-1 bg-blue-50 text-blue-700 rounded-full font-bold text-sm border border-blue-100"><span class="w-2 h-2 bg-blue-600 rounded-full"></span>Assigned</span></div><div class="text-center space-y-1"><h2 class="text-3xl font-bold text-[#1e293b] leading-tight">DEVICE-0003</h2><p class="text-xl text-[#64748b]">ID: SW-01-2245-B</p></div><div class="w-full flex items-center gap-4"><div class="flex-1 h-[1.5px] bg-blue-100"></div><div class="w-2 h-2 bg-blue-600 rounded-full"></div><div class="flex-1 h-[1.5px] bg-blue-100"></div></div><div class="w-full flex items-center gap-3 p-3 border border-outline-variant/30 rounded-xl bg-surface-container-low"><div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-secondary font-bold text-xs">JD</div><div><p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Assigned To</p><p class="text-sm text-on-surface font-semibold">Juan Dela Cruz</p></div></div><div class="w-full space-y-3"><div class="flex items-center gap-3 w-full"><button class="flex-1 py-3 bg-[#1d63ff] text-white text-xs font-bold rounded-xl shadow-md hover:bg-blue-700 transition-colors uppercase tracking-wider">VIEW DETAILS</button><button class="flex-1 py-3 border border-error/50 text-error rounded-xl font-bold text-xs hover:bg-error-container/10 transition-colors">Disable</button></div></div></div>
-</div>
-<!-- Device 3: Disabled -->
-<div class="bg-white rounded-2xl border-[1.5px] border-blue-200 p-6 relative overflow-hidden flex flex-col items-center hover:shadow-xl transition-all duration-300">
-<div class="absolute top-4 left-4">
-<div class="bg-white border border-blue-100 flex flex-col items-center justify-center shadow-sm w-12 h-12 p-2 rounded-xl">
-<img alt="Logo" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUDfiBeldQ_VR_ACyg5kToBbfu8cYVsSY8LzrhRwvMaCDqX8cu6NnvpU1LSNvfI1QxxkRRrX5cy-R_Wxq1LhajmUi_iX1_UW8B6QtjkiQ9XvoP_IxdyZ7147XwjNRh0vif3OZEBDQeeUh-anwgX5kHbTUB1_w3qtHIxx4j37RXi4LlsB-_cDW6bfA2Duoj4rQu5neJIPQBfAmJspgUvS5si0goEjbBuLO6-18JvyQs_XWBKBL55MrzF6UvThPkOW5-En5044hkicBzyA"/>
-</div>
-</div>
-<div class="flex flex-col items-center w-full pt-12 space-y-6">
-<div class="mt-2">
-<span class="inline-flex items-center gap-2 px-4 py-1 bg-[#e7f6ed] text-[#2d8a4e] rounded-full font-bold text-sm border border-[#c1e8d0]">
-<span class="w-2 h-2 bg-[#2d8a4e] rounded-full"></span>Available !
-            </span>
-</div>
-<div class="text-center space-y-1">
-<h2 class="text-3xl font-bold text-[#1e293b] leading-tight">DEVICE-0004</h2>
-<p class="text-xl text-[#64748b]">ID: SW-01-5582-K</p>
-</div>
-<div class="w-full flex items-center gap-4">
-<div class="flex-1 h-[1.5px] bg-blue-100"></div>
-<div class="w-2 h-2 bg-blue-600 rounded-full"></div>
-<div class="flex-1 h-[1.5px] bg-blue-100"></div>
-</div>
-<button class="w-full py-4 bg-[#1d63ff] text-white text-lg font-bold rounded-xl shadow-lg shadow-blue-200 hover:bg-blue-700 transition-colors uppercase tracking-wider">ASSIGN NOW</button>
-</div>
-</div>
-<!-- Device 4: Assigned -->
-<div class="bg-white rounded-2xl border-[1.5px] border-blue-200 p-6 relative overflow-hidden flex flex-col items-center hover:shadow-xl transition-all duration-300">
-<div class="absolute top-4 left-4">
-<div class="bg-white border border-blue-100 flex flex-col items-center justify-center shadow-sm w-12 h-12 p-2 rounded-xl">
-<img alt="Logo" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUDfiBeldQ_VR_ACyg5kToBbfu8cYVsSY8LzrhRwvMaCDqX8cu6NnvpU1LSNvfI1QxxkRRrX5cy-R_Wxq1LhajmUi_iX1_UW8B6QtjkiQ9XvoP_IxdyZ7147XwjNRh0vif3OZEBDQeeUh-anwgX5kHbTUB1_w3qtHIxx4j37RXi4LlsB-_cDW6bfA2Duoj4rQu5neJIPQBfAmJspgUvS5si0goEjbBuLO6-18JvyQs_XWBKBL55MrzF6UvThPkOW5-En5044hkicBzyA"/>
-</div>
-</div>
-<div class="flex flex-col items-center w-full pt-12 space-y-6">
-<div class="mt-2">
-<span class="inline-flex items-center gap-2 px-4 py-1 bg-blue-50 text-blue-700 rounded-full font-bold text-sm border border-blue-100">
-<span class="w-2 h-2 bg-blue-600 rounded-full"></span>
-                Assigned
-            </span>
-</div>
-<div class="text-center space-y-1">
-<h2 class="text-3xl font-bold text-[#1e293b] leading-tight">DEVICE-0005</h2>
-<p class="text-xl text-[#64748b]">ID: SW-02-1109-M</p>
-</div>
-<div class="w-full flex items-center gap-4">
-<div class="flex-1 h-[1.5px] bg-blue-100"></div>
-<div class="w-2 h-2 bg-blue-600 rounded-full"></div>
-<div class="flex-1 h-[1.5px] bg-blue-100"></div>
-</div>
-<div class="w-full flex items-center gap-3 p-3 border border-outline-variant/30 rounded-xl bg-surface-container-low">
-<div class="w-8 h-8 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed font-bold text-xs">ML</div>
 <div>
-<p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Assigned To</p>
-<p class="text-sm text-on-surface font-semibold">Maria Leonor</p>
-</div>
-</div>
-<div class="w-full space-y-3">
-<div class="flex items-center gap-3 w-full">
-<button class="flex-1 py-3 bg-[#1d63ff] text-white text-xs font-bold rounded-xl shadow-md hover:bg-blue-700 transition-colors uppercase tracking-wider">
-                    VIEW DETAILS
-                </button>
-<button class="flex-1 py-3 border border-error/50 text-error rounded-xl font-bold text-xs hover:bg-error-container/10 transition-colors">
-                    Disable
-                </button>
+<p class="font-label-sm text-label-sm opacity-80 uppercase tracking-widest">Total Output</p>
+<p class="font-headline-lg text-headline-lg font-black">2.4 GW</p>
 </div>
 </div>
 </div>
 </div>
-<div class="bg-white rounded-2xl border-[1.5px] border-blue-200 p-6 relative overflow-hidden flex flex-col items-center hover:shadow-xl transition-all duration-300">
-<div class="absolute top-4 left-4">
-<div class="bg-white border border-blue-100 flex flex-col items-center justify-center shadow-sm w-12 h-12 p-2 rounded-xl">
-<img alt="Logo" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUDfiBeldQ_VR_ACyg5kToBbfu8cYVsSY8LzrhRwvMaCDqX8cu6NnvpU1LSNvfI1QxxkRRrX5cy-R_Wxq1LhajmUi_iX1_UW8B6QtjkiQ9XvoP_IxdyZ7147XwjNRh0vif3OZEBDQeeUh-anwgX5kHbTUB1_w3qtHIxx4j37RXi4LlsB-_cDW6bfA2Duoj4rQu5neJIPQBfAmJspgUvS5si0goEjbBuLO6-18JvyQs_XWBKBL55MrzF6UvThPkOW5-En5044hkicBzyA"/>
-</div>
-</div>
-<div class="flex flex-col items-center w-full pt-12 space-y-6">
-<div class="mt-2">
-<span class="inline-flex items-center gap-2 px-4 py-1 bg-blue-50 text-blue-700 rounded-full font-bold text-sm border border-blue-100">
-<span class="w-2 h-2 bg-blue-600 rounded-full"></span>
-                Assigned
-            </span>
-</div>
-<div class="text-center space-y-1">
-<h2 class="text-3xl font-bold text-[#1e293b] leading-tight">DEVICE-0006</h2>
-<p class="text-xl text-[#64748b]">ID: SW-02-1110-M</p>
-</div>
-<div class="w-full flex items-center gap-4">
-<div class="flex-1 h-[1.5px] bg-blue-100"></div>
-<div class="w-2 h-2 bg-blue-600 rounded-full"></div>
-<div class="flex-1 h-[1.5px] bg-blue-100"></div>
-</div>
-<div class="w-full flex items-center gap-3 p-3 border border-outline-variant/30 rounded-xl bg-surface-container-low">
-<div class="w-8 h-8 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed font-bold text-xs">DR</div>
+<!-- MODAL OVERLAY -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/60 backdrop-blur-sm p-4 animate-overlay" id="requestModal">
+<!-- MODAL CONTAINER -->
+<div class="bg-surface w-full max-w-[750px] rounded-[20px] modal-shadow overflow-hidden flex flex-col max-h-[921px] animate-modal">
+<!-- MODAL HEADER -->
+<div class="px-8 py-6 flex justify-between items-start relative">
 <div>
-<p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Assigned To</p>
-<p class="text-sm text-on-surface font-semibold">Darlene Robertson</p>
+<h2 class="font-headline-md text-headline-md text-on-surface font-bold">Request <span class="" style="color: rgb(0, 102, 255);">Another Device</span></h2>
+<p class="font-body-sm text-body-sm text-outline mt-1">Fill out the form below to request an additional monitoring device for your household.</p>
+</div>
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors" id="closeModal">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="close">close</span>
+</button>
+<div class="absolute bottom-0 left-8 right-8 h-[1px] bg-outline-variant/30"></div>
+</div>
+<div class="flex-grow overflow-y-auto custom-scrollbar px-8 py-6 space-y-8">
+<!-- USER PROFILE CARD -->
+<div class="bg-secondary-container/30 border border-secondary-container/50 rounded-xl p-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center font-bold text-primary font-headline-md">
+                                JH
+                            </div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface font-bold leading-none">Jasmin Hernandez</h4>
+<p class="font-body-sm text-body-sm text-secondary mt-1">jasmin@gmail.com</p>
 </div>
 </div>
-<div class="w-full space-y-3">
-<div class="flex items-center gap-3 w-full">
-<button class="flex-1 py-3 bg-[#1d63ff] text-white text-xs font-bold rounded-xl shadow-md hover:bg-blue-700 transition-colors uppercase tracking-wider">
-                    VIEW DETAILS
-                </button>
-<button class="flex-1 py-3 border border-error/50 text-error rounded-xl font-bold text-xs hover:bg-error-container/10 transition-colors">
-                    Disable
-                </button>
+<span class="px-3 py-1 bg-primary/10 text-primary text-label-sm font-label-sm border border-primary/20 rounded-md">
+                            Household User
+                        </span>
+</div>
+<!-- FORM SECTION 1: GRID -->
+<div class="grid grid-cols-2 gap-x-12 gap-y-6">
+<!-- Left Column -->
+<div class="space-y-6">
+<div class="space-y-1.5">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Request Type</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" data-icon="devices" style="color: rgb(0, 102, 255);">devices</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-xl py-3 pl-10 pr-4 text-body-md font-body-md focus:ring-2 focus:ring-primary/20 transition-all outline-none" id="inputRequestType" placeholder="Request for Another Device." readonly="" type="text" value="Request for Another Device.">
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Quantity</label>
+<div class="flex items-center border rounded-xl overflow-hidden h-[48px] group focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary/50 transition-all bg-white border-primary/30">
+<button class="w-12 h-full flex items-center justify-center transition-colors text-outline hover:text-primary active:scale-90 bg-white hover:bg-primary/5" id="btnDecrease">
+<span class="material-symbols-outlined text-[20px] text-primary" data-icon="remove">remove</span>
+</button>
+<input class="flex-1 h-full border-none text-center font-body-md text-on-surface focus:ring-0 outline-none cursor-default p-0 selection:bg-transparent bg-white" id="inputQuantity" readonly="" style="appearance: textfield;" type="number" value="1">
+<button class="w-12 h-full flex items-center justify-center transition-colors text-outline hover:text-primary active:scale-90 bg-white hover:bg-primary/5" id="btnIncrease">
+<span class="material-symbols-outlined text-[20px] text-primary" data-icon="add">add</span>
+</button>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Submission Timestamp</label>
+<div class="flex items-center bg-surface-container-high/50 border border-outline-variant rounded-xl py-3 px-4 cursor-default select-none">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-primary" data-icon="schedule">schedule</span>
+</div>
+<span class="text-body-md font-body-md text-secondary" id="displayTimestamp">May 24, 2026 08:30 PM</span>
 </div>
 </div>
 </div>
-</div></section>
+</div>
+<!-- Right Column -->
+<div class="space-y-6">
+<div class="space-y-1.5">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" data-icon="location_on" style="color: rgb(0, 102, 255);">location_on</span>
+<select class="w-full bg-surface-container-low border border-outline-variant rounded-xl py-3 pl-10 pr-10 text-body-md font-body-md focus:ring-2 focus:ring-primary/20 transition-all outline-none appearance-none cursor-pointer" id="inputLocation">
+<option value="Purok 1, Alibijaban Island, San Andres Quezon.">Purok 1, Alibijaban Island, San Andres Quezon.</option>
+<option value="Purok 2, Alibijaban Island, San Andres Quezon.">Purok 2, Alibijaban Island, San Andres Quezon.</option>
+</select><span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Phone Number</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary pointer-events-none" data-icon="call" style="color: rgb(0, 102, 255);">call</span>
+<input class="w-full bg-surface-container-low border-outline-variant rounded-xl py-3 pl-10 pr-4 text-body-md font-body-md focus:ring-2 focus:ring-primary/20 transition-all outline-none" id="inputPhoneNumber" placeholder="+639-480-486-303" type="tel" value="+639-480-486-303">
+</div>
+</div>
+</div>
+</div>
+<!-- REASON FOR REQUEST -->
+<div class="space-y-1.5">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Reason for Request</label>
+<textarea class="w-full bg-surface-container-highest border-none rounded-xl p-4 text-body-md font-body-md focus:ring-2 focus:ring-primary/20 transition-all outline-none resize-none" id="inputReason" placeholder="Describe why you need an additional device..." rows="3"></textarea>
+</div>
+<!-- ATTACHMENT AREA -->
+<!-- SUMMARY CARD -->
+<div class="bg-gradient-to-br from-primary-container to-surface-tint p-5 rounded-2xl text-on-primary-container shadow-sm flex items-center justify-between" id="summaryCard">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined" data-icon="info" style="font-variation-settings: 'FILL' 1;">info</span>
+<div>
+<p class="font-label-sm text-label-sm opacity-90 uppercase font-bold tracking-tight">Current Selection Summary</p>
+<p class="font-body-sm text-body-sm mt-0.5" id="summaryLine1">1x Request for Another Device.</p>
+<p class="font-body-sm text-body-sm opacity-80" id="summaryLine2">Location: Purok 1, Alibijaban Island, San Andres Quezon. • Preferred: May 24, 2026</p>
+</div>
+</div>
+<div class="text-right">
+</div>
+</div>
+</div>
+<!-- MODAL FOOTER -->
+<div class="px-8 py-6 bg-surface-container-low border-t border-outline-variant/30 flex items-center justify-between">
+<button class="flex items-center gap-2 px-6 py-2.5 border border-outline-variant text-on-surface-variant font-label-md text-label-md rounded-full hover:bg-surface-container-high transition-all" id="clearForm">
+<span class="material-symbols-outlined text-[20px]" data-icon="refresh">refresh</span>
+                        Clear Form
+                    </button>
+<div class="flex items-center gap-4">
+<button class="px-6 py-2.5 text-secondary font-label-md text-label-md hover:text-on-surface transition-all" id="cancelBtn">
+                            Cancel
+                        </button>
+<button class="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-primary to-primary-container text-on-primary font-label-md text-label-md rounded-full shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+                            Submit Request
+                            <span class="material-symbols-outlined text-[20px]" data-icon="send">send</span>
+</button>
+</div>
+</div>
+</div>
 </div>
 </main>
-<!-- Success Modal -->
-<div class="fixed inset-0 z-[100] flex items-center justify-center bg-on-background/40 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none" id="assignModal">
-<div class="glass-card max-w-md w-full m-margin-mobile rounded-2xl p-8 transition-transform duration-300 scale-95">
-<div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-green-600 mb-6 mx-auto">
-<span class="material-symbols-outlined text-4xl">check</span>
-</div>
-<h2 class="font-headline-md text-headline-md text-center mb-2">Assignment Successful</h2>
-<p class="text-center text-on-surface-variant mb-8">Device SW-01-0891-1 has been successfully assigned to the new household unit.</p>
-<button class="w-full py-4 bg-primary text-white rounded-xl font-bold" onclick="toggleModal()">Continue</button>
-</div>
-</div>
 <script>
-        function toggleModal() {
-            const modal = document.getElementById('assignModal');
-            const inner = modal.children[0];
-            if (modal.classList.contains('opacity-0')) {
-                modal.classList.remove('opacity-0', 'pointer-events-none');
-                inner.classList.remove('scale-95');
-                inner.classList.add('scale-100');
-            } else {
-                modal.classList.add('opacity-0', 'pointer-events-none');
-                inner.classList.remove('scale-100');
-                inner.classList.add('scale-95');
+        // Modal handling
+        const closeBtn = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const modal = document.getElementById('requestModal');
+
+        const hideModal = () => {
+            modal.style.opacity = '0';
+            modal.style.pointerEvents = 'none';
+            modal.style.transition = 'opacity 0.3s ease';
+        };
+
+        closeBtn.addEventListener('click', hideModal);
+        cancelBtn.addEventListener('click', hideModal);
+
+        // Form elements
+        const inputQuantity = document.getElementById('inputQuantity');
+        const inputRequestType = document.getElementById('inputRequestType');
+        const inputLocation = document.getElementById('inputLocation');
+        const inputPhoneNumber = document.getElementById('inputPhoneNumber');
+        const inputReason = document.getElementById('inputReason');
+        const btnIncrease = document.getElementById('btnIncrease');
+        const btnDecrease = document.getElementById('btnDecrease');
+        const displayTimestamp = document.getElementById('displayTimestamp');
+        
+        // Summary elements
+        const summaryLine1 = document.getElementById('summaryLine1');
+        const summaryLine2 = document.getElementById('summaryLine2');
+
+        // Helper to extract date from timestamp string
+        const getFormattedDate = (timestampStr) => {
+            const parts = timestampStr.split(' ');
+            if (parts.length >= 3) {
+                const datePart = parts.slice(0, 3).join(' ');
+                return datePart.replace(/,$/, '');
             }
-        }
-        document.querySelectorAll('button').forEach(btn => {
-            if (btn.innerText.includes('ASSIGN NOW')) {
-                btn.addEventListener('click', toggleModal);
+            return timestampStr;
+        };
+
+        // Update Summary Card function
+        const updateSummary = () => {
+            const qty = inputQuantity.value || '1';
+            const type = inputRequestType.value || 'Device Request';
+            const location = inputLocation.value || 'Not specified';
+            const dateStr = getFormattedDate(displayTimestamp.textContent);
+
+            summaryLine1.textContent = `${qty}x ${type}`;
+            summaryLine2.textContent = `Location: ${location} • Preferred: ${dateStr}`;
+        };
+
+        // Quantity logic
+        btnIncrease.addEventListener('click', () => {
+            let val = parseInt(inputQuantity.value);
+            inputQuantity.value = val + 1;
+            updateSummary();
+        });
+
+        btnDecrease.addEventListener('click', () => {
+            let val = parseInt(inputQuantity.value);
+            if (val > 1) {
+                inputQuantity.value = val - 1;
+                updateSummary();
             }
         });
+
+        // Input listeners
+        inputRequestType.addEventListener('input', updateSummary);
+        inputLocation.addEventListener('input', updateSummary);
+        inputPhoneNumber.addEventListener('input', updateSummary);
+
+        // Clear Form logic
+        document.getElementById('clearForm').addEventListener('click', () => {
+            // Reset to defaults
+            inputQuantity.value = 1;
+            inputRequestType.value = "Request for Another Device.";
+            inputLocation.value = "Purok 1, Alibijaban Island, San Andres Quezon.";
+            inputPhoneNumber.value = "+639-480-486-303";
+            inputReason.value = "";
+            
+            // Update UI
+            updateSummary();
+        });
+
+        // Initial update to match state
+        updateSummary();
     </script>
 </body></html>

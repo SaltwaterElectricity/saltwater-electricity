@@ -1,5 +1,5 @@
 import { cn } from "../../utils/cn";
-import { AlertTriangle, Info, ChevronRight, X } from "lucide-react";
+import { Info, X, Power } from "lucide-react";
 import ModalBackdrop from "./ModalBackdrop";
 
 export const ConfirmationModal = ({
@@ -10,7 +10,7 @@ export const ConfirmationModal = ({
   title = "Confirm Action",
   description = "Are you sure you want to proceed?",
   confirmText = "Confirm",
-  variant = "primary", // primary (blue), danger (red), etc.
+  variant = "primary",
   children,
 }) => {
   if (!isOpen) return null;
@@ -19,34 +19,56 @@ export const ConfirmationModal = ({
 
   return (
     <ModalBackdrop>
-      <div className="relative w-[92%] sm:w-full max-w-[440px] bg-white rounded-3xl p-8 shadow-2xl border border-outline-variant/30 animate-in fade-in zoom-in-95 duration-200">
-        {/* ICON */}
-        <div
-          className={cn(
-            "w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto transition-transform hover:scale-110",
-            isDanger ? "bg-error-container/20 text-error" : "bg-primary/10 text-primary"
-          )}
+      <div className="relative w-full max-w-[440px] bg-white/80 backdrop-blur-2xl rounded-[20px] p-8 shadow-2xl border border-white animate-in fade-in zoom-in-95 duration-200 flex flex-col gap-6">
+        {/* CLOSE BUTTON */}
+        <button
+          onClick={onClose}
+          className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
         >
-          {isDanger ? <AlertTriangle size={32} /> : <Info size={32} />}
+          <X size={20} />
+        </button>
+
+        {/* HEADER (Left-aligned) */}
+        <div className="flex flex-col gap-4 items-start">
+          <div
+            className={cn(
+              "w-14 h-14 rounded-full flex items-center justify-center transition-transform",
+              isDanger ? "bg-red-600 shadow-lg shadow-red-200" : "bg-blue-600 shadow-lg shadow-blue-200"
+            )}
+          >
+            {isDanger ? (
+              <Power className="text-white w-8 h-8" />
+            ) : (
+              <Info className="text-white w-8 h-8" />
+            )}
+          </div>
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+            {isDanger ? (
+              <>
+                {title.split(" ").slice(0, -1).join(" ")}{" "}
+                <span className="text-red-600">{title.split(" ").slice(-1)}</span>
+              </>
+            ) : (
+              title
+            )}
+          </h2>
         </div>
 
-        {/* HEADER */}
-        <h4 className="font-headline-md text-headline-md text-center text-on-surface mb-2 tracking-tight uppercase">
-          {title}
-        </h4>
-        <p className="text-on-surface-variant text-center font-body-md mb-8 leading-relaxed">
-          {description}
-        </p>
-
-        {/* CUSTOM BODY */}
-        {children && <div className="mb-8">{children}</div>}
+        {/* DESCRIPTION */}
+        <div className="space-y-4">
+          <p className="text-slate-500 font-medium leading-relaxed text-left">
+            {description}
+          </p>
+          {/* Custom Body (e.g. Warning Highlight) */}
+          {children}
+        </div>
 
         {/* FOOTER ACTIONS */}
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 mt-2">
           <button
             onClick={onClose}
             disabled={isSubmitting}
-            className="flex-1 px-6 py-3 text-label-md text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors font-semibold border border-outline-variant/30 active:scale-95 disabled:opacity-50"
+            className="flex-1 px-6 py-3 border border-slate-200 hover:bg-slate-50 transition-all text-slate-600 font-bold active:scale-95 rounded-xl disabled:opacity-50"
           >
             Cancel
           </button>
@@ -54,30 +76,19 @@ export const ConfirmationModal = ({
             onClick={onConfirm}
             disabled={isSubmitting}
             className={cn(
-              "flex-1 px-6 py-3 text-label-md text-white rounded-xl transition-all active:scale-95 font-semibold shadow-lg flex items-center justify-center gap-2",
+              "flex-1 px-6 py-3 text-white rounded-xl transition-all active:scale-95 font-bold shadow-lg flex items-center justify-center gap-2 disabled:opacity-50",
               isDanger
-                ? "bg-error hover:bg-red-700 shadow-error/20"
-                : "primary-gradient-btn hover:opacity-90 shadow-primary/20"
+                ? "bg-red-600 hover:bg-red-700 shadow-red-200"
+                : "bg-blue-600 hover:bg-blue-700 shadow-blue-200"
             )}
           >
             {isSubmitting ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : (
-              <>
-                <span>{confirmText}</span>
-                {!isDanger && <ChevronRight size={18} />}
-              </>
+              confirmText
             )}
           </button>
         </div>
-
-        {/* CLOSE BUTTON */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-outline hover:text-on-surface hover:bg-surface-container-low rounded-full transition-colors"
-        >
-          <X size={20} />
-        </button>
       </div>
     </ModalBackdrop>
   );

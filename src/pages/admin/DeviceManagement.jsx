@@ -5,17 +5,17 @@ import {
   ManagedDeviceCard,
   AssignDeviceModal,
   ConfirmationModal,
-  SummaryCard,
-  DashboardSectionHeader,
-  EmptyState,
   LoadingSpinner,
+  GlobalSearch,
+  EmptyState,
 } from "../../components";
 import { useNotification } from "../../context/useNotification";
 import { logger } from "../../utils/logger";
 import { deprovisionDevice } from "../../services/device.service";
-import { ShieldAlert, Plus } from "lucide-react";
+import { ShieldAlert, Search } from "lucide-react";
 
-// Clean Code: Move Constants outside to avoid re-creation
+import { ROLES } from "../../constants/roles";
+
 const STATUS_AVAILABLE = "available";
 
 const DeviceManagement = () => {
@@ -25,24 +25,37 @@ const DeviceManagement = () => {
 
   const [selectedDevice, setSelectedDevice] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All Status");
 
-  // CONFIRMATION MODAL STATE
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,
     deviceId: null,
     isSubmitting: false,
   });
 
-  // Performance Safety: Use useMemo for heavy filtering
-  const { availableDevices, occupiedDevices } = useMemo(
-    () => ({
+  const { availableDevices, occupiedDevices, filteredDevices } = useMemo(() => {
+    let list = devices;
+
+    if (searchTerm) {
+      list = list.filter(
+        (d) =>
+          d.device_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          d.device_id?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (statusFilter !== "All Status") {
+      list = list.filter((d) => d.availability === statusFilter.toLowerCase());
+    }
+
+    return {
       availableDevices: devices.filter((d) => d.availability === STATUS_AVAILABLE),
       occupiedDevices: devices.filter((d) => d.availability !== STATUS_AVAILABLE),
-    }),
-    [devices]
-  );
+      filteredDevices: list,
+    };
+  }, [devices, searchTerm, statusFilter]);
 
-  // Security Check: Ensure user is authorized before modal opens
   const handleDeviceAction = async (actionType, payload) => {
     if (!currentUser) {
       showNotification("Security: Unauthorized access blocked.", "error");
@@ -54,7 +67,6 @@ const DeviceManagement = () => {
         setSelectedDevice(payload);
         setIsModalOpen(true);
       } else if (actionType === "FORCE_DEPROVISION") {
-        // payload is deviceId in this case
         setConfirmModal({
           isOpen: true,
           deviceId: payload,
@@ -67,9 +79,9 @@ const DeviceManagement = () => {
           "success"
         );
       }
-    } catch (error) {
+    } catch (err) {
       showNotification(`Error: Action ${actionType} failed.`, "error");
-      throw error;
+      throw err;
     }
   };
 
@@ -84,128 +96,147 @@ const DeviceManagement = () => {
       await deprovisionDevice(confirmModal.deviceId);
       showNotification("Device has been released and is now available.", "success");
       setConfirmModal({ isOpen: false, deviceId: null, isSubmitting: false });
-    } catch (error) {
-      showNotification(error.message, "error");
+    } catch (err) {
+      showNotification(err.message, "error");
       setConfirmModal((prev) => ({ ...prev, isSubmitting: false }));
     }
   };
 
-  // Error Boundary Safety
   if (error) return <ErrorMessage message={error?.message || error} />;
   if (loading || authLoading) return <LoadingSpinner />;
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] p-6 lg:p-10 space-y-16 relative overflow-hidden">
-      {/* BACKGROUND DECORATION */}
-      <BackgroundDecor />
-
-      <header className="relative z-10">
-        <h1 className="text-4xl font-black text-slate-900 tracking-tight italic">
-          SaltwaterElectricity <span className="text-blue-600">Hub</span>
-        </h1>
-        <p className="text-slate-500 font-medium mt-2">
-          Manage IoT deployments and node availability.
+    <div className="space-y-8 animate-in fade-in duration-500">
+      {/* Header Section */}
+      <section className="space-y-2">
+        <h1 className="text-5xl font-bold text-slate-900 tracking-tight">Device Management</h1>
+        <p className="text-lg text-slate-500 max-w-3xl">
+          Manage all Saltwater Electricity devices, assign available units, and monitor deployed
+          devices across household users with precision monitoring.
         </p>
-      </header>
+      </section>
 
-      {/* STATS OVERVIEW */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-        <SummaryCard
-          title="Total Capacity"
-          value={devices.length}
-          subtitle="Units"
-          icon="inventory_2"
-          bgClass="bg-white/60 backdrop-blur-md"
-        />
-        <SummaryCard
-          title="Ready for Setup"
-          value={availableDevices.length}
-          subtitle="Available"
-          icon="add_circle"
-          colorClass="text-blue-600"
-          bgClass="bg-white/60 backdrop-blur-md"
-        />
-      </div>
+      {/* Summary Section Cards */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Total Devices Card */}
+        <div className="bg-white rounded-2xl p-6 flex items-center gap-4 shadow-sm border border-slate-100">
+          <div className="w-16 h-16 shrink-0 rounded-2xl bg-gradient-to-br from-[#4d7fff] to-[#0050cb] flex items-center justify-center text-white shadow-[0_8px_16px_-4px_rgba(0,80,203,0.3)]">
+            <span className="material-symbols-outlined text-[32px]">devices</span>
+          </div>
+          <div className="flex-1">
+            <p className="text-[13px] font-medium text-slate-500">Total Devices</p>
+            <h3 className="text-3xl font-bold text-slate-900 leading-tight">{devices.length}</h3>
+            <p className="text-[12px] text-slate-400">Registered Devices</p>
+          </div>
+        </div>
 
-      <div className="space-y-20 relative z-10">
-        {/* AVAILABLE SECTION */}
-        <section className="space-y-8">
-          <DashboardSectionHeader title="Available Inventory" variant="neutral" />
+        {/* Available Devices Card */}
+        <div className="bg-white rounded-2xl p-6 flex items-center gap-4 shadow-sm border border-slate-100">
+          <div className="w-16 h-16 shrink-0 rounded-2xl bg-gradient-to-br from-[#4ade80] to-[#16a34a] flex items-center justify-center text-white shadow-[0_8px_16px_-4px_rgba(22,163,74,0.3)]">
+            <span className="material-symbols-outlined text-[32px]">inventory_2</span>
+          </div>
+          <div className="flex-1">
+            <p className="text-[13px] font-medium text-slate-500">Available Devices</p>
+            <h3 className="text-3xl font-bold text-slate-900 leading-tight">
+              {availableDevices.length}
+            </h3>
+            <p className="text-[12px] text-slate-400">Ready for Assignment</p>
+          </div>
+        </div>
 
-          {availableDevices.length === 0 ? (
-            <EmptyState title="Empty inventory." icon={Plus} />
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {availableDevices.map((device) => (
-                <ManagedDeviceCard
-                  key={device.id || device.device_id}
-                  device={device}
-                  isAdmin={currentUser?.role === "ADMIN" || currentUser?.role === "SUPER_ADMIN"}
-                  onAssignClick={(d) => handleDeviceAction("ASSIGN_DEVICE", d)}
-                  onForceRelease={(id) => handleDeviceAction("FORCE_DEPROVISION", id)}
-                />
-              ))}
-            </div>
-          )}
-        </section>
+        {/* Assigned Devices Card */}
+        <div className="bg-white rounded-2xl p-6 flex items-center gap-4 shadow-sm border border-slate-100">
+          <div className="w-16 h-16 shrink-0 rounded-2xl bg-gradient-to-br from-[#fbbf24] to-[#ea580c] flex items-center justify-center text-white shadow-[0_8px_16px_-4px_rgba(234,88,12,0.3)]">
+            <span className="material-symbols-outlined text-[32px]">folder_shared</span>
+          </div>
+          <div className="flex-1">
+            <p className="text-[13px] font-medium text-slate-500">Assigned Devices</p>
+            <h3 className="text-3xl font-bold text-slate-900 leading-tight">
+              {occupiedDevices.length}
+            </h3>
+            <p className="text-[12px] text-slate-400">Currently Assigned</p>
+          </div>
+        </div>
+      </section>
 
-        {/* DEPLOYED SECTION */}
-        {occupiedDevices.length > 0 && (
-          <section className="space-y-8 opacity-80 grayscale-[0.2] hover:opacity-100 transition-all duration-500">
-            <DashboardSectionHeader title="Deployed Units" variant="neutral" />
+      {/* Toolbar */}
+      <section className="flex flex-col lg:flex-row items-center justify-between gap-4 p-4 bg-white/80 backdrop-blur-md border border-slate-200 rounded-2xl shadow-sm">
+        <div className="flex flex-col md:flex-row items-center gap-4 w-full flex-1">
+          <GlobalSearch
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            placeholder="Search device name or ID"
+            variant="solid"
+            className="flex-1"
+          />
+          <select
+            className="w-full md:w-40 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 bg-white text-blue-600 font-semibold py-2.5 px-4 outline-none transition-all"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option>All Status</option>
+            <option value="available">Available</option>
+            <option value="assigned">Assigned</option>
+            <option value="disabled">Disabled</option>
+          </select>
+          <select className="w-full md:w-48 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 bg-white text-blue-600 font-semibold py-2.5 px-4 outline-none transition-all">
+            <option>All Locations</option>
+            <option>Metro Manila</option>
+            <option>Cebu City</option>
+            <option>Davao City</option>
+          </select>
+        </div>
+      </section>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {occupiedDevices.map((device) => (
-                <ManagedDeviceCard
-                  key={device.id || device.device_id}
-                  device={device}
-                  isAdmin={currentUser?.role === "ADMIN" || currentUser?.role === "SUPER_ADMIN"}
-                  onAssignClick={(d) => handleDeviceAction("ASSIGN_DEVICE", d)}
-                  onForceRelease={(id) => handleDeviceAction("FORCE_DEPROVISION", id)}
-                />
-              ))}
-            </div>
-          </section>
+      {/* Device Grid */}
+      <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+        {filteredDevices.map((device) => (
+          <ManagedDeviceCard
+            key={device.id || device.device_id}
+            device={device}
+            isAdmin={currentUser?.role === ROLES.ADMIN || currentUser?.role === ROLES.SUPER_ADMIN}
+            onAssignClick={(d) => handleDeviceAction("ASSIGN_DEVICE", d)}
+            onForceRelease={(id) => handleDeviceAction("FORCE_DEPROVISION", id)}
+          />
+        ))}
+        {filteredDevices.length === 0 && (
+          <EmptyState
+            icon={Search}
+            title="No devices found"
+            description="Try adjusting your search or filters to find what you're looking for."
+            className="col-span-full"
+          />
         )}
-      </div>
+      </section>
 
-      <AssignDeviceModal device={selectedDevice} isOpen={isModalOpen} onClose={handleCloseModal} />
+      <AssignDeviceModal
+        device={selectedDevice}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onShowToast={showNotification}
+      />
 
       <ConfirmationModal
         isOpen={confirmModal.isOpen}
         onClose={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
         onConfirm={handleConfirmDeprovision}
         isSubmitting={confirmModal.isSubmitting}
-        title="Confirm Device Release"
-        description="This will remove the current user assignment and reset the device status to 'Available'. This action cannot be undone."
-        confirmText="Release Hardware"
+        title="Unassigned Device"
+        description="Are you sure you want to unassign this hardware? This action will stop all real-time monitoring and alert notifications for this unit."
+        confirmText="Confirm Unassigned"
         variant="danger"
       >
-        <div className="p-4 bg-amber-50 border border-amber-100 rounded-xl flex gap-4 items-center">
-          <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 shrink-0">
-            <ShieldAlert size={20} />
-          </div>
-          <div>
-            <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest">
-              System Override
-            </p>
-            <p className="text-[10px] text-amber-700 font-bold leading-tight mt-0.5">
-              The hardware will be immediately available for re-assignment after this process
-              completes.
-            </p>
-          </div>
+        <div className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+          <ShieldAlert className="text-blue-600 w-5 h-5 mt-0.5 shrink-0" />
+          <p className="text-xs font-semibold text-slate-500 leading-relaxed">
+            The hardware will be immediately available for re-assignment after this process
+            completes. This can be undone by an administrator later.
+          </p>
         </div>
       </ConfirmationModal>
     </div>
   );
 };
-
-const BackgroundDecor = () => (
-  <>
-    <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-200/30 rounded-full blur-[120px] pointer-events-none" />
-    <div className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-200/30 rounded-full blur-[120px] pointer-events-none" />
-  </>
-);
 
 const ErrorMessage = ({ message }) => (
   <div className="flex h-screen items-center justify-center bg-[#f8fafc] p-6 text-center">
@@ -221,3 +252,4 @@ const ErrorMessage = ({ message }) => (
 );
 
 export default DeviceManagement;
+

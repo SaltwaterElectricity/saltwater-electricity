@@ -1,142 +1,134 @@
-import { Cpu, Globe, Calendar, CheckCircle2, Lock, User, MapPin } from "lucide-react";
+import { useState } from "react";
+import { Eye } from "lucide-react";
 import { cn } from "../../utils/cn";
-import { DeviceInfoRow } from "./DeviceInfoRow";
 import { useAssignmentDetails } from "../../hooks/useAssignmentDetails";
+import { DeviceDetailsModal } from "../modal";
 
 export const ManagedDeviceCard = ({ device, onAssignClick, onForceRelease, isAdmin }) => {
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const isAvailable = device.availability === "available";
+  const assignmentDetails = useAssignmentDetails(device.device_id);
+  const { fullName, loading } = assignmentDetails;
 
-  const { fullName, address, assignedAt, loading } = useAssignmentDetails(device.device_id);
-
-  const formatAddress = (addr) => {
-    if (!addr) return "No Address Provided";
-    if (typeof addr === "string") return addr;
-
-    const parts = [addr.street, addr.baranggay, addr.cityProvince, addr.zipCode].filter(Boolean);
-
-    return parts.length > 0 ? parts.join(", ") : "Invalid Address Format";
-  };
-
-  const formatDate = (timestamp) => {
-    if (!timestamp) return "N/A";
-    return new Date(timestamp).toLocaleString("en-PH", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  // Helper to get initials
+  const getInitials = (name) => {
+    if (!name) return "??";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .substring(0, 2);
   };
 
   return (
-    <article
+    <div
       className={cn(
-        "glass-panel rounded-[20px] p-6 overflow-hidden transition-all duration-500 min-w-[300px] flex flex-col justify-between h-full group",
-        !isAvailable && "opacity-90"
+        "rounded-2xl border-[1.5px] p-6 relative overflow-hidden flex flex-col items-center hover:shadow-xl transition-all duration-300 bg-white",
+        isAvailable ? "border-blue-200" : "border-slate-200"
       )}
     >
-      <div>
-        <div className="flex justify-between items-start mb-6">
-          <div
-            className={cn(
-              "flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest font-body-md",
-              isAvailable
-                ? "bg-tertiary-fixed-dim/20 text-tertiary"
-                : "bg-primary-container/10 text-primary"
-            )}
-          >
-            {isAvailable ? <CheckCircle2 size={10} /> : <Lock size={10} />}
-            {device.availability?.toUpperCase() || "UNKNOWN"}
-          </div>
-          <p className="text-[10px] text-outline font-mono bg-surface-container-low px-2 py-0.5 rounded">
-            #{device.device_id}
-          </p>
+      {/* Logo/Icon Header */}
+      <div className="absolute top-4 left-4">
+        <div className="bg-white border border-blue-100 flex flex-col items-center justify-center shadow-sm w-12 h-12 p-2 rounded-xl">
+          <img
+            alt="Device Icon"
+            className="w-10 h-10 object-contain"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUDfiBeldQ_VR_ACyg5kToBbfu8cYVsSY8LzrhRwvMaCDqX8cu6NnvpU1LSNvfI1QxxkRRrX5cy-R_Wxq1LhajmUi_iX1_UW8B6QtjkiQ9XvoP_IxdyZ7147XwjNRh0vif3OZEBDQeeUh-anwgX5kHbTUB1_w3qtHIxx4j37RXi4LlsB-_cDW6bfA2Duoj4rQu5neJIPQBfAmJspgUvS5si0goEjbBuLO6-18JvyQs_XWBKBL55MrzF6UvThPkOW5-En5044hkicBzyA"
+          />
         </div>
+      </div>
 
-        <div className="flex items-center gap-4 mb-6">
-          <div
-            className={cn(
-              "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 shrink-0 shadow-lg",
-              isAvailable
-                ? "ocean-gradient text-white shadow-blue-500/20"
-                : "bg-surface-container-high text-outline"
-            )}
-          >
-            <Cpu size={24} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-h2 text-xl font-bold text-on-surface leading-tight tracking-tight truncate">
-              {device.device_name || "Unnamed Node"}
-            </h3>
-            {!isAvailable && (
-              <p className="text-[11px] font-bold text-primary uppercase tracking-tighter mt-1 font-body-md">
-                Currently Deployed
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className="space-y-4 mb-8 border-y border-outline-variant/30 py-6">
+      <div className="flex flex-col items-center w-full pt-12 space-y-6">
+        {/* Status Badge */}
+        <div className="mt-2">
           {isAvailable ? (
-            <>
-              <DeviceInfoRow
-                label="IP Address"
-                value={device.ip_address || "0.0.0.0"}
-                icon={Globe}
-                isMono
-              />
-              <DeviceInfoRow
-                label="System Start"
-                value={formatDate(device.created_at)}
-                icon={Calendar}
-              />
-            </>
+            <span className="inline-flex items-center gap-2 px-4 py-1 bg-[#e7f6ed] text-[#2d8a4e] rounded-full font-bold text-sm border border-[#c1e8d0]">
+              <span className="w-2 h-2 bg-[#2d8a4e] rounded-full" />
+              Available !
+            </span>
           ) : (
-            <>
-              <DeviceInfoRow
-                label="Assigned To"
-                value={loading ? "Fetching..." : fullName}
-                icon={User}
-                variant="highlight"
-              />
-              <DeviceInfoRow
-                label="Location"
-                value={loading ? "Locating..." : formatAddress(address)}
-                icon={MapPin}
-              />
-              <DeviceInfoRow
-                label="Deployed On"
-                value={loading ? "..." : formatDate(assignedAt)}
-                icon={Calendar}
-              />
-            </>
+            <span className="inline-flex items-center gap-2 px-4 py-1 bg-blue-50 text-blue-700 rounded-full font-bold text-sm border border-blue-100">
+              <span className="w-2 h-2 bg-blue-600 rounded-full" />
+              Assigned
+            </span>
+          )}
+        </div>
+
+        {/* Device ID and Name */}
+        <div className="text-center space-y-1">
+          <h2 className="text-3xl font-bold text-[#1e293b] leading-tight truncate max-w-[240px]">
+            {device.device_name || "Unnamed"}
+          </h2>
+          <p className="text-xl text-[#64748b]">ID: {device.device_id}</p>
+        </div>
+
+        {/* Visual Divider */}
+        <div className="w-full flex items-center gap-4">
+          <div className="flex-1 h-[1.5px] bg-blue-100" />
+          <div className="w-2 h-2 bg-blue-600 rounded-full" />
+          <div className="flex-1 h-[1.5px] bg-blue-100" />
+        </div>
+
+        {/* Conditional Content: Assignment Details or Action */}
+        {!isAvailable && (
+          <div className="w-full flex items-center gap-3 p-3 border border-slate-100 rounded-xl bg-slate-50">
+            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xs shrink-0">
+              {loading ? "..." : getInitials(fullName)}
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">
+                Assigned To
+              </p>
+              <p className="text-sm text-slate-900 font-semibold truncate max-w-[150px]">
+                {loading ? "Loading..." : fullName || "Unknown Resident"}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Buttons */}
+        <div className="w-full space-y-3">
+          {isAvailable ? (
+            <button
+              onClick={() => onAssignClick(device)}
+              className="w-full py-4 bg-[#1d63ff] text-white text-lg font-bold rounded-xl shadow-lg shadow-blue-200 hover:bg-blue-700 transition-colors uppercase tracking-wider active:scale-95"
+            >
+              ASSIGN NOW
+            </button>
+          ) : (
+            <div className="flex items-center gap-3 w-full">
+              <button
+                onClick={() => setIsDetailsOpen(true)}
+                className="flex-1 py-3 bg-[#1d63ff] text-white text-xs font-bold rounded-xl shadow-md hover:bg-blue-700 transition-colors uppercase tracking-wider active:scale-95 flex items-center justify-center gap-2"
+              >
+                <Eye size={14} />
+                VIEW DETAILS
+              </button>
+              {isAdmin && (
+                <button
+                  onClick={() => onForceRelease(device.device_id)}
+                  className="flex-1 py-3 border border-red-200 text-red-600 rounded-xl font-bold text-xs hover:bg-red-50 transition-colors uppercase tracking-wider active:scale-95 flex items-center justify-center gap-2"
+                >
+                  Unassigned
+                </button>
+              )}
+            </div>
           )}
         </div>
       </div>
 
-      <div className="flex gap-3">
-        <button
-          onClick={() => isAvailable && onAssignClick(device)}
-          disabled={!isAvailable && !isAdmin}
-          className={cn(
-            "flex-1 h-14 rounded-2xl font-bold text-xs tracking-widest transition-all duration-300 uppercase shrink-0",
-            isAvailable
-              ? "ocean-gradient text-white hover:opacity-90 active:scale-[0.98] shadow-lg shadow-blue-500/20"
-              : "bg-surface-container-highest text-outline cursor-not-allowed border border-outline-variant/30"
-          )}
-        >
-          {isAvailable ? "ASSIGN DEVICE" : "LOCKED BY END-USER"}
-        </button>
-
-        {isAdmin && !isAvailable && (
-          <button
-            onClick={() => onForceRelease(device.device_id)}
-            className="h-14 w-14 flex items-center justify-center rounded-2xl bg-error/10 text-error hover:bg-error hover:text-on-error transition-all border border-error/20 shadow-lg shadow-error/10"
-            title="Force Release Device"
-          >
-            <Lock size={20} />
-          </button>
-        )}
-      </div>
-    </article>
+      <DeviceDetailsModal
+        isOpen={isDetailsOpen}
+        onClose={() => setIsDetailsOpen(false)}
+        device={device}
+        assignmentDetails={assignmentDetails}
+        isAdmin={isAdmin}
+        onUnassign={onForceRelease}
+      />
+    </div>
   );
 };
+
+
+

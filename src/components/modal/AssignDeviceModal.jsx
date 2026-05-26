@@ -1,16 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
-import { db } from "../../firebaseConfig";
-import { ref, get } from "firebase/database";
+import { useState, useCallback } from "react";
 import { assignDevice } from "../../services/device.service";
-import { ROLES } from "../../constants/roles";
 import GlobalSearch from "../ui/GlobalSearch";
 import { useSearch } from "../../hooks/useSearch";
 
 import ModalBackdrop from "./ModalBackdrop";
 
 const AssignDeviceModal = ({ device, isOpen, onClose, onShowToast }) => {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [users] = useState([]); // Kept as state for search hook
   const [selectedUser, setSelectedUser] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editableDeviceName, setEditableDeviceName] = useState("");
@@ -22,56 +18,15 @@ const AssignDeviceModal = ({ device, isOpen, onClose, onShowToast }) => {
     isSearching,
   } = useSearch(users, ["firstName", "lastName", "email"]);
 
+  const [isSuccess, setIsSuccess] = useState(false);
+
   // SAFETY: Centralized close logic
   const handleClose = useCallback(() => {
     setSearchTerm("");
     setSelectedUser(null);
+    setIsSuccess(false);
     onClose();
   }, [onClose, setSearchTerm]);
-
-  // ACCESSIBILITY: Keyboard support
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleEsc = (e) => e.key === "Escape" && handleClose();
-    window.addEventListener("keydown", handleEsc);
-    return () => window.removeEventListener("keydown", handleEsc);
-  }, [isOpen, handleClose]);
-
-  useEffect(() => {
-    let isMounted = true; // Safety against memory leaks
-
-    if (isOpen && device) {
-      setEditableDeviceName(device.device_name || "");
-
-      const loadData = async () => {
-        setLoading(true);
-        try {
-          const [uSnap, rSnap] = await Promise.all([get(ref(db, "users")), get(ref(db, "roles"))]);
-
-          if (isMounted && uSnap.exists()) {
-            const roles = rSnap.val() || {};
-            const validUsers = [];
-
-            uSnap.forEach((child) => {
-              const role = roles[child.key]?.role;
-              if (role === ROLES.ADMIN || role === ROLES.RESIDENT) {
-                validUsers.push({ uid: child.key, ...child.val(), role });
-              }
-            });
-            setUsers(validUsers);
-          }
-        } catch {
-          if (isMounted) onShowToast("System access restricted or offline.", "error");
-        } finally {
-          if (isMounted) setLoading(false);
-        }
-      };
-      loadData();
-    }
-    return () => {
-      isMounted = false;
-    };
-  }, [isOpen, device, onShowToast]);
 
   const onAssignTrigger = async () => {
     if (!selectedUser || !editableDeviceName.trim()) return;
@@ -79,16 +34,41 @@ const AssignDeviceModal = ({ device, isOpen, onClose, onShowToast }) => {
 
     try {
       await assignDevice(device.device_id, selectedUser.uid, editableDeviceName.trim());
-      onShowToast("Assignment confirmed.", "success");
-      handleClose();
+      setIsSuccess(true);
+      if (onShowToast) onShowToast("Assignment confirmed.", "success");
     } catch (error) {
-      onShowToast(error.message || "Update failed.", "error");
+      if (onShowToast) onShowToast(error.message || "Update failed.", "error");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   if (!isOpen) return null;
+
+  if (isSuccess) {
+    return (
+      <ModalBackdrop>
+        <div className="bg-white max-w-md w-full m-4 rounded-2xl p-8 shadow-2xl animate-in zoom-in duration-300">
+          <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-green-600 mb-6 mx-auto">
+            <span className="material-symbols-outlined text-4xl">check</span>
+          </div>
+          <h2 className="text-2xl font-bold text-slate-900 text-center mb-2">
+            Assignment Successful
+          </h2>
+          <p className="text-center text-slate-500 mb-8">
+            Device {device?.device_id} has been successfully assigned to{" "}
+            {selectedUser?.firstName} {selectedUser?.lastName}.
+          </p>
+          <button
+            className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all active:scale-95 shadow-lg shadow-blue-200"
+            onClick={handleClose}
+          >
+            Continue
+          </button>
+        </div>
+      </ModalBackdrop>
+    );
+  }
 
   return (
     <ModalBackdrop>
@@ -113,7 +93,7 @@ const AssignDeviceModal = ({ device, isOpen, onClose, onShowToast }) => {
             <GlobalSearch
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
-              isSearching={isSearching || loading}
+              isSearching={isSearching}
               placeholder="Name or email address..."
             />
 
@@ -125,7 +105,7 @@ const AssignDeviceModal = ({ device, isOpen, onClose, onShowToast }) => {
                         key={user.uid}
                         onClick={() => {
                           setSelectedUser(user);
-                          setSearchTerm(""); // <--- Napakahalaga nito para sumara ang dropdown matapos pumili
+                          setSearchTerm("");
                         }}
                         className={`w-full p-4 flex items-center gap-4 transition-all ${
                           selectedUser?.uid === user.uid ? "bg-blue-50" : "hover:bg-gray-50"
@@ -227,3 +207,4 @@ const AssignDeviceModal = ({ device, isOpen, onClose, onShowToast }) => {
 };
 
 export default AssignDeviceModal;
+
