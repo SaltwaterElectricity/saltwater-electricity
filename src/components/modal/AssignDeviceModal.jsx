@@ -56,8 +56,8 @@ const AssignDeviceModal = ({ device, isOpen, onClose, onShowToast }) => {
             Assignment Successful
           </h2>
           <p className="text-center text-slate-500 mb-8">
-            Device {device?.device_id} has been successfully assigned to{" "}
-            {selectedUser?.firstName} {selectedUser?.lastName}.
+            Device {device?.device_id} has been successfully assigned to {selectedUser?.firstName}{" "}
+            {selectedUser?.lastName}.
           </p>
           <button
             className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all active:scale-95 shadow-lg shadow-blue-200"
@@ -207,4 +207,3 @@ const AssignDeviceModal = ({ device, isOpen, onClose, onShowToast }) => {
 };
 
 export default AssignDeviceModal;
-

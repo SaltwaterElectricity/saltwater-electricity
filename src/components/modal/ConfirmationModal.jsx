@@ -33,7 +33,9 @@ export const ConfirmationModal = ({
           <div
             className={cn(
               "w-14 h-14 rounded-full flex items-center justify-center transition-transform",
-              isDanger ? "bg-red-600 shadow-lg shadow-red-200" : "bg-blue-600 shadow-lg shadow-blue-200"
+              isDanger
+                ? "bg-red-600 shadow-lg shadow-red-200"
+                : "bg-blue-600 shadow-lg shadow-blue-200"
             )}
           >
             {isDanger ? (
@@ -56,9 +58,7 @@ export const ConfirmationModal = ({
 
         {/* DESCRIPTION */}
         <div className="space-y-4">
-          <p className="text-slate-500 font-medium leading-relaxed text-left">
-            {description}
-          </p>
+          <p className="text-slate-500 font-medium leading-relaxed text-left">{description}</p>
           {/* Custom Body (e.g. Warning Highlight) */}
           {children}
         </div>

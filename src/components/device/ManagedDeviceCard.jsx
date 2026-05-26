@@ -129,6 +129,3 @@ export const ManagedDeviceCard = ({ device, onAssignClick, onForceRelease, isAdm
     </div>
   );
 };
-
-
-
