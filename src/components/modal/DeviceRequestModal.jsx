@@ -1,5 +1,17 @@
 import { useState, memo, useMemo, useEffect } from "react";
-import { X, Cpu, Minus, Plus, Calendar, MapPin, Phone, Send, RotateCcw, Info, PackageOpen } from "lucide-react";
+import {
+  X,
+  Cpu,
+  Minus,
+  Plus,
+  Calendar,
+  MapPin,
+  Phone,
+  Send,
+  RotateCcw,
+  Info,
+  PackageOpen,
+} from "lucide-react";
 import { createDeviceRequest } from "../../services/request.service";
 import ModalBackdrop from "./ModalBackdrop";
 import { cn } from "../../utils/cn";
@@ -12,7 +24,7 @@ const DeviceRequestModal = ({ isOpen, onClose, onShowToast }) => {
   const availableCount = availableDevices.length;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const formatAddress = (addr) => {
     if (!addr) return "No Address Provided";
     if (typeof addr === "string") return addr;
@@ -20,24 +32,28 @@ const DeviceRequestModal = ({ isOpen, onClose, onShowToast }) => {
     return parts.length > 0 ? parts.join(", ") : "Invalid Address Format";
   };
 
-  const initialFormState = useMemo(() => ({
-    quantity: availableCount > 0 ? 1 : 0,
-    requestType: "Request for Another Device.",
-    address: formatAddress(user?.address),
-    phoneNumber: user?.phone || user?.phoneNumber || "N/A",
-    reason: "",
-  }), [user, availableCount]);
+  const initialFormState = useMemo(
+    () => ({
+      quantity: availableCount > 0 ? 1 : 0,
+      requestType: "Request for Another Device.",
+      address: formatAddress(user?.address),
+      phoneNumber: user?.phone || user?.phoneNumber || "N/A",
+      reason: "",
+    }),
+    [user, availableCount]
+  );
 
   const [formData, setFormData] = useState(initialFormState);
 
   // Sync state if user or availableCount changes while open
   useEffect(() => {
     if (isOpen) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         address: formatAddress(user?.address),
         phoneNumber: user?.phone || user?.phoneNumber || "N/A",
-        quantity: prev.quantity === 0 && availableCount > 0 ? 1 : Math.min(prev.quantity, availableCount)
+        quantity:
+          prev.quantity === 0 && availableCount > 0 ? 1 : Math.min(prev.quantity, availableCount),
       }));
     }
   }, [user, availableCount, isOpen]);
@@ -109,7 +125,7 @@ const DeviceRequestModal = ({ isOpen, onClose, onShowToast }) => {
               Fill out the form below to request an additional monitoring device for your household.
             </p>
           </div>
-          <button 
+          <button
             onClick={handleClose}
             className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400"
           >
@@ -142,12 +158,14 @@ const DeviceRequestModal = ({ isOpen, onClose, onShowToast }) => {
               {/* Left Column */}
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Request Type</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">
+                    Request Type
+                  </label>
                   <div className="relative">
                     <Cpu className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-600 w-5 h-5" />
-                    <input 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-sm font-bold text-slate-700 outline-none" 
-                      readOnly 
+                    <input
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-sm font-bold text-slate-700 outline-none"
+                      readOnly
                       value={formData.requestType}
                     />
                   </div>
@@ -155,33 +173,46 @@ const DeviceRequestModal = ({ isOpen, onClose, onShowToast }) => {
 
                 <div className="space-y-2">
                   <div className="flex justify-between items-center px-1">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Quantity</label>
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                      Quantity
+                    </label>
                     <span className="text-[10px] font-bold text-blue-600 uppercase flex items-center gap-1">
                       <PackageOpen size={12} />
                       {inventoryLoading ? "Checking..." : `${availableCount} Available`}
                     </span>
                   </div>
-                  <div className={cn(
-                    "flex items-center border rounded-xl overflow-hidden h-[48px] bg-white transition-all",
-                    availableCount > 0 ? "border-blue-600/30 focus-within:ring-2 focus-within:ring-blue-600/20" : "border-slate-200 bg-slate-50 opacity-60"
-                  )}>
-                    <button 
+                  <div
+                    className={cn(
+                      "flex items-center border rounded-xl overflow-hidden h-[48px] bg-white transition-all",
+                      availableCount > 0
+                        ? "border-blue-600/30 focus-within:ring-2 focus-within:ring-blue-600/20"
+                        : "border-slate-200 bg-slate-50 opacity-60"
+                    )}
+                  >
+                    <button
                       type="button"
                       disabled={availableCount === 0}
-                      onClick={() => setFormData(prev => ({ ...prev, quantity: Math.max(1, prev.quantity - 1) }))}
+                      onClick={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          quantity: Math.max(1, prev.quantity - 1),
+                        }))
+                      }
                       className="w-12 h-full flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all disabled:cursor-not-allowed"
                     >
                       <Minus size={20} />
                     </button>
-                    <input 
-                      className="flex-1 h-full border-none text-center font-bold text-slate-900 focus:ring-0 outline-none bg-transparent" 
-                      readOnly 
+                    <input
+                      className="flex-1 h-full border-none text-center font-bold text-slate-900 focus:ring-0 outline-none bg-transparent"
+                      readOnly
                       value={formData.quantity}
                     />
-                    <button 
+                    <button
                       type="button"
                       disabled={availableCount === 0 || formData.quantity >= availableCount}
-                      onClick={() => setFormData(prev => ({ ...prev, quantity: prev.quantity + 1 }))}
+                      onClick={() =>
+                        setFormData((prev) => ({ ...prev, quantity: prev.quantity + 1 }))
+                      }
                       className="w-12 h-full flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                     >
                       <Plus size={20} />
@@ -190,7 +221,9 @@ const DeviceRequestModal = ({ isOpen, onClose, onShowToast }) => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Submission Timestamp</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">
+                    Submission Timestamp
+                  </label>
                   <div className="flex items-center bg-slate-50 border border-slate-200 rounded-xl py-3 px-4">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-blue-600/10 flex items-center justify-center text-blue-600">
@@ -205,11 +238,13 @@ const DeviceRequestModal = ({ isOpen, onClose, onShowToast }) => {
               {/* Right Column */}
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Installation Address</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">
+                    Installation Address
+                  </label>
                   <div className="relative">
                     <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-600 w-5 h-5" />
-                    <input 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-600/20 transition-all" 
+                    <input
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-600/20 transition-all"
                       placeholder="Enter installation location"
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
@@ -218,12 +253,14 @@ const DeviceRequestModal = ({ isOpen, onClose, onShowToast }) => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Contact Number</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">
+                    Contact Number
+                  </label>
                   <div className="relative">
                     <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-600 w-5 h-5" />
-                    <input 
+                    <input
                       type="tel"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-600/20 transition-all" 
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-600/20 transition-all"
                       placeholder="+639..."
                       value={formData.phoneNumber}
                       onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
@@ -235,10 +272,12 @@ const DeviceRequestModal = ({ isOpen, onClose, onShowToast }) => {
 
             {/* REASON FOR REQUEST */}
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Reason for Request</label>
-              <textarea 
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-600/20 transition-all resize-none" 
-                placeholder="Describe why you need an additional device..." 
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">
+                Reason for Request
+              </label>
+              <textarea
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-blue-600/20 transition-all resize-none"
+                placeholder="Describe why you need an additional device..."
                 rows="3"
                 value={formData.reason}
                 onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
@@ -250,8 +289,12 @@ const DeviceRequestModal = ({ isOpen, onClose, onShowToast }) => {
               <div className="flex items-center gap-4">
                 <Info size={24} className="opacity-80" />
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest opacity-80">Current Selection Summary</p>
-                  <p className="text-sm font-bold mt-0.5">{formData.quantity}x {formData.requestType}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest opacity-80">
+                    Current Selection Summary
+                  </p>
+                  <p className="text-sm font-bold mt-0.5">
+                    {formData.quantity}x {formData.requestType}
+                  </p>
                   <p className="text-[10px] font-medium opacity-70">
                     Location: {displayAddress.split(",")[0]} • Preferred: {timestamp.split(",")[0]}
                   </p>
@@ -263,7 +306,7 @@ const DeviceRequestModal = ({ isOpen, onClose, onShowToast }) => {
 
         {/* MODAL FOOTER */}
         <div className="px-8 py-6 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-          <button 
+          <button
             onClick={handleClear}
             className="flex items-center gap-2 px-6 py-2.5 border border-slate-200 text-slate-500 font-bold text-xs rounded-full hover:bg-white hover:shadow-sm transition-all active:scale-95"
           >
@@ -271,13 +314,13 @@ const DeviceRequestModal = ({ isOpen, onClose, onShowToast }) => {
             Clear Form
           </button>
           <div className="flex items-center gap-4">
-            <button 
+            <button
               onClick={handleClose}
               className="px-6 py-2.5 text-slate-400 font-bold text-xs hover:text-slate-600 transition-all"
             >
               Cancel
             </button>
-            <button 
+            <button
               form="deviceRequestForm"
               type="submit"
               disabled={isSubmitting || availableCount === 0}
@@ -294,5 +337,3 @@ const DeviceRequestModal = ({ isOpen, onClose, onShowToast }) => {
 };
 
 export default memo(DeviceRequestModal);
-
-
