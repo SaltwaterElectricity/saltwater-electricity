@@ -1,14 +1,14 @@
 import { memo } from "react";
-import { 
-  X, 
-  Calendar, 
-  MapPin, 
-  Tablet, 
-  Phone, 
-  MessageSquare, 
+import {
+  X,
+  Calendar,
+  MapPin,
+  Tablet,
+  Phone,
+  MessageSquare,
   CheckCircle2,
   Clock,
-  XCircle
+  XCircle,
 } from "lucide-react";
 import { ModalBackdrop } from "../../modal";
 
@@ -19,14 +19,7 @@ import { ModalBackdrop } from "../../modal";
  * Footer updated: Cancel button removed, Approve changed to green.
  */
 const ProcessRequestModal = memo(
-  ({
-    isOpen,
-    onClose,
-    request,
-    setModalType,
-    isSubmitting,
-    onSubmit,
-  }) => {
+  ({ isOpen, onClose, request, setModalType, isSubmitting, onSubmit }) => {
     if (!isOpen || !request) return null;
 
     const getInitials = (name) => {
@@ -44,7 +37,7 @@ const ProcessRequestModal = memo(
         day: "numeric",
         year: "numeric",
         hour: "2-digit",
-        minute: "2-digit"
+        minute: "2-digit",
       });
     };
 
@@ -62,13 +55,14 @@ const ProcessRequestModal = memo(
           <header className="flex items-center justify-between px-8 py-5 border-b border-outline-variant/30 sticky top-0 bg-white z-10">
             <div className="flex flex-col gap-1">
               <h2 className="font-headline-lg text-2xl md:text-3xl text-slate-900 font-extrabold tracking-tight">
-                <span className="text-black">REQUEST</span> <span className="text-blue-600">DETAILS</span>
+                <span className="text-black">REQUEST</span>{" "}
+                <span className="text-blue-600">DETAILS</span>
               </h2>
               <p className="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-widest">
                 Review and Validate resident device request.
               </p>
             </div>
-            <button 
+            <button
               onClick={onClose}
               className="p-2 hover:bg-surface-container-low rounded-full transition-colors active-scale"
             >
@@ -82,7 +76,7 @@ const ProcessRequestModal = memo(
             <section className="bg-surface-container-low rounded-xl p-5 border border-outline-variant/20 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 {/* Avatar */}
-                <div 
+                <div
                   className="w-16 h-16 rounded-full flex items-center justify-center bg-[#f0eaff] text-[#6200ee] font-bold text-xl"
                   style={{ outline: "rgb(0, 102, 255) solid 2px", outlineOffset: "2px" }}
                 >
@@ -93,15 +87,15 @@ const ProcessRequestModal = memo(
                   <h3 className="font-bold text-lg leading-tight text-black">
                     {request.residentName}
                   </h3>
-                  <p className="text-[#75849a] text-sm">
-                    {request.residentEmail}
-                  </p>
+                  <p className="text-[#75849a] text-sm">{request.residentEmail}</p>
                 </div>
               </div>
               {/* Status Badge */}
               <div className="px-4 py-2 rounded-xl bg-[#fff2e6] flex items-center gap-2">
                 <Clock className="text-[#ff9933]" size={20} />
-                <span className="text-[#ff9933] font-semibold text-sm capitalize">{request.status}</span>
+                <span className="text-[#ff9933] font-semibold text-sm capitalize">
+                  {request.status}
+                </span>
               </div>
             </section>
 
@@ -147,7 +141,10 @@ const ProcessRequestModal = memo(
                     Request Type
                   </label>
                   <span className="text-primary text-body-md bg-white border border-primary px-3 py-1 rounded-lg inline-block mt-1 font-medium">
-                    {request.requestType?.split("_").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")}
+                    {request.requestType
+                      ?.split("_")
+                      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                      .join(" ")}
                   </span>
                 </div>
               </div>
@@ -191,7 +188,7 @@ const ProcessRequestModal = memo(
             <div className="flex items-center gap-3">
               {request.status === "pending" && (
                 <>
-                  <button 
+                  <button
                     onClick={() => handleAction("decline")}
                     disabled={isSubmitting}
                     className="flex items-center gap-2 px-6 py-2.5 bg-[#ef4444] text-white font-medium rounded-lg hover:brightness-105 shadow-md transition-all active-scale disabled:opacity-50"
@@ -199,7 +196,7 @@ const ProcessRequestModal = memo(
                     <XCircle size={20} className="font-bold" />
                     <span>Decline</span>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleAction("approve")}
                     disabled={isSubmitting}
                     className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-lg hover:opacity-90 shadow-md transition-all active-scale disabled:opacity-50"

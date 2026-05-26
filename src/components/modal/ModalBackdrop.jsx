@@ -21,9 +21,7 @@ const ModalBackdrop = ({ children }) => {
 
       {/* 3. The Content Layer */}
       <div className="relative z-10 flex items-center justify-center w-full h-full pointer-events-none">
-        <div className="pointer-events-auto flex justify-center w-full max-w-full">
-          {children}
-        </div>
+        <div className="pointer-events-auto flex justify-center w-full max-w-full">{children}</div>
       </div>
     </div>
   );

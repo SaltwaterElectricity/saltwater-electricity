@@ -49,7 +49,8 @@ const RequestManagement = () => {
         residentName: resident ? `${resident.firstName} ${resident.lastName}` : "Unknown Resident",
         residentEmail: resident?.email || "",
         residentMobile: resident?.mobileNum || "N/A",
-        residentLocation: resident?.address?.street || resident?.address?.baranggay || "Unknown Location",
+        residentLocation:
+          resident?.address?.street || resident?.address?.baranggay || "Unknown Location",
         message: req.message || "No message provided.",
       };
     });
