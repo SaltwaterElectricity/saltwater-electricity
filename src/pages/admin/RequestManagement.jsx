@@ -39,7 +39,7 @@ const RequestManagement = () => {
   const [approveForm, setApproveForm] = useState({ deviceId: "", deviceAssignId: "" });
   const [declineForm, setDeclineForm] = useState({ reason: "" });
 
-  // HYDRATION: Map userId to Name, Email, and Location
+  // HYDRATION: Map userId to Name, Email, Location, Contact, and Message
   const hydratedRequests = useMemo(() => {
     if (!requests || !users) return [];
     return requests.map((req) => {
@@ -48,8 +48,9 @@ const RequestManagement = () => {
         ...req,
         residentName: resident ? `${resident.firstName} ${resident.lastName}` : "Unknown Resident",
         residentEmail: resident?.email || "",
-        residentLocation:
-          resident?.address?.street || resident?.address?.baranggay || "Unknown Location",
+        residentMobile: resident?.mobileNum || "N/A",
+        residentLocation: resident?.address?.street || resident?.address?.baranggay || "Unknown Location",
+        message: req.message || "No message provided.",
       };
     });
   }, [requests, users]);

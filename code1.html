@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Device Management | Saltwater Electricity</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#390c00",
+                        "inverse-primary": "#b3c5ff",
+                        "on-background": "#191b24",
+                        "background": "#faf8ff",
+                        "primary-fixed-dim": "#b3c5ff",
+                        "surface-dim": "#d8d9e6",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "primary": "#0050cb",
+                        "outline-variant": "#c2c6d8",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e1e2ee",
+                        "on-secondary": "#ffffff",
+                        "surface": "#faf8ff",
+                        "surface-container-low": "#f2f3ff",
+                        "inverse-on-surface": "#eff0fd",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#832600",
+                        "on-tertiary-container": "#fff6f4",
+                        "inverse-surface": "#2e303a",
+                        "on-primary-container": "#f8f7ff",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#ecedfa",
+                        "secondary-container": "#d0e1fb",
+                        "surface-bright": "#faf8ff",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "primary-container": "#0066ff",
+                        "tertiary-fixed-dim": "#ffb59d",
+                        "tertiary": "#a33200",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-error-container": "#93000a",
+                        "secondary": "#505f76",
+                        "on-primary-fixed": "#001849",
+                        "surface-container-high": "#e6e7f4",
+                        "on-surface": "#191b24",
+                        "outline": "#727687",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#e1e2ee",
+                        "tertiary-fixed": "#ffdbd0",
+                        "surface-tint": "#0054d6",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#003fa4",
+                        "on-surface-variant": "#424656",
+                        "on-secondary-container": "#54647a",
+                        "tertiary-container": "#cc4204",
+                        "primary-fixed": "#dae1ff",
+                        "on-secondary-fixed": "#0b1c30"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1.25rem",
+                        "3xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1280px",
+                        "unit": "4px",
+                        "margin-mobile": "16px",
+                        "gutter": "24px",
+                        "margin-desktop": "48px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { background-color: #F8FAFC; font-family: 'Inter', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid #E2E8F0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.03); }
+        .sidebar-glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border-right: 1px solid rgba(226, 232, 240, 0.3); }
+        .linear-shadow { box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05), 0 15px 30px -5px rgba(0,0,0,0.04); }
+        .status-pill { padding: 4px 12px; border-radius: 9999px; font-weight: 600; font-size: 12px; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- Side Navigation Sidebar (Anchor Component) -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 bg-white/80 dark:bg-inverse-surface/80 backdrop-blur-2xl border-r border-outline-variant/20 shadow-lg flex flex-col p-6 space-y-2 hidden md:flex">
+<div class="flex items-center gap-3 mb-8">
+<img alt="Saltwater Electricity Logo" class="w-12 h-12 rounded-lg" src="https://lh3.googleusercontent.com/aida/ADBb0ugvj1fRUZ1bu0_pnvwBZic-ct36gpfGtzFQnyH5NRtm2pVi2UeQT_EP2znT7GDvgbzQQOt3w8XJE0As6tb1XWDkH_xgfwUnmZEGPV5EK61J3trVjhx6nCj1irTppZFWM9kTwljIuIYDmFDl4vVH6iTxXbVT-nFAacMTUB19loQoSDoruznRIjFiiSegy8os_AO0ewVlZc8oc11EEfrmiox3u_mhCuOuMgL4JvXSzUgGEAigVbsEiErQV1k"/>
+<div>
+<h1 class="font-headline-md text-headline-md text-primary font-bold">Saltwater</h1>
+<p class="text-on-surface-variant text-label-sm">Utility Control</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-high transition-all duration-300 hover:translate-x-1 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-high transition-all duration-300 hover:translate-x-1 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">monitoring</span>
+<span class="font-label-md text-label-md">Realtime Monitor</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-high transition-all duration-300 hover:translate-x-1 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-label-md text-label-md">Device Alerts</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-high transition-all duration-300 hover:translate-x-1 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-md text-label-md">Historical Data</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-high transition-all duration-300 hover:translate-x-1 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-md text-label-md">User Management</span>
+</a>
+<!-- Active Tab Mapping: Device Management -->
+<a class="bg-secondary-container text-on-secondary-container rounded-xl font-bold flex items-center gap-3 px-4 py-3 transition-all duration-300 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined">settings_remote</span>
+<span class="font-label-md text-label-md">Device Management</span>
+</a>
+</nav>
+<div class="pt-6 border-t border-outline-variant/20 space-y-1">
+<button class="w-full bg-primary-container text-on-primary-container py-3 rounded-xl font-bold mb-4 hover:shadow-lg transition-all active:scale-95">
+                Add Device
+            </button>
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-error-container/20 hover:text-error transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 min-h-screen">
+<!-- Top Navigation Bar (Anchor Component) -->
+<header class="w-full h-16 sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm flex items-center justify-between px-margin-mobile md:px-margin-desktop">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-md text-headline-md text-primary font-bold">Device Management</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center bg-surface-container px-4 py-2 rounded-full border border-outline-variant/20">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px] mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-label-md w-64" placeholder="Search devices..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
+<img alt="User profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAEvHLG7EMxP_rFgjlLF4MxwiWbYnCqPhsS_Z9KA0wrCMenZWCM8_IGQhOF0MLkshvu4D7OyQs8Hpo0Kbfl56AUCOawQY0bV5mnceMmMc4448rDOjWGc2kFBL0uBIPUfOWgE_7Jh0z0G486idtjMjcY8KipKutE0krjaOWeYqy2qn5EWgY48agStJQq63C2KuM5KiZSIWVX8ngphb9DBah8r1qcZVVSkwkPPfwF9SImSQsOBOS9MHTrNtWdvM88WHEUaNoDj3JQlg"/>
+</div>
+</div>
+</div>
+</header>
+<div class="p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto space-y-8">
+<!-- Header Section -->
+<section class="space-y-2">
+<h1 class="font-display-lg text-display-lg text-on-surface">Device Management</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">Manage all Saltwater Electricity devices, assign available units, and monitor deployed devices across household users with precision monitoring.</p>
+</section>
+<!-- Summary Section Cards -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Total Devices Card -->
+<div class="bg-white rounded-2xl p-6 flex items-center gap-4 shadow-sm border border-outline-variant/10">
+<div class="w-16 h-16 shrink-0 rounded-2xl bg-gradient-to-br from-[#4d7fff] to-[#0050cb] flex items-center justify-center text-white shadow-[0_8px_16px_-4px_rgba(0,80,203,0.3)]">
+<span class="material-symbols-outlined text-[32px]">devices</span>
+</div>
+<div class="flex-1">
+<p class="text-[13px] font-medium text-on-surface-variant">Total Devices</p>
+<h3 class="text-3xl font-bold text-on-surface leading-tight">70</h3>
+<p class="text-[12px] text-on-surface-variant/70">Registered Devices</p>
+</div>
+</div>
+<!-- Available Devices Card -->
+<div class="bg-white rounded-2xl p-6 flex items-center gap-4 shadow-sm border border-outline-variant/10">
+<div class="w-16 h-16 shrink-0 rounded-2xl bg-gradient-to-br from-[#4ade80] to-[#16a34a] flex items-center justify-center text-white shadow-[0_8px_16px_-4px_rgba(22,163,74,0.3)]">
+<span class="material-symbols-outlined text-[32px]">inventory_2</span>
+</div>
+<div class="flex-1">
+<p class="text-[13px] font-medium text-on-surface-variant">Available Devices</p>
+<h3 class="text-3xl font-bold text-on-surface leading-tight">5</h3>
+<p class="text-[12px] text-on-surface-variant/70">Ready for Assignment</p>
+</div>
+</div>
+<!-- Assigned Devices Card -->
+<div class="bg-white rounded-2xl p-6 flex items-center gap-4 shadow-sm border border-outline-variant/10">
+<div class="w-16 h-16 shrink-0 rounded-2xl bg-gradient-to-br from-[#fbbf24] to-[#ea580c] flex items-center justify-center text-white shadow-[0_8px_16px_-4px_rgba(234,88,12,0.3)]">
+<span class="material-symbols-outlined text-[32px]">folder_shared</span>
+</div>
+<div class="flex-1">
+<p class="text-[13px] font-medium text-on-surface-variant">Assigned Devices</p>
+<h3 class="text-3xl font-bold text-on-surface leading-tight">65</h3>
+<p class="text-[12px] text-on-surface-variant/70">Currently Assigned</p>
+</div>
+</div>
+</section>
+<!-- Toolbar -->
+<section class="flex flex-col lg:flex-row items-center justify-between gap-4 p-4 glass-card rounded-2xl">
+<div class="flex flex-col md:flex-row items-center gap-4 w-full flex-1">
+<div class="relative w-full flex-1">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary">search</span>
+<input class="w-full pl-12 pr-4 py-2.5 rounded-xl border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 bg-white text-primary" placeholder="Search device name or ID" type="text"/>
+</div>
+<select class="w-full md:w-40 rounded-xl border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 bg-white font-label-md text-primary">
+<option>All Status</option>
+<option>Available</option>
+<option>Assigned</option>
+<option>Disabled</option>
+</select>
+<select class="w-full md:w-48 rounded-xl border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 bg-white font-label-md text-primary">
+<option>All Locations</option>
+<option>Metro Manila</option>
+<option>Cebu City</option>
+<option>Davao City</option>
+</select>
+</div>
+</section>
+<!-- Device Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"><div class="rounded-2xl border-[1.5px] p-6 relative overflow-hidden flex flex-col items-center hover:shadow-xl transition-all duration-300 bg-white border-blue-200">
+<div class="absolute top-4 left-4">
+<div class="bg-white border border-green-100 flex flex-col items-center justify-center shadow-sm w-12 h-12 p-2 rounded-xl">
+<img alt="Logo" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUDfiBeldQ_VR_ACyg5kToBbfu8cYVsSY8LzrhRwvMaCDqX8cu6NnvpU1LSNvfI1QxxkRRrX5cy-R_Wxq1LhajmUi_iX1_UW8B6QtjkiQ9XvoP_IxdyZ7147XwjNRh0vif3OZEBDQeeUh-anwgX5kHbTUB1_w3qtHIxx4j37RXi4LlsB-_cDW6bfA2Duoj4rQu5neJIPQBfAmJspgUvS5si0goEjbBuLO6-18JvyQs_XWBKBL55MrzF6UvThPkOW5-En5044hkicBzyA"/>
+</div>
+</div>
+<div class="flex flex-col items-center w-full pt-12 space-y-6">
+<div class="mt-2"><span class="inline-flex items-center gap-2 px-4 py-1 bg-[#e7f6ed] text-[#2d8a4e] rounded-full font-bold text-sm border border-[#c1e8d0]"><span class="w-2 h-2 bg-[#2d8a4e] rounded-full"></span>Available !</span></div>
+<div class="text-center space-y-1"><h2 class="text-3xl font-bold text-[#1e293b] leading-tight">DEVICE-0001</h2><p class="text-xl text-[#64748b]">ID: SW-01-0891-1</p></div>
+<div class="w-full flex items-center gap-4">
+<div class="flex-1 h-[1.5px] bg-blue-100"></div>
+<div class="w-2 h-2 bg-blue-600 rounded-full"></div>
+<div class="flex-1 h-[1.5px] bg-blue-100"></div>
+</div>
+<button class="w-full py-4 bg-[#1d63ff] text-white text-lg font-bold rounded-xl shadow-lg shadow-blue-200 hover:bg-blue-700 transition-colors uppercase tracking-wider">ASSIGN NOW</button>
+</div>
+</div>
+<!-- Device 1: Available -->
+<div class="bg-white rounded-2xl border-[1.5px] border-blue-200 p-6 relative overflow-hidden flex flex-col items-center hover:shadow-xl transition-all duration-300"><div class="absolute top-4 left-4">
+<div class="bg-white border border-blue-100 flex flex-col items-center justify-center shadow-sm w-12 h-12 p-2 rounded-xl">
+<img alt="Logo" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUDfiBeldQ_VR_ACyg5kToBbfu8cYVsSY8LzrhRwvMaCDqX8cu6NnvpU1LSNvfI1QxxkRRrX5cy-R_Wxq1LhajmUi_iX1_UW8B6QtjkiQ9XvoP_IxdyZ7147XwjNRh0vif3OZEBDQeeUh-anwgX5kHbTUB1_w3qtHIxx4j37RXi4LlsB-_cDW6bfA2Duoj4rQu5neJIPQBfAmJspgUvS5si0goEjbBuLO6-18JvyQs_XWBKBL55MrzF6UvThPkOW5-En5044hkicBzyA"/>
+</div>
+</div>
+<div class="flex flex-col items-center w-full pt-12 space-y-6">
+<div class="mt-2">
+<span class="inline-flex items-center gap-2 px-4 py-1 bg-[#e7f6ed] text-[#2d8a4e] rounded-full font-bold text-sm border border-[#c1e8d0]">
+<span class="w-2 h-2 bg-[#2d8a4e] rounded-full"></span>
+            Available !
+        </span>
+</div>
+<div class="text-center space-y-1">
+<h2 class="text-3xl font-bold text-[#1e293b] leading-tight">DEVICE-0002</h2>
+<p class="text-xl text-[#64748b]">ID: SW-01-0891-1</p>
+</div>
+<div class="w-full flex items-center gap-4">
+<div class="flex-1 h-[1.5px] bg-blue-100"></div>
+<div class="w-2 h-2 bg-blue-600 rounded-full"></div>
+<div class="flex-1 h-[1.5px] bg-blue-100"></div>
+</div>
+<button class="w-full py-4 bg-[#1d63ff] text-white text-lg font-bold rounded-xl shadow-lg shadow-blue-200 hover:bg-blue-700 transition-colors uppercase tracking-wider">
+        ASSIGN NOW
+    </button>
+</div></div>
+<!-- Device 2: Assigned -->
+<div class="bg-white rounded-2xl border-[1.5px] border-blue-200 p-6 relative overflow-hidden flex flex-col items-center hover:shadow-xl transition-all duration-300">
+<div class="absolute top-4 left-4">
+<div class="bg-white border border-blue-100 flex flex-col items-center justify-center shadow-sm w-12 h-12 p-2 rounded-xl">
+<img alt="Logo" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUDfiBeldQ_VR_ACyg5kToBbfu8cYVsSY8LzrhRwvMaCDqX8cu6NnvpU1LSNvfI1QxxkRRrX5cy-R_Wxq1LhajmUi_iX1_UW8B6QtjkiQ9XvoP_IxdyZ7147XwjNRh0vif3OZEBDQeeUh-anwgX5kHbTUB1_w3qtHIxx4j37RXi4LlsB-_cDW6bfA2Duoj4rQu5neJIPQBfAmJspgUvS5si0goEjbBuLO6-18JvyQs_XWBKBL55MrzF6UvThPkOW5-En5044hkicBzyA"/>
+</div>
+</div>
+<div class="flex flex-col items-center w-full pt-12 space-y-6"><div class="mt-2"><span class="inline-flex items-center gap-2 px-4 py-1 bg-blue-50 text-blue-700 rounded-full font-bold text-sm border border-blue-100"><span class="w-2 h-2 bg-blue-600 rounded-full"></span>Assigned</span></div><div class="text-center space-y-1"><h2 class="text-3xl font-bold text-[#1e293b] leading-tight">DEVICE-0003</h2><p class="text-xl text-[#64748b]">ID: SW-01-2245-B</p></div><div class="w-full flex items-center gap-4"><div class="flex-1 h-[1.5px] bg-blue-100"></div><div class="w-2 h-2 bg-blue-600 rounded-full"></div><div class="flex-1 h-[1.5px] bg-blue-100"></div></div><div class="w-full flex items-center gap-3 p-3 border border-outline-variant/30 rounded-xl bg-surface-container-low"><div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-secondary font-bold text-xs">JD</div><div><p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Assigned To</p><p class="text-sm text-on-surface font-semibold">Juan Dela Cruz</p></div></div><div class="w-full space-y-3"><div class="flex items-center gap-3 w-full"><button class="flex-1 py-3 bg-[#1d63ff] text-white text-xs font-bold rounded-xl shadow-md hover:bg-blue-700 transition-colors uppercase tracking-wider">VIEW DETAILS</button><button class="flex-1 py-3 border border-error/50 text-error rounded-xl font-bold text-xs hover:bg-error-container/10 transition-colors">Disable</button></div></div></div>
+</div>
+<!-- Device 3: Disabled -->
+<div class="bg-white rounded-2xl border-[1.5px] border-blue-200 p-6 relative overflow-hidden flex flex-col items-center hover:shadow-xl transition-all duration-300">
+<div class="absolute top-4 left-4">
+<div class="bg-white border border-blue-100 flex flex-col items-center justify-center shadow-sm w-12 h-12 p-2 rounded-xl">
+<img alt="Logo" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUDfiBeldQ_VR_ACyg5kToBbfu8cYVsSY8LzrhRwvMaCDqX8cu6NnvpU1LSNvfI1QxxkRRrX5cy-R_Wxq1LhajmUi_iX1_UW8B6QtjkiQ9XvoP_IxdyZ7147XwjNRh0vif3OZEBDQeeUh-anwgX5kHbTUB1_w3qtHIxx4j37RXi4LlsB-_cDW6bfA2Duoj4rQu5neJIPQBfAmJspgUvS5si0goEjbBuLO6-18JvyQs_XWBKBL55MrzF6UvThPkOW5-En5044hkicBzyA"/>
+</div>
+</div>
+<div class="flex flex-col items-center w-full pt-12 space-y-6">
+<div class="mt-2">
+<span class="inline-flex items-center gap-2 px-4 py-1 bg-[#e7f6ed] text-[#2d8a4e] rounded-full font-bold text-sm border border-[#c1e8d0]">
+<span class="w-2 h-2 bg-[#2d8a4e] rounded-full"></span>Available !
+            </span>
+</div>
+<div class="text-center space-y-1">
+<h2 class="text-3xl font-bold text-[#1e293b] leading-tight">DEVICE-0004</h2>
+<p class="text-xl text-[#64748b]">ID: SW-01-5582-K</p>
+</div>
+<div class="w-full flex items-center gap-4">
+<div class="flex-1 h-[1.5px] bg-blue-100"></div>
+<div class="w-2 h-2 bg-blue-600 rounded-full"></div>
+<div class="flex-1 h-[1.5px] bg-blue-100"></div>
+</div>
+<button class="w-full py-4 bg-[#1d63ff] text-white text-lg font-bold rounded-xl shadow-lg shadow-blue-200 hover:bg-blue-700 transition-colors uppercase tracking-wider">ASSIGN NOW</button>
+</div>
+</div>
+<!-- Device 4: Assigned -->
+<div class="bg-white rounded-2xl border-[1.5px] border-blue-200 p-6 relative overflow-hidden flex flex-col items-center hover:shadow-xl transition-all duration-300">
+<div class="absolute top-4 left-4">
+<div class="bg-white border border-blue-100 flex flex-col items-center justify-center shadow-sm w-12 h-12 p-2 rounded-xl">
+<img alt="Logo" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUDfiBeldQ_VR_ACyg5kToBbfu8cYVsSY8LzrhRwvMaCDqX8cu6NnvpU1LSNvfI1QxxkRRrX5cy-R_Wxq1LhajmUi_iX1_UW8B6QtjkiQ9XvoP_IxdyZ7147XwjNRh0vif3OZEBDQeeUh-anwgX5kHbTUB1_w3qtHIxx4j37RXi4LlsB-_cDW6bfA2Duoj4rQu5neJIPQBfAmJspgUvS5si0goEjbBuLO6-18JvyQs_XWBKBL55MrzF6UvThPkOW5-En5044hkicBzyA"/>
+</div>
+</div>
+<div class="flex flex-col items-center w-full pt-12 space-y-6">
+<div class="mt-2">
+<span class="inline-flex items-center gap-2 px-4 py-1 bg-blue-50 text-blue-700 rounded-full font-bold text-sm border border-blue-100">
+<span class="w-2 h-2 bg-blue-600 rounded-full"></span>
+                Assigned
+            </span>
+</div>
+<div class="text-center space-y-1">
+<h2 class="text-3xl font-bold text-[#1e293b] leading-tight">DEVICE-0005</h2>
+<p class="text-xl text-[#64748b]">ID: SW-02-1109-M</p>
+</div>
+<div class="w-full flex items-center gap-4">
+<div class="flex-1 h-[1.5px] bg-blue-100"></div>
+<div class="w-2 h-2 bg-blue-600 rounded-full"></div>
+<div class="flex-1 h-[1.5px] bg-blue-100"></div>
+</div>
+<div class="w-full flex items-center gap-3 p-3 border border-outline-variant/30 rounded-xl bg-surface-container-low">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed font-bold text-xs">ML</div>
+<div>
+<p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Assigned To</p>
+<p class="text-sm text-on-surface font-semibold">Maria Leonor</p>
+</div>
+</div>
+<div class="w-full space-y-3">
+<div class="flex items-center gap-3 w-full">
+<button class="flex-1 py-3 bg-[#1d63ff] text-white text-xs font-bold rounded-xl shadow-md hover:bg-blue-700 transition-colors uppercase tracking-wider">
+                    VIEW DETAILS
+                </button>
+<button class="flex-1 py-3 border border-error/50 text-error rounded-xl font-bold text-xs hover:bg-error-container/10 transition-colors">
+                    Disable
+                </button>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white rounded-2xl border-[1.5px] border-blue-200 p-6 relative overflow-hidden flex flex-col items-center hover:shadow-xl transition-all duration-300">
+<div class="absolute top-4 left-4">
+<div class="bg-white border border-blue-100 flex flex-col items-center justify-center shadow-sm w-12 h-12 p-2 rounded-xl">
+<img alt="Logo" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUDfiBeldQ_VR_ACyg5kToBbfu8cYVsSY8LzrhRwvMaCDqX8cu6NnvpU1LSNvfI1QxxkRRrX5cy-R_Wxq1LhajmUi_iX1_UW8B6QtjkiQ9XvoP_IxdyZ7147XwjNRh0vif3OZEBDQeeUh-anwgX5kHbTUB1_w3qtHIxx4j37RXi4LlsB-_cDW6bfA2Duoj4rQu5neJIPQBfAmJspgUvS5si0goEjbBuLO6-18JvyQs_XWBKBL55MrzF6UvThPkOW5-En5044hkicBzyA"/>
+</div>
+</div>
+<div class="flex flex-col items-center w-full pt-12 space-y-6">
+<div class="mt-2">
+<span class="inline-flex items-center gap-2 px-4 py-1 bg-blue-50 text-blue-700 rounded-full font-bold text-sm border border-blue-100">
+<span class="w-2 h-2 bg-blue-600 rounded-full"></span>
+                Assigned
+            </span>
+</div>
+<div class="text-center space-y-1">
+<h2 class="text-3xl font-bold text-[#1e293b] leading-tight">DEVICE-0006</h2>
+<p class="text-xl text-[#64748b]">ID: SW-02-1110-M</p>
+</div>
+<div class="w-full flex items-center gap-4">
+<div class="flex-1 h-[1.5px] bg-blue-100"></div>
+<div class="w-2 h-2 bg-blue-600 rounded-full"></div>
+<div class="flex-1 h-[1.5px] bg-blue-100"></div>
+</div>
+<div class="w-full flex items-center gap-3 p-3 border border-outline-variant/30 rounded-xl bg-surface-container-low">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed font-bold text-xs">DR</div>
+<div>
+<p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Assigned To</p>
+<p class="text-sm text-on-surface font-semibold">Darlene Robertson</p>
+</div>
+</div>
+<div class="w-full space-y-3">
+<div class="flex items-center gap-3 w-full">
+<button class="flex-1 py-3 bg-[#1d63ff] text-white text-xs font-bold rounded-xl shadow-md hover:bg-blue-700 transition-colors uppercase tracking-wider">
+                    VIEW DETAILS
+                </button>
+<button class="flex-1 py-3 border border-error/50 text-error rounded-xl font-bold text-xs hover:bg-error-container/10 transition-colors">
+                    Disable
+                </button>
+</div>
+</div>
+</div>
+</div></section>
+</div>
+</main>
+<!-- Success Modal -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center bg-on-background/40 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none" id="assignModal">
+<div class="glass-card max-w-md w-full m-margin-mobile rounded-2xl p-8 transition-transform duration-300 scale-95">
+<div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-green-600 mb-6 mx-auto">
+<span class="material-symbols-outlined text-4xl">check</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-center mb-2">Assignment Successful</h2>
+<p class="text-center text-on-surface-variant mb-8">Device SW-01-0891-1 has been successfully assigned to the new household unit.</p>
+<button class="w-full py-4 bg-primary text-white rounded-xl font-bold" onclick="toggleModal()">Continue</button>
+</div>
+</div>
+<script>
+        function toggleModal() {
+            const modal = document.getElementById('assignModal');
+            const inner = modal.children[0];
+            if (modal.classList.contains('opacity-0')) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                inner.classList.remove('scale-95');
+                inner.classList.add('scale-100');
+            } else {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                inner.classList.remove('scale-100');
+                inner.classList.add('scale-95');
+            }
+        }
+        document.querySelectorAll('button').forEach(btn => {
+            if (btn.innerText.includes('ASSIGN NOW')) {
+                btn.addEventListener('click', toggleModal);
+            }
+        });
+    </script>
+</body></html>
