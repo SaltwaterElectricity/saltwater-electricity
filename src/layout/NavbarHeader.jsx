@@ -1,41 +1,33 @@
-import { NavLink } from "react-router-dom";
 import { NavbarProfile } from "./NavbarProfile";
-import { ROUTES } from "../constants/routes";
 import { cn } from "../utils/cn";
+import { useUI } from "../context/useUI";
 
 /**
  * NavbarHeader Component
  * Standardized top navigation bar adhering to AlonKuryente visual language.
- * Updated based on code.html specifications.
+ * branding text visibility is linked to sidebar state to prevent redundancy.
  */
 export const NavbarHeader = ({ currentUid }) => {
+  const { isSidebarCollapsed } = useUI();
+
   return (
     <header className="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-white/40 flex justify-between items-center px-6 py-4 w-full">
       <div className="flex items-center space-x-8">
-        <span className="text-2xl font-bold bg-gradient-to-r from-blue-700 to-cyan-500 bg-clip-text text-transparent font-['Space_Grotesk']">
-          Saltwater Electricity
-        </span>
-        <nav className="hidden lg:flex space-x-6 font-['Space_Grotesk']">
-          <NavLink
-            to={ROUTES.DASHBOARD}
-            className={({ isActive }) =>
-              cn(
-                "pb-1 font-medium transition-colors",
-                isActive
-                  ? "text-blue-700 border-b-2 border-blue-600"
-                  : "text-slate-600 hover:text-blue-500"
-              )
-            }
-          >
-            Live View
-          </NavLink>
-          <NavLink
-            to="/grid-status"
-            className="text-slate-600 hover:text-blue-500 transition-colors font-medium"
-          >
-            Grid Status
-          </NavLink>
-        </nav>
+        <div 
+          className={cn(
+            "flex items-center gap-2.5 transition-all duration-500",
+            isSidebarCollapsed ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4 pointer-events-none"
+          )}
+        >
+          <div className="flex flex-col items-center text-center">
+            <h1 className="text-sm font-black tracking-tight text-on-surface leading-none uppercase">
+              Device Monitoring
+            </h1>
+            <p className="text-[10px] font-bold text-primary tracking-[0.5px] mt-1 uppercase">
+              Saltwater Electricity
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="flex items-center space-x-4">

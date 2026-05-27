@@ -1,454 +1,485 @@
-<!DOCTYPE html><html class="light" lang="en" style="width: 1280px; height: 1024px; overflow: hidden; position: relative;"><head>
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>Request Validation - Device Monitoring</title>
-<!-- Google Fonts: Inter -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
-<!-- Material Symbols -->
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-<!-- Tailwind CSS -->
+<title>User Provisioning | Saltwater Enterprise</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
 <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "on-tertiary-fixed": "#390c00",
-                    "tertiary-fixed": "#ffdbd0",
-                    "inverse-surface": "#2e303a",
-                    "on-surface": "#191b24",
-                    "on-surface-variant": "#424656",
-                    "tertiary-fixed-dim": "#ffb59d",
-                    "surface-tint": "#0054d6",
-                    "on-error-container": "#93000a",
-                    "on-background": "#191b24",
-                    "error-container": "#ffdad6",
-                    "primary": "#0050cb",
-                    "on-tertiary-fixed-variant": "#832600",
-                    "on-secondary": "#ffffff",
-                    "background": "#faf8ff",
-                    "tertiary-container": "#cc4204",
-                    "on-secondary-fixed": "#0b1c30",
-                    "outline": "#727687",
-                    "on-primary": "#ffffff",
-                    "surface-bright": "#faf8ff",
-                    "primary-fixed-dim": "#b3c5ff",
-                    "surface-container-high": "#e6e7f4",
-                    "primary-fixed": "#dae1ff",
-                    "outline-variant": "#c2c6d8",
-                    "on-tertiary": "#ffffff",
-                    "surface-container": "#ecedfa",
-                    "primary-container": "#0066ff",
-                    "on-primary-fixed": "#001849",
-                    "on-secondary-fixed-variant": "#38485d",
-                    "surface": "#faf8ff",
-                    "inverse-primary": "#b3c5ff",
-                    "surface-container-highest": "#e1e2ee",
-                    "on-error": "#ffffff",
-                    "secondary-container": "#d0e1fb",
-                    "inverse-on-surface": "#eff0fd",
-                    "surface-dim": "#d8d9e6",
-                    "secondary-fixed-dim": "#b7c8e1",
-                    "on-primary-container": "#f8f7ff",
-                    "error": "#ba1a1a",
-                    "surface-variant": "#e1e2ee",
-                    "surface-container-low": "#f2f3ff",
-                    "secondary": "#505f76",
-                    "on-secondary-container": "#54647a",
-                    "tertiary": "#a33200",
-                    "secondary-fixed": "#d3e4fe",
-                    "surface-container-lowest": "#ffffff",
-                    "on-tertiary-container": "#fff6f4",
-                    "on-primary-fixed-variant": "#003fa4"
-            },
-            "borderRadius": {
-                    "DEFAULT": "0.25rem",
-                    "lg": "0.5rem",
-                    "xl": "0.75rem",
-                    "full": "9999px"
-            },
-            "spacing": {
-                    "gutter": "24px",
-                    "margin-mobile": "16px",
-                    "margin-desktop": "48px",
-                    "container-max": "1280px",
-                    "unit": "4px"
-            },
-            "fontFamily": {
-                    "display-lg": ["Inter"],
-                    "label-sm": ["Inter"],
-                    "headline-lg": ["Inter"],
-                    "headline-md": ["Inter"],
-                    "body-lg": ["Inter"],
-                    "headline-lg-mobile": ["Inter"],
-                    "body-sm": ["Inter"],
-                    "label-md": ["Inter"],
-                    "body-md": ["Inter"]
-            },
-            "fontSize": {
-                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
-                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
-                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
-                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
-                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
-                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
-                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
-                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#e2e7ff",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "on-secondary-container": "#5e656d",
+                        "surface-dim": "#d2d9f4",
+                        "outline-variant": "#c3c6d7",
+                        "surface-variant": "#dae2fd",
+                        "on-primary": "#ffffff",
+                        "background": "#faf8ff",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#b4c5ff",
+                        "tertiary": "#943700",
+                        "secondary-fixed-dim": "#c0c7d0",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#004ac6",
+                        "primary-container": "#2563eb",
+                        "on-primary-fixed": "#00174b",
+                        "surface-container-highest": "#dae2fd",
+                        "tertiary-fixed": "#ffdbcd",
+                        "outline": "#737686",
+                        "on-tertiary-container": "#ffede6",
+                        "on-secondary-fixed": "#151c23",
+                        "tertiary-container": "#bc4800",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "secondary-container": "#dce3ec",
+                        "error": "#ba1a1a",
+                        "surface-container": "#eaedff",
+                        "on-primary-container": "#eeefff",
+                        "surface-container-low": "#f2f3ff",
+                        "secondary": "#585f67",
+                        "on-tertiary-fixed": "#360f00",
+                        "on-background": "#131b2e",
+                        "secondary-fixed": "#dce3ec",
+                        "surface-tint": "#0053db",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "surface-bright": "#faf8ff",
+                        "inverse-on-surface": "#eef0ff",
+                        "on-surface-variant": "#434655",
+                        "inverse-surface": "#283044",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#131b2e",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "surface": "#faf8ff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#40484f",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "3xl": "2rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "xl": "32px",
+                        "base": "4px",
+                        "margin-mobile": "16px",
+                        "3xl": "64px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "2xl": "48px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}]
+                    }
+                }
             }
-          },
-        },
-      }
+        }
     </script>
 <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 1);
+            box-shadow: 0 4px 20px -2px rgba(37, 99, 235, 0.08);
+        }
+        .modal-overlay {
+            background: rgba(19, 27, 46, 0.4);
+            backdrop-filter: blur(8px);
+        }
+        .custom-shadow {
+            box-shadow: 0 10px 40px -10px rgba(0, 74, 198, 0.15);
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2563eb !important;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+        }
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .modal-shadow {
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05), 0 15px 30px -5px rgba(0, 0, 0, 0.06);
+        .modal-animate-in {
+            animation: modalScaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .linear-border {
-            border: 1px solid #e2e8f0;
-        }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-
-        /* Animation Definitions */
-        @keyframes overlayFade {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes modalEntrance {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .animate-overlay {
-            animation: overlayFade 300ms ease-out forwards;
-        }
-
-        .animate-modal {
-            animation: modalEntrance 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            @keyframes modalEntranceReduced {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
-            .animate-modal {
-                animation: modalEntranceReduced 400ms ease-out forwards;
-                transform: none !important;
-            }
+        @keyframes modalScaleUp {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
     </style>
 </head>
-<body class="bg-background text-on-surface antialiased min-h-screen overflow-hidden">
-<!-- NAVIGATION SHELL (SIDENAVBAR) -->
-<aside class="fixed left-0 top-0 h-full flex flex-col justify-between py-8 bg-inverse-surface dark:bg-on-background shadow-xl w-64 z-40 bg-gradient-to-b from-inverse-surface to-on-background">
-<div class="px-6 mb-8">
-<h1 class="font-headline-md text-headline-md font-bold text-surface-bright dark:text-surface-container-lowest leading-tight">DEVICE MONITORING</h1>
-<p class="font-body-sm text-body-sm text-outline-variant tracking-wider uppercase opacity-80">SALTWATER ELECTRICITY</p>
+<body class="bg-surface font-body-md text-on-surface min-h-screen">
+<!-- Global Navigation Anchor -->
+<aside class="fixed left-0 top-0 h-full py-lg space-y-base flex flex-col bg-surface-container-low dark:bg-inverse-surface shadow-md shadow-primary/10 w-[280px] z-40 hidden md:flex">
+<div class="px-lg pb-md">
+<h1 class="font-headline-sm text-headline-sm font-black text-primary">jjjjjSaltwater Enterprise</h1>
+<p class="text-label-md font-label-md text-on-surface-variant">Admin Console</p>
 </div>
-<nav class="flex-grow flex flex-col gap-1">
-<a class="text-outline-variant hover:text-surface-bright flex items-center gap-4 px-6 py-3 hover:bg-surface-variant/5 transition-all duration-200" href="#">
-<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
 <span class="font-label-md text-label-md">Dashboard</span>
 </a>
-<a class="text-primary-fixed font-bold border-l-4 border-primary-fixed bg-surface-variant/10 flex items-center gap-4 px-6 py-3 transition-all duration-200" href="#">
-<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
-<span class="font-label-md text-label-md">Realtime Monitor</span>
+<a class="flex items-center gap-md px-md py-sm bg-primary-container text-on-primary-container font-semibold rounded-lg mx-2" href="#">
+<span class="material-symbols-outlined">person_add</span>
+<span class="font-label-md text-label-md">User Provisioning</span>
 </a>
-<a class="text-outline-variant hover:text-surface-bright flex items-center gap-4 px-6 py-3 hover:bg-surface-variant/5 transition-all duration-200" href="#">
-<span class="material-symbols-outlined" data-icon="warning">warning</span>
-<span class="font-label-md text-label-md">Device Alerts</span>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-label-md text-label-md">Analytics</span>
 </a>
-<a class="text-outline-variant hover:text-surface-bright flex items-center gap-4 px-6 py-3 hover:bg-surface-variant/5 transition-all duration-200" href="#">
-<span class="material-symbols-outlined" data-icon="history">history</span>
-<span class="font-label-md text-label-md">Historical Data</span>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">bolt</span>
+<span class="font-label-md text-label-md">Grid Health</span>
 </a>
-<a class="text-outline-variant hover:text-surface-bright flex items-center gap-4 px-6 py-3 hover:bg-surface-variant/5 transition-all duration-200" href="#">
-<span class="material-symbols-outlined" data-icon="group">group</span>
-<span class="font-label-md text-label-md">User Management</span>
-</a>
-<a class="text-outline-variant hover:text-surface-bright flex items-center gap-4 px-6 py-3 hover:bg-surface-variant/5 transition-all duration-200" href="#">
-<span class="material-symbols-outlined" data-icon="settings">settings</span>
-<span class="font-label-md text-label-md">Device Management</span>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-md text-label-md">System Logs</span>
 </a>
 </nav>
-<div class="px-6 pt-8 border-t border-outline-variant/10 flex flex-col gap-2">
-<button class="text-outline-variant hover:text-surface-bright flex items-center gap-4 py-3 transition-all duration-200">
-<span class="material-symbols-outlined" data-icon="logout">logout</span>
-<span class="font-label-md text-label-md">Sign Out</span>
-</button>
-<button class="text-outline-variant hover:text-surface-bright flex items-center gap-4 py-3 transition-all duration-200">
-<span class="material-symbols-outlined" data-icon="light_mode">light_mode</span>
-<span class="font-label-md text-label-md">Light Mode</span>
-</button>
+<div class="pt-lg border-t border-outline-variant/30">
+<button class="w-[calc(100%-32px)] mx-md bg-primary text-on-primary py-sm rounded-lg font-label-md text-label-md shadow-sm hover:translate-y-[-1px] transition-all">
+                New Provision
+            </button>
 </div>
 </aside>
-<!-- MAIN CONTENT AREA -->
-<main class="ml-64 min-h-screen">
-<!-- TOP NAVBAR -->
-<header class="flex justify-between items-center px-8 py-4 w-full bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 sticky top-0 z-30">
-<div class="flex items-center gap-6">
-<div class="relative">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
-<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full text-label-md font-label-md focus:ring-2 focus:ring-primary/20 w-64 transition-all" placeholder="Search validations..." type="text">
+<!-- Main Content Area -->
+<main class="md:ml-[280px] min-h-screen p-lg relative">
+<!-- Breadcrumb & Top Bar -->
+<header class="flex justify-between items-center mb-xl">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Provisioning Hub</h2>
+<div class="flex gap-sm text-label-sm text-on-surface-variant">
+<span class="">Admin</span> / <span class="">Operations</span> / <span class="text-primary">User Registration</span>
 </div>
 </div>
-<div class="flex items-center gap-8">
-<div class="flex items-center gap-6">
-<span class="material-symbols-outlined text-secondary hover:text-primary cursor-pointer transition-colors" data-icon="notifications">notifications</span>
-<span class="material-symbols-outlined text-secondary hover:text-primary cursor-pointer transition-colors" data-icon="help">help</span>
+<div class="flex items-center gap-md">
+<div class="bg-surface-container-high p-sm rounded-full cursor-pointer hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
 </div>
-<div class="flex items-center gap-3 pl-6 border-l border-outline-variant/30">
-<div class="w-8 h-8 rounded-full bg-primary-fixed-dim flex items-center justify-center overflow-hidden">
-<img alt="John Doe" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAc4wWOULHq5Q475ArXd_PEvyqV4hHAqy83wZSTOIV_6pumnS_cvkQy_DbMitvUTKuaQqzqk9nK6CD7nizd-qN9MgrZ3MvSSzPNvN5Oorlk64zaV9MIMK8nLyOy-t0yW-8EClWXIqmSdugm2KaZg20TVtMYpVFSubk3b93tGtmRajxlTQkWYhUH-HNd6jNRn-n0xxrwOCO0JDKbiq7D2pDFoWkUep2Ib2uPd5-Bp2SwQkM6YtlkkRGv2k6fyChdmxbIaFcVLf8TLI4">
-</div>
-<span class="font-label-md text-label-md text-on-surface">John Doe</span>
-</div>
+<img alt="Administrator Avatar" class="w-10 h-10 rounded-full border-2 border-primary/20 shadow-sm" data-alt="A professional headshot of a middle-aged male system administrator with a confident and friendly expression. He wears a navy blue suit and is set against a clean, softly lit office background with cool blue tones and minimal furniture. The image has a crisp, high-end corporate aesthetic with soft, diffuse lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5s4o6m4eXAKAZNLYUe_iPxBEMruLnUmzThGG3MZj0VvbNK7ZVdLB8TuWPdH8PSL-ICUin82IGQS7ARI97PUD5o2agfvRBA09eM64q52u2xBjgYM986RLFWExExnVnTwSTeQikjPXjR-vCbDhBgmGxdGI2PVC3OEFBKhgc0ylBqHVaOywLJ4JNQW_NSONND3thoRwqzOv9eS_M0l4jLQCx8K5g3XByAA0EB2w7kL6te6PcE4H3AEEctHWaHvfiGgkPc86C28QDSvk">
 </div>
 </header>
-<!-- DASHBOARD BACKGROUND CANVAS -->
-<div class="p-12">
-<div class="grid grid-cols-12 gap-8">
-<!-- Decorative Dashboard Elements to simulate a background -->
-<div class="col-span-8 bg-surface border border-outline-variant/20 rounded-[20px] h-64 p-8 flex flex-col justify-end relative overflow-hidden">
-<div class="absolute top-0 right-0 p-8">
-<span class="material-symbols-outlined text-primary/10 text-[120px]" data-icon="monitoring">monitoring</span>
-</div>
-<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Welcome back, Administrator</h2>
-<p class="font-body-md text-body-md text-secondary">System monitoring is currently stable across all saltwater nodes.</p>
-</div>
-<div class="col-span-4 bg-primary-container text-on-primary-container rounded-[20px] h-64 p-8 flex flex-col justify-between">
-<div class="flex justify-between items-start">
-<div class="p-3 bg-white/20 rounded-xl">
-<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
-</div>
-<span class="font-label-md text-label-md bg-white/20 px-3 py-1 rounded-full">+12.5%</span>
-</div>
-<div>
-<p class="font-label-sm text-label-sm opacity-80 uppercase tracking-widest">Total Output</p>
-<p class="font-headline-lg text-headline-lg font-black">2.4 GW</p>
+<!-- Dummy Content to Show Context -->
+<div class="grid grid-cols-12 gap-lg opacity-40 select-none">
+<div class="col-span-12 md:col-span-8 bg-surface-container p-xl rounded-3xl border border-outline-variant/20 h-96"></div>
+<div class="col-span-12 md:col-span-4 space-y-lg">
+<div class="bg-surface-container p-lg rounded-3xl border border-outline-variant/20 h-44"></div>
+<div class="bg-surface-container p-lg rounded-3xl border border-outline-variant/20 h-44"></div>
 </div>
 </div>
-</div>
-</div>
-<!-- MODAL OVERLAY -->
-<div class="fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/60 backdrop-blur-sm p-4 animate-overlay" id="requestModal">
-<!-- MODAL CONTAINER -->
-<div class="bg-surface w-full max-w-[750px] rounded-[20px] modal-shadow overflow-hidden flex flex-col max-h-[921px] animate-modal">
-<!-- MODAL HEADER -->
-<div class="px-8 py-6 flex justify-between items-start relative">
-<div>
-<h2 class="font-headline-md text-headline-md text-on-surface font-bold">Request <span class="" style="color: rgb(0, 102, 255);">Another Device</span></h2>
-<p class="font-body-sm text-body-sm text-outline mt-1">Fill out the form below to request an additional monitoring device for your household.</p>
-</div>
-<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors" id="closeModal">
-<span class="material-symbols-outlined text-on-surface-variant" data-icon="close">close</span>
+<!-- THE PROVISIONING MODAL OVERLAY -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-md md:p-xl modal-overlay" id="provisioning-modal">
+<!-- MAIN MODAL CONTAINER -->
+<div class="bg-white w-full max-w-5xl h-[921px] md:h-auto max-h-[850px] rounded-3xl border border-surface-container-high custom-shadow flex flex-col md:flex-row overflow-hidden modal-animate-in relative">
+<!-- Close Button -->
+<button class="absolute top-md right-md w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-all z-50" onclick="closeModal()">
+<span class="material-symbols-outlined text-outline">close</span>
 </button>
-<div class="absolute bottom-0 left-8 right-8 h-[1px] bg-outline-variant/30"></div>
+<!-- Left Column: Form Section -->
+<div class="flex-1 p-lg md:p-xl overflow-y-auto custom-scrollbar">
+<header class="mb-lg">
+<h3 class="font-headline-lg text-headline-lg text-on-surface"><span style="color: rgb(0, 0, 0);" class="">User Account</span> <span style="color: rgb(37, 99, 235);" class="">Provisioning</span></h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-sm">
+                            Register a new user to the system. Credentials will automatically be generated and sent via email after account provisioning.
+                        </p>
+</header>
+<form class="space-y-xl" id="provisioning-form">
+<!-- Personal Information -->
+<section>
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">person</span>
+<h4 class="font-label-md text-label-md uppercase tracking-wider text-[#2563EB]">Personal Information</h4>
 </div>
-<div class="flex-grow overflow-y-auto custom-scrollbar px-8 py-6 space-y-8">
-<!-- USER PROFILE CARD -->
-<div class="bg-secondary-container/30 border border-secondary-container/50 rounded-xl p-4 flex items-center justify-between">
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center font-bold text-primary font-headline-md">
-                                JH
-                            </div>
-<div>
-<h4 class="font-label-md text-label-md text-on-surface font-bold leading-none">Jasmin Hernandez</h4>
-<p class="font-body-sm text-body-sm text-secondary mt-1">jasmin@gmail.com</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="space-y-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">First Name <span class="text-error">*</span></label>
+<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="firstName" name="firstName" placeholder="e.g. Juan" required="" type="text">
 </div>
+<div class="space-y-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Last Name <span class="text-error">*</span></label>
+<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="lastName" name="lastName" placeholder="e.g. Dela Cruz" required="" type="text">
 </div>
-<span class="px-3 py-1 bg-primary/10 text-primary text-label-sm font-label-sm border border-primary/20 rounded-md">
-                            Household User
-                        </span>
+<div class="space-y-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Middle Name</label>
+<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="middleName" name="middleName" placeholder="e.g. Santos" type="text">
 </div>
-<!-- FORM SECTION 1: GRID -->
-<div class="grid grid-cols-2 gap-x-12 gap-y-6">
-<!-- Left Column -->
-<div class="space-y-6">
-<div class="space-y-1.5">
-<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Request Type</label>
-<div class="relative">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" data-icon="devices" style="color: rgb(0, 102, 255);">devices</span>
-<input class="w-full bg-surface-container-low border border-outline-variant rounded-xl py-3 pl-10 pr-4 text-body-md font-body-md focus:ring-2 focus:ring-primary/20 transition-all outline-none" id="inputRequestType" placeholder="Request for Another Device." readonly="" type="text" value="Request for Another Device.">
+<div class="grid grid-cols-2 gap-md">
+<div class="space-y-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Gender <span class="text-error">*</span></label>
+<select class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="gender" name="gender" required="">
+<option value="">Select</option>
+<option value="Male">Male</option>
+<option value="Female">Female</option>
+</select>
 </div>
-</div>
-<div class="space-y-1.5">
-<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Quantity</label>
-<div class="flex items-center border rounded-xl overflow-hidden h-[48px] group focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary/50 transition-all bg-white border-primary/30">
-<button class="w-12 h-full flex items-center justify-center transition-colors text-outline hover:text-primary active:scale-90 bg-white hover:bg-primary/5" id="btnDecrease">
-<span class="material-symbols-outlined text-[20px] text-primary" data-icon="remove">remove</span>
-</button>
-<input class="flex-1 h-full border-none text-center font-body-md text-on-surface focus:ring-0 outline-none cursor-default p-0 selection:bg-transparent bg-white" id="inputQuantity" readonly="" style="appearance: textfield;" type="number" value="1">
-<button class="w-12 h-full flex items-center justify-center transition-colors text-outline hover:text-primary active:scale-90 bg-white hover:bg-primary/5" id="btnIncrease">
-<span class="material-symbols-outlined text-[20px] text-primary" data-icon="add">add</span>
-</button>
-</div>
-</div>
-<div class="space-y-1.5">
-<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Submission Timestamp</label>
-<div class="flex items-center bg-surface-container-high/50 border border-outline-variant rounded-xl py-3 px-4 cursor-default select-none">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center">
-<span class="material-symbols-outlined text-[18px] text-primary" data-icon="schedule">schedule</span>
-</div>
-<span class="text-body-md font-body-md text-secondary" id="displayTimestamp">May 24, 2026 08:30 PM</span>
+<div class="space-y-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Birth Date <span class="text-error">*</span></label>
+<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="birthDate" name="birthDate" required="" type="date">
 </div>
 </div>
 </div>
+</section>
+<!-- Location Details -->
+<section>
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<h4 class="font-label-md text-label-md uppercase tracking-wider" style="color: #2563EB;">Location Details</h4>
 </div>
-<!-- Right Column -->
-<div class="space-y-6">
-<div class="space-y-1.5">
-<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">address</label>
-<div class="relative">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" data-icon="location_on" style="color: rgb(0, 102, 255);">location_on</span>
-<select class="w-full bg-surface-container-low border border-outline-variant rounded-xl py-3 pl-10 pr-10 text-body-md font-body-md focus:ring-2 focus:ring-primary/20 transition-all outline-none appearance-none cursor-pointer" id="inputLocation">
-<option value="Purok 1, Alibijaban Island, San Andres Quezon.">Purok 1, Alibijaban Island, San Andres Quezon.</option>
-<option value="Purok 2, Alibijaban Island, San Andres Quezon.">Purok 2, Alibijaban Island, San Andres Quezon.</option>
-</select><span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline" data-icon="expand_more">expand_more</span>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="space-y-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Region</label>
+<input class="w-full bg-surface-container-highest/50 border-outline-variant/30 rounded-xl px-md py-sm font-body-md text-on-surface-variant cursor-not-allowed" id="region" name="region" readonly="" type="text" value="Region IV-A">
 </div>
+<div class="space-y-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">City/Province</label>
+<input class="w-full bg-surface-container-highest/50 border-outline-variant/30 rounded-xl px-md py-sm font-body-md text-on-surface-variant cursor-not-allowed" id="city" name="city" readonly="" type="text" value="Quezon">
 </div>
-<div class="space-y-1.5">
-<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Phone Number</label>
-<div class="relative">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary pointer-events-none" data-icon="call" style="color: rgb(0, 102, 255);">call</span>
-<input class="w-full bg-surface-container-low border-outline-variant rounded-xl py-3 pl-10 pr-4 text-body-md font-body-md focus:ring-2 focus:ring-primary/20 transition-all outline-none" id="inputPhoneNumber" placeholder="+639-480-486-303" type="tel" value="+639-480-486-303">
+<div class="space-y-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Municipality</label>
+<input class="w-full bg-surface-container-highest/50 border-outline-variant/30 rounded-xl px-md py-sm font-body-md text-on-surface-variant cursor-not-allowed" id="municipality" name="municipality" readonly="" type="text" value="San Andres">
 </div>
-</div>
-</div>
-</div>
-<!-- REASON FOR REQUEST -->
-<div class="space-y-1.5">
-<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Reason for Request</label>
-<textarea class="w-full bg-surface-container-highest border-none rounded-xl p-4 text-body-md font-body-md focus:ring-2 focus:ring-primary/20 transition-all outline-none resize-none" id="inputReason" placeholder="Describe why you need an additional device..." rows="3"></textarea>
-</div>
-<!-- ATTACHMENT AREA -->
-<!-- SUMMARY CARD -->
-<div class="bg-gradient-to-br from-primary-container to-surface-tint p-5 rounded-2xl text-on-primary-container shadow-sm flex items-center justify-between" id="summaryCard">
-<div class="flex items-center gap-4">
-<span class="material-symbols-outlined" data-icon="info" style="font-variation-settings: 'FILL' 1;">info</span>
-<div>
-<p class="font-label-sm text-label-sm opacity-90 uppercase font-bold tracking-tight">Current Selection Summary</p>
-<p class="font-body-sm text-body-sm mt-0.5" id="summaryLine1">1x Request for Another Device.</p>
-<p class="font-body-sm text-body-sm opacity-80" id="summaryLine2">Location: Purok 1, Alibijaban Island, San Andres Quezon. • Preferred: May 24, 2026</p>
+<div class="space-y-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Barangay <span class="text-error">*</span></label>
+<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="barangay" name="barangay" placeholder="Enter barangay name" required="" type="text">
 </div>
 </div>
-<div class="text-right">
+</section>
+<!-- Account & Contact -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-xl">
+<section>
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">shield</span>
+<h4 class="font-label-md text-label-md uppercase tracking-wider text-[#2563EB]">Account Information</h4>
+</div>
+<div class="space-y-md">
+<div class="space-y-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Email Address <span class="text-error">*</span></label>
+<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="email" name="email" placeholder="juan.delacruz@example.com" required="" type="email">
+</div>
+<div class="space-y-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Role <span class="text-error">*</span></label>
+<select class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="role" name="role" required="">
+<option value="Resident">Resident</option>
+<option value="Administrator">Administrator</option>
+</select>
+</div>
+</div>
+</section>
+<section>
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">call</span>
+<h4 class="font-label-md text-label-md uppercase tracking-wider" style="color: #2563EB;">Contact Information</h4>
+</div>
+<div class="space-y-md">
+<div class="space-y-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Mobile Number <span class="text-error">*</span></label>
+<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="mobile" name="mobile" placeholder="+63 9XX XXX XXXX" required="" type="tel">
+</div>
+<div class="space-y-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Alternate Contact</label>
+<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="altContact" name="altContact" placeholder="Optional contact number" type="tel">
+</div>
+</div>
+</section>
+</div>
+<!-- Footer Actions -->
+<div class="flex flex-col md:flex-row gap-md pt-lg border-t border-outline-variant/20">
+<button class="flex-1 md:flex-none px-xl py-sm rounded-xl font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high transition-all" onclick="closeModal()" type="button">
+                                Cancel
+                            </button>
+<button class="flex-1 bg-gradient-to-r from-primary to-primary-container text-on-primary px-xl py-sm rounded-xl font-label-md text-label-md shadow-md hover:translate-y-[-2px] hover:shadow-lg active:scale-[0.98] transition-all" type="submit">
+                                Review &amp; Provision User
+                            </button>
+</div>
+</form>
+</div>
+<!-- Right Column: Live Summary Card -->
+<div class="w-full md:w-[340px] bg-surface-container-low border-l border-outline-variant/30 p-lg hidden md:flex flex-col">
+<h4 class="font-label-md text-label-md uppercase tracking-wider text-outline mb-lg">Live Summary</h4>
+<div class="glass-card rounded-3xl p-lg space-y-md flex-1">
+<div class="flex flex-col items-center mb-lg">
+<div class="w-20 h-20 rounded-full bg-primary-fixed flex items-center justify-center text-primary-fixed-dim font-bold text-headline-md mb-md border-4 border-white shadow-sm overflow-hidden" id="summary-avatar-container">
+<span class="material-symbols-outlined text-primary text-[40px]">account_circle</span>
+</div>
+<h5 class="font-headline-sm text-headline-sm text-on-surface text-center" id="sum-name">New User</h5>
+<span class="bg-primary/10 text-primary px-sm py-[2px] rounded-full font-label-sm text-label-sm mt-xs" id="sum-role">Administrator</span>
+</div>
+<div class="space-y-sm">
+<div class="group">
+<p class="font-label-sm text-label-sm text-outline">Email Address</p>
+<p class="font-body-md text-on-surface truncate" id="sum-email">—</p>
+</div>
+<div class="group">
+<p class="font-label-sm text-label-sm text-outline">Gender</p>
+<p class="font-body-md text-on-surface" id="sum-gender">—</p>
+</div>
+<div class="group">
+<p class="font-label-sm text-label-sm text-outline">Birth Date</p>
+<p class="font-body-md text-on-surface" id="sum-birth">—</p>
+</div>
+<div class="group">
+<p class="font-label-sm text-label-sm text-outline">Address</p>
+<p class="font-body-md text-on-surface italic text-on-surface-variant" id="sum-address">..., San Andres, Quezon</p>
+</div>
+</div>
+<div class="mt-auto pt-lg">
+<div class="bg-primary/5 rounded-2xl p-md border border-primary/10">
+<div class="flex items-center gap-xs mb-xs">
+<span class="material-symbols-outlined text-primary text-sm">info</span>
+<span class="font-label-sm text-label-sm text-primary">Provisioning Status</span>
+</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden">
+<div class="w-1/4 h-full bg-primary transition-all duration-500" id="progress-bar" style="width: 25%;"></div>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-sm">Step 1 of 3: Drafting</p>
 </div>
 </div>
 </div>
-<!-- MODAL FOOTER -->
-<div class="px-8 py-6 bg-surface-container-low border-t border-outline-variant/30 flex items-center justify-between">
-<button class="flex items-center gap-2 px-6 py-2.5 border border-outline-variant text-on-surface-variant font-label-md text-label-md rounded-full hover:bg-surface-container-high transition-all" id="clearForm">
-<span class="material-symbols-outlined text-[20px]" data-icon="refresh">refresh</span>
-                        Clear Form
-                    </button>
-<div class="flex items-center gap-4">
-<button class="px-6 py-2.5 text-secondary font-label-md text-label-md hover:text-on-surface transition-all" id="cancelBtn">
-                            Cancel
-                        </button>
-<button class="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-primary to-primary-container text-on-primary font-label-md text-label-md rounded-full shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
-                            Submit Request
-                            <span class="material-symbols-outlined text-[20px]" data-icon="send">send</span>
-</button>
 </div>
 </div>
+</div>
+<!-- STEP 2: CONFIRMATION MODAL (Hidden by default) -->
+<div class="fixed inset-0 z-[60] flex items-center justify-center p-md modal-overlay hidden" id="confirmation-modal">
+<div class="bg-white w-full max-w-md rounded-3xl p-xl custom-shadow text-center modal-animate-in">
+<div class="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mx-auto mb-lg">
+<span class="material-symbols-outlined text-primary text-3xl">fact_check</span>
+</div>
+<h3 class="font-headline-md text-headline-md mb-md">Review Details</h3>
+<p class="text-on-surface-variant mb-xl">Are you sure you want to provision <span class="font-bold text-on-surface" id="confirm-user-name"></span> as a <span class="font-bold text-on-surface" id="confirm-user-role"></span>?</p>
+<div class="flex gap-md">
+<button class="flex-1 py-sm font-label-md text-on-surface-variant hover:bg-surface-container rounded-xl transition-all" onclick="hideConfirmation()">Back to Edit</button>
+<button class="flex-1 py-sm bg-primary text-on-primary font-label-md rounded-xl shadow-md hover:bg-primary-container transition-all" onclick="processProvisioning()">Confirm &amp; Provision</button>
+</div>
+</div>
+</div>
+<!-- STEP 3: SUCCESS MODAL (Hidden by default) -->
+<div class="fixed inset-0 z-[70] flex items-center justify-center p-md modal-overlay hidden" id="success-modal">
+<div class="bg-white w-full max-w-md rounded-3xl p-xl custom-shadow text-center modal-animate-in">
+<div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-lg border-2 border-green-100">
+<span class="material-symbols-outlined text-success text-[40px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-md">Account Provisioned Successfully</h3>
+<p class="text-on-surface-variant mb-xl">The account for <span class="font-bold text-primary" id="success-email"></span> is now active. Welcome instructions have been dispatched via email.</p>
+<button class="w-full py-sm bg-inverse-surface text-inverse-on-surface font-label-md rounded-xl shadow-md hover:bg-surface-variant/20 hover:text-on-surface transition-all" onclick="location.reload()">
+                    Dismiss
+                </button>
 </div>
 </div>
 </main>
 <script>
-        // Modal handling
-        const closeBtn = document.getElementById('closeModal');
-        const cancelBtn = document.getElementById('cancelBtn');
-        const modal = document.getElementById('requestModal');
-
-        const hideModal = () => {
+        // Form interactivity
+        const form = document.getElementById('provisioning-form');
+        const summaryFields = {
+            name: document.getElementById('sum-name'),
+            role: document.getElementById('sum-role'),
+            email: document.getElementById('sum-email'),
+            gender: document.getElementById('sum-gender'),
+            birth: document.getElementById('sum-birth'),
+            address: document.getElementById('sum-address')
+        };
+        const progressBar = document.getElementById('progress-bar');
+ 
+        const inputs = form.querySelectorAll('input, select');
+ 
+        inputs.forEach(input => {
+            input.addEventListener('input', updateSummary);
+        });
+ 
+        function updateSummary() {
+            const firstName = document.getElementById('firstName').value || 'New';
+            const lastName = document.getElementById('lastName').value || 'User';
+            const role = document.getElementById('role').value;
+            const email = document.getElementById('email').value || '—';
+            const gender = document.getElementById('gender').value || '—';
+            const birth = document.getElementById('birthDate').value || '—';
+            const barangay = document.getElementById('barangay').value || '...';
+ 
+            summaryFields.name.textContent = `${firstName} ${lastName}`;
+            summaryFields.role.textContent = role;
+            summaryFields.email.textContent = email;
+            summaryFields.gender.textContent = gender;
+            summaryFields.birth.textContent = birth;
+            summaryFields.address.textContent = `${barangay}, San Andres, Quezon`;
+ 
+            // Simple progress logic
+            const filled = Array.from(inputs).filter(i => i.value && i.required).length;
+            const requiredCount = Array.from(inputs).filter(i => i.required).length;
+            const percentage = (filled / requiredCount) * 100;
+            progressBar.style.width = `${Math.max(25, percentage)}%`;
+        }
+ 
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const role = document.getElementById('role').value;
+ 
+            document.getElementById('confirm-user-name').textContent = `${firstName} ${lastName}`;
+            document.getElementById('confirm-user-role').textContent = role;
+ 
+            showConfirmation();
+        });
+ 
+        function closeModal() {
+            const modal = document.getElementById('provisioning-modal');
             modal.style.opacity = '0';
-            modal.style.pointerEvents = 'none';
             modal.style.transition = 'opacity 0.3s ease';
-        };
-
-        closeBtn.addEventListener('click', hideModal);
-        cancelBtn.addEventListener('click', hideModal);
-
-        // Form elements
-        const inputQuantity = document.getElementById('inputQuantity');
-        const inputRequestType = document.getElementById('inputRequestType');
-        const inputLocation = document.getElementById('inputLocation');
-        const inputPhoneNumber = document.getElementById('inputPhoneNumber');
-        const inputReason = document.getElementById('inputReason');
-        const btnIncrease = document.getElementById('btnIncrease');
-        const btnDecrease = document.getElementById('btnDecrease');
-        const displayTimestamp = document.getElementById('displayTimestamp');
-        
-        // Summary elements
-        const summaryLine1 = document.getElementById('summaryLine1');
-        const summaryLine2 = document.getElementById('summaryLine2');
-
-        // Helper to extract date from timestamp string
-        const getFormattedDate = (timestampStr) => {
-            const parts = timestampStr.split(' ');
-            if (parts.length >= 3) {
-                const datePart = parts.slice(0, 3).join(' ');
-                return datePart.replace(/,$/, '');
-            }
-            return timestampStr;
-        };
-
-        // Update Summary Card function
-        const updateSummary = () => {
-            const qty = inputQuantity.value || '1';
-            const type = inputRequestType.value || 'Device Request';
-            const location = inputLocation.value || 'Not specified';
-            const dateStr = getFormattedDate(displayTimestamp.textContent);
-
-            summaryLine1.textContent = `${qty}x ${type}`;
-            summaryLine2.textContent = `Location: ${location} • Preferred: ${dateStr}`;
-        };
-
-        // Quantity logic
-        btnIncrease.addEventListener('click', () => {
-            let val = parseInt(inputQuantity.value);
-            inputQuantity.value = val + 1;
-            updateSummary();
-        });
-
-        btnDecrease.addEventListener('click', () => {
-            let val = parseInt(inputQuantity.value);
-            if (val > 1) {
-                inputQuantity.value = val - 1;
-                updateSummary();
-            }
-        });
-
-        // Input listeners
-        inputRequestType.addEventListener('input', updateSummary);
-        inputLocation.addEventListener('input', updateSummary);
-        inputPhoneNumber.addEventListener('input', updateSummary);
-
-        // Clear Form logic
-        document.getElementById('clearForm').addEventListener('click', () => {
-            // Reset to defaults
-            inputQuantity.value = 1;
-            inputRequestType.value = "Request for Another Device.";
-            inputLocation.value = "Purok 1, Alibijaban Island, San Andres Quezon.";
-            inputPhoneNumber.value = "+639-480-486-303";
-            inputReason.value = "";
-            
-            // Update UI
-            updateSummary();
-        });
-
-        // Initial update to match state
-        updateSummary();
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+ 
+        function showConfirmation() {
+            document.getElementById('confirmation-modal').classList.remove('hidden');
+        }
+ 
+        function hideConfirmation() {
+            document.getElementById('confirmation-modal').classList.add('hidden');
+        }
+ 
+        function processProvisioning() {
+            hideConfirmation();
+            const email = document.getElementById('email').value;
+            document.getElementById('success-email').textContent = email;
+ 
+            // Artificial loading delay
+            const btn = document.querySelector('button[onclick="processProvisioning()"]');
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span>';
+            btn.disabled = true;
+ 
+            setTimeout(() => {
+                document.getElementById('success-modal').classList.remove('hidden');
+            }, 1000);
+        }
     </script>
+ 
+ 
+ 
+ 
+ 
+ 
 </body></html>
