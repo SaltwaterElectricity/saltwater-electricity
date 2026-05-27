@@ -66,7 +66,7 @@ const AdminBranding = memo(({ isExpanded, toggleCollapse }) => (
 
         {/* Tooltip for collapsed state branding */}
         <div className="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-3 py-2 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest rounded-lg opacity-0 invisible group-hover/brand:opacity-100 group-hover/brand:visible transition-all duration-200 whitespace-nowrap z-[100] shadow-2xl border border-white/10 pointer-events-none">
-          Expand Menu
+          Open Sidebar
           <div className="absolute -left-1 top-1/2 -translate-y-1/2 border-t-4 border-t-transparent border-b-4 border-b-transparent border-r-4 border-r-slate-900" />
         </div>
       </div>
