@@ -11,10 +11,7 @@ const ResidentBranding = memo(() => (
   <div className="mb-10 transition-all duration-300">
     <div className="flex items-center gap-3 overflow-hidden">
       <div className="flex-shrink-0 w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary relative">
-        <span
-          className="material-symbols-outlined"
-          style={{ fontVariationSettings: "'FILL' 1" }}
-        >
+        <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
           water_drop
         </span>
         <span
@@ -92,52 +89,45 @@ const ResidentNav = memo(({ deviceId, unreadCount, handleLinkClick }) => (
  * MAIN EXPORT: ResidentSidebar
  * Mobile-responsive sidebar for household users.
  */
-export const ResidentSidebar = memo(({ 
-  isOpen, 
-  toggleSidebar, 
-  deviceId, 
-  unreadCount, 
-  handleLinkClick, 
-  onLogout 
-}) => {
-  return (
-    <>
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[45] md:hidden transition-all duration-300"
-          onClick={toggleSidebar}
-        />
-      )}
-
-      <aside
-        className={cn(
-          "h-screen transition-all duration-300 ease-in-out fixed left-0 top-0 z-50 shadow-xl flex flex-col",
-          "w-64 bg-gradient-to-b from-[#0034b5] to-[#0047ff] text-white p-gutter overflow-x-hidden",
-          isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+export const ResidentSidebar = memo(
+  ({ isOpen, toggleSidebar, deviceId, unreadCount, handleLinkClick, onLogout }) => {
+    return (
+      <>
+        {isOpen && (
+          <div
+            className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[45] md:hidden transition-all duration-300"
+            onClick={toggleSidebar}
+          />
         )}
-      >
-        <ResidentBranding />
-        <ResidentNav 
-          deviceId={deviceId} 
-          unreadCount={unreadCount} 
-          handleLinkClick={handleLinkClick} 
-        />
-        
-        <div className="mt-auto pt-6 space-y-1 overflow-x-hidden">
-          <button
-            onClick={onLogout}
-            className="w-full flex items-center space-x-3 px-4 py-2.5 transition-all rounded-xl text-white/70 hover:bg-white/10 hover:text-white"
-          >
-            <span className="material-symbols-outlined text-[20px] flex-shrink-0">logout</span>
-            <span className="font-medium whitespace-nowrap text-[14px]">
-              Log Out
-            </span>
-          </button>
-        </div>
-      </aside>
-    </>
-  );
-});
+
+        <aside
+          className={cn(
+            "h-screen transition-all duration-300 ease-in-out fixed left-0 top-0 z-50 shadow-xl flex flex-col",
+            "w-64 bg-gradient-to-b from-[#0034b5] to-[#0047ff] text-white p-gutter overflow-x-hidden",
+            isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          )}
+        >
+          <ResidentBranding />
+          <ResidentNav
+            deviceId={deviceId}
+            unreadCount={unreadCount}
+            handleLinkClick={handleLinkClick}
+          />
+
+          <div className="mt-auto pt-6 space-y-1 overflow-x-hidden">
+            <button
+              onClick={onLogout}
+              className="w-full flex items-center space-x-3 px-4 py-2.5 transition-all rounded-xl text-white/70 hover:bg-white/10 hover:text-white"
+            >
+              <span className="material-symbols-outlined text-[20px] flex-shrink-0">logout</span>
+              <span className="font-medium whitespace-nowrap text-[14px]">Log Out</span>
+            </button>
+          </div>
+        </aside>
+      </>
+    );
+  }
+);
 
 ResidentSidebar.displayName = "ResidentSidebar";
 ResidentBranding.displayName = "ResidentBranding";

@@ -20,7 +20,7 @@ const SuperAdminBranding = memo(({ isExpanded, toggleCollapse }) => (
   >
     {isExpanded ? (
       <>
-        <div 
+        <div
           className="flex items-center gap-2.5 cursor-pointer group/logo"
           onClick={toggleCollapse}
         >
@@ -30,8 +30,12 @@ const SuperAdminBranding = memo(({ isExpanded, toggleCollapse }) => (
           </div>
           {/* Text Branding - Centered block */}
           <div className="flex flex-col items-center text-center animate-in fade-in duration-500">
-            <h1 className="text-sm font-black tracking-tight text-white leading-none uppercase">Device Monitoring</h1>
-            <p className="text-[10px] font-bold text-[#001fff] tracking-[0.5px] mt-1 uppercase">Saltwater Electricity</p>
+            <h1 className="text-sm font-black tracking-tight text-white leading-none uppercase">
+              Device Monitoring
+            </h1>
+            <p className="text-[10px] font-bold text-[#001fff] tracking-[0.5px] mt-1 uppercase">
+              Saltwater Electricity
+            </p>
           </div>
         </div>
         {/* Toggle Button - Expanded State */}
@@ -47,22 +51,22 @@ const SuperAdminBranding = memo(({ isExpanded, toggleCollapse }) => (
       </>
     ) : (
       /* Collapsed State: Logo replaces with Toggle on Hover */
-      <div 
+      <div
         className="relative w-12 h-12 flex items-center justify-center group/brand cursor-pointer transition-all rounded-xl hover:bg-white/5"
         onClick={toggleCollapse}
       >
         {/* Logo - Hidden on hover */}
-        <img 
-          alt="Branding" 
-          className="h-9 object-contain transition-all duration-300 group-hover/brand:opacity-0" 
+        <img
+          alt="Branding"
+          className="h-9 object-contain transition-all duration-300 group-hover/brand:opacity-0"
           src={adminLogo}
         />
         {/* Toggle - Revealed on hover */}
-        <ChevronLeft 
-          size={20} 
-          className="absolute inset-0 m-auto opacity-0 group-hover/brand:opacity-100 transition-all duration-300 rotate-180 text-white" 
+        <ChevronLeft
+          size={20}
+          className="absolute inset-0 m-auto opacity-0 group-hover/brand:opacity-100 transition-all duration-300 rotate-180 text-white"
         />
-        
+
         {/* Tooltip for collapsed state branding */}
         <div className="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-3 py-2 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest rounded-lg opacity-0 invisible group-hover/brand:opacity-100 group-hover/brand:visible transition-all duration-200 whitespace-nowrap z-[100] shadow-2xl border border-white/10 pointer-events-none">
           Expand Menu
@@ -78,10 +82,12 @@ const SuperAdminBranding = memo(({ isExpanded, toggleCollapse }) => (
  * Main navigation links and sections for Super Admin.
  */
 const SuperAdminNav = memo(({ isExpanded, isAdmin, userRole, unreadCount, handleLinkClick }) => (
-  <nav className={cn(
-    "flex-1 space-y-1 scrollbar-none pb-12 transition-all duration-300",
-    isExpanded ? "px-2 overflow-y-auto" : "px-0 overflow-y-visible"
-  )}>
+  <nav
+    className={cn(
+      "flex-1 space-y-1 scrollbar-none pb-12 transition-all duration-300",
+      isExpanded ? "px-2 overflow-y-auto" : "px-0 overflow-y-visible"
+    )}
+  >
     <SidebarLink
       to={ROUTES.DASHBOARD}
       icon="home"
@@ -100,9 +106,13 @@ const SuperAdminNav = memo(({ isExpanded, isAdmin, userRole, unreadCount, handle
       isCollapsed={!isExpanded}
       onClick={handleLinkClick}
     />
-    
-    <div className={cn("pt-4 pb-2 transition-all", !isExpanded && "opacity-0 h-0 p-0 overflow-hidden")}>
-      <p className="px-4 text-[11px] font-black text-[#c2c6d8]/60 uppercase tracking-[2px]">Operations</p>
+
+    <div
+      className={cn("pt-4 pb-2 transition-all", !isExpanded && "opacity-0 h-0 p-0 overflow-hidden")}
+    >
+      <p className="px-4 text-[11px] font-black text-[#c2c6d8]/60 uppercase tracking-[2px]">
+        Operations
+      </p>
     </div>
 
     <SidebarLink
@@ -163,8 +173,12 @@ const SuperAdminNav = memo(({ isExpanded, isAdmin, userRole, unreadCount, handle
       onClick={handleLinkClick}
     />
 
-    <div className={cn("pt-4 pb-2 transition-all", !isExpanded && "opacity-0 h-0 p-0 overflow-hidden")}>
-      <p className="px-4 text-[11px] font-black text-[#c2c6d8]/60 uppercase tracking-[2px]">Account</p>
+    <div
+      className={cn("pt-4 pb-2 transition-all", !isExpanded && "opacity-0 h-0 p-0 overflow-hidden")}
+    >
+      <p className="px-4 text-[11px] font-black text-[#c2c6d8]/60 uppercase tracking-[2px]">
+        Account
+      </p>
     </div>
 
     <SidebarLink
@@ -178,7 +192,6 @@ const SuperAdminNav = memo(({ isExpanded, isAdmin, userRole, unreadCount, handle
     />
   </nav>
 ));
-
 
 /**
  * INTERNAL COMPONENT: SuperAdminProfileFooter
@@ -202,7 +215,7 @@ const SuperAdminProfileFooter = memo(({ isExpanded, currentUser, user, userRole,
               {user?.firstName ? `${user.firstName} ${user.lastName}` : "Super Admin"}
             </span>
             <span className="text-[#c2c6d8] text-[10px] font-medium truncate uppercase tracking-tighter">
-              {userRole?.replace(/([A-Z])/g, ' $1') || "Super Administration"}
+              {userRole?.replace(/([A-Z])/g, " $1") || "Super Administration"}
             </span>
           </div>
         </div>
@@ -218,7 +231,9 @@ const SuperAdminProfileFooter = memo(({ isExpanded, currentUser, user, userRole,
           !isExpanded ? "justify-center px-0 mx-auto w-10" : "w-full px-4 gap-3"
         )}
       >
-        <span className="material-symbols-outlined text-[20px] flex-shrink-0 text-red-500">logout</span>
+        <span className="material-symbols-outlined text-[20px] flex-shrink-0 text-red-500">
+          logout
+        </span>
         <span
           className={cn(
             "font-medium whitespace-nowrap overflow-hidden transition-all duration-300",

@@ -13,10 +13,12 @@ export const NavbarHeader = ({ currentUid }) => {
   return (
     <header className="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-white/40 flex justify-between items-center px-6 py-4 w-full">
       <div className="flex items-center space-x-8">
-        <div 
+        <div
           className={cn(
             "flex items-center gap-2.5 transition-all duration-500",
-            isSidebarCollapsed ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4 pointer-events-none"
+            isSidebarCollapsed
+              ? "opacity-100 translate-x-0"
+              : "opacity-0 -translate-x-4 pointer-events-none"
           )}
         >
           <div className="flex flex-col items-center text-center">
