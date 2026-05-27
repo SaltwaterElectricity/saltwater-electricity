@@ -15,7 +15,9 @@ const InputField = ({
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-[11px] font-semibold text-slate-500">{label} {validation?.required && <span className="text-red-500">*</span>}</label>
+      <label className="text-[11px] font-semibold text-slate-500">
+        {label} {validation?.required && <span className="text-red-500">*</span>}
+      </label>
 
       <input
         type={type}
@@ -30,9 +32,7 @@ const InputField = ({
       />
 
       {hasError && (
-        <span className="text-[10px] text-red-500 font-medium italic">
-          {errors[name].message}
-        </span>
+        <span className="text-[10px] text-red-500 font-medium italic">{errors[name].message}</span>
       )}
     </div>
   );
@@ -46,12 +46,17 @@ export const RegistrationFields = ({ register, errors, currentUserRole = ROLES.R
       {/* 1. PERSONAL INFORMATION SECTION */}
       <section className="space-y-6">
         <div className="flex items-center gap-2 mb-4">
-          <span className="material-symbols-outlined text-blue-600 font-variation-settings-fill" style={{ fontVariationSettings: "'FILL' 1" }}>person</span>
+          <span
+            className="material-symbols-outlined text-blue-600 font-variation-settings-fill"
+            style={{ fontVariationSettings: "'FILL' 1" }}
+          >
+            person
+          </span>
           <h2 className="text-[13px] font-bold text-blue-600 uppercase tracking-wider">
             Personal Information
           </h2>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <InputField
             label="First Name"
@@ -80,7 +85,9 @@ export const RegistrationFields = ({ register, errors, currentUserRole = ROLES.R
             placeholder="e.g. Santos"
           />
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-semibold text-slate-500">Gender <span className="text-red-500">*</span></label>
+            <label className="text-[11px] font-semibold text-slate-500">
+              Gender <span className="text-red-500">*</span>
+            </label>
             <select
               {...register("gender")}
               className={cn(
@@ -107,16 +114,42 @@ export const RegistrationFields = ({ register, errors, currentUserRole = ROLES.R
       {/* 2. ADDRESS SECTION */}
       <section className="space-y-6">
         <div className="flex items-center gap-2 mb-4">
-          <span className="material-symbols-outlined text-blue-600 font-variation-settings-fill" style={{ fontVariationSettings: "'FILL' 1" }}>location_on</span>
+          <span
+            className="material-symbols-outlined text-blue-600 font-variation-settings-fill"
+            style={{ fontVariationSettings: "'FILL' 1" }}
+          >
+            location_on
+          </span>
           <h2 className="text-[13px] font-bold text-blue-600 uppercase tracking-wider">
             Location Details
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <InputField label="Region" name="region" register={register} errors={errors} readOnly className="bg-slate-100/50 cursor-not-allowed" />
-          <InputField label="City / Province" name="cityProvince" register={register} errors={errors} readOnly className="bg-slate-100/50 cursor-not-allowed" />
-          <InputField label="Municipality" name="municipality" register={register} errors={errors} readOnly className="bg-slate-100/50 cursor-not-allowed" />
+          <InputField
+            label="Region"
+            name="region"
+            register={register}
+            errors={errors}
+            readOnly
+            className="bg-slate-100/50 cursor-not-allowed"
+          />
+          <InputField
+            label="City / Province"
+            name="cityProvince"
+            register={register}
+            errors={errors}
+            readOnly
+            className="bg-slate-100/50 cursor-not-allowed"
+          />
+          <InputField
+            label="Municipality"
+            name="municipality"
+            register={register}
+            errors={errors}
+            readOnly
+            className="bg-slate-100/50 cursor-not-allowed"
+          />
           <InputField
             label="Baranggay"
             name="baranggay"
@@ -134,8 +167,15 @@ export const RegistrationFields = ({ register, errors, currentUserRole = ROLES.R
           {/* Account Sub-section */}
           <div className="space-y-6">
             <div className="flex items-center gap-2 mb-4">
-              <span className="material-symbols-outlined text-blue-600 font-variation-settings-fill" style={{ fontVariationSettings: "'FILL' 1" }}>shield</span>
-              <h2 className="text-[13px] font-bold text-blue-600 uppercase tracking-wider">Account</h2>
+              <span
+                className="material-symbols-outlined text-blue-600 font-variation-settings-fill"
+                style={{ fontVariationSettings: "'FILL' 1" }}
+              >
+                shield
+              </span>
+              <h2 className="text-[13px] font-bold text-blue-600 uppercase tracking-wider">
+                Account
+              </h2>
             </div>
             <InputField
               label="Email Address"
@@ -151,7 +191,9 @@ export const RegistrationFields = ({ register, errors, currentUserRole = ROLES.R
             />
             {isSuperAdmin ? (
               <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-semibold text-slate-500">Role <span className="text-red-500">*</span></label>
+                <label className="text-[11px] font-semibold text-slate-500">
+                  Role <span className="text-red-500">*</span>
+                </label>
                 <select
                   {...register("role")}
                   className="w-full bg-slate-50/50 border border-slate-200/50 rounded-xl px-4 py-2.5 text-sm transition-all outline-none cursor-pointer focus:border-blue-500"
@@ -168,8 +210,15 @@ export const RegistrationFields = ({ register, errors, currentUserRole = ROLES.R
           {/* Contact Sub-section */}
           <div className="space-y-6">
             <div className="flex items-center gap-2 mb-4">
-              <span className="material-symbols-outlined text-blue-600 font-variation-settings-fill" style={{ fontVariationSettings: "'FILL' 1" }}>call</span>
-              <h2 className="text-[13px] font-bold text-blue-600 uppercase tracking-wider">Contact</h2>
+              <span
+                className="material-symbols-outlined text-blue-600 font-variation-settings-fill"
+                style={{ fontVariationSettings: "'FILL' 1" }}
+              >
+                call
+              </span>
+              <h2 className="text-[13px] font-bold text-blue-600 uppercase tracking-wider">
+                Contact
+              </h2>
             </div>
             <InputField
               label="Mobile Number"

@@ -74,12 +74,20 @@ const AccountProvisioningModal = ({ isOpen, onClose, mode = "user" }) => {
 
   // WATCH FIELDS FOR LIVE SUMMARY
   const watchedFields = watch();
-  
+
   // PROGRESS CALCULATION
   const progress = useMemo(() => {
-    const required = ["firstName", "lastName", "email", "baranggay", "birthDate", "gender", "mobileNum"];
-    const filled = required.filter(field => !!watchedFields[field]).length;
-    return Math.floor(15 + ((filled / required.length) * 85));
+    const required = [
+      "firstName",
+      "lastName",
+      "email",
+      "baranggay",
+      "birthDate",
+      "gender",
+      "mobileNum",
+    ];
+    const filled = required.filter((field) => !!watchedFields[field]).length;
+    return Math.floor(15 + (filled / required.length) * 85);
   }, [watchedFields]);
 
   if (!isOpen) return null;
@@ -128,7 +136,11 @@ const AccountProvisioningModal = ({ isOpen, onClose, mode = "user" }) => {
       setIsConfirmModalOpen(false);
     } finally {
       if (regResult?.tempApp) {
-        try { await deleteApp(regResult.tempApp); } catch { /* ignore cleanup error */ }
+        try {
+          await deleteApp(regResult.tempApp);
+        } catch {
+          /* ignore cleanup error */
+        }
       }
       setIsSubmitting(false);
     }
@@ -138,7 +150,6 @@ const AccountProvisioningModal = ({ isOpen, onClose, mode = "user" }) => {
     <ModalBackdrop>
       {/* MAIN MODAL CONTAINER (Two-Column) */}
       <div className="bg-white w-full max-w-5xl max-h-[90vh] rounded-[32px] border border-slate-200 shadow-2xl flex flex-col md:flex-row overflow-hidden animate-in fade-in zoom-in-95 duration-300 relative">
-        
         {/* LEFT COLUMN: FORM SECTION */}
         <div className="flex-1 p-8 md:p-12 overflow-y-auto custom-scrollbar text-on-surface">
           <header className="mb-10 text-on-surface">
@@ -187,16 +198,23 @@ const AccountProvisioningModal = ({ isOpen, onClose, mode = "user" }) => {
 
         {/* RIGHT COLUMN: LIVE SUMMARY CARD (Hidden on Mobile) */}
         <div className="w-full md:w-[360px] bg-slate-50 border-l border-slate-200 p-8 hidden md:flex flex-col overflow-y-auto scrollbar-none">
-          <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-[2px] mb-8 shrink-0">Live Summary</h4>
-          
+          <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-[2px] mb-8 shrink-0">
+            Live Summary
+          </h4>
+
           <div className="bg-white border border-slate-200/50 rounded-3xl p-6 lg:p-8 space-y-6 lg:space-y-8 flex-1 flex flex-col shadow-sm min-h-fit">
             <div className="flex flex-col items-center shrink-0">
               <div className="w-20 h-20 lg:w-24 lg:h-24 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-bold mb-4 lg:mb-6 border-4 border-white shadow-inner">
-                <span className="material-symbols-outlined text-[40px] lg:text-[48px]" style={{ fontVariationSettings: "'FILL' 1" }}>account_circle</span>
+                <span
+                  className="material-symbols-outlined text-[40px] lg:text-[48px]"
+                  style={{ fontVariationSettings: "'FILL' 1" }}
+                >
+                  account_circle
+                </span>
               </div>
               <h5 className="text-lg font-black text-slate-900 text-center leading-tight">
-                {watchedFields.firstName || watchedFields.lastName 
-                  ? `${watchedFields.firstName} ${watchedFields.lastName}` 
+                {watchedFields.firstName || watchedFields.lastName
+                  ? `${watchedFields.firstName} ${watchedFields.lastName}`
                   : "New User Candidate"}
               </h5>
               <span className="bg-blue-600/10 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider mt-3">
@@ -206,18 +224,39 @@ const AccountProvisioningModal = ({ isOpen, onClose, mode = "user" }) => {
 
             <div className="space-y-5 lg:space-y-6 flex-1">
               {[
-                { label: "Email Address", val: watchedFields.email, placeholder: "—", noCaps: true },
-                { label: "Gender", val: watchedFields.gender ? (watchedFields.gender.charAt(0).toUpperCase() + watchedFields.gender.slice(1)) : "", placeholder: "Not specified" },
+                {
+                  label: "Email Address",
+                  val: watchedFields.email,
+                  placeholder: "—",
+                  noCaps: true,
+                },
+                {
+                  label: "Gender",
+                  val: watchedFields.gender
+                    ? watchedFields.gender.charAt(0).toUpperCase() + watchedFields.gender.slice(1)
+                    : "",
+                  placeholder: "Not specified",
+                },
                 { label: "Birth Date", val: watchedFields.birthDate, placeholder: "—" },
-                { label: "Address", val: watchedFields.baranggay ? `${watchedFields.baranggay}, San Andres, Quezon` : "..., San Andres, Quezon", italic: true }
+                {
+                  label: "Address",
+                  val: watchedFields.baranggay
+                    ? `${watchedFields.baranggay}, San Andres, Quezon`
+                    : "..., San Andres, Quezon",
+                  italic: true,
+                },
               ].map((field) => (
                 <div key={field.label} className="group">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{field.label}</p>
-                  <p className={cn(
-                    "text-[13px] font-semibold text-slate-700 truncate",
-                    !field.noCaps && "uppercase",
-                    field.italic && "italic text-slate-500 font-medium"
-                  )}>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    {field.label}
+                  </p>
+                  <p
+                    className={cn(
+                      "text-[13px] font-semibold text-slate-700 truncate",
+                      !field.noCaps && "uppercase",
+                      field.italic && "italic text-slate-500 font-medium"
+                    )}
+                  >
                     {field.val || field.placeholder}
                   </p>
                 </div>
@@ -228,16 +267,20 @@ const AccountProvisioningModal = ({ isOpen, onClose, mode = "user" }) => {
               <div className="bg-blue-50/50 rounded-2xl p-5 border border-blue-100">
                 <div className="flex items-center gap-2 mb-3">
                   <Info size={14} className="text-blue-600" />
-                  <span className="text-[10px] font-black uppercase tracking-wider text-blue-600">Provisioning Status</span>
+                  <span className="text-[10px] font-black uppercase tracking-wider text-blue-600">
+                    Provisioning Status
+                  </span>
                 </div>
                 <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-blue-600 transition-all duration-700 ease-out rounded-full shadow-[0_0_8px_rgba(37,99,235,0.4)]" 
+                  <div
+                    className="h-full bg-blue-600 transition-all duration-700 ease-out rounded-full shadow-[0_0_8px_rgba(37,99,235,0.4)]"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
                 <p className="text-[10px] font-bold text-slate-500 mt-3">
-                  {progress === 100 ? "Ready for review" : `Profiling: Step ${Math.min(3, Math.ceil(progress/33.3))} of 3`}
+                  {progress === 100
+                    ? "Ready for review"
+                    : `Profiling: Step ${Math.min(3, Math.ceil(progress / 33.3))} of 3`}
                 </p>
               </div>
             </div>
