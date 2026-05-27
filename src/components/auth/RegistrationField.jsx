@@ -14,31 +14,23 @@ const InputField = ({
   const hasError = !!errors?.[name];
 
   return (
-    <div className="flex flex-col">
-      <label className="text-[10px] font-bold uppercase text-slate-400 mb-2">{label}</label>
+    <div className="flex flex-col gap-1.5">
+      <label className="text-[11px] font-semibold text-slate-500">{label} {validation?.required && <span className="text-red-500">*</span>}</label>
 
       <input
         type={type}
-        // A11y: Ipinapaalam sa screen readers kung ang input ay may error
-        aria-invalid={hasError ? "true" : "false"}
         {...register(name, validation)}
         className={cn(
-          // BASE STYLES
-          "p-3 border rounded-lg text-sm outline-none transition-all",
-
-          // DEFAULT STATE
-          "border-slate-200 focus:border-blue-500 bg-white",
-
-          // ERROR STATE
-          hasError && "border-red-500 bg-red-50 focus:border-red-500",
-
+          "w-full bg-slate-50/50 border border-slate-200/50 rounded-xl px-4 py-2.5 text-sm transition-all outline-none",
+          "focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500",
+          hasError && "border-red-500 bg-red-50 focus:ring-red-500/10",
           className
         )}
         {...rest}
       />
 
       {hasError && (
-        <span className="text-[10px] text-red-500 mt-1 font-medium italic">
+        <span className="text-[10px] text-red-500 font-medium italic">
           {errors[name].message}
         </span>
       )}
@@ -50,38 +42,57 @@ export const RegistrationFields = ({ register, errors, currentUserRole = ROLES.R
   const isSuperAdmin = currentUserRole === ROLES.SUPER_ADMIN;
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-12">
       {/* 1. PERSONAL INFORMATION SECTION */}
       <section className="space-y-6">
-        <h2 className="text-xs font-bold text-blue-600 uppercase tracking-widest border-b border-blue-100 pb-2">
-          Personal Information
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="material-symbols-outlined text-blue-600 font-variation-settings-fill" style={{ fontVariationSettings: "'FILL' 1" }}>person</span>
+          <h2 className="text-[13px] font-bold text-blue-600 uppercase tracking-wider">
+            Personal Information
+          </h2>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <InputField
             label="First Name"
             name="firstName"
             register={register}
             errors={errors}
+            placeholder="e.g. Juan"
             validation={{ required: "First name is required" }}
           />
-          <InputField label="Middle Name" name="middleName" register={register} errors={errors} />
           <InputField
             label="Last Name"
             name="lastName"
             register={register}
             errors={errors}
+            placeholder="e.g. Dela Cruz"
             validation={{ required: "Last name is required" }}
-          />
-          <InputField
-            label="Suffix"
-            name="suffix"
-            register={register}
-            errors={errors}
-            placeholder="Jr."
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <InputField
+            label="Middle Name"
+            name="middleName"
+            register={register}
+            errors={errors}
+            placeholder="e.g. Santos"
+          />
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[11px] font-semibold text-slate-500">Gender <span className="text-red-500">*</span></label>
+            <select
+              {...register("gender")}
+              className={cn(
+                "w-full bg-slate-50/50 border border-slate-200/50 rounded-xl px-4 py-2.5 text-sm transition-all outline-none cursor-pointer",
+                "focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500",
+                errors?.gender && "border-red-500 bg-red-50"
+              )}
+            >
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
           <InputField
             label="Birth Date"
             name="birthDate"
@@ -90,115 +101,88 @@ export const RegistrationFields = ({ register, errors, currentUserRole = ROLES.R
             errors={errors}
             validation={{ required: "Birth date is required" }}
           />
-          <div className="flex flex-col">
-            <label className="text-[10px] font-bold uppercase text-slate-400 mb-2">Gender</label>
-            <select
-              aria-invalid={errors?.gender ? "true" : "false"}
-              {...register("gender")}
-              className={cn(
-                "p-3 border rounded-lg text-sm bg-white outline-none cursor-pointer transition-all",
-                errors?.gender
-                  ? "border-red-500 bg-red-50"
-                  : "border-slate-200 focus:border-blue-500"
-              )}
-            >
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <InputField
-            label="Mobile Number"
-            name="mobileNum"
-            register={register}
-            errors={errors}
-            placeholder="09123456789"
-            validation={{
-              required: "Mobile number is required",
-              pattern: { value: /^09\d{9}$/, message: "Format: 09XXXXXXXXX" },
-            }}
-          />
         </div>
       </section>
 
       {/* 2. ADDRESS SECTION */}
       <section className="space-y-6">
-        <h2 className="text-xs font-bold text-slate-700 uppercase tracking-widest border-b border-slate-100 pb-2">
-          Permanent Address
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField
-            label="Street / House No."
-            name="street"
-            register={register}
-            errors={errors}
-            placeholder="e.g. 123 Rizal St."
-          />
+        <div className="flex items-center gap-2 mb-4">
+          <span className="material-symbols-outlined text-blue-600 font-variation-settings-fill" style={{ fontVariationSettings: "'FILL' 1" }}>location_on</span>
+          <h2 className="text-[13px] font-bold text-blue-600 uppercase tracking-wider">
+            Location Details
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <InputField label="Region" name="region" register={register} errors={errors} readOnly className="bg-slate-100/50 cursor-not-allowed" />
+          <InputField label="City / Province" name="cityProvince" register={register} errors={errors} readOnly className="bg-slate-100/50 cursor-not-allowed" />
+          <InputField label="Municipality" name="municipality" register={register} errors={errors} readOnly className="bg-slate-100/50 cursor-not-allowed" />
           <InputField
             label="Baranggay"
             name="baranggay"
             register={register}
             errors={errors}
+            placeholder="Enter baranggay name"
             validation={{ required: "Baranggay is required" }}
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField
-            label="Municipality"
-            name="municipality"
-            register={register}
-            errors={errors}
-            validation={{ required: "Municipality is required" }}
-          />
-          <InputField
-            label="City / Province"
-            name="cityProvince"
-            register={register}
-            errors={errors}
-            validation={{ required: "City/Province is required" }}
-          />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Region" name="region" register={register} errors={errors} />
-          <InputField label="Zip Code" name="zipCode" register={register} errors={errors} />
-        </div>
       </section>
 
-      {/* 3. ACCESS CREDENTIALS SECTION */}
-      <section className="bg-slate-50 p-8 rounded-2xl border border-slate-200 space-y-6">
-        <h2 className="text-xs font-bold text-slate-700 uppercase tracking-widest">
-          Access Credentials
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <InputField
-            label="Work Email"
-            name="email"
-            type="email"
-            register={register}
-            errors={errors}
-            validation={{
-              required: "Email is required",
-              pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Invalid email" },
-            }}
-          />
-
-          {/* DYNAMIC ROLE FIELD: Select for Super Admin, Hidden for Admin */}
-          {isSuperAdmin ? (
-            <div className="flex flex-col">
-              <label className="text-[10px] font-bold uppercase text-slate-400 mb-2">
-                Assigned Role
-              </label>
-              <select
-                {...register("role")}
-                className="p-3 border border-slate-200 rounded-lg text-sm bg-white outline-none cursor-pointer transition-all focus:border-blue-500"
-              >
-                <option value={ROLES.ADMIN}>Administrator (Staff)</option>
-                <option value={ROLES.RESIDENT}>Resident (User)</option>
-              </select>
+      {/* 3. ACCESS & CONTACT SECTION */}
+      <section className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          {/* Account Sub-section */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="material-symbols-outlined text-blue-600 font-variation-settings-fill" style={{ fontVariationSettings: "'FILL' 1" }}>shield</span>
+              <h2 className="text-[13px] font-bold text-blue-600 uppercase tracking-wider">Account</h2>
             </div>
-          ) : (
-            <input type="hidden" value={ROLES.RESIDENT} {...register("role")} />
-          )}
+            <InputField
+              label="Email Address"
+              name="email"
+              type="email"
+              register={register}
+              errors={errors}
+              placeholder="juan.delacruz@example.com"
+              validation={{
+                required: "Email is required",
+                pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Invalid email" },
+              }}
+            />
+            {isSuperAdmin ? (
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-semibold text-slate-500">Role <span className="text-red-500">*</span></label>
+                <select
+                  {...register("role")}
+                  className="w-full bg-slate-50/50 border border-slate-200/50 rounded-xl px-4 py-2.5 text-sm transition-all outline-none cursor-pointer focus:border-blue-500"
+                >
+                  <option value={ROLES.RESIDENT}>Resident</option>
+                  <option value={ROLES.ADMIN}>Administrator</option>
+                </select>
+              </div>
+            ) : (
+              <input type="hidden" value={ROLES.RESIDENT} {...register("role")} />
+            )}
+          </div>
+
+          {/* Contact Sub-section */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="material-symbols-outlined text-blue-600 font-variation-settings-fill" style={{ fontVariationSettings: "'FILL' 1" }}>call</span>
+              <h2 className="text-[13px] font-bold text-blue-600 uppercase tracking-wider">Contact</h2>
+            </div>
+            <InputField
+              label="Mobile Number"
+              name="mobileNum"
+              register={register}
+              errors={errors}
+              placeholder="+63 9XX XXX XXXX"
+              validation={{
+                required: "Mobile number is required",
+                pattern: { value: /^(09|\+639)\d{9}$/, message: "Invalid format" },
+              }}
+            />
+          </div>
         </div>
       </section>
     </div>
