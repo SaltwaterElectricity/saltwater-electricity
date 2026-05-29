@@ -5,7 +5,7 @@ import {
   useAuditLogs,
   useDeviceRequests,
   useDevices,
-  useHistory,
+  useMultiDeviceHistory,
 } from "../../hooks";
 import {
   AnalyticsChart,
@@ -54,34 +54,22 @@ const AdminDashboard = () => {
     };
   }, [devices, telemetry, now]);
 
-  // DATA CALCULATION: Chart Data Mapping
-  const activeDeviceId = useMemo(() => {
-    return devices.length > 0 ? devices[0].device_id : null;
+  // CONFIGURATION: Multi-Device Comparison Setup
+  const comparisonConfig = useMemo(() => {
+    // Select top 3 devices for comparison
+    const COLORS = ["#004ac6", "#00A3C4", "#8E44AD", "#F39C12", "#27AE60"];
+    return devices.slice(0, 3).map((d, index) => ({
+      id: d.device_id,
+      name: d.device_name || `Unit ${d.device_id.substring(0, 4)}`,
+      color: COLORS[index % COLORS.length]
+    }));
   }, [devices]);
 
-  const { logs: historicalLogs } = useHistory(activeDeviceId, 20);
+  const comparisonDeviceIds = useMemo(() => 
+    comparisonConfig.map(c => c.id), 
+  [comparisonConfig]);
 
-  const voltageData = useMemo(() => {
-    if (!historicalLogs) return [];
-    return [...historicalLogs].reverse().map((log) => ({
-      timestamp: new Date(log.__normalizedTs).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      value: log.voltage || 0,
-    }));
-  }, [historicalLogs]);
-
-  const salinityData = useMemo(() => {
-    if (!historicalLogs) return [];
-    return [...historicalLogs].reverse().map((log) => ({
-      timestamp: new Date(log.__normalizedTs).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      value: log.tds_ppm || 0,
-    }));
-  }, [historicalLogs]);
+  const { data: multiHistoryData } = useMultiDeviceHistory(comparisonDeviceIds, 20);
 
   const deviceFeatureData = useMemo(() => {
     return devices.slice(0, 4).map((d) => {
@@ -108,7 +96,10 @@ const AdminDashboard = () => {
       {/* 2. PERFORMANCE & HEALTH SECTION */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-9">
-          <AnalyticsChart voltageData={voltageData} salinityData={salinityData} />
+          <AnalyticsChart 
+            data={multiHistoryData} 
+            devices={comparisonConfig} 
+          />
         </div>
         <div className="lg:col-span-3">
           <SystemHealthGauge
