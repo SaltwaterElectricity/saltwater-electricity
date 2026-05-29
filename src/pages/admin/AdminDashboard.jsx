@@ -61,13 +61,11 @@ const AdminDashboard = () => {
     return devices.slice(0, 3).map((d, index) => ({
       id: d.device_id,
       name: d.device_name || `Unit ${d.device_id.substring(0, 4)}`,
-      color: COLORS[index % COLORS.length]
+      color: COLORS[index % COLORS.length],
     }));
   }, [devices]);
 
-  const comparisonDeviceIds = useMemo(() => 
-    comparisonConfig.map(c => c.id), 
-  [comparisonConfig]);
+  const comparisonDeviceIds = useMemo(() => comparisonConfig.map((c) => c.id), [comparisonConfig]);
 
   const { data: multiHistoryData } = useMultiDeviceHistory(comparisonDeviceIds, 20);
 
@@ -96,10 +94,7 @@ const AdminDashboard = () => {
       {/* 2. PERFORMANCE & HEALTH SECTION */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-9">
-          <AnalyticsChart 
-            data={multiHistoryData} 
-            devices={comparisonConfig} 
-          />
+          <AnalyticsChart data={multiHistoryData} devices={comparisonConfig} />
         </div>
         <div className="lg:col-span-3">
           <SystemHealthGauge
