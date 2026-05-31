@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Search } from "lucide-react";
+import GlobalSearch from "../../ui/GlobalSearch";
 
 /**
  * COMPONENT: MonitorFilters
@@ -17,14 +17,13 @@ const MonitorFilters = ({
   return (
     <div className="flex flex-col md:flex-row items-center gap-4 mb-6">
       {/* Local Filter Search */}
-      <div className="relative flex-1 w-full">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-        <input
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-9 pr-4 py-2 w-full bg-white border-gray-200 rounded-xl text-sm font-medium focus:ring-4 focus:ring-primary/5 focus:border-primary border shadow-sm transition-all"
+      <div className="flex-1 w-full">
+        <GlobalSearch
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
           placeholder="Search for device..."
-          type="text"
+          variant="solid"
+          className="h-10" // Slightly smaller to match neighboring selectors
         />
       </div>
 

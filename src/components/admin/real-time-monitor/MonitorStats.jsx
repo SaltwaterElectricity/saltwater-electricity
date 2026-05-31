@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Bolt, Droplets } from "lucide-react";
+import { Zap, FlaskConical } from "lucide-react";
 
 /**
  * COMPONENT: MonitorStats
@@ -12,7 +12,7 @@ const MonitorStats = ({ stats }) => {
       {/* Total Voltage Card */}
       <div className="bg-white p-6 rounded-[24px] shadow-sm border border-gray-100 flex items-center group hover:shadow-md transition-all duration-300">
         <div className="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center mr-6 shrink-0 border border-blue-100 transition-transform group-hover:scale-110">
-          <Bolt className="h-7 w-7 text-primary" />
+          <Zap className="h-7 w-7 text-primary" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-gray-500 mb-1">Total Voltage</p>
@@ -40,7 +40,7 @@ const MonitorStats = ({ stats }) => {
       {/* Total Salinity Card */}
       <div className="bg-white p-6 rounded-[24px] shadow-sm border border-gray-100 flex items-center group hover:shadow-md transition-all duration-300">
         <div className="w-14 h-14 bg-purple-50 rounded-full flex items-center justify-center mr-6 shrink-0 border border-purple-100 transition-transform group-hover:scale-110">
-          <Droplets className="h-7 w-7 text-purple-600" />
+          <FlaskConical className="h-7 w-7 text-purple-600" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-gray-500 mb-1">Total Salinity</p>

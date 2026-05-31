@@ -129,47 +129,49 @@ const AdminRealTimeMonitor = () => {
   }
 
   return (
-    <div className="flex flex-col h-full relative overflow-hidden transition-all-custom animate-fade-in p-8 bg-[#F0F2F5]">
-      {/* 1. HEADER SECTION */}
-      <MonitorHeader searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+    <>
+      <div className="flex flex-col h-full relative overflow-hidden transition-all-custom animate-fade-in p-8 bg-[#F0F2F5]">
+        {/* 1. HEADER SECTION */}
+        <MonitorHeader />
 
-      {/* 2. TOP SUMMARY CARDS (Large Horizontal) */}
-      <MonitorStats stats={stats} />
+        {/* 2. TOP SUMMARY CARDS (Large Horizontal) */}
+        <MonitorStats stats={stats} />
 
-      {/* 3. BOTTOM SUMMARY CARDS (Small Metric Cards) */}
-      <MonitorMetrics stats={stats} />
+        {/* 3. BOTTOM SUMMARY CARDS (Small Metric Cards) */}
+        <MonitorMetrics stats={stats} />
 
-      {/* 4. FILTERS */}
-      <MonitorFilters
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        locationFilter={locationFilter}
-        setLocationFilter={setLocationFilter}
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
-        locations={locations}
-      />
+        {/* 4. FILTERS */}
+        <MonitorFilters
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          locationFilter={locationFilter}
+          setLocationFilter={setLocationFilter}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
+          locations={locations}
+        />
 
-      {/* 5. DEVICE LIST (The Data Stream) */}
-      <div className="space-y-4 overflow-y-auto pr-2 custom-scrollbar pb-10">
-        {filteredDevices.map((device) => (
-          <MonitorDeviceRow
-            key={device.device_id}
-            device={device}
-            onView={() => handleViewDevice(device.device_id)}
-          />
-        ))}
-        {filteredDevices.length === 0 && (
-          <div className="py-20 text-center bg-white rounded-[24px] border-2 border-dashed border-slate-200">
-            <Info className="mx-auto text-slate-300 mb-4" size={48} />
-            <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-xs">
-              No nodes match the filter spectrum
-            </p>
-          </div>
-        )}
+        {/* 5. DEVICE LIST (The Data Stream) */}
+        <div className="space-y-4 overflow-y-auto pr-2 custom-scrollbar pb-10">
+          {filteredDevices.map((device) => (
+            <MonitorDeviceRow
+              key={device.device_id}
+              device={device}
+              onView={() => handleViewDevice(device.device_id)}
+            />
+          ))}
+          {filteredDevices.length === 0 && (
+            <div className="py-20 text-center bg-white rounded-[24px] border-2 border-dashed border-slate-200">
+              <Info className="mx-auto text-slate-300 mb-4" size={48} />
+              <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-xs">
+                No nodes match the filter spectrum
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* 6. ANALYTICS SIDE PANEL (Overlay) */}
+      {/* 6. ANALYTICS SIDE PANEL (Overlay) - Moved outside the animated container to escape its stacking context */}
       <MonitorSidePanel
         isOpen={isSidePanelOpen}
         onClose={closeSidePanel}
@@ -177,7 +179,7 @@ const AdminRealTimeMonitor = () => {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
       />
-    </div>
+    </>
   );
 };
 

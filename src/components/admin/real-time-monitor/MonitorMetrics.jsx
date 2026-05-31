@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Server, Signal, WifiOff } from "lucide-react";
+import { Box, Wifi, WifiOff } from "lucide-react";
 
 /**
  * COMPONENT: MonitorMetrics
@@ -12,7 +12,7 @@ const MonitorMetrics = ({ stats }) => {
       {/* Total Devices */}
       <div className="bg-white p-6 rounded-[24px] shadow-sm border border-gray-100 flex items-center group hover:shadow-md transition-all duration-300">
         <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mr-4 border border-blue-100 transition-transform group-hover:rotate-6">
-          <Server className="h-6 w-6 text-primary" />
+          <Box className="h-6 w-6 text-primary" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-xs font-bold text-gray-500 uppercase tracking-tight">Total Devices</p>
@@ -30,7 +30,7 @@ const MonitorMetrics = ({ stats }) => {
       {/* Online Devices */}
       <div className="bg-white p-6 rounded-[24px] shadow-sm border border-gray-100 flex items-center group hover:shadow-md transition-all duration-300">
         <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mr-4 border border-green-100 transition-transform group-hover:rotate-6">
-          <Signal className="h-6 w-6 text-green-500" />
+          <Wifi className="h-6 w-6 text-green-500" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-xs font-bold text-gray-500 uppercase tracking-tight">Online Devices</p>

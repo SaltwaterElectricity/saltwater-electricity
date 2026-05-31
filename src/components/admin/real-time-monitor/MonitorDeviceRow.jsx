@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { MapPin, Server } from "lucide-react";
+import { MapPin, Cpu } from "lucide-react";
 import { cn } from "../../../utils/cn";
 
 /**
@@ -8,14 +8,9 @@ import { cn } from "../../../utils/cn";
  */
 const ReadingColumn = ({ label, value, unit, color }) => (
   <div className="w-40 group/reading">
-    <div className="flex flex-col mb-2">
-      <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">{label}</span>
-      <div className="flex items-baseline space-x-1">
-        <span className="text-sm font-bold text-slate-900 group-hover/reading:text-primary transition-colors">
-          {value}
-          {unit}
-        </span>
-      </div>
+    <div className="flex flex-col mb-1">
+      <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">{label}</span>
+      <span className="text-sm font-bold text-gray-900">{value}{unit}</span>
     </div>
     <div className="flex items-end space-x-1 h-8">
       {[
@@ -47,49 +42,45 @@ const ReadingColumn = ({ label, value, unit, color }) => (
  */
 const MonitorDeviceRow = ({ device, onView }) => {
   return (
-    <div className="bg-white px-6 py-4 rounded-[20px] border border-gray-100 flex items-center shadow-sm hover:shadow-md transition-all duration-300 group h-[110px]">
+    <div className="bg-white px-6 py-4 rounded-[24px] border border-gray-100 flex items-center shadow-sm hover:shadow-md transition-shadow group h-[100px]">
       {/* Identity Section */}
-      <div className="w-[30%] flex items-center space-x-4 pr-6 border-r border-gray-100 h-full">
+      <div className="w-[28%] flex items-center space-x-3 pr-4 border-r border-gray-100 h-full">
         <div
           className={cn(
-            "w-12 h-12 shrink-0 rounded-2xl flex items-center justify-center border transition-all duration-500 group-hover:rotate-6 shadow-inner",
+            "w-12 h-12 shrink-0 rounded-2xl flex items-center justify-center border transition-all duration-500 group-hover:rotate-6",
             device.isOnline
               ? "bg-blue-50 text-primary border-blue-100"
-              : "bg-slate-50 text-slate-300 border-slate-100"
+              : "bg-gray-50 text-gray-400 border-gray-100"
           )}
         >
-          <Server className="h-6 w-6" />
+          <Cpu className="h-6 w-6" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center space-x-2 mb-0.5">
-            <span className="font-bold text-slate-900 truncate tracking-tight">
-              {device.device_id}
-            </span>
+          <div className="flex items-center space-x-2">
+            <span className="font-bold text-gray-900 truncate">{device.device_id}</span>
             <span
               className={cn(
-                "px-1.5 py-0.5 text-[9px] font-bold rounded uppercase shadow-sm border",
+                "px-1.5 py-0.5 text-[9px] font-bold rounded uppercase",
                 device.status === "Online"
-                  ? "bg-green-50 text-green-600 border-green-100"
+                  ? "bg-green-50 text-green-600"
                   : device.status === "Warning"
-                    ? "bg-orange-50 text-orange-600 border-orange-100"
-                    : "bg-slate-50 text-slate-400 border-slate-200"
+                    ? "bg-orange-50 text-orange-600"
+                    : "bg-gray-100 text-gray-500"
               )}
             >
               {device.status}
             </span>
           </div>
-          <p className="text-xs font-semibold text-slate-500 truncate italic">
-            {device.residentName}
-          </p>
-          <div className="flex items-center mt-1 text-[10px] text-slate-400 font-medium">
-            <MapPin className="h-3 w-3 mr-1 shrink-0 text-primary opacity-50" />
+          <p className="text-xs text-gray-400 mt-0.5 truncate">{device.residentName}</p>
+          <div className="flex items-center mt-0.5 text-[10px] text-gray-400">
+            <MapPin className="h-3 w-3 mr-1 shrink-0" />
             <span className="truncate">{device.residentLocation}</span>
           </div>
         </div>
       </div>
 
       {/* Data Section */}
-      <div className="flex-1 flex items-center px-10 space-x-12">
+      <div className="flex-1 flex items-center px-8 space-x-12">
         <ReadingColumn
           label="Voltage"
           value={device.telemetry?.voltage || 0}
@@ -105,16 +96,16 @@ const MonitorDeviceRow = ({ device, onView }) => {
       </div>
 
       {/* Action Section */}
-      <div className="flex items-center space-x-6 pl-6 border-l border-gray-100 h-full">
-        <div className="flex flex-col items-start min-w-[60px]">
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Updated</p>
-          <p className="text-[10px] font-black text-slate-900 italic">2m ago</p>
+      <div className="flex items-center">
+        <div className="w-20 flex flex-col items-start">
+          <p className="text-[10px] font-bold text-gray-400">2m ago</p>
+          <p className="text-[9px] text-gray-300 font-medium">real-time</p>
         </div>
         <button
           onClick={onView}
-          className="px-6 py-2.5 bg-white border border-primary text-primary rounded-xl font-bold text-xs hover:bg-primary hover:text-white transition-all shadow-sm uppercase active:scale-95"
+          className="ml-6 px-5 py-2.5 bg-white border border-primary text-primary rounded-xl font-bold text-xs hover:bg-primary hover:text-white transition-all shadow-sm uppercase active:scale-95"
         >
-          View
+          VIEW
         </button>
       </div>
     </div>
