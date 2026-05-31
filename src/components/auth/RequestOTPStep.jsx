@@ -84,7 +84,10 @@ const RequestOTPStep = ({ onNext, onClose }) => {
           </label>
           <div className="relative group transition-all duration-200">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <Mail className="text-slate-400 group-focus-within:text-primary transition-colors" size={18} />
+              <Mail
+                className="text-slate-400 group-focus-within:text-primary transition-colors"
+                size={18}
+              />
             </div>
             <input
               type="email"
@@ -107,7 +110,10 @@ const RequestOTPStep = ({ onNext, onClose }) => {
             "Sending..."
           ) : (
             <>
-              <Send size={18} className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
+              <Send
+                size={18}
+                className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1"
+              />
               Send Reset Code
             </>
           )}
@@ -129,11 +135,8 @@ const RequestOTPStep = ({ onNext, onClose }) => {
       {/* Footer Compliance */}
       <div className="mt-6 flex items-center justify-center gap-2 opacity-40">
         <Lock size={14} />
-        <p className="text-[11px] font-medium leading-none">
-          Secure, encrypted recovery process.
-        </p>
+        <p className="text-[11px] font-medium leading-none">Secure, encrypted recovery process.</p>
       </div>
-
     </div>
   );
 };

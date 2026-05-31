@@ -51,7 +51,9 @@ const MonitorMetrics = ({ stats }) => {
           <WifiOff className="h-6 w-6 text-slate-400" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-bold text-gray-500 uppercase tracking-tight">Inactive Devices</p>
+          <p className="text-xs font-bold text-gray-500 uppercase tracking-tight">
+            Inactive Devices
+          </p>
           <h3 className="text-2xl font-bold text-gray-900">{stats.offline}</h3>
           <p className="text-[10px] text-gray-400">Inactive devices</p>
         </div>

@@ -7,7 +7,10 @@ import { Search, Bell, ChevronDown, RefreshCcw } from "lucide-react";
  */
 const MonitorHeader = ({ searchTerm, setSearchTerm }) => {
   return (
-    <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 mb-8" data-purpose="header">
+    <div
+      className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 mb-8"
+      data-purpose="header"
+    >
       <div>
         <div className="flex items-center gap-3">
           <h2 className="text-2xl font-bold text-slate-900">Real Time Monitor</h2>
@@ -41,12 +44,12 @@ const MonitorHeader = ({ searchTerm, setSearchTerm }) => {
         {/* Top Search Input */}
         <div className="relative group">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-primary transition-colors" />
-          <input 
+          <input
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 pr-4 py-2.5 w-64 bg-white border-gray-200 rounded-xl text-sm font-medium focus:ring-4 focus:ring-primary/5 focus:border-primary border shadow-sm transition-all" 
-            placeholder="Search device or resident..." 
-            type="text" 
+            className="pl-10 pr-4 py-2.5 w-64 bg-white border-gray-200 rounded-xl text-sm font-medium focus:ring-4 focus:ring-primary/5 focus:border-primary border shadow-sm transition-all"
+            placeholder="Search device or resident..."
+            type="text"
           />
         </div>
       </div>

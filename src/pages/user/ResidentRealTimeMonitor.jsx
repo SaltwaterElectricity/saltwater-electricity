@@ -63,8 +63,8 @@ const ResidentRealTimeMonitor = () => {
           <div className="h-[520px] bg-white/50 rounded-[24px]" />
         </div>
         <div className="xl:col-span-8 space-y-10">
-           <div className="h-20 bg-white/50 rounded-[24px] animate-pulse" />
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          <div className="h-20 bg-white/50 rounded-[24px] animate-pulse" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {["s1", "s2", "s3", "s4"].map((id) => (
               <DeviceCardSkeleton key={id} />
             ))}
@@ -97,30 +97,27 @@ const ResidentRealTimeMonitor = () => {
 
       {/* 2. BENTO GRID MAIN CONTENT (12-column layout) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-        
         {/* LEFT COLUMN: Summary & Alerts (col-span-4) */}
         <div className="col-span-12 lg:col-span-4 flex flex-col gap-10">
-          
           {/* Total Devices Card */}
-          <SummaryCard 
-            variant="sparkline" 
-            title="Total Devices" 
-            value={totalDevicesFormatted} 
+          <SummaryCard
+            variant="sparkline"
+            title="Total Devices"
+            value={totalDevicesFormatted}
             className="premium-card !p-8"
           />
 
           {/* Recent Alerts Feed (Widget Variant) */}
-          <RecentAlertsFeed 
+          <RecentAlertsFeed
             title="Recent Alerts"
-            alerts={auditLogs} 
+            alerts={auditLogs}
             variant="widget"
-            onViewAll={() => navigate(ROUTES.ALERTS)} 
+            onViewAll={() => navigate(ROUTES.ALERTS)}
           />
         </div>
 
         {/* RIGHT COLUMN: Device Cards & CTA (col-span-8) */}
         <div className="col-span-12 lg:col-span-8 flex flex-col gap-10">
-          
           {/* REQUEST FOR ANOTHER DEVICE SECTION (Horizontal CTA) */}
           <ProvisionDeviceCard onAction={handleRequestDevice} />
 
@@ -134,7 +131,9 @@ const ResidentRealTimeMonitor = () => {
                     deviceName={device.device_name}
                     telemetry={telemetry?.[device.device_id]}
                     assignment={assignments[device.device_id]}
-                    onViewHistory={() => navigate(ROUTES.DEVICE_ANALYTICS.replace(":deviceId", device.device_id))}
+                    onViewHistory={() =>
+                      navigate(ROUTES.DEVICE_ANALYTICS.replace(":deviceId", device.device_id))
+                    }
                   />
                 </CardErrorBoundary>
               ))}

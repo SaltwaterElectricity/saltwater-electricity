@@ -108,7 +108,7 @@ const VerifyOTPStep = ({ email, onSuccess, onBack }) => {
             />
           </div>
         </div>
-        
+
         <h1 className="text-3xl font-bold text-slate-900 mb-2">
           Verify <span className="text-primary">Identity</span>
         </h1>
@@ -137,7 +137,7 @@ const VerifyOTPStep = ({ email, onSuccess, onBack }) => {
         <div className="flex justify-center gap-2 sm:gap-3 mb-8" onPaste={handlePaste}>
           {[0, 1, 2, 3, 4, 5].map((index) => (
             <input
-              key={`otp-field-${index}`} 
+              key={`otp-field-${index}`}
               ref={(el) => (inputRefs.current[index] = el)}
               type="text"
               inputMode="numeric"
@@ -171,16 +171,12 @@ const VerifyOTPStep = ({ email, onSuccess, onBack }) => {
           className="w-full primary-gradient py-4 rounded-2xl flex items-center justify-center gap-3 text-white font-bold transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed group"
         >
           <div className="bg-white/20 p-1.5 rounded-full shrink-0">
-            {loading ? (
-              <div className="loader-spinner" />
-            ) : (
-              <Lock className="h-5 w-5" />
-            )}
+            {loading ? <div className="loader-spinner" /> : <Lock className="h-5 w-5" />}
           </div>
-          <span className="text-lg">
-            {loading ? "Verifying..." : "Verify & Continue"}
-          </span>
-          {!loading && <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />}
+          <span className="text-lg">{loading ? "Verifying..." : "Verify & Continue"}</span>
+          {!loading && (
+            <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
+          )}
         </button>
       </form>
 

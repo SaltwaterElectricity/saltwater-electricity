@@ -125,11 +125,7 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
         )}
 
         {view === "forgot-reset" && isVerified && (
-          <ResetPassword
-            email={forgotEmail}
-            otp={forgotOtp}
-            onSuccess={handleResetSuccess}
-          />
+          <ResetPassword email={forgotEmail} otp={forgotOtp} onSuccess={handleResetSuccess} />
         )}
       </div>
     );
@@ -140,9 +136,7 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
     <div className="w-full">
       {/* Welcome Header */}
       <div className="text-center mb-8 animate-in fade-in slide-in-from-top-4 duration-700">
-        <h1 className="text-2xl font-bold text-on-surface mb-2 font-display">
-          Welcome Back
-        </h1>
+        <h1 className="text-2xl font-bold text-on-surface mb-2 font-display">Welcome Back</h1>
         <p className="text-outline text-xs font-body-md uppercase tracking-wider">
           Saltwater Device Monitoring
         </p>

@@ -244,12 +244,24 @@
     animation: fadeInUp 0.6s ease forwards;
   }
 
-  .otp-delay-1 { animation-delay: 0.1s; }
-  .otp-delay-2 { animation-delay: 0.2s; }
-  .otp-delay-3 { animation-delay: 0.3s; }
-  .otp-delay-4 { animation-delay: 0.4s; }
-  .otp-delay-5 { animation-delay: 0.5s; }
-  .otp-delay-6 { animation-delay: 0.6s; }
+  .otp-delay-1 {
+    animation-delay: 0.1s;
+  }
+  .otp-delay-2 {
+    animation-delay: 0.2s;
+  }
+  .otp-delay-3 {
+    animation-delay: 0.3s;
+  }
+  .otp-delay-4 {
+    animation-delay: 0.4s;
+  }
+  .otp-delay-5 {
+    animation-delay: 0.5s;
+  }
+  .otp-delay-6 {
+    animation-delay: 0.6s;
+  }
 
   .loader-spinner {
     border: 2px solid rgba(255, 255, 255, 0.3);
@@ -261,8 +273,12 @@
   }
 
   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 
   .pulse-live {
@@ -270,9 +286,15 @@
   }
 
   @keyframes pulse-live-animation {
-    0% { opacity: 1; }
-    50% { opacity: 0.4; }
-    100% { opacity: 1; }
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.4;
+    }
+    100% {
+      opacity: 1;
+    }
   }
 
   .transition-all-custom {
