@@ -10,7 +10,10 @@ const ReadingColumn = ({ label, value, unit, color }) => (
   <div className="w-40 group/reading">
     <div className="flex flex-col mb-1">
       <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">{label}</span>
-      <span className="text-sm font-bold text-gray-900">{value}{unit}</span>
+      <span className="text-sm font-bold text-gray-900">
+        {value}
+        {unit}
+      </span>
     </div>
     <div className="flex items-end space-x-1 h-8">
       {[

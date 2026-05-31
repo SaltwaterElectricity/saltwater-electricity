@@ -1,14 +1,5 @@
 import { memo } from "react";
-import {
-  X,
-  User,
-  Phone,
-  MapPin,
-  CheckCircle2,
-  AlertTriangle,
-  WifiOff,
-  Bolt,
-} from "lucide-react";
+import { X, User, Phone, MapPin, CheckCircle2, AlertTriangle, WifiOff, Bolt } from "lucide-react";
 import { cn } from "../../../utils/cn";
 
 /**
@@ -36,8 +27,8 @@ const TimeRangeFilters = () => (
         key={range}
         className={cn(
           "px-5 py-2 text-[11px] font-bold rounded-full transition-all duration-200",
-          i === 0 
-            ? "bg-primary text-white shadow-sm hover:bg-blue-700" 
+          i === 0
+            ? "bg-primary text-white shadow-sm hover:bg-blue-700"
             : "text-primary hover:bg-primary hover:text-white"
         )}
       >
@@ -55,13 +46,15 @@ const MiniGraphSection = ({ label, value, unit, color, data }) => (
   <div className="pt-4">
     <div className="flex items-center justify-between mb-4">
       <div>
-        <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">{label} ({unit})</p>
+        <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+          {label} ({unit})
+        </p>
         <div className="flex items-center space-x-2">
           <span className="text-xl font-bold text-gray-900">{value}</span>
         </div>
       </div>
     </div>
-    
+
     <div className="relative h-32 flex items-end justify-between px-1">
       {/* Tooltip Overlay */}
       <div className="absolute -top-12 left-[80%] bg-black text-white shadow-lg rounded-lg border-2 border-white p-2 text-center z-10 font-extrabold min-w-[60px]">
@@ -75,8 +68,12 @@ const MiniGraphSection = ({ label, value, unit, color, data }) => (
           className={cn(
             "w-1.5 rounded-t transition-all duration-700",
             i === 6 // Highlight a bar like in code1.html
-              ? (color === "blue" ? "bg-blue-600 h-[85%]" : "bg-purple-600 h-[80%]")
-              : (color === "blue" ? "bg-blue-400" : "bg-purple-400")
+              ? color === "blue"
+                ? "bg-blue-600 h-[85%]"
+                : "bg-purple-600 h-[80%]"
+              : color === "blue"
+                ? "bg-blue-400"
+                : "bg-purple-400"
           )}
           style={{ height: i === 6 ? undefined : `${h}%` }}
         />
@@ -85,7 +82,7 @@ const MiniGraphSection = ({ label, value, unit, color, data }) => (
 
     {/* X-Axis Labels */}
     <div className="flex justify-between mt-2 text-[9px] text-gray-400 font-medium">
-      {["10:00", "10:05", "10:10", "10:15", "10:20", "10:25", "10:30"].map(t => (
+      {["10:00", "10:05", "10:10", "10:15", "10:20", "10:25", "10:30"].map((t) => (
         <span key={t}>{t}</span>
       ))}
     </div>
@@ -99,13 +96,18 @@ const MiniGraphSection = ({ label, value, unit, color, data }) => (
 const AlertRow = ({ icon: Icon, title, desc, time, status }) => (
   <div className="flex items-center justify-between">
     <div className="flex items-center space-x-3">
-      <div className={cn(
-        "w-8 h-8 rounded-full flex items-center justify-center border",
-        status === "success" ? "bg-green-50 text-green-500 border-green-100" :
-        status === "warning" ? "bg-orange-50 text-orange-500 border-orange-100" :
-        status === "danger" ? "bg-red-50 text-red-500 border-red-100" :
-        "bg-gray-50 text-gray-400 border-gray-100"
-      )}>
+      <div
+        className={cn(
+          "w-8 h-8 rounded-full flex items-center justify-center border",
+          status === "success"
+            ? "bg-green-50 text-green-500 border-green-100"
+            : status === "warning"
+              ? "bg-orange-50 text-orange-500 border-orange-100"
+              : status === "danger"
+                ? "bg-red-50 text-red-500 border-red-100"
+                : "bg-gray-50 text-gray-400 border-gray-100"
+        )}
+      >
         <Icon size={16} />
       </div>
       <div>
@@ -115,13 +117,18 @@ const AlertRow = ({ icon: Icon, title, desc, time, status }) => (
     </div>
     <div className="flex items-center space-x-2">
       <p className="text-[10px] text-gray-400">{time}</p>
-      <div className={cn(
-        "w-1.5 h-1.5 rounded-full",
-        status === "success" ? "bg-green-500" :
-        status === "warning" ? "bg-orange-500" :
-        status === "danger" ? "bg-red-500" :
-        "bg-gray-300"
-      )} />
+      <div
+        className={cn(
+          "w-1.5 h-1.5 rounded-full",
+          status === "success"
+            ? "bg-green-500"
+            : status === "warning"
+              ? "bg-orange-500"
+              : status === "danger"
+                ? "bg-red-500"
+                : "bg-gray-300"
+        )}
+      />
     </div>
   </div>
 );
@@ -174,20 +181,18 @@ const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) 
                   <span
                     className={cn(
                       "px-2 py-0.5 text-[10px] font-black rounded uppercase",
-                      device.status === "Online" ? "bg-green-50 text-green-600" :
-                      device.status === "Warning" ? "bg-orange-50 text-orange-600" :
-                      "bg-gray-100 text-gray-500"
+                      device.status === "Online"
+                        ? "bg-green-50 text-green-600"
+                        : device.status === "Warning"
+                          ? "bg-orange-50 text-orange-600"
+                          : "bg-gray-100 text-gray-500"
                     )}
                   >
                     {device.status}
                   </span>
                 </div>
-                <p className="text-sm font-medium text-gray-500">
-                  {device.residentName}
-                </p>
-                <p className="text-xs text-gray-400">
-                  {device.residentEmail}
-                </p>
+                <p className="text-sm font-medium text-gray-500">{device.residentName}</p>
+                <p className="text-xs text-gray-400">{device.residentEmail}</p>
               </div>
             </div>
 
@@ -199,8 +204,8 @@ const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) 
                   onClick={() => scrollToSection(tab)}
                   className={cn(
                     "pb-3 text-sm font-bold border-b-2 transition-all capitalize",
-                    activeTab === tab 
-                      ? "text-primary border-primary" 
+                    activeTab === tab
+                      ? "text-primary border-primary"
                       : "text-gray-400 border-transparent hover:text-gray-600"
                   )}
                 >
@@ -213,7 +218,10 @@ const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) 
           {/* Panel Content - Single Page Scrollable */}
           <div className="p-6 space-y-8">
             {/* Overview Section */}
-            <div id="section-overview" className="grid grid-cols-2 gap-y-6 scroll-mt-[260px] animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div
+              id="section-overview"
+              className="grid grid-cols-2 gap-y-6 scroll-mt-[260px] animate-in fade-in slide-in-from-bottom-4 duration-500"
+            >
               <InfoItem icon={User} label="Resident Name" value={device.residentName} />
               <InfoItem label="Assigned Date" value="MAY 12, 2025" />
               <InfoItem icon={Phone} label="Contact Number" value={device.residentPhone} />
@@ -223,7 +231,10 @@ const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) 
             </div>
 
             {/* Readings Section */}
-            <div id="section-readings" className="pt-4 scroll-mt-[260px] animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div
+              id="section-readings"
+              className="pt-4 scroll-mt-[260px] animate-in fade-in slide-in-from-bottom-4 duration-500"
+            >
               <TimeRangeFilters />
               <div className="space-y-10">
                 <MiniGraphSection
@@ -244,7 +255,10 @@ const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) 
             </div>
 
             {/* Alerts Section */}
-            <div id="section-alerts" className="pt-4 scroll-mt-[260px] animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div
+              id="section-alerts"
+              className="pt-4 scroll-mt-[260px] animate-in fade-in slide-in-from-bottom-4 duration-500"
+            >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-sm font-bold text-gray-900">Recent Alerts</h3>
                 <button className="text-[10px] font-bold text-primary hover:underline">
