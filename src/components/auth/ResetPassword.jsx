@@ -68,7 +68,7 @@ const ResetPassword = ({ email, otp, onSuccess }) => {
         <p className="text-slate-500 text-sm mt-2 text-center leading-relaxed">
           Your password has been changed successfully.
           <br />
-          <span className="font-semibold text-blue-600 italic">
+          <span className="font-semibold text-primary italic">
             You can now sign in with your new credentials.
           </span>
         </p>
@@ -82,21 +82,21 @@ const ResetPassword = ({ email, otp, onSuccess }) => {
   }
 
   return (
-    <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-      <header className="mb-8">
+    <div className="animate-in fade-in duration-500">
+      <header className="mb-6">
         <h2 className="text-2xl font-bold text-slate-800 tracking-tight">New Password</h2>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-xs text-slate-500 mt-1">
           Create a strong password to secure your account.
         </p>
       </header>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-[10px] font-bold uppercase tracking-wider rounded">
+        <div className="mb-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-[9px] font-bold uppercase tracking-wider rounded">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <PasswordInput
           label="Create Password"
           name="newPassword"
@@ -108,7 +108,7 @@ const ResetPassword = ({ email, otp, onSuccess }) => {
             validate: () => strength >= 80 || "Does not meet complexity requirements",
           }}
         >
-          <div className="flex flex-col gap-2 mt-2">
+          <div className="flex flex-col gap-1.5 mt-2">
             <StrengthMeter strength={strength} />
             <PasswordChecklist password={newPassword} />
           </div>
@@ -128,7 +128,7 @@ const ResetPassword = ({ email, otp, onSuccess }) => {
         <button
           type="submit"
           disabled={loading || strength < 80}
-          className="w-full h-14 bg-slate-900 hover:bg-black disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold rounded-2xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"
+          className="w-full h-12 bg-primary hover:brightness-110 disabled:bg-slate-200 disabled:text-slate-400 text-white text-sm font-bold rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95 flex items-center justify-center gap-2"
         >
           {loading ? "Processing..." : "Update Password"}
         </button>

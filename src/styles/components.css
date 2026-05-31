@@ -227,4 +227,72 @@
   .teal-gradient {
     background: linear-gradient(135deg, #1fd6c1 0%, #34c759 100%);
   }
+
+  /* OTP & Verification Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeInUp {
+    animation: fadeInUp 0.6s ease forwards;
+  }
+
+  .otp-delay-1 { animation-delay: 0.1s; }
+  .otp-delay-2 { animation-delay: 0.2s; }
+  .otp-delay-3 { animation-delay: 0.3s; }
+  .otp-delay-4 { animation-delay: 0.4s; }
+  .otp-delay-5 { animation-delay: 0.5s; }
+  .otp-delay-6 { animation-delay: 0.6s; }
+
+  .loader-spinner {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 2px solid #fff;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .pulse-live {
+    animation: pulse-live-animation 2s infinite;
+  }
+
+  @keyframes pulse-live-animation {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+  }
+
+  .transition-all-custom {
+    transition: all 0.3s ease-in-out;
+  }
+
+  .side-panel-hidden {
+    width: 0 !important;
+    min-width: 0 !important;
+    margin-right: 0 !important;
+    overflow: hidden;
+    border-left-width: 0 !important;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .side-panel-visible {
+    width: 450px !important;
+    min-width: 450px !important;
+    opacity: 1;
+    pointer-events: auto;
+  }
 }

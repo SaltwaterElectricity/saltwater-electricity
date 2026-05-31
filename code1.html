@@ -1,485 +1,772 @@
-<!DOCTYPE html><html class="light" lang="en" style=""><head>
-<meta charset="utf-8">
+<!DOCTYPE html><html class="h-full bg-[#f8fafc]" lang="en" style="width: 1280px; height: 1024px; overflow: hidden; position: relative;"><head></head><body class="h-full overflow-hidden flex bg-[#F0F2F5]">```html
+
+
+    <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>User Provisioning | Saltwater Enterprise</title>
+<title>Saltwater Electricity Monitoring - Real Time Monitor</title>
+<!-- Tailwind CSS v3 -->
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-<script id="tailwind-config">
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .transition-all-custom { transition: all 0.3s ease-in-out; }
+        .side-panel-hidden { width: 0 !important; min-width: 0 !important; margin-right: 0 !important; overflow: hidden; border-left-width: 0 !important; opacity: 0; pointer-events: none; }
+        .side-panel-visible { width: 450px !important; min-width: 450px !important; opacity: 1; pointer-events: auto; }
+        .pulse-live { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+        /* Custom Scrollbar for a cleaner UI */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+<script>
         tailwind.config = {
-            darkMode: "class",
             theme: {
                 extend: {
-                    "colors": {
-                        "surface-container-high": "#e2e7ff",
-                        "tertiary-fixed-dim": "#ffb596",
-                        "on-secondary-container": "#5e656d",
-                        "surface-dim": "#d2d9f4",
-                        "outline-variant": "#c3c6d7",
-                        "surface-variant": "#dae2fd",
-                        "on-primary": "#ffffff",
-                        "background": "#faf8ff",
-                        "on-error-container": "#93000a",
-                        "inverse-primary": "#b4c5ff",
-                        "tertiary": "#943700",
-                        "secondary-fixed-dim": "#c0c7d0",
-                        "surface-container-lowest": "#ffffff",
-                        "primary": "#004ac6",
-                        "primary-container": "#2563eb",
-                        "on-primary-fixed": "#00174b",
-                        "surface-container-highest": "#dae2fd",
-                        "tertiary-fixed": "#ffdbcd",
-                        "outline": "#737686",
-                        "on-tertiary-container": "#ffede6",
-                        "on-secondary-fixed": "#151c23",
-                        "tertiary-container": "#bc4800",
-                        "on-tertiary-fixed-variant": "#7d2d00",
-                        "secondary-container": "#dce3ec",
-                        "error": "#ba1a1a",
-                        "surface-container": "#eaedff",
-                        "on-primary-container": "#eeefff",
-                        "surface-container-low": "#f2f3ff",
-                        "secondary": "#585f67",
-                        "on-tertiary-fixed": "#360f00",
-                        "on-background": "#131b2e",
-                        "secondary-fixed": "#dce3ec",
-                        "surface-tint": "#0053db",
-                        "on-secondary": "#ffffff",
-                        "primary-fixed-dim": "#b4c5ff",
-                        "surface-bright": "#faf8ff",
-                        "inverse-on-surface": "#eef0ff",
-                        "on-surface-variant": "#434655",
-                        "inverse-surface": "#283044",
-                        "error-container": "#ffdad6",
-                        "on-surface": "#131b2e",
-                        "on-primary-fixed-variant": "#003ea8",
-                        "surface": "#faf8ff",
-                        "on-tertiary": "#ffffff",
-                        "on-secondary-fixed-variant": "#40484f",
-                        "on-error": "#ffffff"
+                    colors: {
+                        primary: '#0050cb',
+                        surface: '#faf8ff',
+                        'surface-container': '#ecedfa',
                     },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "2xl": "1rem",
-                        "3xl": "2rem",
-                        "full": "9999px"
-                    },
-                    "spacing": {
-                        "container-max": "1440px",
-                        "xl": "32px",
-                        "base": "4px",
-                        "margin-mobile": "16px",
-                        "3xl": "64px",
-                        "gutter": "24px",
-                        "xs": "4px",
-                        "2xl": "48px",
-                        "sm": "8px",
-                        "md": "16px",
-                        "lg": "24px"
-                    },
-                    "fontFamily": {
-                        "label-sm": ["Inter"],
-                        "body-lg": ["Inter"],
-                        "label-md": ["Inter"],
-                        "headline-md": ["Inter"],
-                        "body-md": ["Inter"],
-                        "headline-lg": ["Inter"],
-                        "headline-sm": ["Inter"]
-                    },
-                    "fontSize": {
-                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
-                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-                        "label-md": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
-                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
-                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
-                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
-                        "headline-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}]
+                    borderRadius: {
+                        'xl-custom': '20px',
+                        '2xl-custom': '24px',
                     }
                 }
             }
         }
     </script>
-<style>
-        .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 1);
-            box-shadow: 0 4px 20px -2px rgba(37, 99, 235, 0.08);
-        }
-        .modal-overlay {
-            background: rgba(19, 27, 46, 0.4);
-            backdrop-filter: blur(8px);
-        }
-        .custom-shadow {
-            box-shadow: 0 10px 40px -10px rgba(0, 74, 198, 0.15);
-        }
-        input:focus, select:focus {
-            outline: none;
-            border-color: #2563eb !important;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
-        }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .modal-animate-in {
-            animation: modalScaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        @keyframes modalScaleUp {
-            from { opacity: 0; transform: scale(0.95) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-    </style>
-</head>
-<body class="bg-surface font-body-md text-on-surface min-h-screen">
-<!-- Global Navigation Anchor -->
-<aside class="fixed left-0 top-0 h-full py-lg space-y-base flex flex-col bg-surface-container-low dark:bg-inverse-surface shadow-md shadow-primary/10 w-[280px] z-40 hidden md:flex">
-<div class="px-lg pb-md">
-<h1 class="font-headline-sm text-headline-sm font-black text-primary">jjjjjSaltwater Enterprise</h1>
-<p class="text-label-md font-label-md text-on-surface-variant">Admin Console</p>
+<!-- BEGIN: LeftSidebar -->
+<aside class="w-64 bg-white border-r border-gray-200 flex flex-col h-full z-10 shrink-0" data-purpose="main-navigation">
+<div class="p-6 flex items-center space-x-3">
+<div class="w-10 h-10 bg-[#0050cb] rounded-full flex items-center justify-center text-white">
+<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
 </div>
-<nav class="flex-1 space-y-1">
-<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-all duration-200" href="#">
-<span class="material-symbols-outlined">dashboard</span>
-<span class="font-label-md text-label-md">Dashboard</span>
+<div>
+<h1 class="font-bold text-gray-900 leading-tight tracking-tight">SALTWATER</h1>
+<p class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Electricity Monitoring</p>
+</div>
+</div>
+<nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
+<div class="text-[11px] font-bold text-gray-400 uppercase px-2 mb-4 tracking-widest">Super Admin</div>
+<a class="flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 group" href="#">
+<svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                Dashboard
+            </a>
+<a class="flex items-center px-3 py-2.5 text-sm font-semibold text-[#0050cb] bg-blue-50 rounded-lg" href="#">
+<svg class="mr-3 h-5 w-5 text-[#0050cb]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                Real Time Monitor
+            </a>
+<a class="flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 group" href="#">
+<svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                Devices
+            </a>
+<a class="flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 group" href="#">
+<svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                Residents
+            </a>
+<a class="flex items-center justify-between px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 group" href="#">
+<div class="flex items-center">
+<svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                    Alerts
+                </div>
+<span class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">6</span>
 </a>
-<a class="flex items-center gap-md px-md py-sm bg-primary-container text-on-primary-container font-semibold rounded-lg mx-2" href="#">
-<span class="material-symbols-outlined">person_add</span>
-<span class="font-label-md text-label-md">User Provisioning</span>
-</a>
-<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-all duration-200" href="#">
-<span class="material-symbols-outlined">insights</span>
-<span class="font-label-md text-label-md">Analytics</span>
-</a>
-<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-all duration-200" href="#">
-<span class="material-symbols-outlined">bolt</span>
-<span class="font-label-md text-label-md">Grid Health</span>
-</a>
-<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-all duration-200" href="#">
-<span class="material-symbols-outlined">history</span>
-<span class="font-label-md text-label-md">System Logs</span>
-</a>
+<a class="flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 group" href="#">
+<svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                Analytics
+            </a>
+<a class="flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 group" href="#">
+<svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                Reports
+            </a>
+<a class="flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 group" href="#">
+<svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                Settings
+            </a>
 </nav>
-<div class="pt-lg border-t border-outline-variant/30">
-<button class="w-[calc(100%-32px)] mx-md bg-primary text-on-primary py-sm rounded-lg font-label-md text-label-md shadow-sm hover:translate-y-[-1px] transition-all">
-                New Provision
-            </button>
+<div class="p-4 border-t border-gray-100">
+<div class="flex items-center space-x-3 p-2 bg-blue-50 rounded-xl cursor-pointer">
+<img alt="User Profile" class="w-10 h-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2xUYpwUCZ02yWAmhFdJl2kIO3Lx00u1HegEwLe_8OaneAahzXuOTt0aVrTrcDsCV8uo2vePyI0Z_Vt3-OPY3vlgQjXze7fGvypm6DNWgwMa1gHfZXmAJhEe_-Oe4WMCxSwQMir4DbRZx5MAUS6mW7SX538vyd80KW9IElqfz_okbT0yZEpml-TBVIEmaW0ySZDQQ7T-pXPmJldVDeKyt2Ga7T0y2Uff8yqrDpl0Cgd8BQBRpnxn23_sLSguJuXR6RzI7V3ynNCV0">
+<div class="flex-1 overflow-hidden">
+<p class="text-sm font-bold text-gray-900 truncate">Super Admin</p>
+<p class="text-[11px] text-gray-500 truncate">superadmin@saltwater.com</p>
+</div>
+<svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
 </div>
 </aside>
-<!-- Main Content Area -->
-<main class="md:ml-[280px] min-h-screen p-lg relative">
-<!-- Breadcrumb & Top Bar -->
-<header class="flex justify-between items-center mb-xl">
+<!-- END: LeftSidebar -->
+<main class="flex-1 flex overflow-hidden relative">
+<!-- BEGIN: DashboardMainContent -->
+<div class="flex-1 flex flex-col overflow-y-auto p-8 h-full transition-all-custom" id="mainContent">
+<!-- BEGIN: HeaderSection -->
+<div class="flex items-center justify-between mb-8" data-purpose="header">
 <div>
-<h2 class="font-headline-md text-headline-md text-on-surface">Provisioning Hub</h2>
-<div class="flex gap-sm text-label-sm text-on-surface-variant">
-<span class="">Admin</span> / <span class="">Operations</span> / <span class="text-primary">User Registration</span>
+<div class="flex items-center space-x-3">
+<h2 class="text-2xl font-bold text-gray-900">Real Time Monitor</h2>
+<div class="flex items-center px-2 py-0.5 bg-green-50 rounded-full">
+<span class="w-2 h-2 bg-green-500 rounded-full mr-2 pulse-live"></span>
+<span class="text-[11px] font-bold text-green-600 uppercase">Live</span>
 </div>
 </div>
-<div class="flex items-center gap-md">
-<div class="bg-surface-container-high p-sm rounded-full cursor-pointer hover:bg-surface-container-highest transition-colors">
-<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<p class="text-sm text-gray-500 mt-1 font-medium">Live overview of all resident devices and real-time readings.</p>
 </div>
-<img alt="Administrator Avatar" class="w-10 h-10 rounded-full border-2 border-primary/20 shadow-sm" data-alt="A professional headshot of a middle-aged male system administrator with a confident and friendly expression. He wears a navy blue suit and is set against a clean, softly lit office background with cool blue tones and minimal furniture. The image has a crisp, high-end corporate aesthetic with soft, diffuse lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5s4o6m4eXAKAZNLYUe_iPxBEMruLnUmzThGG3MZj0VvbNK7ZVdLB8TuWPdH8PSL-ICUin82IGQS7ARI97PUD5o2agfvRBA09eM64q52u2xBjgYM986RLFWExExnVnTwSTeQikjPXjR-vCbDhBgmGxdGI2PVC3OEFBKhgc0ylBqHVaOywLJ4JNQW_NSONND3thoRwqzOv9eS_M0l4jLQCx8K5g3XByAA0EB2w7kL6te6PcE4H3AEEctHWaHvfiGgkPc86C28QDSvk">
+<div class="flex items-center space-x-4">
+<div class="flex items-center bg-white rounded-xl border border-gray-200 px-4 py-2 space-x-3 cursor-pointer hover:border-blue-300 transition-colors">
+<svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<div class="text-xs">
+<p class="text-gray-400 font-medium">Auto Refresh</p>
+<p class="text-gray-900 font-bold">10 sec</p>
 </div>
-</header>
-<!-- Dummy Content to Show Context -->
-<div class="grid grid-cols-12 gap-lg opacity-40 select-none">
-<div class="col-span-12 md:col-span-8 bg-surface-container p-xl rounded-3xl border border-outline-variant/20 h-96"></div>
-<div class="col-span-12 md:col-span-4 space-y-lg">
-<div class="bg-surface-container p-lg rounded-3xl border border-outline-variant/20 h-44"></div>
-<div class="bg-surface-container p-lg rounded-3xl border border-outline-variant/20 h-44"></div>
+<svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
 </div>
-</div>
-<!-- THE PROVISIONING MODAL OVERLAY -->
-<div class="fixed inset-0 z-50 flex items-center justify-center p-md md:p-xl modal-overlay" id="provisioning-modal">
-<!-- MAIN MODAL CONTAINER -->
-<div class="bg-white w-full max-w-5xl h-[921px] md:h-auto max-h-[850px] rounded-3xl border border-surface-container-high custom-shadow flex flex-col md:flex-row overflow-hidden modal-animate-in relative">
-<!-- Close Button -->
-<button class="absolute top-md right-md w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-all z-50" onclick="closeModal()">
-<span class="material-symbols-outlined text-outline">close</span>
+<button class="p-2.5 bg-white border border-gray-200 rounded-xl relative hover:border-blue-300 transition-colors">
+<svg class="h-6 w-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
 </button>
-<!-- Left Column: Form Section -->
-<div class="flex-1 p-lg md:p-xl overflow-y-auto custom-scrollbar">
-<header class="mb-lg">
-<h3 class="font-headline-lg text-headline-lg text-on-surface"><span style="color: rgb(0, 0, 0);" class="">User Account</span> <span style="color: rgb(37, 99, 235);" class="">Provisioning</span></h3>
-<p class="font-body-md text-body-md text-on-surface-variant mt-sm">
-                            Register a new user to the system. Credentials will automatically be generated and sent via email after account provisioning.
-                        </p>
-</header>
-<form class="space-y-xl" id="provisioning-form">
-<!-- Personal Information -->
-<section>
-<div class="flex items-center gap-sm mb-md">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">person</span>
-<h4 class="font-label-md text-label-md uppercase tracking-wider text-[#2563EB]">Personal Information</h4>
+<div class="relative">
+<svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<input class="pl-10 pr-4 py-2.5 w-64 bg-white border-gray-200 rounded-xl text-sm focus:ring-primary focus:border-primary border" placeholder="Search device or resident..." type="text">
 </div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">First Name <span class="text-error">*</span></label>
-<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="firstName" name="firstName" placeholder="e.g. Juan" required="" type="text">
 </div>
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Last Name <span class="text-error">*</span></label>
-<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="lastName" name="lastName" placeholder="e.g. Dela Cruz" required="" type="text">
 </div>
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Middle Name</label>
-<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="middleName" name="middleName" placeholder="e.g. Santos" type="text">
+<!-- END: HeaderSection -->
+<!-- BEGIN: TopSummaryCards -->
+<div class="grid grid-cols-2 gap-6 mb-6">
+<!-- Total Voltage Card -->
+<div class="bg-white p-6 rounded-2xl-custom shadow-sm border border-gray-100 flex items-center">
+<div class="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center mr-6">
+<svg class="h-7 w-7 text-[#0050cb]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
 </div>
-<div class="grid grid-cols-2 gap-md">
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Gender <span class="text-error">*</span></label>
-<select class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="gender" name="gender" required="">
-<option value="">Select</option>
-<option value="Male">Male</option>
-<option value="Female">Female</option>
+<div class="flex-1">
+<p class="text-sm font-medium text-gray-500">Total Voltage</p>
+<div class="flex items-baseline space-x-2">
+<h3 class="text-3xl font-black text-gray-900">240V</h3>
+</div>
+<p class="text-xs text-gray-400 mt-1">All real-time voltage</p>
+</div>
+<div class="flex items-end space-x-1 h-12" data-purpose="mini-graph">
+<div class="w-1.5 bg-blue-100 rounded-full h-4"></div>
+<div class="w-1.5 bg-blue-200 rounded-full h-6"></div>
+<div class="w-1.5 bg-blue-300 rounded-full h-8"></div>
+<div class="w-1.5 bg-blue-400 rounded-full h-12"></div>
+<div class="w-1.5 bg-primary rounded-full h-10"></div>
+<div class="w-1.5 bg-blue-200 rounded-full h-5"></div>
+</div>
+</div>
+<!-- Total Salinity Card -->
+<div class="bg-white p-6 rounded-2xl-custom shadow-sm border border-gray-100 flex items-center">
+<div class="w-14 h-14 bg-purple-50 rounded-full flex items-center justify-center mr-6">
+<svg class="h-7 w-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div class="flex-1">
+<p class="text-sm font-medium text-gray-500">Total Salinity</p>
+<div class="flex items-baseline space-x-2">
+<h3 class="text-3xl font-black text-gray-900">253<span class="text-lg">ppm</span></h3>
+</div>
+<p class="text-xs text-gray-400 mt-1">All real-time salinity</p>
+</div>
+<div class="flex items-end space-x-1 h-12" data-purpose="mini-graph">
+<div class="w-1.5 bg-purple-100 rounded-full h-8"></div>
+<div class="w-1.5 bg-purple-200 rounded-full h-10"></div>
+<div class="w-1.5 bg-purple-300 rounded-full h-12"></div>
+<div class="w-1.5 bg-purple-400 rounded-full h-8"></div>
+<div class="w-1.5 bg-purple-600 rounded-full h-9"></div>
+<div class="w-1.5 bg-purple-200 rounded-full h-6"></div>
+</div>
+</div>
+</div>
+<!-- END: TopSummaryCards -->
+<!-- BEGIN: BottomSummaryCards -->
+<div class="grid grid-cols-3 gap-6 mb-8">
+<!-- Total Devices -->
+<div class="bg-white p-6 rounded-2xl-custom shadow-sm border border-gray-100 flex items-center">
+<div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mr-4">
+<svg class="h-6 w-6 text-[#0050cb]" fill="currentColor" viewBox="0 0 20 20"><path d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"></path></svg>
+</div>
+<div class="flex-1">
+<p class="text-xs font-bold text-gray-500 uppercase tracking-tight">Total Devices</p>
+<h3 class="text-2xl font-bold text-gray-900">10</h3>
+<p class="text-[10px] text-gray-400">Across all locations</p>
+</div>
+<div class="flex items-end space-x-1 h-8">
+<div class="w-1 bg-blue-100 rounded-full h-3"></div>
+<div class="w-1 bg-blue-200 rounded-full h-4"></div>
+<div class="w-1 bg-blue-300 rounded-full h-6"></div>
+<div class="w-1 bg-primary rounded-full h-8"></div>
+</div>
+</div>
+<!-- Online Devices -->
+<div class="bg-white p-6 rounded-2xl-custom shadow-sm border border-gray-100 flex items-center">
+<div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mr-4">
+<svg class="h-6 w-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071a9.5 9.5 0 0114.142 0M6.27 6.405a13.5 13.5 0 0119.46 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div class="flex-1">
+<p class="text-xs font-bold text-gray-500 uppercase tracking-tight">Online Devices</p>
+<h3 class="text-2xl font-bold text-gray-900">5</h3>
+<p class="text-[10px] text-gray-400">Active devices</p>
+</div>
+<div class="flex items-end space-x-1 h-8">
+<div class="w-1 bg-green-100 rounded-full h-5"></div>
+<div class="w-1 bg-green-200 rounded-full h-7"></div>
+<div class="w-1 bg-green-500 rounded-full h-8"></div>
+<div class="w-1 bg-green-200 rounded-full h-4"></div>
+</div>
+</div>
+<!-- Inactive Devices -->
+<div class="bg-white p-6 rounded-2xl-custom shadow-sm border border-gray-100 flex items-center">
+<div class="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center mr-4">
+<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div class="flex-1">
+<p class="text-xs font-bold text-gray-500 uppercase tracking-tight">Inactive Devices</p>
+<h3 class="text-2xl font-bold text-gray-900">5</h3>
+<p class="text-[10px] text-gray-400">Inactive devices</p>
+</div>
+<div class="flex items-end space-x-1 h-8">
+<div class="w-1 bg-gray-100 rounded-full h-6"></div>
+<div class="w-1 bg-gray-200 rounded-full h-8"></div>
+<div class="w-1 bg-gray-300 rounded-full h-5"></div>
+<div class="w-1 bg-gray-200 rounded-full h-2"></div>
+</div>
+</div>
+</div>
+<!-- END: BottomSummaryCards -->
+<!-- BEGIN: Filters -->
+<div class="flex items-center space-x-4 mb-6">
+<div class="relative flex-1">
+<svg class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<input class="pl-9 pr-4 py-2 w-full bg-white border-gray-200 rounded-xl text-sm focus:ring-primary focus:border-primary border" placeholder="Search for device..." type="text">
+</div>
+<select class="bg-white border-gray-200 rounded-xl text-sm py-2 px-4 focus:ring-primary focus:border-primary min-w-[160px] border">
+<option>All Locations</option>
+<option>Purok 1</option>
+<option>Purok 2</option>
+</select>
+<select class="bg-white border-gray-200 rounded-xl text-sm py-2 px-4 focus:ring-primary focus:border-primary min-w-[140px] border">
+<option>Status</option>
+<option>Online</option>
+<option>Offline</option>
+<option>Warning</option>
 </select>
 </div>
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Birth Date <span class="text-error">*</span></label>
-<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="birthDate" name="birthDate" required="" type="date">
+<!-- END: Filters -->
+<!-- BEGIN: DeviceList -->
+<div class="space-y-4">
+<!-- Device Card 1 (DEVICE-001) -->
+<div class="bg-white px-6 py-4 rounded-2xl-custom border border-gray-100 flex items-center shadow-sm hover:shadow-md transition-shadow group h-[100px]">
+<div class="w-[28%] flex items-center space-x-3 pr-4 border-r border-gray-100 h-full">
+<div class="w-12 h-12 shrink-0 bg-blue-50 rounded-2xl flex items-center justify-center border border-blue-100">
+<svg class="h-6 w-6 text-[#0050cb]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></svg>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center space-x-2">
+<span class="font-bold text-gray-900 truncate">DEVICE-001</span>
+<span class="px-1.5 py-0.5 bg-green-50 text-green-600 text-[9px] font-bold rounded uppercase">Online</span>
+</div>
+<p class="text-xs text-gray-400 mt-0.5 truncate">Jasmine Sanchez</p>
+<div class="flex items-center mt-0.5 text-[10px] text-gray-400">
+<svg class="h-3 w-3 mr-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="truncate">Purok 1, SNQ</span>
 </div>
 </div>
 </div>
-</section>
-<!-- Location Details -->
-<section>
-<div class="flex items-center gap-sm mb-md">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">location_on</span>
-<h4 class="font-label-md text-label-md uppercase tracking-wider" style="color: #2563EB;">Location Details</h4>
+<div class="flex-1 flex items-center px-8 space-x-12">
+<div class="w-40">
+<div class="flex flex-col mb-1">
+<span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Voltage</span>
+<span class="text-sm font-bold text-gray-900">230V</span>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Region</label>
-<input class="w-full bg-surface-container-highest/50 border-outline-variant/30 rounded-xl px-md py-sm font-body-md text-on-surface-variant cursor-not-allowed" id="region" name="region" readonly="" type="text" value="Region IV-A">
-</div>
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">City/Province</label>
-<input class="w-full bg-surface-container-highest/50 border-outline-variant/30 rounded-xl px-md py-sm font-body-md text-on-surface-variant cursor-not-allowed" id="city" name="city" readonly="" type="text" value="Quezon">
-</div>
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Municipality</label>
-<input class="w-full bg-surface-container-highest/50 border-outline-variant/30 rounded-xl px-md py-sm font-body-md text-on-surface-variant cursor-not-allowed" id="municipality" name="municipality" readonly="" type="text" value="San Andres">
-</div>
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Barangay <span class="text-error">*</span></label>
-<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="barangay" name="barangay" placeholder="Enter barangay name" required="" type="text">
+<div class="flex items-end space-x-1 h-8">
+<div class="flex-1 bg-blue-100 rounded-sm h-3"></div>
+<div class="flex-1 bg-blue-200 rounded-sm h-5"></div>
+<div class="flex-1 bg-blue-300 rounded-sm h-8"></div>
+<div class="flex-1 bg-primary rounded-sm h-7"></div>
+<div class="flex-1 bg-blue-200 rounded-sm h-6"></div>
+<div class="flex-1 bg-blue-100 rounded-sm h-4"></div>
 </div>
 </div>
-</section>
-<!-- Account & Contact -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-xl">
-<section>
-<div class="flex items-center gap-sm mb-md">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">shield</span>
-<h4 class="font-label-md text-label-md uppercase tracking-wider text-[#2563EB]">Account Information</h4>
+<div class="w-40">
+<div class="flex flex-col mb-1">
+<span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Salinity</span>
+<span class="text-sm font-bold text-gray-900">350ppm</span>
 </div>
-<div class="space-y-md">
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Email Address <span class="text-error">*</span></label>
-<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="email" name="email" placeholder="juan.delacruz@example.com" required="" type="email">
-</div>
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Role <span class="text-error">*</span></label>
-<select class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="role" name="role" required="">
-<option value="Resident">Resident</option>
-<option value="Administrator">Administrator</option>
-</select>
-</div>
-</div>
-</section>
-<section>
-<div class="flex items-center gap-sm mb-md">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">call</span>
-<h4 class="font-label-md text-label-md uppercase tracking-wider" style="color: #2563EB;">Contact Information</h4>
-</div>
-<div class="space-y-md">
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Mobile Number <span class="text-error">*</span></label>
-<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="mobile" name="mobile" placeholder="+63 9XX XXX XXXX" required="" type="tel">
-</div>
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Alternate Contact</label>
-<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="altContact" name="altContact" placeholder="Optional contact number" type="tel">
-</div>
-</div>
-</section>
-</div>
-<!-- Footer Actions -->
-<div class="flex flex-col md:flex-row gap-md pt-lg border-t border-outline-variant/20">
-<button class="flex-1 md:flex-none px-xl py-sm rounded-xl font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high transition-all" onclick="closeModal()" type="button">
-                                Cancel
-                            </button>
-<button class="flex-1 bg-gradient-to-r from-primary to-primary-container text-on-primary px-xl py-sm rounded-xl font-label-md text-label-md shadow-md hover:translate-y-[-2px] hover:shadow-lg active:scale-[0.98] transition-all" type="submit">
-                                Review &amp; Provision User
-                            </button>
-</div>
-</form>
-</div>
-<!-- Right Column: Live Summary Card -->
-<div class="w-full md:w-[340px] bg-surface-container-low border-l border-outline-variant/30 p-lg hidden md:flex flex-col">
-<h4 class="font-label-md text-label-md uppercase tracking-wider text-outline mb-lg">Live Summary</h4>
-<div class="glass-card rounded-3xl p-lg space-y-md flex-1">
-<div class="flex flex-col items-center mb-lg">
-<div class="w-20 h-20 rounded-full bg-primary-fixed flex items-center justify-center text-primary-fixed-dim font-bold text-headline-md mb-md border-4 border-white shadow-sm overflow-hidden" id="summary-avatar-container">
-<span class="material-symbols-outlined text-primary text-[40px]">account_circle</span>
-</div>
-<h5 class="font-headline-sm text-headline-sm text-on-surface text-center" id="sum-name">New User</h5>
-<span class="bg-primary/10 text-primary px-sm py-[2px] rounded-full font-label-sm text-label-sm mt-xs" id="sum-role">Administrator</span>
-</div>
-<div class="space-y-sm">
-<div class="group">
-<p class="font-label-sm text-label-sm text-outline">Email Address</p>
-<p class="font-body-md text-on-surface truncate" id="sum-email">—</p>
-</div>
-<div class="group">
-<p class="font-label-sm text-label-sm text-outline">Gender</p>
-<p class="font-body-md text-on-surface" id="sum-gender">—</p>
-</div>
-<div class="group">
-<p class="font-label-sm text-label-sm text-outline">Birth Date</p>
-<p class="font-body-md text-on-surface" id="sum-birth">—</p>
-</div>
-<div class="group">
-<p class="font-label-sm text-label-sm text-outline">Address</p>
-<p class="font-body-md text-on-surface italic text-on-surface-variant" id="sum-address">..., San Andres, Quezon</p>
-</div>
-</div>
-<div class="mt-auto pt-lg">
-<div class="bg-primary/5 rounded-2xl p-md border border-primary/10">
-<div class="flex items-center gap-xs mb-xs">
-<span class="material-symbols-outlined text-primary text-sm">info</span>
-<span class="font-label-sm text-label-sm text-primary">Provisioning Status</span>
-</div>
-<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden">
-<div class="w-1/4 h-full bg-primary transition-all duration-500" id="progress-bar" style="width: 25%;"></div>
-</div>
-<p class="font-label-sm text-label-sm text-on-surface-variant mt-sm">Step 1 of 3: Drafting</p>
+<div class="flex items-end space-x-1 h-8">
+<div class="flex-1 bg-purple-100 rounded-sm h-4"></div>
+<div class="flex-1 bg-purple-200 rounded-sm h-6"></div>
+<div class="flex-1 bg-purple-400 rounded-sm h-8"></div>
+<div class="flex-1 bg-purple-600 rounded-sm h-5"></div>
+<div class="flex-1 bg-purple-200 rounded-sm h-4"></div>
 </div>
 </div>
 </div>
+<div class="flex items-center">
+<div class="w-20 flex flex-col items-start">
+<p class="text-[10px] font-bold text-gray-400">2m ago</p>
+<p class="text-[9px] text-gray-300 font-medium">real-time</p>
+</div>
+<button class="ml-6 px-5 py-2.5 bg-white border border-[#0050cb] text-[#0050cb] rounded-xl font-bold text-xs hover:bg-[#0050cb] hover:text-white transition-all shadow-sm" onclick="toggleSidePanel(true)">
+                            VIEW
+                        </button>
+</div>
+</div>
+<!-- Device Card 2 (DEVICE-002) -->
+<div class="bg-white px-6 py-4 rounded-2xl-custom border border-gray-100 flex items-center shadow-sm hover:shadow-md transition-shadow group h-[100px]">
+<div class="w-[28%] flex items-center space-x-3 pr-4 border-r border-gray-100 h-full">
+<div class="w-12 h-12 shrink-0 bg-gray-50 rounded-2xl flex items-center justify-center border border-gray-100">
+<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></svg>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center space-x-2">
+<span class="font-bold text-gray-900 truncate">DEVICE-002</span>
+<span class="px-1.5 py-0.5 bg-gray-100 text-gray-500 text-[9px] font-bold rounded uppercase">Offline</span>
+</div>
+<p class="text-xs text-gray-400 mt-0.5 truncate">Reynan Rafael</p>
+<div class="flex items-center mt-0.5 text-[10px] text-gray-400">
+<svg class="h-3 w-3 mr-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="truncate">Purok 2, SNQ</span>
 </div>
 </div>
 </div>
-<!-- STEP 2: CONFIRMATION MODAL (Hidden by default) -->
-<div class="fixed inset-0 z-[60] flex items-center justify-center p-md modal-overlay hidden" id="confirmation-modal">
-<div class="bg-white w-full max-w-md rounded-3xl p-xl custom-shadow text-center modal-animate-in">
-<div class="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mx-auto mb-lg">
-<span class="material-symbols-outlined text-primary text-3xl">fact_check</span>
+<div class="flex-1 flex items-center px-8 space-x-12">
+<div class="w-40">
+<div class="flex flex-col mb-1">
+<span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Voltage</span>
+<span class="text-sm font-bold text-gray-900">280V</span>
 </div>
-<h3 class="font-headline-md text-headline-md mb-md">Review Details</h3>
-<p class="text-on-surface-variant mb-xl">Are you sure you want to provision <span class="font-bold text-on-surface" id="confirm-user-name"></span> as a <span class="font-bold text-on-surface" id="confirm-user-role"></span>?</p>
-<div class="flex gap-md">
-<button class="flex-1 py-sm font-label-md text-on-surface-variant hover:bg-surface-container rounded-xl transition-all" onclick="hideConfirmation()">Back to Edit</button>
-<button class="flex-1 py-sm bg-primary text-on-primary font-label-md rounded-xl shadow-md hover:bg-primary-container transition-all" onclick="processProvisioning()">Confirm &amp; Provision</button>
-</div>
-</div>
-</div>
-<!-- STEP 3: SUCCESS MODAL (Hidden by default) -->
-<div class="fixed inset-0 z-[70] flex items-center justify-center p-md modal-overlay hidden" id="success-modal">
-<div class="bg-white w-full max-w-md rounded-3xl p-xl custom-shadow text-center modal-animate-in">
-<div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-lg border-2 border-green-100">
-<span class="material-symbols-outlined text-success text-[40px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</div>
-<h3 class="font-headline-md text-headline-md text-on-surface mb-md">Account Provisioned Successfully</h3>
-<p class="text-on-surface-variant mb-xl">The account for <span class="font-bold text-primary" id="success-email"></span> is now active. Welcome instructions have been dispatched via email.</p>
-<button class="w-full py-sm bg-inverse-surface text-inverse-on-surface font-label-md rounded-xl shadow-md hover:bg-surface-variant/20 hover:text-on-surface transition-all" onclick="location.reload()">
-                    Dismiss
-                </button>
+<div class="flex items-end space-x-1 h-8">
+<div class="flex-1 bg-blue-200 rounded-sm h-5"></div>
+<div class="flex-1 bg-blue-300 rounded-sm h-7"></div>
+<div class="flex-1 bg-blue-400 rounded-sm h-8"></div>
+<div class="flex-1 bg-primary rounded-sm h-8"></div>
+<div class="flex-1 bg-blue-500 rounded-sm h-6"></div>
+<div class="flex-1 bg-blue-300 rounded-sm h-4"></div>
 </div>
 </div>
-</main>
+<div class="w-40">
+<div class="flex flex-col mb-1">
+<span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Salinity</span>
+<span class="text-sm font-bold text-gray-900">450ppm</span>
+</div>
+<div class="flex items-end space-x-1 h-8">
+<div class="flex-1 bg-purple-100 rounded-sm h-6"></div>
+<div class="flex-1 bg-purple-200 rounded-sm h-4"></div>
+<div class="flex-1 bg-purple-300 rounded-sm h-7"></div>
+<div class="flex-1 bg-purple-400 rounded-sm h-8"></div>
+<div class="flex-1 bg-purple-600 rounded-sm h-5"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center">
+<div class="w-20 flex flex-col items-start">
+<p class="text-[10px] font-bold text-gray-400">1m ago</p>
+</div>
+<button class="ml-6 px-5 py-2.5 bg-white border border-[#0050cb] text-[#0050cb] rounded-xl font-bold text-xs hover:bg-[#0050cb] hover:text-white transition-all shadow-sm" onclick="toggleSidePanel(true)">
+                            VIEW
+                        </button>
+</div>
+</div>
+<!-- Device Card 3 (DEVICE-003) -->
+<div class="bg-white px-6 py-4 rounded-2xl-custom border border-gray-100 flex items-center shadow-sm hover:shadow-md transition-shadow group h-[100px]">
+<div class="w-[28%] flex items-center space-x-3 pr-4 border-r border-gray-100 h-full">
+<div class="w-12 h-12 shrink-0 bg-blue-50 rounded-2xl flex items-center justify-center border border-blue-100">
+<svg class="h-6 w-6 text-[#0050cb]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5"></path></svg>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center space-x-2">
+<span class="font-bold text-gray-900 truncate">DEVICE-003</span>
+<span class="px-1.5 py-0.5 bg-orange-50 text-orange-600 text-[9px] font-bold rounded uppercase">Warning</span>
+</div>
+<p class="text-xs text-gray-400 mt-0.5 truncate">Jamin Hernandez</p>
+<div class="flex items-center mt-0.5 text-[10px] text-gray-400">
+<svg class="h-3 w-3 mr-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="truncate">Purok 3, SNQ</span>
+</div>
+</div>
+</div>
+<div class="flex-1 flex items-center px-8 space-x-12">
+<div class="w-40">
+<div class="flex flex-col mb-1">
+<span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Voltage</span>
+<span class="text-sm font-bold text-gray-900">230V</span>
+</div>
+<div class="flex items-end space-x-1 h-8">
+<div class="flex-1 bg-blue-100 rounded-sm h-3"></div>
+<div class="flex-1 bg-blue-200 rounded-sm h-5"></div>
+<div class="flex-1 bg-blue-300 rounded-sm h-6"></div>
+<div class="flex-1 bg-primary rounded-sm h-7"></div>
+<div class="flex-1 bg-blue-400 rounded-sm h-5"></div>
+<div class="flex-1 bg-blue-200 rounded-sm h-4"></div>
+</div>
+</div>
+<div class="w-40">
+<div class="flex flex-col mb-1">
+<span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Salinity</span>
+<span class="text-sm font-bold text-gray-900">320ppm</span>
+</div>
+<div class="flex items-end space-x-1 h-8">
+<div class="flex-1 bg-purple-100 rounded-sm h-3"></div>
+<div class="flex-1 bg-purple-200 rounded-sm h-5"></div>
+<div class="flex-1 bg-purple-300 rounded-sm h-6"></div>
+<div class="flex-1 bg-purple-600 rounded-sm h-7"></div>
+<div class="flex-1 bg-purple-400 rounded-sm h-5"></div>
+<div class="flex-1 bg-purple-200 rounded-sm h-4"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center">
+<div class="w-20 flex flex-col items-start">
+<p class="text-[10px] font-bold text-gray-400">2m ago</p>
+</div>
+<button class="ml-6 px-5 py-2.5 bg-white border border-[#0050cb] text-[#0050cb] rounded-xl font-bold text-xs hover:bg-[#0050cb] hover:text-white transition-all shadow-sm" onclick="toggleSidePanel(true)">
+                            VIEW
+                        </button>
+</div>
+</div>
+<!-- Device Card 4 (DEVICE-004) -->
+<div class="bg-white px-6 py-4 rounded-2xl-custom border border-gray-100 flex items-center shadow-sm opacity-80 group h-[100px]">
+<div class="w-[28%] flex items-center space-x-3 pr-4 border-r border-gray-100 h-full">
+<div class="w-12 h-12 shrink-0 bg-gray-50 rounded-2xl flex items-center justify-center border border-gray-100">
+<svg class="h-6 w-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6"></path></svg>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center space-x-2">
+<span class="font-bold text-gray-900 truncate">DEVICE-004</span>
+<span class="px-1.5 py-0.5 bg-gray-100 text-gray-400 text-[9px] font-bold rounded uppercase">Offline</span>
+</div>
+<p class="text-xs text-gray-400 mt-0.5 truncate">Ana Morales</p>
+<div class="flex items-center mt-0.5 text-[10px] text-gray-200">
+<svg class="h-3 w-3 mr-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="truncate">N/A</span>
+</div>
+</div>
+</div>
+<div class="flex-1 flex items-center px-8 space-x-12">
+<div class="w-40">
+<div class="flex flex-col mb-1">
+<span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Voltage</span>
+<span class="text-sm font-bold text-gray-300">0V</span>
+</div>
+<div class="flex items-end space-x-1 h-8">
+<div class="flex-1 bg-gray-100 rounded-sm h-1"></div>
+<div class="flex-1 bg-gray-100 rounded-sm h-1"></div>
+<div class="flex-1 bg-gray-100 rounded-sm h-1 opacity-0"></div>
+</div>
+</div>
+<div class="w-40">
+<div class="flex flex-col mb-1">
+<span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Salinity</span>
+<span class="text-sm font-bold text-gray-300">0ppm</span>
+</div>
+<div class="flex items-end space-x-1 h-8">
+<div class="flex-1 bg-gray-100 rounded-sm h-1"></div>
+<div class="flex-1 bg-gray-100 rounded-sm h-1"></div>
+<div class="flex-1 bg-gray-100 rounded-sm h-1 opacity-0"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center">
+<div class="w-20 flex flex-col items-start">
+<p class="text-[10px] font-bold text-gray-400">15m ago</p>
+</div>
+<button class="ml-6 px-5 py-2.5 bg-white border border-[#0050cb] text-[#0050cb] rounded-xl font-bold text-xs hover:bg-[#0050cb] hover:text-white transition-all shadow-sm" onclick="toggleSidePanel(true)">
+                            VIEW
+                        </button>
+</div>
+</div>
+</div>
+<!-- END: DeviceList -->
+</div>
+<!-- END: DashboardMainContent -->
+<!-- BEGIN: AnalyticsSidePanel -->
+<aside class="bg-white border-l border-gray-200 overflow-y-auto transform h-full transition-all-custom z-20 shadow-2xl shrink-0 absolute right-0 top-0 side-panel-visible" data-purpose="device-details" id="sidePanel">
+<!-- Close & Header -->
+<div class="sticky top-0 bg-white z-10 p-6 border-b border-gray-100">
+<div class="flex justify-end mb-4">
+<button class="p-2 hover:bg-gray-100 rounded-full transition-colors" onclick="toggleSidePanel(false)">
+<svg class="h-6 w-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+<div class="flex items-center space-x-5">
+<div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center border border-blue-100">
+<img alt="Saltwater Logo" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7JTRQ-V7oco2PJ5O17vmnIkZ8B05Vtsy4LhHSJJhAhyenNdQyZIufqxWfhS8kMpJtvgc_LbDYmyTK4wlYO6QEe6jmGsCYRk76nnpIJoYNn3JBrjrVwGzvWm5m6iS6ByVE6FDFr3EPh3A2OB53vfNroysFiwNFwo_8cZqI3ax61OC4_TCghNpDJpctiwffuCzKJHwFrIaAsGf1cbGgwkaXeoO7Rr3rlx_ixSgJrfLjMomhm7CAnvtZugKlFbYEVHJ5HcT2ia6s0m8">
+</div>
+<div>
+<div class="flex items-center space-x-3">
+<h2 class="text-xl font-bold text-gray-900">DEVICE-001</h2>
+<span class="px-2 py-0.5 bg-green-50 text-green-600 text-[10px] font-black rounded uppercase">Online</span>
+</div>
+<p class="text-sm font-medium text-gray-500">Jasmine Sanchez</p>
+<p class="text-xs text-gray-400">jasmine@email.com</p>
+</div>
+</div>
+<!-- Tabs -->
+<div class="flex space-x-8 mt-8 border-b border-gray-50"><button onclick="setActiveTab(this, 'overview-section')" class="pb-3 text-sm font-bold border-b-2 transition-all text-gray-400 border-transparent">Overview</button>
+<button onclick="setActiveTab(this, 'readings-section')" class="pb-3 text-sm font-bold border-b-2 hover:text-gray-600 transition-all text-primary border-primary">Readings</button>
+<button onclick="setActiveTab(this, 'alerts-section')" class="pb-3 text-sm font-bold text-gray-400 border-b-2 border-transparent hover:text-gray-600 transition-all">Alerts</button></div>
+</div>
+<div class="p-6 space-y-8 min-w-[450px]"><!-- Info Cards -->
+<div class="grid grid-cols-2 gap-y-6" id="overview-section">
+<div class="flex items-start space-x-3">
+<span class="material-symbols-outlined text-xl text-blue-400">person</span>
+<div>
+<p class="text-[10px] font-bold text-gray-400 uppercase">Resident Name</p>
+<p class="text-sm font-bold text-gray-900">Jasmine Sanchez</p>
+</div>
+</div>
+<div class="flex items-start space-x-3">
+
+<div>
+<p class="text-[10px] font-bold text-gray-400 uppercase">Assigned Date</p>
+<p class="text-sm font-bold text-gray-900">May 12, 2025</p>
+</div>
+</div>
+<div class="flex items-start space-x-3">
+<span class="material-symbols-outlined text-xl text-blue-400">call</span>
+<div>
+<p class="text-[10px] font-bold text-gray-400 uppercase">Contact Number</p>
+<p class="text-sm font-bold text-gray-900">0917 123 4567</p>
+</div>
+</div><div class="flex items-start space-x-3">
+
+<div>
+<p class="text-[10px] font-bold text-gray-400 uppercase">Device ID</p>
+<p class="text-sm font-bold text-gray-900">DEVICE-001</p>
+</div>
+</div>
+<div class="flex items-start space-x-3">
+<span class="material-symbols-outlined text-xl text-blue-400">location_on</span>
+<div>
+<p class="text-[10px] font-bold text-gray-400 uppercase">Address</p>
+<p class="text-sm font-bold text-gray-900">Purok 1, SNQ</p>
+</div>
+</div>
+<div class="flex items-start space-x-3">
+
+<div>
+<p class="text-[10px] font-bold text-gray-400 uppercase">Number of Devices</p>
+<p class="text-sm font-bold text-gray-900">1</p>
+</div>
+</div>
+</div>
+<!-- Time Filters -->
+<div class="flex items-center space-x-2 p-1.5 bg-gray-50/50 rounded-full mb-8 overflow-x-auto whitespace-nowrap border border-gray-100" data-purpose="time-range-filters">
+    <button class="px-5 py-2 text-[11px] font-bold rounded-full bg-[#2563eb] text-white shadow-sm transition-all duration-200 hover:bg-[#1d4ed8]">1HR</button>
+    <button class="px-5 py-2 text-[11px] font-bold rounded-full text-[#2563eb] hover:bg-[#2563eb] hover:text-white transition-all duration-200">3HR</button>
+    <button class="px-5 py-2 text-[11px] font-bold rounded-full text-[#2563eb] hover:bg-[#2563eb] hover:text-white transition-all duration-200">6HR</button>
+    <button class="px-5 py-2 text-[11px] font-bold rounded-full text-[#2563eb] hover:bg-[#2563eb] hover:text-white transition-all duration-200">24HR</button>
+    <button class="px-5 py-2 text-[11px] font-bold rounded-full text-[#2563eb] hover:bg-[#2563eb] hover:text-white transition-all duration-200">3D</button>
+    <button class="px-5 py-2 text-[11px] font-bold rounded-full text-[#2563eb] hover:bg-[#2563eb] hover:text-white transition-all duration-200">7D</button>
+    <button class="px-5 py-2 text-[11px] font-bold rounded-full text-[#2563eb] hover:bg-[#2563eb] hover:text-white transition-all duration-200">1M</button>
+</div><div class="pt-4" id="readings-section">
+<div class="flex items-center justify-between mb-4">
+<div>
+<p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Voltage (V)</p>
+<div class="flex items-center space-x-2">
+<span class="text-xl font-bold text-gray-900">230V</span>
+
+</div>
+</div>
+</div>
+<div class="relative h-32 flex items-end justify-between px-1">
+<div class="absolute -top-12 left-[85%] bg-black text-white shadow-lg rounded-lg border-2 border-white p-2 text-center z-10 font-extrabold">
+    <p class="text-gray-400 text-[11px] uppercase tracking-wider mb-0.5">10:25</p>
+    <p class="text-white text-lg" data-stitch-orig-opacity="0">238V</p>
+</div>
+<div class="w-1.5 bg-blue-400 rounded-t h-[60%]"></div>
+<div class="w-1.5 bg-blue-400 rounded-t h-[75%]"></div>
+<div class="w-1.5 bg-blue-400 rounded-t h-[65%]"></div>
+<div class="w-1.5 bg-blue-400 rounded-t h-[80%]"></div>
+<div class="w-1.5 bg-blue-400 rounded-t h-[70%]"></div>
+<div class="w-1.5 bg-blue-400 rounded-t h-[72%]"></div>
+<div class="w-1.5 bg-blue-600 rounded-t h-[85%]"></div>
+<div class="w-1.5 bg-blue-400 rounded-t h-[70%]"></div>
+<div class="w-1.5 bg-blue-400 rounded-t h-[78%]"></div>
+<div class="w-1.5 bg-blue-400 rounded-t h-[82%]"></div>
+<div class="w-1.5 bg-blue-400 rounded-t h-[75%]"></div>
+<div class="w-1.5 bg-blue-400 rounded-t h-[68%]"></div>
+<div class="w-1.5 bg-blue-400 rounded-t h-[70%]"></div>
+</div>
+<div class="flex justify-between mt-2 text-[9px] text-gray-400 font-medium">
+<span class="">10:00</span><span class="">10:05</span><span class="">10:10</span><span class="">10:15</span><span class="">10:20</span><span class="">10:25</span><span class="">10:30</span>
+</div>
+</div>
+<!-- Voltage Graph -->
+
+<!-- Salinity Graph -->
+<div class="pt-4" id="alerts-section">
+<div class="flex items-center justify-between mb-4">
+<div>
+<p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Salinity (ppm)</p>
+<div class="flex items-center space-x-2">
+<span class="text-xl font-bold text-gray-900">350ppm</span>
+
+</div>
+</div>
+</div>
+<div class="relative h-32 flex items-end justify-between px-1">
+<div class="absolute -top-12 left-[85%] z-10">
+<div class="bg-black text-white font-extrabold p-2 rounded-lg border-2 border-white shadow-lg text-center">
+<p class="text-[11px] uppercase tracking-wider mb-0.5">10:25</p>
+<p class="text-sm">342ppm</p>
+</div>
+</div>
+<div class="w-1.5 bg-purple-400 rounded-t h-[55%]"></div>
+<div class="w-1.5 bg-purple-400 rounded-t h-[65%]"></div>
+<div class="w-1.5 bg-purple-400 rounded-t h-[60%]"></div>
+<div class="w-1.5 bg-purple-400 rounded-t h-[70%]"></div>
+<div class="w-1.5 bg-purple-400 rounded-t h-[62%]"></div>
+<div class="w-1.5 bg-purple-400 rounded-t h-[65%]"></div>
+<div class="w-1.5 bg-purple-600 rounded-t h-[80%]"></div>
+<div class="w-1.5 bg-purple-400 rounded-t h-[68%]"></div>
+<div class="w-1.5 bg-purple-400 rounded-t h-[72%]"></div>
+<div class="w-1.5 bg-purple-400 rounded-t h-[78%]"></div>
+<div class="w-1.5 bg-purple-400 rounded-t h-[70%]"></div>
+<div class="w-1.5 bg-purple-400 rounded-t h-[75%]"></div>
+<div class="w-1.5 bg-purple-400 rounded-t h-[65%]"></div>
+</div>
+<div class="flex justify-between mt-2 text-[9px] text-gray-400 font-medium">
+<span class="">10:00</span><span class="">10:05</span><span class="">10:10</span><span class="">10:15</span><span class="">10:20</span><span class="">10:25</span><span class="">10:30</span>
+</div>
+</div>
+<!-- Recent Alerts -->
+<div class="pt-4">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-sm font-bold text-gray-900">Recent Alerts</h3>
+<button class="text-[10px] font-bold text-[#0050cb] hover:underline">View All</button>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center text-green-500">
+<span class="material-symbols-outlined text-lg">check_circle</span>
+</div>
+<div>
+<p class="text-xs font-bold text-gray-900">Voltage Stable</p>
+<p class="text-[10px] text-gray-400">Voltage reading is within normal range.</p>
+</div>
+</div>
+<div class="flex items-center space-x-2">
+<p class="text-[10px] text-gray-400">Just now</p>
+<div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center text-orange-500">
+<span class="material-symbols-outlined text-lg">warning</span>
+</div>
+<div>
+<p class="text-xs font-bold text-gray-900">Salinity High</p>
+<p class="text-[10px] text-gray-400">Salinity level is above normal threshold.</p>
+</div>
+</div>
+<div class="flex items-center space-x-2">
+<p class="text-[10px] text-gray-400">10 mins ago</p>
+<div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400">
+<span class="material-symbols-outlined text-lg">wifi_off</span>
+</div>
+<div>
+<p class="text-xs font-bold text-gray-900">Device Offline</p>
+<p class="text-[10px] text-gray-400">Device was offline for 5 minutes.</p>
+</div>
+</div>
+<div class="flex items-center space-x-2">
+<p class="text-[10px] text-gray-400">25 mins ago</p>
+<div class="w-1.5 h-1.5 rounded-full bg-gray-300"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center text-red-500">
+<span class="material-symbols-outlined text-lg">error</span>
+</div>
+<div>
+<p class="text-xs font-bold text-gray-900">Voltage Spike Detected</p>
+<p class="text-[10px] text-gray-400">Voltage reached 240V at 09:45 AM.</p>
+</div>
+</div>
+<div class="flex items-center space-x-2">
+<p class="text-[10px] text-gray-400">1 hour ago</p>
+<div class="w-1.5 h-1.5 rounded-full bg-red-500"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Export Button -->
+<div class="pt-6 pb-8">
+
+</div></div></aside></main>
 <script>
-        // Form interactivity
-        const form = document.getElementById('provisioning-form');
-        const summaryFields = {
-            name: document.getElementById('sum-name'),
-            role: document.getElementById('sum-role'),
-            email: document.getElementById('sum-email'),
-            gender: document.getElementById('sum-gender'),
-            birth: document.getElementById('sum-birth'),
-            address: document.getElementById('sum-address')
-        };
-        const progressBar = document.getElementById('progress-bar');
- 
-        const inputs = form.querySelectorAll('input, select');
- 
-        inputs.forEach(input => {
-            input.addEventListener('input', updateSummary);
-        });
- 
-        function updateSummary() {
-            const firstName = document.getElementById('firstName').value || 'New';
-            const lastName = document.getElementById('lastName').value || 'User';
-            const role = document.getElementById('role').value;
-            const email = document.getElementById('email').value || '—';
-            const gender = document.getElementById('gender').value || '—';
-            const birth = document.getElementById('birthDate').value || '—';
-            const barangay = document.getElementById('barangay').value || '...';
- 
-            summaryFields.name.textContent = `${firstName} ${lastName}`;
-            summaryFields.role.textContent = role;
-            summaryFields.email.textContent = email;
-            summaryFields.gender.textContent = gender;
-            summaryFields.birth.textContent = birth;
-            summaryFields.address.textContent = `${barangay}, San Andres, Quezon`;
- 
-            // Simple progress logic
-            const filled = Array.from(inputs).filter(i => i.value && i.required).length;
-            const requiredCount = Array.from(inputs).filter(i => i.required).length;
-            const percentage = (filled / requiredCount) * 100;
-            progressBar.style.width = `${Math.max(25, percentage)}%`;
-        }
- 
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            const role = document.getElementById('role').value;
- 
-            document.getElementById('confirm-user-name').textContent = `${firstName} ${lastName}`;
-            document.getElementById('confirm-user-role').textContent = role;
- 
-            showConfirmation();
-        });
- 
-        function closeModal() {
-            const modal = document.getElementById('provisioning-modal');
-            modal.style.opacity = '0';
-            modal.style.transition = 'opacity 0.3s ease';
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        }
- 
-        function showConfirmation() {
-            document.getElementById('confirmation-modal').classList.remove('hidden');
-        }
- 
-        function hideConfirmation() {
-            document.getElementById('confirmation-modal').classList.add('hidden');
-        }
- 
-        function processProvisioning() {
-            hideConfirmation();
-            const email = document.getElementById('email').value;
-            document.getElementById('success-email').textContent = email;
- 
-            // Artificial loading delay
-            const btn = document.querySelector('button[onclick="processProvisioning()"]');
-            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span>';
-            btn.disabled = true;
- 
-            setTimeout(() => {
-                document.getElementById('success-modal').classList.remove('hidden');
-            }, 1000);
+        function toggleSidePanel(isOpen) {
+            const sidePanel = document.getElementById('sidePanel');
+            const mainContent = document.getElementById('mainContent');
+            
+            if (isOpen) {
+                sidePanel.classList.remove('side-panel-hidden');
+                sidePanel.classList.add('side-panel-visible');
+                // Optional: add a class to main content if needed for shifting/scaling
+            } else {
+                sidePanel.classList.remove('side-panel-visible');
+                sidePanel.classList.add('side-panel-hidden');
+            }
         }
     </script>
- 
- 
- 
- 
- 
- 
+
+
+
+
+
+
+<script>
+function setActiveTab(el, sectionId) {
+    const tabs = el.parentElement.querySelectorAll('button');
+    tabs.forEach(tab => {
+        tab.classList.remove('text-primary', 'border-primary');
+        tab.classList.add('text-gray-400', 'border-transparent');
+    });
+    el.classList.add('text-primary', 'border-primary');
+    el.classList.remove('text-gray-400', 'border-transparent');
+    
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+</script>
+
+
+
 </body></html>
