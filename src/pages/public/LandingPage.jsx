@@ -1,9 +1,7 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LoginHero from "../../components/auth/LoginHero";
 import { ROUTES } from "../../constants/routes";
 import { Footer } from "../../layout";
-import { ForgotPasswordModal } from "../../components/modal";
 
 // LOCAL ASSETS
 import pupLogo from "../../assets/landing-page-img/pup-unisan-logo.png";
@@ -16,7 +14,6 @@ import saltwaterLogo from "../../assets/landing-page-img/saltwater-electricity-l
  */
 const LandingPage = () => {
   const navigate = useNavigate();
-  const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
 
   return (
     <div className="bg-background text-on-surface font-body-md min-h-screen custom-scrollbar">
@@ -58,7 +55,7 @@ const LandingPage = () => {
         </div>
         <div className="flex items-center gap-4">
           <button
-            onClick={() => setIsForgotModalOpen(true)}
+            onClick={() => navigate(ROUTES.LOGIN)}
             className="text-[11px] font-bold text-primary hover:underline uppercase tracking-wider font-body-md hidden sm:block"
           >
             Forgot Password?
@@ -219,8 +216,6 @@ const LandingPage = () => {
       </section>
 
       <Footer />
-
-      <ForgotPasswordModal isOpen={isForgotModalOpen} onClose={() => setIsForgotModalOpen(false)} />
     </div>
   );
 };
