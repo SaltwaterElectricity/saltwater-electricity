@@ -6,7 +6,6 @@ export { ConfirmationModal } from "./ConfirmationModal.jsx";
 export { default as DeviceRequestModal } from "./DeviceRequestModal.jsx";
 export { default as DeviceDetailsModal } from "./DeviceDetailsModal.jsx";
 export { default as EditUserModal } from "./EditUserModal.jsx";
-export { default as ForgotPasswordModal } from "./ForgotPasswordModal.jsx";
 export { default as ModalBackdrop } from "./ModalBackdrop.jsx";
 export { default as SessionExpiredModal } from "./SessionExpiredModal.jsx";
 export { SettingsModal } from "./SettingsModal.jsx";

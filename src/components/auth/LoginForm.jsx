@@ -1,23 +1,32 @@
-import { useState, memo } from "react";
+import { useState, memo, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { loginUser } from "../../services/auth.service";
 import { useBruteForce } from "../../hooks/useBruteForce";
 import { sanitizeForFirebaseKey } from "../../utils/sanitization";
 import { cn } from "../../utils/cn";
-import ForgotPasswordModal from "../modal/ForgotPasswordModal";
+
+// Recovery Components
+import RequestOTPStep from "./RequestOTPStep";
+import VerifyOTPStep from "./VerifyOTPStep";
+import ResetPassword from "./ResetPassword";
 
 /**
  * LoginForm Component
- * Orchestrates Login flow and triggers Forgot Password modal.
- * Handles user authentication and brute-force protection.
+ * Orchestrates Login and Forgot Password flows.
+ * Handles user authentication and multi-step recovery.
  */
 const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
   const navigate = useNavigate();
-  const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
+  const [view, setView] = useState("login"); // 'login' | 'forgot-request' | 'forgot-verify' | 'forgot-reset'
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authError, setAuthError] = useState("");
+
+  // Recovery States
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotOtp, setForgotOtp] = useState("");
+  const [isVerified, setIsVerified] = useState(false);
 
   const {
     register,
@@ -65,6 +74,95 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
       setIsSubmitting(false);
     }
   };
+
+  const handleBackToLogin = useCallback(() => {
+    setView("login");
+    setForgotEmail("");
+    setForgotOtp("");
+    setIsVerified(false);
+  }, []);
+
+  const handleVerifySuccess = (verifiedEmail, verifiedOtp) => {
+    setForgotEmail(verifiedEmail);
+    setForgotOtp(verifiedOtp);
+    setIsVerified(true);
+    setView("forgot-reset");
+  };
+
+  // --- RENDER RECOVERY FLOW ---
+  if (view !== "login") {
+    const step = view === "forgot-request" ? 1 : view === "forgot-verify" ? 2 : 3;
+
+    return (
+      <div className="w-full relative flex flex-col animate-in fade-in duration-500 min-h-[420px]">
+        {/* CLOSE BUTTON */}
+        <div className="absolute -top-4 -right-2 z-50">
+          <button
+            onClick={handleBackToLogin}
+            className="p-2 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-full transition-all duration-200"
+            aria-label="Close"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* CONTENT AREA */}
+        <div className="flex-1 flex flex-col justify-center py-4">
+          {view === "forgot-request" && (
+            <RequestOTPStep
+              onNext={(email) => {
+                setForgotEmail(email);
+                setView("forgot-verify");
+              }}
+              onClose={handleBackToLogin}
+            />
+          )}
+
+          {view === "forgot-verify" && (
+            <VerifyOTPStep
+              email={forgotEmail}
+              onSuccess={handleVerifySuccess}
+              onBack={() => setView("forgot-request")}
+            />
+          )}
+
+          {view === "forgot-reset" && isVerified && (
+            <ResetPassword
+              email={forgotEmail}
+              otp={forgotOtp}
+              onSuccess={handleBackToLogin}
+            />
+          )}
+        </div>
+
+        {/* STEP INDICATOR (Pinned to Bottom) */}
+        <div className="pt-4 mt-auto border-t border-slate-50">
+          <div className="flex gap-2 justify-center">
+            <div
+              className={`h-1 flex-1 rounded-full transition-all duration-500 ${
+                step >= 1 ? "bg-primary shadow-[0_0_8px_rgba(10,46,255,0.3)]" : "bg-slate-100"
+              }`}
+            />
+            <div
+              className={`h-1 flex-1 rounded-full transition-all duration-500 ${
+                step >= 2 ? "bg-primary shadow-[0_0_8px_rgba(10,46,255,0.3)]" : "bg-slate-100"
+              }`}
+            />
+            <div
+              className={`h-1 flex-1 rounded-full transition-all duration-500 ${
+                step >= 3 ? "bg-primary shadow-[0_0_8px_rgba(10,46,255,0.3)]" : "bg-slate-100"
+              }`}
+            />
+          </div>
+          <div className="mt-2 flex justify-between px-1">
+            <span className={`text-[9px] font-bold uppercase tracking-widest ${step === 1 ? 'text-primary' : 'text-slate-300'}`}>Request</span>
+            <span className={`text-[9px] font-bold uppercase tracking-widest ${step === 2 ? 'text-primary' : 'text-slate-300'}`}>Verify</span>
+            <span className={`text-[9px] font-bold uppercase tracking-widest ${step === 3 ? 'text-primary' : 'text-slate-300'}`}>Reset</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // --- RENDER LOGIN VIEW ---
   return (
@@ -128,7 +226,7 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
             </label>
             <button
               type="button"
-              onClick={() => setIsForgotModalOpen(true)}
+              onClick={() => setView("forgot-request")}
               className="text-[10px] font-bold text-primary hover:underline uppercase tracking-wider font-body-md"
             >
               Forgot?
@@ -207,9 +305,6 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
           </a>
         </div>
       </div>
-
-      {/* Forgot Password Modal */}
-      <ForgotPasswordModal isOpen={isForgotModalOpen} onClose={() => setIsForgotModalOpen(false)} />
     </div>
   );
 };
