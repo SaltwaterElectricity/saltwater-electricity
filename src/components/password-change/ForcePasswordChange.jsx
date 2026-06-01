@@ -98,7 +98,7 @@ const ForcePasswordChange = ({ onSuccess }) => {
       <header className="mb-10">
         <h2 className="text-2xl font-black text-slate-900 tracking-tight">Protect Your Account</h2>
         <p className="text-sm text-slate-500 mt-2 leading-relaxed">
-          Change your temporary password to unlock the SmartAqua dashboard.
+          Change your temporary password to unlock the Saltwater Electricity dashboard.
         </p>
       </header>
 

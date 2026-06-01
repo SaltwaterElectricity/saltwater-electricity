@@ -1,19 +1,33 @@
-import { useState, memo } from "react";
+import { useState, memo, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { loginUser } from "../../services/auth.service";
-import { ForgotPasswordModal } from "../modal";
 import { appError } from "../../utils/appError";
 import { useBruteForce } from "../../hooks/useBruteForce";
 import { sanitizeForFirebaseKey } from "../../utils/sanitization";
 import { cn } from "../../utils/cn";
 
+// Forgot Password Flow Components
+import RequestOTPStep from "./RequestOTPStep";
+import VerifyOTPStep from "./VerifyOTPStep";
+import ResetPassword from "./ResetPassword";
+
+/**
+ * LoginForm Component
+ * Orchestrates Login and Forgot Password flows.
+ * Handles user authentication and multi-step recovery.
+ */
 const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
   const navigate = useNavigate();
+  const [view, setView] = useState("login"); // 'login' | 'forgot-request' | 'forgot-verify' | 'forgot-reset'
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authError, setAuthError] = useState("");
-  const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
+
+  // Forgot Password State
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotOtp, setForgotOtp] = useState("");
+  const [isVerified, setIsVerified] = useState(false);
 
   const {
     register,
@@ -31,7 +45,6 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
     setIsSubmitting(true);
     setAuthError("");
 
-    // SYNC: Tell parent we are starting login to block any premature redirects
     if (onLoginStart) onLoginStart();
 
     try {
@@ -47,16 +60,12 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
         return;
       }
 
-      // Instead of navigating, pass the data to the parent to trigger the success UI
       if (onLoginSuccess) {
         onLoginSuccess({ ...userData, email: data.email });
       }
     } catch (err) {
       setAuthError(err.message);
-
-      // SYNC: Tell parent login failed so it can unblock redirects if needed
       if (onLoginError) onLoginError();
-
       if (err.code !== "auth/user-not-found") {
         await recordFailedAttempt();
       }
@@ -65,8 +74,77 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
     }
   };
 
+  const handleVerifySuccess = (email, otp) => {
+    setForgotEmail(email);
+    setForgotOtp(otp);
+    setIsVerified(true);
+    setView("forgot-reset");
+  };
+
+  const handleResetSuccess = () => {
+    setView("login");
+  };
+
+  const handleBackToLogin = useCallback(() => {
+    setView("login");
+    setForgotEmail("");
+    setForgotOtp("");
+    setIsVerified(false);
+  }, []);
+
+  // --- RENDER FORGOT PASSWORD FLOW ---
+  if (view !== "login") {
+    return (
+      <div className="w-full flex flex-col gap-4 animate-in fade-in duration-500">
+        {/* Step Indicator */}
+        <div className="w-full h-1 bg-slate-50 rounded-full overflow-hidden mb-2">
+          <div
+            className={cn(
+              "h-full bg-primary transition-all duration-700 ease-in-out",
+              view === "forgot-request" ? "w-1/3" : view === "forgot-verify" ? "w-2/3" : "w-full"
+            )}
+          />
+        </div>
+
+        {view === "forgot-request" && (
+          <RequestOTPStep
+            onNext={(email) => {
+              setForgotEmail(email);
+              setView("forgot-verify");
+            }}
+            onClose={handleBackToLogin}
+          />
+        )}
+
+        {view === "forgot-verify" && (
+          <VerifyOTPStep
+            email={forgotEmail}
+            onSuccess={handleVerifySuccess}
+            onBack={() => setView("forgot-request")}
+          />
+        )}
+
+        {view === "forgot-reset" && isVerified && (
+          <ResetPassword email={forgotEmail} otp={forgotOtp} onSuccess={handleResetSuccess} />
+        )}
+      </div>
+    );
+  }
+
+  // --- RENDER LOGIN VIEW ---
   return (
     <div className="w-full">
+      {/* Welcome Header */}
+      <div className="text-center mb-8 animate-in fade-in slide-in-from-top-4 duration-700">
+        <h1 className="text-2xl font-bold text-on-surface mb-2 font-display">Welcome Back</h1>
+        <p className="text-outline text-xs font-body-md uppercase tracking-wider">
+          Saltwater Device Monitoring
+        </p>
+        <p className="text-outline/60 text-[10px] font-medium mt-1 font-body-md">
+          Access your real-time telemetry dashboard.
+        </p>
+      </div>
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Global Error Container */}
         {authError && !isLocked && (
@@ -115,7 +193,7 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
             </label>
             <button
               type="button"
-              onClick={() => setIsForgotModalOpen(true)}
+              onClick={() => setView("forgot-request")}
               className="text-[10px] font-bold text-primary hover:underline uppercase tracking-wider font-body-md"
             >
               Forgot?
@@ -194,8 +272,6 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
           </a>
         </div>
       </div>
-
-      <ForgotPasswordModal isOpen={isForgotModalOpen} onClose={() => setIsForgotModalOpen(false)} />
     </div>
   );
 };

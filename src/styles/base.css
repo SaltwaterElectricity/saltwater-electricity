@@ -73,9 +73,12 @@
   --font-h1: "Outfit", sans-serif;
   --font-h2: "Outfit", sans-serif;
   --font-h3: "Outfit", sans-serif;
-  --font-label-sm: "Inter", sans-serif;
+  --font-label-sm: "Geist", sans-serif;
   --font-body-md: "Inter", sans-serif;
-  --font-display: "Outfit", sans-serif;
+  --font-display: "Geist", sans-serif;
+  --font-headline-lg: "Geist", sans-serif;
+  --font-headline-md: "Geist", sans-serif;
+  --font-mono-data: "JetBrains Mono", monospace;
 
   /* TEXT SIZES */
   --text-body-lg: 18px;
@@ -84,6 +87,9 @@
   --text-h3: 24px;
   --text-label-sm: 12px;
   --text-body-md: 16px;
+  --text-headline-lg: 32px;
+  --text-headline-md: 24px;
+  --text-mono-data: 14px;
 }
 
 /* ============================================================

@@ -7,6 +7,7 @@ import { ROLES } from "../constants/roles";
 import NotFound from "../pages/NotFound";
 import { ForcePasswordChange } from "../components";
 import { MainLayout } from "../layout";
+import AccountProvisioning from "../pages/admin/AccountProvisioning";
 import LoginPage from "../pages/auth/LoginPage";
 import UserManagement from "../pages/admin/UserManagement";
 import ResidentManagement from "../pages/admin/ResidentManagement";
@@ -64,21 +65,6 @@ export const AppRoutes = () => {
           {/* Dashboard Route (Standard entry point) */}
           <Route path="/dashboard" element={<DashboardController />} />
 
-          {/* Admin Placeholder / Base Route */}
-          <Route
-            path="/admin"
-            element={
-              <div className="flex items-center justify-center h-[60vh]">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold text-primary mb-2">Admin Portal</h2>
-                  <p className="text-outline">
-                    Select a management module from the sidebar to begin.
-                  </p>
-                </div>
-              </div>
-            }
-          />
-
           {/* Detailed Admin Modules */}
           {(isAdmin || isSuperAdmin) && (
             <Route element={<PrivateRoute requiredRole={ROLES.ADMIN} />}>
@@ -93,11 +79,16 @@ export const AppRoutes = () => {
               <Route path={ROUTES.ADMIN_DEVICE_MANAGEMENT} element={<DeviceManagement />} />
               <Route path={ROUTES.ADMIN_REQUEST_MANAGEMENT} element={<RequestManagement />} />
               <Route path={ROUTES.ADMIN_AUDIT_LOGS} element={<AuditLogPage />} />
+              <Route path={ROUTES.REGISTER_USER} element={<AccountProvisioning mode="user" />} />
             </Route>
           )}
 
           {/* Super Admin Module */}
-          {isSuperAdmin && <Route element={<PrivateRoute requiredRole={ROLES.SUPER_ADMIN} />} />}
+          {isSuperAdmin && (
+            <Route element={<PrivateRoute requiredRole={ROLES.SUPER_ADMIN} />}>
+              <Route path={ROUTES.REGISTER_STAFF} element={<AccountProvisioning mode="staff" />} />
+            </Route>
+          )}
 
           {/* Shared Application Views */}
           <Route path={ROUTES.ALERTS} element={<Alerts />} />

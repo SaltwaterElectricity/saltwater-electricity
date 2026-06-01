@@ -10,4 +10,3 @@ export { default as ForgotPasswordModal } from "./ForgotPasswordModal.jsx";
 export { default as ModalBackdrop } from "./ModalBackdrop.jsx";
 export { default as SessionExpiredModal } from "./SessionExpiredModal.jsx";
 export { SettingsModal } from "./SettingsModal.jsx";
-export { default as SystemAuditModal } from "./SystemAuditModal.jsx";

@@ -5,7 +5,6 @@ export { useAuditLogs } from "./useAuditLogs";
 export { useBruteForce } from "./useBruteForce";
 export { useDeviceRequests } from "./useDeviceRequests";
 export { useDevices } from "./useDevices";
-export { useFullUserData } from "./useFullUserData";
 export { useHistory } from "./useHistory";
 export { useMultiDeviceHistory } from "./useMultiDeviceHistory";
 export { useNotifications } from "./useNotifications";

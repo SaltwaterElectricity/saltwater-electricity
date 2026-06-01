@@ -1,485 +1,395 @@
-<!DOCTYPE html><html class="light" lang="en" style=""><head>
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>User Provisioning | Saltwater Enterprise</title>
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SaltGrid | Create New Password</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@450&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
         tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "surface-container-high": "#e2e7ff",
-                        "tertiary-fixed-dim": "#ffb596",
-                        "on-secondary-container": "#5e656d",
-                        "surface-dim": "#d2d9f4",
-                        "outline-variant": "#c3c6d7",
-                        "surface-variant": "#dae2fd",
-                        "on-primary": "#ffffff",
-                        "background": "#faf8ff",
-                        "on-error-container": "#93000a",
-                        "inverse-primary": "#b4c5ff",
-                        "tertiary": "#943700",
-                        "secondary-fixed-dim": "#c0c7d0",
-                        "surface-container-lowest": "#ffffff",
-                        "primary": "#004ac6",
-                        "primary-container": "#2563eb",
-                        "on-primary-fixed": "#00174b",
-                        "surface-container-highest": "#dae2fd",
-                        "tertiary-fixed": "#ffdbcd",
-                        "outline": "#737686",
-                        "on-tertiary-container": "#ffede6",
-                        "on-secondary-fixed": "#151c23",
-                        "tertiary-container": "#bc4800",
-                        "on-tertiary-fixed-variant": "#7d2d00",
-                        "secondary-container": "#dce3ec",
-                        "error": "#ba1a1a",
-                        "surface-container": "#eaedff",
-                        "on-primary-container": "#eeefff",
-                        "surface-container-low": "#f2f3ff",
-                        "secondary": "#585f67",
-                        "on-tertiary-fixed": "#360f00",
-                        "on-background": "#131b2e",
-                        "secondary-fixed": "#dce3ec",
-                        "surface-tint": "#0053db",
-                        "on-secondary": "#ffffff",
-                        "primary-fixed-dim": "#b4c5ff",
-                        "surface-bright": "#faf8ff",
-                        "inverse-on-surface": "#eef0ff",
-                        "on-surface-variant": "#434655",
-                        "inverse-surface": "#283044",
-                        "error-container": "#ffdad6",
-                        "on-surface": "#131b2e",
-                        "on-primary-fixed-variant": "#003ea8",
-                        "surface": "#faf8ff",
-                        "on-tertiary": "#ffffff",
-                        "on-secondary-fixed-variant": "#40484f",
-                        "on-error": "#ffffff"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "2xl": "1rem",
-                        "3xl": "2rem",
-                        "full": "9999px"
-                    },
-                    "spacing": {
-                        "container-max": "1440px",
-                        "xl": "32px",
-                        "base": "4px",
-                        "margin-mobile": "16px",
-                        "3xl": "64px",
-                        "gutter": "24px",
-                        "xs": "4px",
-                        "2xl": "48px",
-                        "sm": "8px",
-                        "md": "16px",
-                        "lg": "24px"
-                    },
-                    "fontFamily": {
-                        "label-sm": ["Inter"],
-                        "body-lg": ["Inter"],
-                        "label-md": ["Inter"],
-                        "headline-md": ["Inter"],
-                        "body-md": ["Inter"],
-                        "headline-lg": ["Inter"],
-                        "headline-sm": ["Inter"]
-                    },
-                    "fontSize": {
-                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
-                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-                        "label-md": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
-                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
-                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
-                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
-                        "headline-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}]
-                    }
-                }
-            }
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed": "#d2e4ff",
+                      "primary-fixed-dim": "#b4c5ff",
+                      "surface-bright": "#f7f9fb",
+                      "outline-variant": "#c3c6d7",
+                      "on-surface": "#191c1e",
+                      "on-secondary-container": "#49617f",
+                      "on-primary-fixed": "#00174b",
+                      "on-error-container": "#93000a",
+                      "data-glow": "rgba(37, 99, 235, 0.15)",
+                      "warning": "#F59E0B",
+                      "on-surface-variant": "#434655",
+                      "tertiary-fixed": "#ffdbcd",
+                      "tertiary-fixed-dim": "#ffb596",
+                      "primary": "#004ac6",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "outline": "#737686",
+                      "surface-container": "#eceef0",
+                      "error-container": "#ffdad6",
+                      "tertiary-container": "#bc4800",
+                      "surface-variant": "#e0e3e5",
+                      "inverse-on-surface": "#eff1f3",
+                      "border-subtle": "#EAEAEA",
+                      "surface-tint": "#0053db",
+                      "error": "#ba1a1a",
+                      "tertiary": "#943700",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-highest": "#e0e3e5",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed-dim": "#b0c8eb",
+                      "on-primary-fixed-variant": "#003ea8",
+                      "surface-container-low": "#f2f4f6",
+                      "success": "#10B981",
+                      "on-tertiary-fixed-variant": "#7d2d00",
+                      "on-secondary-fixed": "#001c37",
+                      "surface-dim": "#d8dadc",
+                      "surface-container-high": "#e6e8ea",
+                      "primary-container": "#2563eb",
+                      "surface": "#f7f9fb",
+                      "danger": "#EF4444",
+                      "inverse-surface": "#2d3133",
+                      "on-tertiary-fixed": "#360f00",
+                      "on-secondary-fixed-variant": "#314865",
+                      "on-error": "#ffffff",
+                      "on-tertiary-container": "#ffede6",
+                      "secondary-container": "#c4dcff",
+                      "background": "#f7f9fb",
+                      "secondary": "#49607e",
+                      "on-primary-container": "#eeefff",
+                      "on-background": "#191c1e",
+                      "primary-fixed": "#dbe1ff",
+                      "inverse-primary": "#b4c5ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "label-md": ["Geist"],
+                      "display": ["Geist"],
+                      "headline-md": ["Geist"],
+                      "body-md": ["Inter"],
+                      "headline-lg": ["Geist"],
+                      "body-lg": ["Inter"],
+                      "mono-data": ["JetBrains Mono"]
+              },
+              "fontSize": {
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "mono-data": ["14px", {"lineHeight": "20px", "fontWeight": "450"}]
+              }
+            },
+          },
         }
     </script>
 <style>
-        .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 1);
-            box-shadow: 0 4px 20px -2px rgba(37, 99, 235, 0.08);
-        }
-        .modal-overlay {
-            background: rgba(19, 27, 46, 0.4);
-            backdrop-filter: blur(8px);
-        }
-        .custom-shadow {
-            box-shadow: 0 10px 40px -10px rgba(0, 74, 198, 0.15);
-        }
-        input:focus, select:focus {
-            outline: none;
-            border-color: #2563eb !important;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
-        }
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
         }
-        .modal-animate-in {
-            animation: modalScaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        
+        .success-checkmark {
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: dash 0.8s ease-in-out forwards;
         }
-        @keyframes modalScaleUp {
-            from { opacity: 0; transform: scale(0.95) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+
+        @keyframes dash {
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* Security Icon Animations */
+        @keyframes entrance-pop {
+            0% { opacity: 0; transform: scale(0); }
+            70% { transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes ambient-breath {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+
+        @keyframes shine-sweep {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .security-icon-container {
+            animation: entrance-pop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .security-icon-inner {
+            position: relative;
+            overflow: hidden;
+            border-radius: 9999px;
+            animation: ambient-breath 4s ease-in-out infinite;
+            animation-delay: 0.8s;
+        }
+
+        .security-icon-inner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.4) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-25deg);
+            animation: shine-sweep 6s infinite ease-in-out;
+            animation-delay: 1.5s;
+            pointer-events: none;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .security-icon-container, .security-icon-inner, .security-icon-inner::after {
+                animation: none !important;
+                transform: none !important;
+            }
         }
     </style>
 </head>
-<body class="bg-surface font-body-md text-on-surface min-h-screen">
-<!-- Global Navigation Anchor -->
-<aside class="fixed left-0 top-0 h-full py-lg space-y-base flex flex-col bg-surface-container-low dark:bg-inverse-surface shadow-md shadow-primary/10 w-[280px] z-40 hidden md:flex">
-<div class="px-lg pb-md">
-<h1 class="font-headline-sm text-headline-sm font-black text-primary">jjjjjSaltwater Enterprise</h1>
-<p class="text-label-md font-label-md text-on-surface-variant">Admin Console</p>
-</div>
-<nav class="flex-1 space-y-1">
-<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-all duration-200" href="#">
-<span class="material-symbols-outlined">dashboard</span>
-<span class="font-label-md text-label-md">Dashboard</span>
-</a>
-<a class="flex items-center gap-md px-md py-sm bg-primary-container text-on-primary-container font-semibold rounded-lg mx-2" href="#">
-<span class="material-symbols-outlined">person_add</span>
-<span class="font-label-md text-label-md">User Provisioning</span>
-</a>
-<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-all duration-200" href="#">
-<span class="material-symbols-outlined">insights</span>
-<span class="font-label-md text-label-md">Analytics</span>
-</a>
-<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-all duration-200" href="#">
-<span class="material-symbols-outlined">bolt</span>
-<span class="font-label-md text-label-md">Grid Health</span>
-</a>
-<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-all duration-200" href="#">
-<span class="material-symbols-outlined">history</span>
-<span class="font-label-md text-label-md">System Logs</span>
-</a>
-</nav>
-<div class="pt-lg border-t border-outline-variant/30">
-<button class="w-[calc(100%-32px)] mx-md bg-primary text-on-primary py-sm rounded-lg font-label-md text-label-md shadow-sm hover:translate-y-[-1px] transition-all">
-                New Provision
-            </button>
-</div>
-</aside>
-<!-- Main Content Area -->
-<main class="md:ml-[280px] min-h-screen p-lg relative">
-<!-- Breadcrumb & Top Bar -->
-<header class="flex justify-between items-center mb-xl">
-<div>
-<h2 class="font-headline-md text-headline-md text-on-surface">Provisioning Hub</h2>
-<div class="flex gap-sm text-label-sm text-on-surface-variant">
-<span class="">Admin</span> / <span class="">Operations</span> / <span class="text-primary">User Registration</span>
+<body class="bg-slate-50 font-body-md text-on-background min-h-screen flex items-center justify-center p-12 relative overflow-hidden">
+<!-- Main Modal -->
+<main class="relative z-10 w-full max-w-[580px] bg-white rounded-[32px] overflow-hidden shadow-[0_20px_60px_-15px_rgba(37,99,235,0.1)] transition-all duration-500 scale-100 opacity-100 border border-slate-100" id="auth-modal">
+<div class="px-12 pt-14 pb-12 flex flex-col items-center">
+<!-- Security Header -->
+<div class="relative">
+<div class="flex justify-center items-center relative">
+<div class="relative w-28 h-28 flex items-center justify-center">
+<div class="absolute inset-0 bg-primary-container/10 rounded-full animate-pulse"></div>
+<div class="absolute inset-4 bg-primary-container/20 rounded-full blur-xl"></div>
+<div class="relative z-10 w-24 h-24 rounded-full bg-white shadow-lg flex items-center justify-center border border-primary-container/20 security-icon-container">
+<div class="security-icon-inner flex items-center justify-center w-full h-full">
+<img alt="Security Lock" class="w-16 h-16 object-contain relative z-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf7Rwiehw6b-xmE8kk63oBPY2gHlDF1r0p9zxXPfEGV6nPeZHttomvaqQnZ_wnibNVgMPo8prfDG8SxiKG0GyMufXgbuvYga_m68QcB2jpd8CF-Png9lzoDA_5JOXCu5id1EM6zKuoYBmiJgw1ik6oSBgi-bYfP0CQWL0YsBGImkXS9aORBD09YjVAj9F1R1SPxWa9NQnmyQJjNKKfCgcxQnWL_8n2BY-xgOV6NAw5SNykTXxxw8aLFe2n0VFzr-t3bg22C2CL7UCw"/>
 </div>
 </div>
-<div class="flex items-center gap-md">
-<div class="bg-surface-container-high p-sm rounded-full cursor-pointer hover:bg-surface-container-highest transition-colors">
-<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
-</div>
-<img alt="Administrator Avatar" class="w-10 h-10 rounded-full border-2 border-primary/20 shadow-sm" data-alt="A professional headshot of a middle-aged male system administrator with a confident and friendly expression. He wears a navy blue suit and is set against a clean, softly lit office background with cool blue tones and minimal furniture. The image has a crisp, high-end corporate aesthetic with soft, diffuse lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5s4o6m4eXAKAZNLYUe_iPxBEMruLnUmzThGG3MZj0VvbNK7ZVdLB8TuWPdH8PSL-ICUin82IGQS7ARI97PUD5o2agfvRBA09eM64q52u2xBjgYM986RLFWExExnVnTwSTeQikjPXjR-vCbDhBgmGxdGI2PVC3OEFBKhgc0ylBqHVaOywLJ4JNQW_NSONND3thoRwqzOv9eS_M0l4jLQCx8K5g3XByAA0EB2w7kL6te6PcE4H3AEEctHWaHvfiGgkPc86C28QDSvk">
-</div>
-</header>
-<!-- Dummy Content to Show Context -->
-<div class="grid grid-cols-12 gap-lg opacity-40 select-none">
-<div class="col-span-12 md:col-span-8 bg-surface-container p-xl rounded-3xl border border-outline-variant/20 h-96"></div>
-<div class="col-span-12 md:col-span-4 space-y-lg">
-<div class="bg-surface-container p-lg rounded-3xl border border-outline-variant/20 h-44"></div>
-<div class="bg-surface-container p-lg rounded-3xl border border-outline-variant/20 h-44"></div>
 </div>
 </div>
-<!-- THE PROVISIONING MODAL OVERLAY -->
-<div class="fixed inset-0 z-50 flex items-center justify-center p-md md:p-xl modal-overlay" id="provisioning-modal">
-<!-- MAIN MODAL CONTAINER -->
-<div class="bg-white w-full max-w-5xl h-[921px] md:h-auto max-h-[850px] rounded-3xl border border-surface-container-high custom-shadow flex flex-col md:flex-row overflow-hidden modal-animate-in relative">
-<!-- Close Button -->
-<button class="absolute top-md right-md w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-all z-50" onclick="closeModal()">
-<span class="material-symbols-outlined text-outline">close</span>
+</div>
+<!-- Typography Header -->
+<div class="text-center mb-10">
+<h1 class="font-headline-lg text-[48px] leading-tight text-on-surface mb-3 tracking-tight font-bold mt-4"><span class="text-[#000000]">Set new</span> <span class="text-[#2563eb]">Password</span></h1>
+<p class="font-body-md text-on-surface-variant opacity-80 max-w-[360px] mx-auto text-[18px]">Create a strong password to secure your account.</p>
+</div>
+<!-- Form Content -->
+<div class="w-full space-y-6" id="form-content">
+<!-- Create Password Input -->
+<div class="space-y-2">
+<div class="relative h-[64px] group mb-4">
+<input class="w-full h-full px-6 bg-surface-container-low border border-border-subtle rounded-2xl focus:border-primary focus:ring-4 focus:ring-data-glow transition-all outline-none font-body-md text-on-surface placeholder:text-outline" id="new-password" placeholder="New Password" type="password"/>
+<button class="absolute right-6 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors" onclick="toggleVisibility('new-password', this)" type="button">
+<span class="material-symbols-outlined">visibility</span>
 </button>
-<!-- Left Column: Form Section -->
-<div class="flex-1 p-lg md:p-xl overflow-y-auto custom-scrollbar">
-<header class="mb-lg">
-<h3 class="font-headline-lg text-headline-lg text-on-surface"><span style="color: rgb(0, 0, 0);" class="">User Account</span> <span style="color: rgb(37, 99, 235);" class="">Provisioning</span></h3>
-<p class="font-body-md text-body-md text-on-surface-variant mt-sm">
-                            Register a new user to the system. Credentials will automatically be generated and sent via email after account provisioning.
-                        </p>
-</header>
-<form class="space-y-xl" id="provisioning-form">
-<!-- Personal Information -->
-<section>
-<div class="flex items-center gap-sm mb-md">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">person</span>
-<h4 class="font-label-md text-label-md uppercase tracking-wider text-[#2563EB]">Personal Information</h4>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">First Name <span class="text-error">*</span></label>
-<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="firstName" name="firstName" placeholder="e.g. Juan" required="" type="text">
+<!-- Password Strength Meter -->
+<div class="px-2 space-y-2">
+<div class="flex justify-between items-center">
+<span class="font-label-md text-error" id="strength-label">Weak</span>
+<span class="font-mono-data text-outline" id="strength-percent">0%</span>
 </div>
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Last Name <span class="text-error">*</span></label>
-<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="lastName" name="lastName" placeholder="e.g. Dela Cruz" required="" type="text">
-</div>
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Middle Name</label>
-<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="middleName" name="middleName" placeholder="e.g. Santos" type="text">
-</div>
-<div class="grid grid-cols-2 gap-md">
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Gender <span class="text-error">*</span></label>
-<select class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="gender" name="gender" required="">
-<option value="">Select</option>
-<option value="Male">Male</option>
-<option value="Female">Female</option>
-</select>
-</div>
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Birth Date <span class="text-error">*</span></label>
-<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="birthDate" name="birthDate" required="" type="date">
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-error transition-all duration-500 rounded-full" id="strength-bar" style="width: 0%;"></div>
 </div>
 </div>
 </div>
-</section>
-<!-- Location Details -->
-<section>
-<div class="flex items-center gap-sm mb-md">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">location_on</span>
-<h4 class="font-label-md text-label-md uppercase tracking-wider" style="color: #2563EB;">Location Details</h4>
+<!-- Confirm Password Input -->
+<div class="relative h-[64px] group mb-4">
+<input class="w-full h-full px-6 bg-surface-container-low border border-border-subtle rounded-2xl focus:border-primary focus:ring-4 focus:ring-data-glow transition-all outline-none font-body-md text-on-surface placeholder:text-outline" id="confirm-password" placeholder="Confirm Password" type="password"/>
+<button class="absolute right-6 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors" onclick="toggleVisibility('confirm-password', this)" type="button">
+<span class="material-symbols-outlined">visibility</span>
+</button>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Region</label>
-<input class="w-full bg-surface-container-highest/50 border-outline-variant/30 rounded-xl px-md py-sm font-body-md text-on-surface-variant cursor-not-allowed" id="region" name="region" readonly="" type="text" value="Region IV-A">
+<!-- Checklist Grid -->
+<div class="grid grid-cols-2 gap-y-5 gap-x-8 pt-6 border-t border-slate-50">
+<div class="flex items-center gap-2 group" id="req-length">
+<span class="material-symbols-outlined text-surface-variant group-[.valid]:text-success transition-colors text-[20px]">check_circle</span>
+<span class="font-label-md text-outline group-[.valid]:text-on-surface transition-colors">8+ Characters</span>
 </div>
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">City/Province</label>
-<input class="w-full bg-surface-container-highest/50 border-outline-variant/30 rounded-xl px-md py-sm font-body-md text-on-surface-variant cursor-not-allowed" id="city" name="city" readonly="" type="text" value="Quezon">
+<div class="flex items-center gap-2 group" id="req-upper">
+<span class="material-symbols-outlined text-surface-variant group-[.valid]:text-success transition-colors text-[20px]">check_circle</span>
+<span class="font-label-md text-outline group-[.valid]:text-on-surface transition-colors">Uppercase Letter</span>
 </div>
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Municipality</label>
-<input class="w-full bg-surface-container-highest/50 border-outline-variant/30 rounded-xl px-md py-sm font-body-md text-on-surface-variant cursor-not-allowed" id="municipality" name="municipality" readonly="" type="text" value="San Andres">
+<div class="flex items-center gap-2 group" id="req-number">
+<span class="material-symbols-outlined text-surface-variant group-[.valid]:text-success transition-colors text-[20px]">check_circle</span>
+<span class="font-label-md text-outline group-[.valid]:text-on-surface transition-colors">Include Number</span>
 </div>
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Barangay <span class="text-error">*</span></label>
-<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="barangay" name="barangay" placeholder="Enter barangay name" required="" type="text">
-</div>
-</div>
-</section>
-<!-- Account & Contact -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-xl">
-<section>
-<div class="flex items-center gap-sm mb-md">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">shield</span>
-<h4 class="font-label-md text-label-md uppercase tracking-wider text-[#2563EB]">Account Information</h4>
-</div>
-<div class="space-y-md">
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Email Address <span class="text-error">*</span></label>
-<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="email" name="email" placeholder="juan.delacruz@example.com" required="" type="email">
-</div>
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Role <span class="text-error">*</span></label>
-<select class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="role" name="role" required="">
-<option value="Resident">Resident</option>
-<option value="Administrator">Administrator</option>
-</select>
+<div class="flex items-center gap-2 group" id="req-special">
+<span class="material-symbols-outlined text-surface-variant group-[.valid]:text-success transition-colors text-[20px]">check_circle</span>
+<span class="font-label-md text-outline group-[.valid]:text-on-surface transition-colors">Special Symbol</span>
 </div>
 </div>
-</section>
-<section>
-<div class="flex items-center gap-sm mb-md">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">call</span>
-<h4 class="font-label-md text-label-md uppercase tracking-wider" style="color: #2563EB;">Contact Information</h4>
+<!-- Action Button -->
+<button class="w-full h-[64px] mt-10 bg-primary-container text-white rounded-2xl font-headline-md font-semibold flex items-center justify-center gap-3 hover:bg-primary-container/90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed group shadow-lg shadow-primary-container/20" id="submit-btn" onclick="handleSubmit()">
+<span class="" id="btn-text">Update Password</span>
+<span class="hidden animate-spin h-5 w-5 border-2 border-white/30 border-t-white rounded-full" id="btn-loader"></span>
+</button>
 </div>
-<div class="space-y-md">
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Mobile Number <span class="text-error">*</span></label>
-<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="mobile" name="mobile" placeholder="+63 9XX XXX XXXX" required="" type="tel">
+<!-- Success Flow (Hidden initially) -->
+<div class="hidden w-full flex-col items-center text-center py-10" id="success-flow">
+<div class="w-24 h-24 rounded-full bg-success/10 flex items-center justify-center mb-8">
+<svg class="w-12 h-12 text-success" fill="none" stroke="currentColor" stroke-width="3" viewbox="0 0 24 24">
+<path class="success-checkmark" d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
 </div>
-<div class="space-y-xs">
-<label class="font-label-sm text-label-sm text-on-surface-variant">Alternate Contact</label>
-<input class="w-full bg-surface-container-low border-outline-variant/30 rounded-xl px-md py-sm font-body-md" id="altContact" name="altContact" placeholder="Optional contact number" type="tel">
+<h2 class="font-headline-lg text-3xl mb-4 text-on-surface">Password Updated</h2>
+<p class="font-body-md text-on-surface-variant opacity-80 max-w-[360px] mx-auto text-[18px]">Your security settings have been updated successfully.</p>
+<div class="w-full space-y-3">
+<div class="flex justify-between font-label-md text-outline mb-1">
+<span class="">Redirecting to Login</span>
+<span class="" id="redirect-percent">0%</span>
 </div>
-</div>
-</section>
-</div>
-<!-- Footer Actions -->
-<div class="flex flex-col md:flex-row gap-md pt-lg border-t border-outline-variant/20">
-<button class="flex-1 md:flex-none px-xl py-sm rounded-xl font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high transition-all" onclick="closeModal()" type="button">
-                                Cancel
-                            </button>
-<button class="flex-1 bg-gradient-to-r from-primary to-primary-container text-on-primary px-xl py-sm rounded-xl font-label-md text-label-md shadow-md hover:translate-y-[-2px] hover:shadow-lg active:scale-[0.98] transition-all" type="submit">
-                                Review &amp; Provision User
-                            </button>
-</div>
-</form>
-</div>
-<!-- Right Column: Live Summary Card -->
-<div class="w-full md:w-[340px] bg-surface-container-low border-l border-outline-variant/30 p-lg hidden md:flex flex-col">
-<h4 class="font-label-md text-label-md uppercase tracking-wider text-outline mb-lg">Live Summary</h4>
-<div class="glass-card rounded-3xl p-lg space-y-md flex-1">
-<div class="flex flex-col items-center mb-lg">
-<div class="w-20 h-20 rounded-full bg-primary-fixed flex items-center justify-center text-primary-fixed-dim font-bold text-headline-md mb-md border-4 border-white shadow-sm overflow-hidden" id="summary-avatar-container">
-<span class="material-symbols-outlined text-primary text-[40px]">account_circle</span>
-</div>
-<h5 class="font-headline-sm text-headline-sm text-on-surface text-center" id="sum-name">New User</h5>
-<span class="bg-primary/10 text-primary px-sm py-[2px] rounded-full font-label-sm text-label-sm mt-xs" id="sum-role">Administrator</span>
-</div>
-<div class="space-y-sm">
-<div class="group">
-<p class="font-label-sm text-label-sm text-outline">Email Address</p>
-<p class="font-body-md text-on-surface truncate" id="sum-email">—</p>
-</div>
-<div class="group">
-<p class="font-label-sm text-label-sm text-outline">Gender</p>
-<p class="font-body-md text-on-surface" id="sum-gender">—</p>
-</div>
-<div class="group">
-<p class="font-label-sm text-label-sm text-outline">Birth Date</p>
-<p class="font-body-md text-on-surface" id="sum-birth">—</p>
-</div>
-<div class="group">
-<p class="font-label-sm text-label-sm text-outline">Address</p>
-<p class="font-body-md text-on-surface italic text-on-surface-variant" id="sum-address">..., San Andres, Quezon</p>
-</div>
-</div>
-<div class="mt-auto pt-lg">
-<div class="bg-primary/5 rounded-2xl p-md border border-primary/10">
-<div class="flex items-center gap-xs mb-xs">
-<span class="material-symbols-outlined text-primary text-sm">info</span>
-<span class="font-label-sm text-label-sm text-primary">Provisioning Status</span>
-</div>
-<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden">
-<div class="w-1/4 h-full bg-primary transition-all duration-500" id="progress-bar" style="width: 25%;"></div>
-</div>
-<p class="font-label-sm text-label-sm text-on-surface-variant mt-sm">Step 1 of 3: Drafting</p>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full w-0 bg-primary transition-all duration-[2000ms] linear rounded-full" id="redirect-bar"></div>
 </div>
 </div>
 </div>
 </div>
-</div>
-</div>
-<!-- STEP 2: CONFIRMATION MODAL (Hidden by default) -->
-<div class="fixed inset-0 z-[60] flex items-center justify-center p-md modal-overlay hidden" id="confirmation-modal">
-<div class="bg-white w-full max-w-md rounded-3xl p-xl custom-shadow text-center modal-animate-in">
-<div class="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mx-auto mb-lg">
-<span class="material-symbols-outlined text-primary text-3xl">fact_check</span>
-</div>
-<h3 class="font-headline-md text-headline-md mb-md">Review Details</h3>
-<p class="text-on-surface-variant mb-xl">Are you sure you want to provision <span class="font-bold text-on-surface" id="confirm-user-name"></span> as a <span class="font-bold text-on-surface" id="confirm-user-role"></span>?</p>
-<div class="flex gap-md">
-<button class="flex-1 py-sm font-label-md text-on-surface-variant hover:bg-surface-container rounded-xl transition-all" onclick="hideConfirmation()">Back to Edit</button>
-<button class="flex-1 py-sm bg-primary text-on-primary font-label-md rounded-xl shadow-md hover:bg-primary-container transition-all" onclick="processProvisioning()">Confirm &amp; Provision</button>
-</div>
-</div>
-</div>
-<!-- STEP 3: SUCCESS MODAL (Hidden by default) -->
-<div class="fixed inset-0 z-[70] flex items-center justify-center p-md modal-overlay hidden" id="success-modal">
-<div class="bg-white w-full max-w-md rounded-3xl p-xl custom-shadow text-center modal-animate-in">
-<div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-lg border-2 border-green-100">
-<span class="material-symbols-outlined text-success text-[40px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</div>
-<h3 class="font-headline-md text-headline-md text-on-surface mb-md">Account Provisioned Successfully</h3>
-<p class="text-on-surface-variant mb-xl">The account for <span class="font-bold text-primary" id="success-email"></span> is now active. Welcome instructions have been dispatched via email.</p>
-<button class="w-full py-sm bg-inverse-surface text-inverse-on-surface font-label-md rounded-xl shadow-md hover:bg-surface-variant/20 hover:text-on-surface transition-all" onclick="location.reload()">
-                    Dismiss
-                </button>
-</div>
+<!-- Footer Help -->
+<div class="bg-surface-container-lowest px-10 py-6 border-t border-border-subtle text-center" id="modal-footer">
+<p class="font-label-md text-outline">Having trouble? <a class="text-primary-container font-semibold hover:underline" href="#">Contact System Admin</a></p>
 </div>
 </main>
 <script>
-        // Form interactivity
-        const form = document.getElementById('provisioning-form');
-        const summaryFields = {
-            name: document.getElementById('sum-name'),
-            role: document.getElementById('sum-role'),
-            email: document.getElementById('sum-email'),
-            gender: document.getElementById('sum-gender'),
-            birth: document.getElementById('sum-birth'),
-            address: document.getElementById('sum-address')
-        };
-        const progressBar = document.getElementById('progress-bar');
- 
-        const inputs = form.querySelectorAll('input, select');
- 
-        inputs.forEach(input => {
-            input.addEventListener('input', updateSummary);
+    // Visibility Toggle
+    function toggleVisibility(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('.material-symbols-outlined');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.innerText = 'visibility_off';
+        } else {
+            input.type = 'password';
+            icon.innerText = 'visibility';
+        }
+    }
+
+    // Real-time Validation
+    const newPass = document.getElementById('new-password');
+    const confirmPass = document.getElementById('confirm-password');
+    const strengthBar = document.getElementById('strength-bar');
+    const strengthLabel = document.getElementById('strength-label');
+    const strengthPercent = document.getElementById('strength-percent');
+
+    if (newPass) {
+        newPass.addEventListener('input', () => {
+            const val = newPass.value;
+            let strength = 0;
+            
+            const checks = {
+                length: val.length >= 8,
+                upper: /[A-Z]/.test(val),
+                number: /[0-9]/.test(val),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(val)
+            };
+
+            // Update UI Checklist
+            Object.keys(checks).forEach(key => {
+                const el = document.getElementById(`req-${key}`);
+                if (el) {
+                    if (checks[key]) {
+                        el.classList.add('valid');
+                        strength += 25;
+                    } else {
+                        el.classList.remove('valid');
+                    }
+                }
+            });
+
+            // Update Strength UI
+            if (strengthBar && strengthPercent && strengthLabel) {
+                strengthBar.style.width = `${strength}%`;
+                strengthPercent.innerText = `${strength}%`;
+
+                if (strength <= 25) {
+                    strengthBar.className = 'h-full bg-error transition-all duration-500 rounded-full';
+                    strengthLabel.innerText = 'Weak';
+                    strengthLabel.className = 'font-label-md text-error';
+                } else if (strength <= 50) {
+                    strengthBar.className = 'h-full bg-warning transition-all duration-500 rounded-full';
+                    strengthLabel.innerText = 'Fair';
+                    strengthLabel.className = 'font-label-md text-warning';
+                } else if (strength <= 75) {
+                    strengthBar.className = 'h-full bg-primary transition-all duration-500 rounded-full';
+                    strengthLabel.innerText = 'Strong';
+                    strengthLabel.className = 'font-label-md text-primary';
+                } else {
+                    strengthBar.className = 'h-full bg-success transition-all duration-500 rounded-full';
+                    strengthLabel.innerText = 'Excellent';
+                    strengthLabel.className = 'font-label-md text-success';
+                }
+            }
         });
- 
-        function updateSummary() {
-            const firstName = document.getElementById('firstName').value || 'New';
-            const lastName = document.getElementById('lastName').value || 'User';
-            const role = document.getElementById('role').value;
-            const email = document.getElementById('email').value || '—';
-            const gender = document.getElementById('gender').value || '—';
-            const birth = document.getElementById('birthDate').value || '—';
-            const barangay = document.getElementById('barangay').value || '...';
- 
-            summaryFields.name.textContent = `${firstName} ${lastName}`;
-            summaryFields.role.textContent = role;
-            summaryFields.email.textContent = email;
-            summaryFields.gender.textContent = gender;
-            summaryFields.birth.textContent = birth;
-            summaryFields.address.textContent = `${barangay}, San Andres, Quezon`;
- 
-            // Simple progress logic
-            const filled = Array.from(inputs).filter(i => i.value && i.required).length;
-            const requiredCount = Array.from(inputs).filter(i => i.required).length;
-            const percentage = (filled / requiredCount) * 100;
-            progressBar.style.width = `${Math.max(25, percentage)}%`;
+    }
+
+    // Submit Simulation
+    async function handleSubmit() {
+        const btn = document.getElementById('submit-btn');
+        const btnText = document.getElementById('btn-text');
+        const btnLoader = document.getElementById('btn-loader');
+        const formContent = document.getElementById('form-content');
+        const successFlow = document.getElementById('success-flow');
+        const modalFooter = document.getElementById('modal-footer');
+
+        if (!newPass.value || newPass.value !== confirmPass.value) {
+            confirmPass.classList.add('border-error');
+            setTimeout(() => confirmPass.classList.remove('border-error'), 2000);
+            return;
         }
- 
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            const role = document.getElementById('role').value;
- 
-            document.getElementById('confirm-user-name').textContent = `${firstName} ${lastName}`;
-            document.getElementById('confirm-user-role').textContent = role;
- 
-            showConfirmation();
-        });
- 
-        function closeModal() {
-            const modal = document.getElementById('provisioning-modal');
-            modal.style.opacity = '0';
-            modal.style.transition = 'opacity 0.3s ease';
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        }
- 
-        function showConfirmation() {
-            document.getElementById('confirmation-modal').classList.remove('hidden');
-        }
- 
-        function hideConfirmation() {
-            document.getElementById('confirmation-modal').classList.add('hidden');
-        }
- 
-        function processProvisioning() {
-            hideConfirmation();
-            const email = document.getElementById('email').value;
-            document.getElementById('success-email').textContent = email;
- 
-            // Artificial loading delay
-            const btn = document.querySelector('button[onclick="processProvisioning()"]');
-            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span>';
-            btn.disabled = true;
- 
+
+        // Show loading
+        btn.disabled = true;
+        btnText.classList.add('opacity-0');
+        btnLoader.classList.remove('hidden');
+
+        // Simulate API delay
+        await new Promise(r => setTimeout(r, 1500));
+
+        // Transition to Success
+        formContent.classList.add('hidden');
+        modalFooter.classList.add('hidden');
+        successFlow.classList.remove('hidden');
+        
+        // Success Progress Bar
+        const redirectBar = document.getElementById('redirect-bar');
+        const redirectPercentText = document.getElementById('redirect-percent');
+        
+        setTimeout(() => {
+            redirectBar.style.width = '100%';
+            let count = 0;
+            const interval = setInterval(() => {
+                count += 2;
+                redirectPercentText.innerText = `${count}%`;
+                if (count >= 100) clearInterval(interval);
+            }, 40);
+        }, 100);
+
+        // Redirect simulation
+        setTimeout(() => {
+            document.getElementById('auth-modal').classList.add('scale-95', 'opacity-0');
             setTimeout(() => {
-                document.getElementById('success-modal').classList.remove('hidden');
-            }, 1000);
-        }
-    </script>
- 
- 
- 
- 
- 
- 
+                alert('Password successfully reset. Returning to Login...');
+                window.location.reload();
+            }, 500);
+        }, 2500);
+    }
+</script>
 </body></html>

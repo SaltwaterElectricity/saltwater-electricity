@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LoginHero from "../../components/auth/LoginHero";
 import { ROUTES } from "../../constants/routes";
 import { Footer } from "../../layout";
+import { ForgotPasswordModal } from "../../components/modal";
 
 // LOCAL ASSETS
 import pupLogo from "../../assets/landing-page-img/pup-unisan-logo.png";
@@ -11,10 +13,10 @@ import saltwaterLogo from "../../assets/landing-page-img/saltwater-electricity-l
 /**
  * LandingPage Component
  * A public-facing landing page for the Saltwater Electricity IoT Monitoring System.
- * Fully synchronized with landingPage.html and global Tailwind 4 theme.
  */
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
 
   return (
     <div className="bg-background text-on-surface font-body-md min-h-screen custom-scrollbar">
@@ -55,6 +57,12 @@ const LandingPage = () => {
           </a>
         </div>
         <div className="flex items-center gap-4">
+          <button
+            onClick={() => setIsForgotModalOpen(true)}
+            className="text-[11px] font-bold text-primary hover:underline uppercase tracking-wider font-body-md hidden sm:block"
+          >
+            Forgot Password?
+          </button>
           <button
             onClick={() => navigate(ROUTES.LOGIN)}
             className="bg-primary text-on-primary px-6 py-2.5 rounded-full font-body-md text-body-md font-semibold hover:backdrop-brightness-110 transition-all duration-300 shadow-lg shadow-primary/20 scale-95 active:scale-90"
@@ -101,7 +109,6 @@ const LandingPage = () => {
       {/* Trust Bar (Marquee) */}
       <div className="w-full overflow-hidden bg-surface-container-low py-2 border-y border-outline-variant/30">
         <div className="animate-marquee whitespace-nowrap items-center">
-          {/* First set of logos */}
           <div className="flex items-center gap-24 px-12 cursor-default">
             <div className="flex items-center gap-4 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300">
               <img
@@ -134,39 +141,6 @@ const LandingPage = () => {
               </span>
             </div>
           </div>
-          {/* Second set for seamless loop */}
-          <div className="flex items-center gap-24 px-12 cursor-default">
-            <div className="flex items-center gap-4 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300">
-              <img
-                alt="PUP Logo"
-                className="h-10 w-auto object-contain mix-blend-multiply"
-                src={pupLogo}
-              />
-              <span className="font-h3 text-h5 font-bold tracking-tight text-on-surface whitespace-nowrap">
-                Polytechnic University of the Philippines - Unisan Campus
-              </span>
-            </div>
-            <div className="flex items-center gap-4 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300">
-              <img
-                alt="San Andres Logo"
-                className="h-10 w-auto object-contain mix-blend-multiply"
-                src={sanAndresLogo}
-              />
-              <span className="font-h3 text-h5 font-bold tracking-tight text-on-surface whitespace-nowrap">
-                Alibijaban Island, San Andres Municipality
-              </span>
-            </div>
-            <div className="flex items-center gap-4 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300">
-              <img
-                alt="Saltwater Electricity Logo"
-                className="h-10 w-auto object-contain mix-blend-multiply"
-                src={saltwaterLogo}
-              />
-              <span className="font-h3 text-h5 font-bold tracking-tight text-on-surface whitespace-nowrap">
-                Saltwater Electricity
-              </span>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -185,7 +159,6 @@ const LandingPage = () => {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
-          {/* Real-Time Monitoring */}
           <div className="glass-card p-8 rounded-[32px] border border-white/40 hover:border-primary/30 hover:bg-white/80 hover:shadow-[0_20px_50px_-12px_rgba(0,101,145,0.15)] transition-all duration-500 group relative overflow-hidden">
             <div className="w-14 h-14 bg-gradient-to-br from-primary to-tertiary-container rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform duration-500">
               <span className="material-symbols-outlined text-on-primary text-[32px]">
@@ -200,7 +173,6 @@ const LandingPage = () => {
               with sub-second latency.
             </p>
           </div>
-          {/* Smart Alert System */}
           <div className="glass-card p-8 rounded-[32px] border border-white/40 hover:border-primary/30 hover:bg-white/80 hover:shadow-[0_20px_50px_-12px_rgba(0,101,145,0.15)] transition-all duration-500 group relative overflow-hidden">
             <div className="w-14 h-14 bg-gradient-to-br from-primary to-tertiary-container rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform duration-500">
               <span className="material-symbols-outlined text-on-primary text-[32px]">
@@ -215,7 +187,6 @@ const LandingPage = () => {
               system anomalies.
             </p>
           </div>
-          {/* Multi-Site Monitoring */}
           <div className="glass-card p-8 rounded-[32px] border border-white/40 hover:border-primary/30 hover:bg-white/80 hover:shadow-[0_20px_50px_-12px_rgba(0,101,145,0.15)] transition-all duration-500 group relative overflow-hidden">
             <div className="w-14 h-14 bg-gradient-to-br from-primary to-tertiary-container rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform duration-500">
               <span className="material-symbols-outlined text-on-primary text-[32px]">
@@ -230,7 +201,6 @@ const LandingPage = () => {
               performance analytics.
             </p>
           </div>
-          {/* Mobile Accessibility */}
           <div className="glass-card p-8 rounded-[32px] border border-white/40 hover:border-primary/30 hover:bg-white/80 hover:shadow-[0_20px_50px_-12px_rgba(0,101,145,0.15)] transition-all duration-500 group relative overflow-hidden">
             <div className="w-14 h-14 bg-gradient-to-br from-primary to-tertiary-container rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform duration-500">
               <span className="material-symbols-outlined text-on-primary text-[32px]">
@@ -249,6 +219,8 @@ const LandingPage = () => {
       </section>
 
       <Footer />
+
+      <ForgotPasswordModal isOpen={isForgotModalOpen} onClose={() => setIsForgotModalOpen(false)} />
     </div>
   );
 };
