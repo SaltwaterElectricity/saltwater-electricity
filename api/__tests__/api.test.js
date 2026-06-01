@@ -25,6 +25,7 @@ vi.mock("../_utils/firebase.js", () => ({
           }),
         }),
         remove: vi.fn().mockResolvedValue({}),
+        update: vi.fn().mockResolvedValue({}),
       })),
     },
   })),
