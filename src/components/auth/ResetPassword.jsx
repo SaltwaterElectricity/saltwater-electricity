@@ -97,7 +97,9 @@ const ResetPassword = ({ email, otp, onSuccess }) => {
             />
           </svg>
         </div>
-        <h2 className="font-headline-lg text-3xl mb-4 text-on-surface font-bold">Password Updated</h2>
+        <h2 className="font-headline-lg text-3xl mb-4 text-on-surface font-bold">
+          Password Updated
+        </h2>
         <p className="font-body-md text-on-surface-variant opacity-80 max-w-[360px] mx-auto text-[18px]">
           Your security settings have been updated successfully.
         </p>
@@ -182,7 +184,10 @@ const ResetPassword = ({ email, otp, onSuccess }) => {
             </div>
             <div className="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
               <div
-                className={cn("h-full transition-all duration-500 rounded-full", strengthConfig.color)}
+                className={cn(
+                  "h-full transition-all duration-500 rounded-full",
+                  strengthConfig.color
+                )}
                 style={{ width: `${strength}%` }}
               />
             </div>
@@ -260,7 +265,9 @@ const ResetPassword = ({ email, otp, onSuccess }) => {
 };
 
 const ChecklistItem = ({ label, isValid }) => (
-  <div className={cn("flex items-center gap-2 transition-all", isValid ? "opacity-100" : "opacity-60")}>
+  <div
+    className={cn("flex items-center gap-2 transition-all", isValid ? "opacity-100" : "opacity-60")}
+  >
     <CheckCircle2
       size={18}
       className={cn("transition-colors", isValid ? "text-success" : "text-slate-200")}
