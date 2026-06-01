@@ -127,11 +127,7 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
           )}
 
           {view === "forgot-reset" && isVerified && (
-            <ResetPassword
-              email={forgotEmail}
-              otp={forgotOtp}
-              onSuccess={handleBackToLogin}
-            />
+            <ResetPassword email={forgotEmail} otp={forgotOtp} onSuccess={handleBackToLogin} />
           )}
         </div>
 
@@ -155,9 +151,21 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
             />
           </div>
           <div className="mt-2 flex justify-between px-1">
-            <span className={`text-[9px] font-bold uppercase tracking-widest ${step === 1 ? 'text-primary' : 'text-slate-300'}`}>Request</span>
-            <span className={`text-[9px] font-bold uppercase tracking-widest ${step === 2 ? 'text-primary' : 'text-slate-300'}`}>Verify</span>
-            <span className={`text-[9px] font-bold uppercase tracking-widest ${step === 3 ? 'text-primary' : 'text-slate-300'}`}>Reset</span>
+            <span
+              className={`text-[9px] font-bold uppercase tracking-widest ${step === 1 ? "text-primary" : "text-slate-300"}`}
+            >
+              Request
+            </span>
+            <span
+              className={`text-[9px] font-bold uppercase tracking-widest ${step === 2 ? "text-primary" : "text-slate-300"}`}
+            >
+              Verify
+            </span>
+            <span
+              className={`text-[9px] font-bold uppercase tracking-widest ${step === 3 ? "text-primary" : "text-slate-300"}`}
+            >
+              Reset
+            </span>
           </div>
         </div>
       </div>
