@@ -209,10 +209,7 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
       </div>
 
       {/* Forgot Password Modal */}
-      <ForgotPasswordModal
-        isOpen={isForgotModalOpen}
-        onClose={() => setIsForgotModalOpen(false)}
-      />
+      <ForgotPasswordModal isOpen={isForgotModalOpen} onClose={() => setIsForgotModalOpen(false)} />
     </div>
   );
 };

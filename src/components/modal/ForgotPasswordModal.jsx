@@ -117,9 +117,21 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
             />
           </div>
           <div className="mt-3 flex justify-between px-1">
-            <span className={`text-[10px] font-bold uppercase tracking-widest ${step === 1 ? 'text-primary' : 'text-slate-300'}`}>Request</span>
-            <span className={`text-[10px] font-bold uppercase tracking-widest ${step === 2 ? 'text-primary' : 'text-slate-300'}`}>Verify</span>
-            <span className={`text-[10px] font-bold uppercase tracking-widest ${step === 3 ? 'text-primary' : 'text-slate-300'}`}>Reset</span>
+            <span
+              className={`text-[10px] font-bold uppercase tracking-widest ${step === 1 ? "text-primary" : "text-slate-300"}`}
+            >
+              Request
+            </span>
+            <span
+              className={`text-[10px] font-bold uppercase tracking-widest ${step === 2 ? "text-primary" : "text-slate-300"}`}
+            >
+              Verify
+            </span>
+            <span
+              className={`text-[10px] font-bold uppercase tracking-widest ${step === 3 ? "text-primary" : "text-slate-300"}`}
+            >
+              Reset
+            </span>
           </div>
         </div>
       </div>

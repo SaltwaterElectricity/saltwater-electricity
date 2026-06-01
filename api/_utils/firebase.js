@@ -15,10 +15,10 @@ export function initFirebaseAdmin() {
     const databaseURL = process.env.VITE_FIREBASE_DATABASE_URL; // databaseURL is also not a secret
 
     if (!projectId || !clientEmail || !privateKey) {
-      console.error("[Firebase Admin] Critical: Missing configuration variables (CLIENT_EMAIL or PRIVATE_KEY).");
-      throw new Error(
-        "Missing Firebase Admin credentials (CLIENT_EMAIL or PRIVATE_KEY)."
+      console.error(
+        "[Firebase Admin] Critical: Missing configuration variables (CLIENT_EMAIL or PRIVATE_KEY)."
       );
+      throw new Error("Missing Firebase Admin credentials (CLIENT_EMAIL or PRIVATE_KEY).");
     }
 
     try {

@@ -242,4 +242,3 @@ const ResetPassword = ({ email, otp, onSuccess, _onClose }) => {
 
 const MemoizedResetPassword = memo(ResetPassword);
 export default MemoizedResetPassword;
-

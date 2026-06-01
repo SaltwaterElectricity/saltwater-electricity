@@ -33,7 +33,7 @@ export default async function handler(req, res) {
       console.error("[generateOTP] Missing SendGrid configuration.");
       throw new Error("Mail service configuration missing.");
     }
-    
+
     sgMail.setApiKey(sgKey);
 
     const OTP_EXPIRY_MS = 900000; // 15 minutes
