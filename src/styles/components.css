@@ -240,8 +240,75 @@
     }
   }
 
+  @keyframes entrance-pop {
+    0% {
+      opacity: 0;
+      transform: scale(0);
+    }
+    70% {
+      transform: scale(1.1);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes ambient-breath {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.04);
+    }
+  }
+
+  @keyframes success-dash {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
   .animate-fadeInUp {
     animation: fadeInUp 0.6s ease forwards;
+  }
+
+  .security-icon-container {
+    animation: entrance-pop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .security-icon-inner {
+    position: relative;
+    overflow: hidden;
+    border-radius: 9999px;
+    animation: ambient-breath 4s ease-in-out infinite;
+    animation-delay: 0.8s;
+  }
+
+  .security-icon-inner::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 40%) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transform: skewX(-25deg);
+    animation: shine-sweep 6s infinite ease-in-out;
+    animation-delay: 1.5s;
+    pointer-events: none;
+  }
+
+  .success-checkmark {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: success-dash 0.8s ease-in-out forwards;
   }
 
   .otp-delay-1 {

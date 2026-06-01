@@ -1,772 +1,395 @@
-<!DOCTYPE html><html class="h-full bg-[#f8fafc]" lang="en" style="width: 1280px; height: 1024px; overflow: hidden; position: relative;"><head></head><body class="h-full overflow-hidden flex bg-[#F0F2F5]">```html
+<!DOCTYPE html>
 
-
-    <meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>Saltwater Electricity Monitoring - Real Time Monitor</title>
-<!-- Tailwind CSS v3 -->
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SaltGrid | Create New Password</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<!-- Google Fonts: Inter -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-<style>
-        body { font-family: 'Inter', sans-serif; }
-        .transition-all-custom { transition: all 0.3s ease-in-out; }
-        .side-panel-hidden { width: 0 !important; min-width: 0 !important; margin-right: 0 !important; overflow: hidden; border-left-width: 0 !important; opacity: 0; pointer-events: none; }
-        .side-panel-visible { width: 450px !important; min-width: 450px !important; opacity: 1; pointer-events: auto; }
-        .pulse-live { animation: pulse 2s infinite; }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.4; }
-            100% { opacity: 1; }
-        }
-        /* Custom Scrollbar for a cleaner UI */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    </style>
-<script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@450&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
         tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#0050cb',
-                        surface: '#faf8ff',
-                        'surface-container': '#ecedfa',
-                    },
-                    borderRadius: {
-                        'xl-custom': '20px',
-                        '2xl-custom': '24px',
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed": "#d2e4ff",
+                      "primary-fixed-dim": "#b4c5ff",
+                      "surface-bright": "#f7f9fb",
+                      "outline-variant": "#c3c6d7",
+                      "on-surface": "#191c1e",
+                      "on-secondary-container": "#49617f",
+                      "on-primary-fixed": "#00174b",
+                      "on-error-container": "#93000a",
+                      "data-glow": "rgba(37, 99, 235, 0.15)",
+                      "warning": "#F59E0B",
+                      "on-surface-variant": "#434655",
+                      "tertiary-fixed": "#ffdbcd",
+                      "tertiary-fixed-dim": "#ffb596",
+                      "primary": "#004ac6",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "outline": "#737686",
+                      "surface-container": "#eceef0",
+                      "error-container": "#ffdad6",
+                      "tertiary-container": "#bc4800",
+                      "surface-variant": "#e0e3e5",
+                      "inverse-on-surface": "#eff1f3",
+                      "border-subtle": "#EAEAEA",
+                      "surface-tint": "#0053db",
+                      "error": "#ba1a1a",
+                      "tertiary": "#943700",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-highest": "#e0e3e5",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed-dim": "#b0c8eb",
+                      "on-primary-fixed-variant": "#003ea8",
+                      "surface-container-low": "#f2f4f6",
+                      "success": "#10B981",
+                      "on-tertiary-fixed-variant": "#7d2d00",
+                      "on-secondary-fixed": "#001c37",
+                      "surface-dim": "#d8dadc",
+                      "surface-container-high": "#e6e8ea",
+                      "primary-container": "#2563eb",
+                      "surface": "#f7f9fb",
+                      "danger": "#EF4444",
+                      "inverse-surface": "#2d3133",
+                      "on-tertiary-fixed": "#360f00",
+                      "on-secondary-fixed-variant": "#314865",
+                      "on-error": "#ffffff",
+                      "on-tertiary-container": "#ffede6",
+                      "secondary-container": "#c4dcff",
+                      "background": "#f7f9fb",
+                      "secondary": "#49607e",
+                      "on-primary-container": "#eeefff",
+                      "on-background": "#191c1e",
+                      "primary-fixed": "#dbe1ff",
+                      "inverse-primary": "#b4c5ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "label-md": ["Geist"],
+                      "display": ["Geist"],
+                      "headline-md": ["Geist"],
+                      "body-md": ["Inter"],
+                      "headline-lg": ["Geist"],
+                      "body-lg": ["Inter"],
+                      "mono-data": ["JetBrains Mono"]
+              },
+              "fontSize": {
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "mono-data": ["14px", {"lineHeight": "20px", "fontWeight": "450"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        
+        .success-checkmark {
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: dash 0.8s ease-in-out forwards;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* Security Icon Animations */
+        @keyframes entrance-pop {
+            0% { opacity: 0; transform: scale(0); }
+            70% { transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes ambient-breath {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+
+        @keyframes shine-sweep {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .security-icon-container {
+            animation: entrance-pop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .security-icon-inner {
+            position: relative;
+            overflow: hidden;
+            border-radius: 9999px;
+            animation: ambient-breath 4s ease-in-out infinite;
+            animation-delay: 0.8s;
+        }
+
+        .security-icon-inner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.4) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-25deg);
+            animation: shine-sweep 6s infinite ease-in-out;
+            animation-delay: 1.5s;
+            pointer-events: none;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .security-icon-container, .security-icon-inner, .security-icon-inner::after {
+                animation: none !important;
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-body-md text-on-background min-h-screen flex items-center justify-center p-12 relative overflow-hidden">
+<!-- Main Modal -->
+<main class="relative z-10 w-full max-w-[580px] bg-white rounded-[32px] overflow-hidden shadow-[0_20px_60px_-15px_rgba(37,99,235,0.1)] transition-all duration-500 scale-100 opacity-100 border border-slate-100" id="auth-modal">
+<div class="px-12 pt-14 pb-12 flex flex-col items-center">
+<!-- Security Header -->
+<div class="relative">
+<div class="flex justify-center items-center relative">
+<div class="relative w-28 h-28 flex items-center justify-center">
+<div class="absolute inset-0 bg-primary-container/10 rounded-full animate-pulse"></div>
+<div class="absolute inset-4 bg-primary-container/20 rounded-full blur-xl"></div>
+<div class="relative z-10 w-24 h-24 rounded-full bg-white shadow-lg flex items-center justify-center border border-primary-container/20 security-icon-container">
+<div class="security-icon-inner flex items-center justify-center w-full h-full">
+<img alt="Security Lock" class="w-16 h-16 object-contain relative z-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf7Rwiehw6b-xmE8kk63oBPY2gHlDF1r0p9zxXPfEGV6nPeZHttomvaqQnZ_wnibNVgMPo8prfDG8SxiKG0GyMufXgbuvYga_m68QcB2jpd8CF-Png9lzoDA_5JOXCu5id1EM6zKuoYBmiJgw1ik6oSBgi-bYfP0CQWL0YsBGImkXS9aORBD09YjVAj9F1R1SPxWa9NQnmyQJjNKKfCgcxQnWL_8n2BY-xgOV6NAw5SNykTXxxw8aLFe2n0VFzr-t3bg22C2CL7UCw"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Typography Header -->
+<div class="text-center mb-10">
+<h1 class="font-headline-lg text-[48px] leading-tight text-on-surface mb-3 tracking-tight font-bold mt-4"><span class="text-[#000000]">Set new</span> <span class="text-[#2563eb]">Password</span></h1>
+<p class="font-body-md text-on-surface-variant opacity-80 max-w-[360px] mx-auto text-[18px]">Create a strong password to secure your account.</p>
+</div>
+<!-- Form Content -->
+<div class="w-full space-y-6" id="form-content">
+<!-- Create Password Input -->
+<div class="space-y-2">
+<div class="relative h-[64px] group mb-4">
+<input class="w-full h-full px-6 bg-surface-container-low border border-border-subtle rounded-2xl focus:border-primary focus:ring-4 focus:ring-data-glow transition-all outline-none font-body-md text-on-surface placeholder:text-outline" id="new-password" placeholder="New Password" type="password"/>
+<button class="absolute right-6 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors" onclick="toggleVisibility('new-password', this)" type="button">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+<!-- Password Strength Meter -->
+<div class="px-2 space-y-2">
+<div class="flex justify-between items-center">
+<span class="font-label-md text-error" id="strength-label">Weak</span>
+<span class="font-mono-data text-outline" id="strength-percent">0%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-error transition-all duration-500 rounded-full" id="strength-bar" style="width: 0%;"></div>
+</div>
+</div>
+</div>
+<!-- Confirm Password Input -->
+<div class="relative h-[64px] group mb-4">
+<input class="w-full h-full px-6 bg-surface-container-low border border-border-subtle rounded-2xl focus:border-primary focus:ring-4 focus:ring-data-glow transition-all outline-none font-body-md text-on-surface placeholder:text-outline" id="confirm-password" placeholder="Confirm Password" type="password"/>
+<button class="absolute right-6 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors" onclick="toggleVisibility('confirm-password', this)" type="button">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+<!-- Checklist Grid -->
+<div class="grid grid-cols-2 gap-y-5 gap-x-8 pt-6 border-t border-slate-50">
+<div class="flex items-center gap-2 group" id="req-length">
+<span class="material-symbols-outlined text-surface-variant group-[.valid]:text-success transition-colors text-[20px]">check_circle</span>
+<span class="font-label-md text-outline group-[.valid]:text-on-surface transition-colors">8+ Characters</span>
+</div>
+<div class="flex items-center gap-2 group" id="req-upper">
+<span class="material-symbols-outlined text-surface-variant group-[.valid]:text-success transition-colors text-[20px]">check_circle</span>
+<span class="font-label-md text-outline group-[.valid]:text-on-surface transition-colors">Uppercase Letter</span>
+</div>
+<div class="flex items-center gap-2 group" id="req-number">
+<span class="material-symbols-outlined text-surface-variant group-[.valid]:text-success transition-colors text-[20px]">check_circle</span>
+<span class="font-label-md text-outline group-[.valid]:text-on-surface transition-colors">Include Number</span>
+</div>
+<div class="flex items-center gap-2 group" id="req-special">
+<span class="material-symbols-outlined text-surface-variant group-[.valid]:text-success transition-colors text-[20px]">check_circle</span>
+<span class="font-label-md text-outline group-[.valid]:text-on-surface transition-colors">Special Symbol</span>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full h-[64px] mt-10 bg-primary-container text-white rounded-2xl font-headline-md font-semibold flex items-center justify-center gap-3 hover:bg-primary-container/90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed group shadow-lg shadow-primary-container/20" id="submit-btn" onclick="handleSubmit()">
+<span class="" id="btn-text">Update Password</span>
+<span class="hidden animate-spin h-5 w-5 border-2 border-white/30 border-t-white rounded-full" id="btn-loader"></span>
+</button>
+</div>
+<!-- Success Flow (Hidden initially) -->
+<div class="hidden w-full flex-col items-center text-center py-10" id="success-flow">
+<div class="w-24 h-24 rounded-full bg-success/10 flex items-center justify-center mb-8">
+<svg class="w-12 h-12 text-success" fill="none" stroke="currentColor" stroke-width="3" viewbox="0 0 24 24">
+<path class="success-checkmark" d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<h2 class="font-headline-lg text-3xl mb-4 text-on-surface">Password Updated</h2>
+<p class="font-body-md text-on-surface-variant opacity-80 max-w-[360px] mx-auto text-[18px]">Your security settings have been updated successfully.</p>
+<div class="w-full space-y-3">
+<div class="flex justify-between font-label-md text-outline mb-1">
+<span class="">Redirecting to Login</span>
+<span class="" id="redirect-percent">0%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full w-0 bg-primary transition-all duration-[2000ms] linear rounded-full" id="redirect-bar"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Help -->
+<div class="bg-surface-container-lowest px-10 py-6 border-t border-border-subtle text-center" id="modal-footer">
+<p class="font-label-md text-outline">Having trouble? <a class="text-primary-container font-semibold hover:underline" href="#">Contact System Admin</a></p>
+</div>
+</main>
+<script>
+    // Visibility Toggle
+    function toggleVisibility(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('.material-symbols-outlined');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.innerText = 'visibility_off';
+        } else {
+            input.type = 'password';
+            icon.innerText = 'visibility';
+        }
+    }
+
+    // Real-time Validation
+    const newPass = document.getElementById('new-password');
+    const confirmPass = document.getElementById('confirm-password');
+    const strengthBar = document.getElementById('strength-bar');
+    const strengthLabel = document.getElementById('strength-label');
+    const strengthPercent = document.getElementById('strength-percent');
+
+    if (newPass) {
+        newPass.addEventListener('input', () => {
+            const val = newPass.value;
+            let strength = 0;
+            
+            const checks = {
+                length: val.length >= 8,
+                upper: /[A-Z]/.test(val),
+                number: /[0-9]/.test(val),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(val)
+            };
+
+            // Update UI Checklist
+            Object.keys(checks).forEach(key => {
+                const el = document.getElementById(`req-${key}`);
+                if (el) {
+                    if (checks[key]) {
+                        el.classList.add('valid');
+                        strength += 25;
+                    } else {
+                        el.classList.remove('valid');
                     }
                 }
+            });
+
+            // Update Strength UI
+            if (strengthBar && strengthPercent && strengthLabel) {
+                strengthBar.style.width = `${strength}%`;
+                strengthPercent.innerText = `${strength}%`;
+
+                if (strength <= 25) {
+                    strengthBar.className = 'h-full bg-error transition-all duration-500 rounded-full';
+                    strengthLabel.innerText = 'Weak';
+                    strengthLabel.className = 'font-label-md text-error';
+                } else if (strength <= 50) {
+                    strengthBar.className = 'h-full bg-warning transition-all duration-500 rounded-full';
+                    strengthLabel.innerText = 'Fair';
+                    strengthLabel.className = 'font-label-md text-warning';
+                } else if (strength <= 75) {
+                    strengthBar.className = 'h-full bg-primary transition-all duration-500 rounded-full';
+                    strengthLabel.innerText = 'Strong';
+                    strengthLabel.className = 'font-label-md text-primary';
+                } else {
+                    strengthBar.className = 'h-full bg-success transition-all duration-500 rounded-full';
+                    strengthLabel.innerText = 'Excellent';
+                    strengthLabel.className = 'font-label-md text-success';
+                }
             }
-        }
-    </script>
-<!-- BEGIN: LeftSidebar -->
-<aside class="w-64 bg-white border-r border-gray-200 flex flex-col h-full z-10 shrink-0" data-purpose="main-navigation">
-<div class="p-6 flex items-center space-x-3">
-<div class="w-10 h-10 bg-[#0050cb] rounded-full flex items-center justify-center text-white">
-<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-</div>
-<div>
-<h1 class="font-bold text-gray-900 leading-tight tracking-tight">SALTWATER</h1>
-<p class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Electricity Monitoring</p>
-</div>
-</div>
-<nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
-<div class="text-[11px] font-bold text-gray-400 uppercase px-2 mb-4 tracking-widest">Super Admin</div>
-<a class="flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 group" href="#">
-<svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-                Dashboard
-            </a>
-<a class="flex items-center px-3 py-2.5 text-sm font-semibold text-[#0050cb] bg-blue-50 rounded-lg" href="#">
-<svg class="mr-3 h-5 w-5 text-[#0050cb]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-                Real Time Monitor
-            </a>
-<a class="flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 group" href="#">
-<svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-                Devices
-            </a>
-<a class="flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 group" href="#">
-<svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-                Residents
-            </a>
-<a class="flex items-center justify-between px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 group" href="#">
-<div class="flex items-center">
-<svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-                    Alerts
-                </div>
-<span class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">6</span>
-</a>
-<a class="flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 group" href="#">
-<svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-                Analytics
-            </a>
-<a class="flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 group" href="#">
-<svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-                Reports
-            </a>
-<a class="flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 group" href="#">
-<svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-                Settings
-            </a>
-</nav>
-<div class="p-4 border-t border-gray-100">
-<div class="flex items-center space-x-3 p-2 bg-blue-50 rounded-xl cursor-pointer">
-<img alt="User Profile" class="w-10 h-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2xUYpwUCZ02yWAmhFdJl2kIO3Lx00u1HegEwLe_8OaneAahzXuOTt0aVrTrcDsCV8uo2vePyI0Z_Vt3-OPY3vlgQjXze7fGvypm6DNWgwMa1gHfZXmAJhEe_-Oe4WMCxSwQMir4DbRZx5MAUS6mW7SX538vyd80KW9IElqfz_okbT0yZEpml-TBVIEmaW0ySZDQQ7T-pXPmJldVDeKyt2Ga7T0y2Uff8yqrDpl0Cgd8BQBRpnxn23_sLSguJuXR6RzI7V3ynNCV0">
-<div class="flex-1 overflow-hidden">
-<p class="text-sm font-bold text-gray-900 truncate">Super Admin</p>
-<p class="text-[11px] text-gray-500 truncate">superadmin@saltwater.com</p>
-</div>
-<svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-</div>
-</div>
-</aside>
-<!-- END: LeftSidebar -->
-<main class="flex-1 flex overflow-hidden relative">
-<!-- BEGIN: DashboardMainContent -->
-<div class="flex-1 flex flex-col overflow-y-auto p-8 h-full transition-all-custom" id="mainContent">
-<!-- BEGIN: HeaderSection -->
-<div class="flex items-center justify-between mb-8" data-purpose="header">
-<div>
-<div class="flex items-center space-x-3">
-<h2 class="text-2xl font-bold text-gray-900">Real Time Monitor</h2>
-<div class="flex items-center px-2 py-0.5 bg-green-50 rounded-full">
-<span class="w-2 h-2 bg-green-500 rounded-full mr-2 pulse-live"></span>
-<span class="text-[11px] font-bold text-green-600 uppercase">Live</span>
-</div>
-</div>
-<p class="text-sm text-gray-500 mt-1 font-medium">Live overview of all resident devices and real-time readings.</p>
-</div>
-<div class="flex items-center space-x-4">
-<div class="flex items-center bg-white rounded-xl border border-gray-200 px-4 py-2 space-x-3 cursor-pointer hover:border-blue-300 transition-colors">
-<svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-<div class="text-xs">
-<p class="text-gray-400 font-medium">Auto Refresh</p>
-<p class="text-gray-900 font-bold">10 sec</p>
-</div>
-<svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-</div>
-<button class="p-2.5 bg-white border border-gray-200 rounded-xl relative hover:border-blue-300 transition-colors">
-<svg class="h-6 w-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-<span class="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-</button>
-<div class="relative">
-<svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-<input class="pl-10 pr-4 py-2.5 w-64 bg-white border-gray-200 rounded-xl text-sm focus:ring-primary focus:border-primary border" placeholder="Search device or resident..." type="text">
-</div>
-</div>
-</div>
-<!-- END: HeaderSection -->
-<!-- BEGIN: TopSummaryCards -->
-<div class="grid grid-cols-2 gap-6 mb-6">
-<!-- Total Voltage Card -->
-<div class="bg-white p-6 rounded-2xl-custom shadow-sm border border-gray-100 flex items-center">
-<div class="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center mr-6">
-<svg class="h-7 w-7 text-[#0050cb]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-</div>
-<div class="flex-1">
-<p class="text-sm font-medium text-gray-500">Total Voltage</p>
-<div class="flex items-baseline space-x-2">
-<h3 class="text-3xl font-black text-gray-900">240V</h3>
-</div>
-<p class="text-xs text-gray-400 mt-1">All real-time voltage</p>
-</div>
-<div class="flex items-end space-x-1 h-12" data-purpose="mini-graph">
-<div class="w-1.5 bg-blue-100 rounded-full h-4"></div>
-<div class="w-1.5 bg-blue-200 rounded-full h-6"></div>
-<div class="w-1.5 bg-blue-300 rounded-full h-8"></div>
-<div class="w-1.5 bg-blue-400 rounded-full h-12"></div>
-<div class="w-1.5 bg-primary rounded-full h-10"></div>
-<div class="w-1.5 bg-blue-200 rounded-full h-5"></div>
-</div>
-</div>
-<!-- Total Salinity Card -->
-<div class="bg-white p-6 rounded-2xl-custom shadow-sm border border-gray-100 flex items-center">
-<div class="w-14 h-14 bg-purple-50 rounded-full flex items-center justify-center mr-6">
-<svg class="h-7 w-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-</div>
-<div class="flex-1">
-<p class="text-sm font-medium text-gray-500">Total Salinity</p>
-<div class="flex items-baseline space-x-2">
-<h3 class="text-3xl font-black text-gray-900">253<span class="text-lg">ppm</span></h3>
-</div>
-<p class="text-xs text-gray-400 mt-1">All real-time salinity</p>
-</div>
-<div class="flex items-end space-x-1 h-12" data-purpose="mini-graph">
-<div class="w-1.5 bg-purple-100 rounded-full h-8"></div>
-<div class="w-1.5 bg-purple-200 rounded-full h-10"></div>
-<div class="w-1.5 bg-purple-300 rounded-full h-12"></div>
-<div class="w-1.5 bg-purple-400 rounded-full h-8"></div>
-<div class="w-1.5 bg-purple-600 rounded-full h-9"></div>
-<div class="w-1.5 bg-purple-200 rounded-full h-6"></div>
-</div>
-</div>
-</div>
-<!-- END: TopSummaryCards -->
-<!-- BEGIN: BottomSummaryCards -->
-<div class="grid grid-cols-3 gap-6 mb-8">
-<!-- Total Devices -->
-<div class="bg-white p-6 rounded-2xl-custom shadow-sm border border-gray-100 flex items-center">
-<div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mr-4">
-<svg class="h-6 w-6 text-[#0050cb]" fill="currentColor" viewBox="0 0 20 20"><path d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"></path></svg>
-</div>
-<div class="flex-1">
-<p class="text-xs font-bold text-gray-500 uppercase tracking-tight">Total Devices</p>
-<h3 class="text-2xl font-bold text-gray-900">10</h3>
-<p class="text-[10px] text-gray-400">Across all locations</p>
-</div>
-<div class="flex items-end space-x-1 h-8">
-<div class="w-1 bg-blue-100 rounded-full h-3"></div>
-<div class="w-1 bg-blue-200 rounded-full h-4"></div>
-<div class="w-1 bg-blue-300 rounded-full h-6"></div>
-<div class="w-1 bg-primary rounded-full h-8"></div>
-</div>
-</div>
-<!-- Online Devices -->
-<div class="bg-white p-6 rounded-2xl-custom shadow-sm border border-gray-100 flex items-center">
-<div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mr-4">
-<svg class="h-6 w-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071a9.5 9.5 0 0114.142 0M6.27 6.405a13.5 13.5 0 0119.46 0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-</div>
-<div class="flex-1">
-<p class="text-xs font-bold text-gray-500 uppercase tracking-tight">Online Devices</p>
-<h3 class="text-2xl font-bold text-gray-900">5</h3>
-<p class="text-[10px] text-gray-400">Active devices</p>
-</div>
-<div class="flex items-end space-x-1 h-8">
-<div class="w-1 bg-green-100 rounded-full h-5"></div>
-<div class="w-1 bg-green-200 rounded-full h-7"></div>
-<div class="w-1 bg-green-500 rounded-full h-8"></div>
-<div class="w-1 bg-green-200 rounded-full h-4"></div>
-</div>
-</div>
-<!-- Inactive Devices -->
-<div class="bg-white p-6 rounded-2xl-custom shadow-sm border border-gray-100 flex items-center">
-<div class="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center mr-4">
-<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-</div>
-<div class="flex-1">
-<p class="text-xs font-bold text-gray-500 uppercase tracking-tight">Inactive Devices</p>
-<h3 class="text-2xl font-bold text-gray-900">5</h3>
-<p class="text-[10px] text-gray-400">Inactive devices</p>
-</div>
-<div class="flex items-end space-x-1 h-8">
-<div class="w-1 bg-gray-100 rounded-full h-6"></div>
-<div class="w-1 bg-gray-200 rounded-full h-8"></div>
-<div class="w-1 bg-gray-300 rounded-full h-5"></div>
-<div class="w-1 bg-gray-200 rounded-full h-2"></div>
-</div>
-</div>
-</div>
-<!-- END: BottomSummaryCards -->
-<!-- BEGIN: Filters -->
-<div class="flex items-center space-x-4 mb-6">
-<div class="relative flex-1">
-<svg class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-<input class="pl-9 pr-4 py-2 w-full bg-white border-gray-200 rounded-xl text-sm focus:ring-primary focus:border-primary border" placeholder="Search for device..." type="text">
-</div>
-<select class="bg-white border-gray-200 rounded-xl text-sm py-2 px-4 focus:ring-primary focus:border-primary min-w-[160px] border">
-<option>All Locations</option>
-<option>Purok 1</option>
-<option>Purok 2</option>
-</select>
-<select class="bg-white border-gray-200 rounded-xl text-sm py-2 px-4 focus:ring-primary focus:border-primary min-w-[140px] border">
-<option>Status</option>
-<option>Online</option>
-<option>Offline</option>
-<option>Warning</option>
-</select>
-</div>
-<!-- END: Filters -->
-<!-- BEGIN: DeviceList -->
-<div class="space-y-4">
-<!-- Device Card 1 (DEVICE-001) -->
-<div class="bg-white px-6 py-4 rounded-2xl-custom border border-gray-100 flex items-center shadow-sm hover:shadow-md transition-shadow group h-[100px]">
-<div class="w-[28%] flex items-center space-x-3 pr-4 border-r border-gray-100 h-full">
-<div class="w-12 h-12 shrink-0 bg-blue-50 rounded-2xl flex items-center justify-center border border-blue-100">
-<svg class="h-6 w-6 text-[#0050cb]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></svg>
-</div>
-<div class="flex-1 min-w-0">
-<div class="flex items-center space-x-2">
-<span class="font-bold text-gray-900 truncate">DEVICE-001</span>
-<span class="px-1.5 py-0.5 bg-green-50 text-green-600 text-[9px] font-bold rounded uppercase">Online</span>
-</div>
-<p class="text-xs text-gray-400 mt-0.5 truncate">Jasmine Sanchez</p>
-<div class="flex items-center mt-0.5 text-[10px] text-gray-400">
-<svg class="h-3 w-3 mr-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-<span class="truncate">Purok 1, SNQ</span>
-</div>
-</div>
-</div>
-<div class="flex-1 flex items-center px-8 space-x-12">
-<div class="w-40">
-<div class="flex flex-col mb-1">
-<span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Voltage</span>
-<span class="text-sm font-bold text-gray-900">230V</span>
-</div>
-<div class="flex items-end space-x-1 h-8">
-<div class="flex-1 bg-blue-100 rounded-sm h-3"></div>
-<div class="flex-1 bg-blue-200 rounded-sm h-5"></div>
-<div class="flex-1 bg-blue-300 rounded-sm h-8"></div>
-<div class="flex-1 bg-primary rounded-sm h-7"></div>
-<div class="flex-1 bg-blue-200 rounded-sm h-6"></div>
-<div class="flex-1 bg-blue-100 rounded-sm h-4"></div>
-</div>
-</div>
-<div class="w-40">
-<div class="flex flex-col mb-1">
-<span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Salinity</span>
-<span class="text-sm font-bold text-gray-900">350ppm</span>
-</div>
-<div class="flex items-end space-x-1 h-8">
-<div class="flex-1 bg-purple-100 rounded-sm h-4"></div>
-<div class="flex-1 bg-purple-200 rounded-sm h-6"></div>
-<div class="flex-1 bg-purple-400 rounded-sm h-8"></div>
-<div class="flex-1 bg-purple-600 rounded-sm h-5"></div>
-<div class="flex-1 bg-purple-200 rounded-sm h-4"></div>
-</div>
-</div>
-</div>
-<div class="flex items-center">
-<div class="w-20 flex flex-col items-start">
-<p class="text-[10px] font-bold text-gray-400">2m ago</p>
-<p class="text-[9px] text-gray-300 font-medium">real-time</p>
-</div>
-<button class="ml-6 px-5 py-2.5 bg-white border border-[#0050cb] text-[#0050cb] rounded-xl font-bold text-xs hover:bg-[#0050cb] hover:text-white transition-all shadow-sm" onclick="toggleSidePanel(true)">
-                            VIEW
-                        </button>
-</div>
-</div>
-<!-- Device Card 2 (DEVICE-002) -->
-<div class="bg-white px-6 py-4 rounded-2xl-custom border border-gray-100 flex items-center shadow-sm hover:shadow-md transition-shadow group h-[100px]">
-<div class="w-[28%] flex items-center space-x-3 pr-4 border-r border-gray-100 h-full">
-<div class="w-12 h-12 shrink-0 bg-gray-50 rounded-2xl flex items-center justify-center border border-gray-100">
-<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></svg>
-</div>
-<div class="flex-1 min-w-0">
-<div class="flex items-center space-x-2">
-<span class="font-bold text-gray-900 truncate">DEVICE-002</span>
-<span class="px-1.5 py-0.5 bg-gray-100 text-gray-500 text-[9px] font-bold rounded uppercase">Offline</span>
-</div>
-<p class="text-xs text-gray-400 mt-0.5 truncate">Reynan Rafael</p>
-<div class="flex items-center mt-0.5 text-[10px] text-gray-400">
-<svg class="h-3 w-3 mr-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-<span class="truncate">Purok 2, SNQ</span>
-</div>
-</div>
-</div>
-<div class="flex-1 flex items-center px-8 space-x-12">
-<div class="w-40">
-<div class="flex flex-col mb-1">
-<span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Voltage</span>
-<span class="text-sm font-bold text-gray-900">280V</span>
-</div>
-<div class="flex items-end space-x-1 h-8">
-<div class="flex-1 bg-blue-200 rounded-sm h-5"></div>
-<div class="flex-1 bg-blue-300 rounded-sm h-7"></div>
-<div class="flex-1 bg-blue-400 rounded-sm h-8"></div>
-<div class="flex-1 bg-primary rounded-sm h-8"></div>
-<div class="flex-1 bg-blue-500 rounded-sm h-6"></div>
-<div class="flex-1 bg-blue-300 rounded-sm h-4"></div>
-</div>
-</div>
-<div class="w-40">
-<div class="flex flex-col mb-1">
-<span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Salinity</span>
-<span class="text-sm font-bold text-gray-900">450ppm</span>
-</div>
-<div class="flex items-end space-x-1 h-8">
-<div class="flex-1 bg-purple-100 rounded-sm h-6"></div>
-<div class="flex-1 bg-purple-200 rounded-sm h-4"></div>
-<div class="flex-1 bg-purple-300 rounded-sm h-7"></div>
-<div class="flex-1 bg-purple-400 rounded-sm h-8"></div>
-<div class="flex-1 bg-purple-600 rounded-sm h-5"></div>
-</div>
-</div>
-</div>
-<div class="flex items-center">
-<div class="w-20 flex flex-col items-start">
-<p class="text-[10px] font-bold text-gray-400">1m ago</p>
-</div>
-<button class="ml-6 px-5 py-2.5 bg-white border border-[#0050cb] text-[#0050cb] rounded-xl font-bold text-xs hover:bg-[#0050cb] hover:text-white transition-all shadow-sm" onclick="toggleSidePanel(true)">
-                            VIEW
-                        </button>
-</div>
-</div>
-<!-- Device Card 3 (DEVICE-003) -->
-<div class="bg-white px-6 py-4 rounded-2xl-custom border border-gray-100 flex items-center shadow-sm hover:shadow-md transition-shadow group h-[100px]">
-<div class="w-[28%] flex items-center space-x-3 pr-4 border-r border-gray-100 h-full">
-<div class="w-12 h-12 shrink-0 bg-blue-50 rounded-2xl flex items-center justify-center border border-blue-100">
-<svg class="h-6 w-6 text-[#0050cb]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5"></path></svg>
-</div>
-<div class="flex-1 min-w-0">
-<div class="flex items-center space-x-2">
-<span class="font-bold text-gray-900 truncate">DEVICE-003</span>
-<span class="px-1.5 py-0.5 bg-orange-50 text-orange-600 text-[9px] font-bold rounded uppercase">Warning</span>
-</div>
-<p class="text-xs text-gray-400 mt-0.5 truncate">Jamin Hernandez</p>
-<div class="flex items-center mt-0.5 text-[10px] text-gray-400">
-<svg class="h-3 w-3 mr-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-<span class="truncate">Purok 3, SNQ</span>
-</div>
-</div>
-</div>
-<div class="flex-1 flex items-center px-8 space-x-12">
-<div class="w-40">
-<div class="flex flex-col mb-1">
-<span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Voltage</span>
-<span class="text-sm font-bold text-gray-900">230V</span>
-</div>
-<div class="flex items-end space-x-1 h-8">
-<div class="flex-1 bg-blue-100 rounded-sm h-3"></div>
-<div class="flex-1 bg-blue-200 rounded-sm h-5"></div>
-<div class="flex-1 bg-blue-300 rounded-sm h-6"></div>
-<div class="flex-1 bg-primary rounded-sm h-7"></div>
-<div class="flex-1 bg-blue-400 rounded-sm h-5"></div>
-<div class="flex-1 bg-blue-200 rounded-sm h-4"></div>
-</div>
-</div>
-<div class="w-40">
-<div class="flex flex-col mb-1">
-<span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Salinity</span>
-<span class="text-sm font-bold text-gray-900">320ppm</span>
-</div>
-<div class="flex items-end space-x-1 h-8">
-<div class="flex-1 bg-purple-100 rounded-sm h-3"></div>
-<div class="flex-1 bg-purple-200 rounded-sm h-5"></div>
-<div class="flex-1 bg-purple-300 rounded-sm h-6"></div>
-<div class="flex-1 bg-purple-600 rounded-sm h-7"></div>
-<div class="flex-1 bg-purple-400 rounded-sm h-5"></div>
-<div class="flex-1 bg-purple-200 rounded-sm h-4"></div>
-</div>
-</div>
-</div>
-<div class="flex items-center">
-<div class="w-20 flex flex-col items-start">
-<p class="text-[10px] font-bold text-gray-400">2m ago</p>
-</div>
-<button class="ml-6 px-5 py-2.5 bg-white border border-[#0050cb] text-[#0050cb] rounded-xl font-bold text-xs hover:bg-[#0050cb] hover:text-white transition-all shadow-sm" onclick="toggleSidePanel(true)">
-                            VIEW
-                        </button>
-</div>
-</div>
-<!-- Device Card 4 (DEVICE-004) -->
-<div class="bg-white px-6 py-4 rounded-2xl-custom border border-gray-100 flex items-center shadow-sm opacity-80 group h-[100px]">
-<div class="w-[28%] flex items-center space-x-3 pr-4 border-r border-gray-100 h-full">
-<div class="w-12 h-12 shrink-0 bg-gray-50 rounded-2xl flex items-center justify-center border border-gray-100">
-<svg class="h-6 w-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6"></path></svg>
-</div>
-<div class="flex-1 min-w-0">
-<div class="flex items-center space-x-2">
-<span class="font-bold text-gray-900 truncate">DEVICE-004</span>
-<span class="px-1.5 py-0.5 bg-gray-100 text-gray-400 text-[9px] font-bold rounded uppercase">Offline</span>
-</div>
-<p class="text-xs text-gray-400 mt-0.5 truncate">Ana Morales</p>
-<div class="flex items-center mt-0.5 text-[10px] text-gray-200">
-<svg class="h-3 w-3 mr-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-<span class="truncate">N/A</span>
-</div>
-</div>
-</div>
-<div class="flex-1 flex items-center px-8 space-x-12">
-<div class="w-40">
-<div class="flex flex-col mb-1">
-<span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Voltage</span>
-<span class="text-sm font-bold text-gray-300">0V</span>
-</div>
-<div class="flex items-end space-x-1 h-8">
-<div class="flex-1 bg-gray-100 rounded-sm h-1"></div>
-<div class="flex-1 bg-gray-100 rounded-sm h-1"></div>
-<div class="flex-1 bg-gray-100 rounded-sm h-1 opacity-0"></div>
-</div>
-</div>
-<div class="w-40">
-<div class="flex flex-col mb-1">
-<span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Salinity</span>
-<span class="text-sm font-bold text-gray-300">0ppm</span>
-</div>
-<div class="flex items-end space-x-1 h-8">
-<div class="flex-1 bg-gray-100 rounded-sm h-1"></div>
-<div class="flex-1 bg-gray-100 rounded-sm h-1"></div>
-<div class="flex-1 bg-gray-100 rounded-sm h-1 opacity-0"></div>
-</div>
-</div>
-</div>
-<div class="flex items-center">
-<div class="w-20 flex flex-col items-start">
-<p class="text-[10px] font-bold text-gray-400">15m ago</p>
-</div>
-<button class="ml-6 px-5 py-2.5 bg-white border border-[#0050cb] text-[#0050cb] rounded-xl font-bold text-xs hover:bg-[#0050cb] hover:text-white transition-all shadow-sm" onclick="toggleSidePanel(true)">
-                            VIEW
-                        </button>
-</div>
-</div>
-</div>
-<!-- END: DeviceList -->
-</div>
-<!-- END: DashboardMainContent -->
-<!-- BEGIN: AnalyticsSidePanel -->
-<aside class="bg-white border-l border-gray-200 overflow-y-auto transform h-full transition-all-custom z-20 shadow-2xl shrink-0 absolute right-0 top-0 side-panel-visible" data-purpose="device-details" id="sidePanel">
-<!-- Close & Header -->
-<div class="sticky top-0 bg-white z-10 p-6 border-b border-gray-100">
-<div class="flex justify-end mb-4">
-<button class="p-2 hover:bg-gray-100 rounded-full transition-colors" onclick="toggleSidePanel(false)">
-<svg class="h-6 w-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-</button>
-</div>
-<div class="flex items-center space-x-5">
-<div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center border border-blue-100">
-<img alt="Saltwater Logo" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7JTRQ-V7oco2PJ5O17vmnIkZ8B05Vtsy4LhHSJJhAhyenNdQyZIufqxWfhS8kMpJtvgc_LbDYmyTK4wlYO6QEe6jmGsCYRk76nnpIJoYNn3JBrjrVwGzvWm5m6iS6ByVE6FDFr3EPh3A2OB53vfNroysFiwNFwo_8cZqI3ax61OC4_TCghNpDJpctiwffuCzKJHwFrIaAsGf1cbGgwkaXeoO7Rr3rlx_ixSgJrfLjMomhm7CAnvtZugKlFbYEVHJ5HcT2ia6s0m8">
-</div>
-<div>
-<div class="flex items-center space-x-3">
-<h2 class="text-xl font-bold text-gray-900">DEVICE-001</h2>
-<span class="px-2 py-0.5 bg-green-50 text-green-600 text-[10px] font-black rounded uppercase">Online</span>
-</div>
-<p class="text-sm font-medium text-gray-500">Jasmine Sanchez</p>
-<p class="text-xs text-gray-400">jasmine@email.com</p>
-</div>
-</div>
-<!-- Tabs -->
-<div class="flex space-x-8 mt-8 border-b border-gray-50"><button onclick="setActiveTab(this, 'overview-section')" class="pb-3 text-sm font-bold border-b-2 transition-all text-gray-400 border-transparent">Overview</button>
-<button onclick="setActiveTab(this, 'readings-section')" class="pb-3 text-sm font-bold border-b-2 hover:text-gray-600 transition-all text-primary border-primary">Readings</button>
-<button onclick="setActiveTab(this, 'alerts-section')" class="pb-3 text-sm font-bold text-gray-400 border-b-2 border-transparent hover:text-gray-600 transition-all">Alerts</button></div>
-</div>
-<div class="p-6 space-y-8 min-w-[450px]"><!-- Info Cards -->
-<div class="grid grid-cols-2 gap-y-6" id="overview-section">
-<div class="flex items-start space-x-3">
-<span class="material-symbols-outlined text-xl text-blue-400">person</span>
-<div>
-<p class="text-[10px] font-bold text-gray-400 uppercase">Resident Name</p>
-<p class="text-sm font-bold text-gray-900">Jasmine Sanchez</p>
-</div>
-</div>
-<div class="flex items-start space-x-3">
-
-<div>
-<p class="text-[10px] font-bold text-gray-400 uppercase">Assigned Date</p>
-<p class="text-sm font-bold text-gray-900">May 12, 2025</p>
-</div>
-</div>
-<div class="flex items-start space-x-3">
-<span class="material-symbols-outlined text-xl text-blue-400">call</span>
-<div>
-<p class="text-[10px] font-bold text-gray-400 uppercase">Contact Number</p>
-<p class="text-sm font-bold text-gray-900">0917 123 4567</p>
-</div>
-</div><div class="flex items-start space-x-3">
-
-<div>
-<p class="text-[10px] font-bold text-gray-400 uppercase">Device ID</p>
-<p class="text-sm font-bold text-gray-900">DEVICE-001</p>
-</div>
-</div>
-<div class="flex items-start space-x-3">
-<span class="material-symbols-outlined text-xl text-blue-400">location_on</span>
-<div>
-<p class="text-[10px] font-bold text-gray-400 uppercase">Address</p>
-<p class="text-sm font-bold text-gray-900">Purok 1, SNQ</p>
-</div>
-</div>
-<div class="flex items-start space-x-3">
-
-<div>
-<p class="text-[10px] font-bold text-gray-400 uppercase">Number of Devices</p>
-<p class="text-sm font-bold text-gray-900">1</p>
-</div>
-</div>
-</div>
-<!-- Time Filters -->
-<div class="flex items-center space-x-2 p-1.5 bg-gray-50/50 rounded-full mb-8 overflow-x-auto whitespace-nowrap border border-gray-100" data-purpose="time-range-filters">
-    <button class="px-5 py-2 text-[11px] font-bold rounded-full bg-[#2563eb] text-white shadow-sm transition-all duration-200 hover:bg-[#1d4ed8]">1HR</button>
-    <button class="px-5 py-2 text-[11px] font-bold rounded-full text-[#2563eb] hover:bg-[#2563eb] hover:text-white transition-all duration-200">3HR</button>
-    <button class="px-5 py-2 text-[11px] font-bold rounded-full text-[#2563eb] hover:bg-[#2563eb] hover:text-white transition-all duration-200">6HR</button>
-    <button class="px-5 py-2 text-[11px] font-bold rounded-full text-[#2563eb] hover:bg-[#2563eb] hover:text-white transition-all duration-200">24HR</button>
-    <button class="px-5 py-2 text-[11px] font-bold rounded-full text-[#2563eb] hover:bg-[#2563eb] hover:text-white transition-all duration-200">3D</button>
-    <button class="px-5 py-2 text-[11px] font-bold rounded-full text-[#2563eb] hover:bg-[#2563eb] hover:text-white transition-all duration-200">7D</button>
-    <button class="px-5 py-2 text-[11px] font-bold rounded-full text-[#2563eb] hover:bg-[#2563eb] hover:text-white transition-all duration-200">1M</button>
-</div><div class="pt-4" id="readings-section">
-<div class="flex items-center justify-between mb-4">
-<div>
-<p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Voltage (V)</p>
-<div class="flex items-center space-x-2">
-<span class="text-xl font-bold text-gray-900">230V</span>
-
-</div>
-</div>
-</div>
-<div class="relative h-32 flex items-end justify-between px-1">
-<div class="absolute -top-12 left-[85%] bg-black text-white shadow-lg rounded-lg border-2 border-white p-2 text-center z-10 font-extrabold">
-    <p class="text-gray-400 text-[11px] uppercase tracking-wider mb-0.5">10:25</p>
-    <p class="text-white text-lg" data-stitch-orig-opacity="0">238V</p>
-</div>
-<div class="w-1.5 bg-blue-400 rounded-t h-[60%]"></div>
-<div class="w-1.5 bg-blue-400 rounded-t h-[75%]"></div>
-<div class="w-1.5 bg-blue-400 rounded-t h-[65%]"></div>
-<div class="w-1.5 bg-blue-400 rounded-t h-[80%]"></div>
-<div class="w-1.5 bg-blue-400 rounded-t h-[70%]"></div>
-<div class="w-1.5 bg-blue-400 rounded-t h-[72%]"></div>
-<div class="w-1.5 bg-blue-600 rounded-t h-[85%]"></div>
-<div class="w-1.5 bg-blue-400 rounded-t h-[70%]"></div>
-<div class="w-1.5 bg-blue-400 rounded-t h-[78%]"></div>
-<div class="w-1.5 bg-blue-400 rounded-t h-[82%]"></div>
-<div class="w-1.5 bg-blue-400 rounded-t h-[75%]"></div>
-<div class="w-1.5 bg-blue-400 rounded-t h-[68%]"></div>
-<div class="w-1.5 bg-blue-400 rounded-t h-[70%]"></div>
-</div>
-<div class="flex justify-between mt-2 text-[9px] text-gray-400 font-medium">
-<span class="">10:00</span><span class="">10:05</span><span class="">10:10</span><span class="">10:15</span><span class="">10:20</span><span class="">10:25</span><span class="">10:30</span>
-</div>
-</div>
-<!-- Voltage Graph -->
-
-<!-- Salinity Graph -->
-<div class="pt-4" id="alerts-section">
-<div class="flex items-center justify-between mb-4">
-<div>
-<p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Salinity (ppm)</p>
-<div class="flex items-center space-x-2">
-<span class="text-xl font-bold text-gray-900">350ppm</span>
-
-</div>
-</div>
-</div>
-<div class="relative h-32 flex items-end justify-between px-1">
-<div class="absolute -top-12 left-[85%] z-10">
-<div class="bg-black text-white font-extrabold p-2 rounded-lg border-2 border-white shadow-lg text-center">
-<p class="text-[11px] uppercase tracking-wider mb-0.5">10:25</p>
-<p class="text-sm">342ppm</p>
-</div>
-</div>
-<div class="w-1.5 bg-purple-400 rounded-t h-[55%]"></div>
-<div class="w-1.5 bg-purple-400 rounded-t h-[65%]"></div>
-<div class="w-1.5 bg-purple-400 rounded-t h-[60%]"></div>
-<div class="w-1.5 bg-purple-400 rounded-t h-[70%]"></div>
-<div class="w-1.5 bg-purple-400 rounded-t h-[62%]"></div>
-<div class="w-1.5 bg-purple-400 rounded-t h-[65%]"></div>
-<div class="w-1.5 bg-purple-600 rounded-t h-[80%]"></div>
-<div class="w-1.5 bg-purple-400 rounded-t h-[68%]"></div>
-<div class="w-1.5 bg-purple-400 rounded-t h-[72%]"></div>
-<div class="w-1.5 bg-purple-400 rounded-t h-[78%]"></div>
-<div class="w-1.5 bg-purple-400 rounded-t h-[70%]"></div>
-<div class="w-1.5 bg-purple-400 rounded-t h-[75%]"></div>
-<div class="w-1.5 bg-purple-400 rounded-t h-[65%]"></div>
-</div>
-<div class="flex justify-between mt-2 text-[9px] text-gray-400 font-medium">
-<span class="">10:00</span><span class="">10:05</span><span class="">10:10</span><span class="">10:15</span><span class="">10:20</span><span class="">10:25</span><span class="">10:30</span>
-</div>
-</div>
-<!-- Recent Alerts -->
-<div class="pt-4">
-<div class="flex items-center justify-between mb-4">
-<h3 class="text-sm font-bold text-gray-900">Recent Alerts</h3>
-<button class="text-[10px] font-bold text-[#0050cb] hover:underline">View All</button>
-</div>
-<div class="space-y-4">
-<div class="flex items-center justify-between">
-<div class="flex items-center space-x-3">
-<div class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center text-green-500">
-<span class="material-symbols-outlined text-lg">check_circle</span>
-</div>
-<div>
-<p class="text-xs font-bold text-gray-900">Voltage Stable</p>
-<p class="text-[10px] text-gray-400">Voltage reading is within normal range.</p>
-</div>
-</div>
-<div class="flex items-center space-x-2">
-<p class="text-[10px] text-gray-400">Just now</p>
-<div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-</div>
-</div>
-<div class="flex items-center justify-between">
-<div class="flex items-center space-x-3">
-<div class="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center text-orange-500">
-<span class="material-symbols-outlined text-lg">warning</span>
-</div>
-<div>
-<p class="text-xs font-bold text-gray-900">Salinity High</p>
-<p class="text-[10px] text-gray-400">Salinity level is above normal threshold.</p>
-</div>
-</div>
-<div class="flex items-center space-x-2">
-<p class="text-[10px] text-gray-400">10 mins ago</p>
-<div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
-</div>
-</div>
-<div class="flex items-center justify-between">
-<div class="flex items-center space-x-3">
-<div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400">
-<span class="material-symbols-outlined text-lg">wifi_off</span>
-</div>
-<div>
-<p class="text-xs font-bold text-gray-900">Device Offline</p>
-<p class="text-[10px] text-gray-400">Device was offline for 5 minutes.</p>
-</div>
-</div>
-<div class="flex items-center space-x-2">
-<p class="text-[10px] text-gray-400">25 mins ago</p>
-<div class="w-1.5 h-1.5 rounded-full bg-gray-300"></div>
-</div>
-</div>
-<div class="flex items-center justify-between">
-<div class="flex items-center space-x-3">
-<div class="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center text-red-500">
-<span class="material-symbols-outlined text-lg">error</span>
-</div>
-<div>
-<p class="text-xs font-bold text-gray-900">Voltage Spike Detected</p>
-<p class="text-[10px] text-gray-400">Voltage reached 240V at 09:45 AM.</p>
-</div>
-</div>
-<div class="flex items-center space-x-2">
-<p class="text-[10px] text-gray-400">1 hour ago</p>
-<div class="w-1.5 h-1.5 rounded-full bg-red-500"></div>
-</div>
-</div>
-</div>
-</div>
-<!-- Export Button -->
-<div class="pt-6 pb-8">
-
-</div></div></aside></main>
-<script>
-        function toggleSidePanel(isOpen) {
-            const sidePanel = document.getElementById('sidePanel');
-            const mainContent = document.getElementById('mainContent');
-            
-            if (isOpen) {
-                sidePanel.classList.remove('side-panel-hidden');
-                sidePanel.classList.add('side-panel-visible');
-                // Optional: add a class to main content if needed for shifting/scaling
-            } else {
-                sidePanel.classList.remove('side-panel-visible');
-                sidePanel.classList.add('side-panel-hidden');
-            }
-        }
-    </script>
-
-
-
-
-
-
-<script>
-function setActiveTab(el, sectionId) {
-    const tabs = el.parentElement.querySelectorAll('button');
-    tabs.forEach(tab => {
-        tab.classList.remove('text-primary', 'border-primary');
-        tab.classList.add('text-gray-400', 'border-transparent');
-    });
-    el.classList.add('text-primary', 'border-primary');
-    el.classList.remove('text-gray-400', 'border-transparent');
-    
-    const section = document.getElementById(sectionId);
-    if (section) {
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
     }
-}
+
+    // Submit Simulation
+    async function handleSubmit() {
+        const btn = document.getElementById('submit-btn');
+        const btnText = document.getElementById('btn-text');
+        const btnLoader = document.getElementById('btn-loader');
+        const formContent = document.getElementById('form-content');
+        const successFlow = document.getElementById('success-flow');
+        const modalFooter = document.getElementById('modal-footer');
+
+        if (!newPass.value || newPass.value !== confirmPass.value) {
+            confirmPass.classList.add('border-error');
+            setTimeout(() => confirmPass.classList.remove('border-error'), 2000);
+            return;
+        }
+
+        // Show loading
+        btn.disabled = true;
+        btnText.classList.add('opacity-0');
+        btnLoader.classList.remove('hidden');
+
+        // Simulate API delay
+        await new Promise(r => setTimeout(r, 1500));
+
+        // Transition to Success
+        formContent.classList.add('hidden');
+        modalFooter.classList.add('hidden');
+        successFlow.classList.remove('hidden');
+        
+        // Success Progress Bar
+        const redirectBar = document.getElementById('redirect-bar');
+        const redirectPercentText = document.getElementById('redirect-percent');
+        
+        setTimeout(() => {
+            redirectBar.style.width = '100%';
+            let count = 0;
+            const interval = setInterval(() => {
+                count += 2;
+                redirectPercentText.innerText = `${count}%`;
+                if (count >= 100) clearInterval(interval);
+            }, 40);
+        }, 100);
+
+        // Redirect simulation
+        setTimeout(() => {
+            document.getElementById('auth-modal').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                alert('Password successfully reset. Returning to Login...');
+                window.location.reload();
+            }, 500);
+        }, 2500);
+    }
 </script>
-
-
-
 </body></html>
