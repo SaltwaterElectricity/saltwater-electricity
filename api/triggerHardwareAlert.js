@@ -25,6 +25,7 @@ export default async function handler(req, res) {
   // 2. Strict Authentication
   const HARDWARE_SECRET = process.env.HARDWARE_SECRET_KEY;
   if (!HARDWARE_SECRET) {
+    console.error("[triggerHardwareAlert] Missing hardware secret.");
     return sendError(res, "Server configuration error.", 500, "hw/config-missing");
   }
 
@@ -99,7 +100,8 @@ export default async function handler(req, res) {
     const senderId = process.env.PHILSMS_SENDER_ID || "PhilSMS";
 
     if (!apiToken) {
-      throw new Error("SMS service configuration error (missing token).");
+      console.error("[triggerHardwareAlert] Missing PhilSMS configuration.");
+      throw new Error("SMS service configuration error.");
     }
 
     const message = `[SALT-ELEC] ALERT: Unit ${deviceId} detected critical TDS levels: ${tdsValue} PPM. Check dashboard now.`;

@@ -7,7 +7,7 @@ import { cn } from "../../utils/cn";
  * COMPONENT: VerifyOTPStep
  * Mirrored from code1.html with React state and Firebase logic.
  */
-const VerifyOTPStep = ({ email, onSuccess, onBack }) => {
+const VerifyOTPStep = ({ email, onSuccess, onBack, _onClose }) => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

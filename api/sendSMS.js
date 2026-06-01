@@ -29,7 +29,8 @@ export default async function handler(req, res) {
     const senderId = process.env.PHILSMS_SENDER_ID || "PhilSMS";
 
     if (!apiToken) {
-      return sendError(res, "SMS service unavailable.", 500, "sms/config-missing");
+      console.error("[sendSMS] Missing PhilSMS configuration.");
+      return sendError(res, "SMS service configuration missing.", 500, "sms/config-missing");
     }
 
     let { number, message } = req.body;

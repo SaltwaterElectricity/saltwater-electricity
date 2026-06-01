@@ -1,0 +1,223 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 2s linear infinite;
+        }
+        .glass-morphism {
+            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.8);
+        }
+        .progress-gradient {
+            background: linear-gradient(90deg, #0058be 0%, #2170e4 100%);
+        }
+        .step-transition {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#f9f9ff",
+                        "outline": "#727785",
+                        "surface-container": "#e7eeff",
+                        "surface-dim": "#cfdaf2",
+                        "tertiary-fixed-dim": "#c0c1ff",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#151c23",
+                        "on-primary-fixed": "#001a42",
+                        "on-primary-container": "#fefcff",
+                        "secondary-fixed-dim": "#c0c7d0",
+                        "primary": "#0058be",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#d8e2ff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#6063ee",
+                        "outline-variant": "#c2c6d6",
+                        "surface-tint": "#005ac2",
+                        "surface-variant": "#d8e3fb",
+                        "inverse-surface": "#263143",
+                        "on-tertiary-fixed": "#07006c",
+                        "secondary-fixed": "#dce3ec",
+                        "on-primary-fixed-variant": "#004395",
+                        "primary-container": "#2170e4",
+                        "inverse-primary": "#adc6ff",
+                        "on-background": "#111c2d",
+                        "secondary-container": "#dce3ec",
+                        "on-tertiary-fixed-variant": "#2f2ebe",
+                        "surface-container-low": "#f0f3ff",
+                        "surface-container-high": "#dee8ff",
+                        "on-tertiary-container": "#fffbff",
+                        "on-secondary-fixed-variant": "#40484f",
+                        "surface": "#f9f9ff",
+                        "on-surface": "#111c2d",
+                        "on-surface-variant": "#424754",
+                        "tertiary-fixed": "#e1e0ff",
+                        "error": "#ba1a1a",
+                        "tertiary": "#4648d4",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#d8e3fb",
+                        "on-secondary-container": "#5e656d",
+                        "secondary": "#585f67",
+                        "primary-fixed-dim": "#adc6ff",
+                        "surface-bright": "#f9f9ff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#ecf1ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "16px",
+                        "container-max": "1200px",
+                        "xs": "8px",
+                        "md": "24px",
+                        "base": "4px",
+                        "xl": "64px",
+                        "lg": "40px",
+                        "auth-card-width": "440px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col items-center justify-center p-md overflow-hidden">
+<!-- Top App Bar (Hidden in Auth Flow but kept for Identity) -->
+
+<!-- Main Loading Modal Container -->
+<main class="w-full max-w-[600px] bg-surface-container-lowest rounded-[24px] shadow-[0_20px_50px_rgba(59,130,246,0.12)] p-lg flex flex-col items-center relative z-10 transition-transform duration-500 ease-out scale-100" id="modalContainer">
+<!-- Loading Icon Section -->
+<div class="relative w-20 h-20 mb-md">
+<!-- Progress Ring -->
+<svg class="w-20 h-20 animate-spin-slow" viewBox="0 0 80 80">
+<circle class="text-surface-container-high" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" stroke-width="6"></circle>
+<circle class="text-primary" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" stroke-dasharray="213" stroke-dashoffset="140" stroke-linecap="round" stroke-width="6"></circle>
+</svg>
+<!-- Lock Icon Center -->
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-10 h-10 bg-primary-container rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(33,112,228,0.4)] animate-pulse">
+<span class="material-symbols-outlined text-on-primary-container text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">check</span>
+</div>
+</div>
+</div>
+<!-- Text Section -->
+<h1 class="font-headline-md text-[28px] text-on-surface font-bold mb-xs"><span class="text-black">Successfully</span> <span class="text-[#2563eb]">Updated!</span></h1>
+<p class="text-on-surface-variant font-body-md text-green-600 text-left max-w-none mb-xs"><span style="font-family: ui-sans-serif, system-ui, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; text-align: center;">Your password has been changed successfully.</span></p><p class="text-primary font-body-md text-center w-full mb-lg"><span class="whitespace-nowrap" style="font-family: ui-sans-serif, system-ui, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;;">You can now sign in with your new credentials.</span></p>
+<!-- Progress Bar -->
+<div class="w-full mb-lg" id="redirect-container">
+<div class="flex justify-between items-center mb-2">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-green-600">terminal</span>
+<span class="font-label-md text-green-600">Redirecting to Login Page...</span>
+</div>
+<span class="text-on-surface font-bold font-label-md text-green-600" id="redirect-percentage">100%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full rounded-full transition-all duration-[3000ms] ease-linear bg-green-600" id="redirect-progress-fill" style="width: 100%;"></div>
+</div>
+</div>
+<!-- Security Process Card -->
+
+<!-- Security Message -->
+<div class="w-full bg-surface-container-high/50 rounded-lg p-sm flex items-start gap-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">verified_user</span>
+<p class="text-label-sm text-on-surface-variant leading-tight">
+                Your credentials are being encrypted and securely updated using industry-standard AES-256 protocols.
+            </p>
+</div>
+</main>
+<!-- Footer -->
+<footer class="absolute bottom-0 w-full flex justify-center gap-lg py-lg bg-transparent">
+
+</footer>
+<script>
+        // Micro-interactions and step progression logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('modalContainer');
+            
+            // Animation for modal entry
+            setTimeout(() => {
+                modal.classList.remove('scale-95');
+                modal.classList.add('scale-100');
+            }, 100);
+
+            // Redirect Progress Animation Logic
+            const percentageEl = document.getElementById('redirect-percentage');
+            const progressFill = document.getElementById('redirect-progress-fill');
+            const duration = 3000; // 3 seconds
+            let startTime = null;
+
+            function animateProgress(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const percentage = Math.floor(progress * 100);
+
+                percentageEl.innerText = percentage + '%';
+                progressFill.style.width = percentage + '%';
+
+                if (progress < 1) {
+                    requestAnimationFrame(animateProgress);
+                }
+            }
+
+            // Start redirect animation
+            requestAnimationFrame(animateProgress);
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

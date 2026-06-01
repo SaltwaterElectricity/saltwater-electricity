@@ -27,7 +27,13 @@ export default async function handler(req, res) {
 
     // Set SendGrid key
     const sgKey = process.env.SENDGRID_API_KEY;
-    if (!sgKey) throw new Error("Missing SENDGRID_API_KEY.");
+    const senderEmail = process.env.SENDGRID_SENDER_EMAIL;
+
+    if (!sgKey || !senderEmail) {
+      console.error("[generateOTP] Missing SendGrid configuration.");
+      throw new Error("Mail service configuration missing.");
+    }
+    
     sgMail.setApiKey(sgKey);
 
     const OTP_EXPIRY_MS = 900000; // 15 minutes
@@ -56,9 +62,6 @@ export default async function handler(req, res) {
       createdAt: new Date().toISOString(),
       expiresAt: Date.now() + OTP_EXPIRY_MS,
     });
-
-    const senderEmail = process.env.SENDGRID_SENDER_EMAIL;
-    if (!senderEmail) throw new Error("Missing SENDGRID_SENDER_EMAIL.");
 
     const msg = {
       to: email,

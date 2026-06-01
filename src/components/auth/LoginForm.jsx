@@ -1,33 +1,23 @@
-import { useState, memo, useCallback } from "react";
+import { useState, memo } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { loginUser } from "../../services/auth.service";
-import { appError } from "../../utils/appError";
 import { useBruteForce } from "../../hooks/useBruteForce";
 import { sanitizeForFirebaseKey } from "../../utils/sanitization";
 import { cn } from "../../utils/cn";
-
-// Forgot Password Flow Components
-import RequestOTPStep from "./RequestOTPStep";
-import VerifyOTPStep from "./VerifyOTPStep";
-import ResetPassword from "./ResetPassword";
+import ForgotPasswordModal from "../modal/ForgotPasswordModal";
 
 /**
  * LoginForm Component
- * Orchestrates Login and Forgot Password flows.
- * Handles user authentication and multi-step recovery.
+ * Orchestrates Login flow and triggers Forgot Password modal.
+ * Handles user authentication and brute-force protection.
  */
 const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
   const navigate = useNavigate();
-  const [view, setView] = useState("login"); // 'login' | 'forgot-request' | 'forgot-verify' | 'forgot-reset'
+  const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authError, setAuthError] = useState("");
-
-  // Forgot Password State
-  const [forgotEmail, setForgotEmail] = useState("");
-  const [forgotOtp, setForgotOtp] = useState("");
-  const [isVerified, setIsVerified] = useState(false);
 
   const {
     register,
@@ -52,7 +42,9 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
       const { userData } = response;
 
       if (!userData) {
-        throw new appError("Account not found.", true, "auth/user-not-found");
+        setAuthError("Account not found.");
+        if (onLoginError) onLoginError();
+        return;
       }
 
       if (userData.requiresPasswordChange) {
@@ -73,63 +65,6 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
       setIsSubmitting(false);
     }
   };
-
-  const handleVerifySuccess = (email, otp) => {
-    setForgotEmail(email);
-    setForgotOtp(otp);
-    setIsVerified(true);
-    setView("forgot-reset");
-  };
-
-  const handleResetSuccess = () => {
-    setView("login");
-  };
-
-  const handleBackToLogin = useCallback(() => {
-    setView("login");
-    setForgotEmail("");
-    setForgotOtp("");
-    setIsVerified(false);
-  }, []);
-
-  // --- RENDER FORGOT PASSWORD FLOW ---
-  if (view !== "login") {
-    return (
-      <div className="w-full flex flex-col gap-4 animate-in fade-in duration-500">
-        {/* Step Indicator */}
-        <div className="w-full h-1 bg-slate-50 rounded-full overflow-hidden mb-2">
-          <div
-            className={cn(
-              "h-full bg-primary transition-all duration-700 ease-in-out",
-              view === "forgot-request" ? "w-1/3" : view === "forgot-verify" ? "w-2/3" : "w-full"
-            )}
-          />
-        </div>
-
-        {view === "forgot-request" && (
-          <RequestOTPStep
-            onNext={(email) => {
-              setForgotEmail(email);
-              setView("forgot-verify");
-            }}
-            onClose={handleBackToLogin}
-          />
-        )}
-
-        {view === "forgot-verify" && (
-          <VerifyOTPStep
-            email={forgotEmail}
-            onSuccess={handleVerifySuccess}
-            onBack={() => setView("forgot-request")}
-          />
-        )}
-
-        {view === "forgot-reset" && isVerified && (
-          <ResetPassword email={forgotEmail} otp={forgotOtp} onSuccess={handleResetSuccess} />
-        )}
-      </div>
-    );
-  }
 
   // --- RENDER LOGIN VIEW ---
   return (
@@ -193,7 +128,7 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
             </label>
             <button
               type="button"
-              onClick={() => setView("forgot-request")}
+              onClick={() => setIsForgotModalOpen(true)}
               className="text-[10px] font-bold text-primary hover:underline uppercase tracking-wider font-body-md"
             >
               Forgot?
@@ -272,6 +207,12 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
           </a>
         </div>
       </div>
+
+      {/* Forgot Password Modal */}
+      <ForgotPasswordModal
+        isOpen={isForgotModalOpen}
+        onClose={() => setIsForgotModalOpen(false)}
+      />
     </div>
   );
 };

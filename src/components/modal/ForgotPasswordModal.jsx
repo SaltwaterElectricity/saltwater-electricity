@@ -1,4 +1,5 @@
 import { useState, useEffect, memo } from "react";
+import { X } from "lucide-react";
 import RequestOTPStep from "../auth/RequestOTPStep";
 import VerifyOTPStep from "../auth/VerifyOTPStep";
 import ResetPassword from "../auth/ResetPassword";
@@ -49,19 +50,21 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
 
   return (
     <ModalBackdrop>
-      <div className="relative w-full max-w-[400px] bg-white rounded-[24px] shadow-2xl border border-primary/20 overflow-hidden animate-in fade-in duration-500">
-        {/* STEP INDICATOR */}
-        <div className="w-full h-1 bg-slate-50 overflow-hidden">
-          <div
-            className={`h-full bg-primary transition-all duration-700 ease-in-out ${
-              step === 1 ? "w-1/3" : step === 2 ? "w-2/3" : "w-full"
-            }`}
-          />
+      <div className="relative w-full max-w-[400px] bg-white rounded-[32px] shadow-2xl border border-primary/10 overflow-hidden animate-in fade-in duration-500 flex flex-col">
+        {/* CLOSE BUTTON (Header Level) */}
+        <div className="absolute top-6 right-6 z-[60]">
+          <button
+            onClick={onClose}
+            className="p-2 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-full transition-all duration-200"
+            aria-label="Close"
+          >
+            <X size={20} />
+          </button>
         </div>
 
-        <div className="p-7 flex flex-col gap-4">
-          {/* STEP 1: Request Email */}
-          <div className="flex flex-col">
+        {/* MAIN CONTENT AREA */}
+        <div className="p-8 pt-10 flex-1">
+          <div className="w-full h-full">
             {step === 1 && (
               <RequestOTPStep
                 onNext={(sanitizedEmail) => {
@@ -78,13 +81,45 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
                 email={email}
                 onSuccess={handleVerifySuccess}
                 onBack={() => setStep(1)}
+                onClose={onClose}
               />
             )}
 
             {/* STEP 3: Create New Password (Guarded by isVerified) */}
             {step === 3 && isVerified && (
-              <ResetPassword email={email} otp={otp} onSuccess={handleFinalSuccess} />
+              <ResetPassword
+                email={email}
+                otp={otp}
+                onSuccess={handleFinalSuccess}
+                onClose={onClose}
+              />
             )}
+          </div>
+        </div>
+
+        {/* STEP INDICATOR (Pinned to Bottom) */}
+        <div className="px-8 pb-8 pt-2">
+          <div className="flex gap-2 justify-center">
+            <div
+              className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${
+                step >= 1 ? "bg-primary shadow-[0_0_8px_rgba(10,46,255,0.3)]" : "bg-slate-100"
+              }`}
+            />
+            <div
+              className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${
+                step >= 2 ? "bg-primary shadow-[0_0_8px_rgba(10,46,255,0.3)]" : "bg-slate-100"
+              }`}
+            />
+            <div
+              className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${
+                step >= 3 ? "bg-primary shadow-[0_0_8px_rgba(10,46,255,0.3)]" : "bg-slate-100"
+              }`}
+            />
+          </div>
+          <div className="mt-3 flex justify-between px-1">
+            <span className={`text-[10px] font-bold uppercase tracking-widest ${step === 1 ? 'text-primary' : 'text-slate-300'}`}>Request</span>
+            <span className={`text-[10px] font-bold uppercase tracking-widest ${step === 2 ? 'text-primary' : 'text-slate-300'}`}>Verify</span>
+            <span className={`text-[10px] font-bold uppercase tracking-widest ${step === 3 ? 'text-primary' : 'text-slate-300'}`}>Reset</span>
           </div>
         </div>
       </div>

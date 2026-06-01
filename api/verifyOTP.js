@@ -44,6 +44,12 @@ export default async function handler(req, res) {
       return sendError(res, "Invalid security code.", 400, "otp/invalid-code");
     }
 
+    // Extend expiration by 5 minutes to allow time for the "Set Password" step
+    const EXTENSION_MS = 300000; // 5 minutes
+    await otpRef.update({
+      expiresAt: Date.now() + EXTENSION_MS,
+    });
+
     if (shouldDelete) {
       await otpRef.remove();
     }

@@ -41,7 +41,7 @@ const RequestOTPStep = ({ onNext, onClose }) => {
   return (
     <div className="flex flex-col items-center w-full animate-in fade-in duration-500">
       {/* Branding/Shield Header */}
-      <div className="mb-4 flex flex-col items-center text-center">
+      <div className="mb-2 flex flex-col items-center text-center">
         <div className="relative flex items-center justify-center mb-4">
           <div className="w-20 h-20 rounded-full bg-primary/5 flex items-center justify-center relative">
             <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-lg overflow-hidden border border-slate-100">

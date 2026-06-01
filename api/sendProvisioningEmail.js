@@ -16,7 +16,8 @@ export default async function handler(req, res) {
   const senderEmail = process.env.SENDGRID_SENDER_EMAIL;
 
   if (!apiKey || !senderEmail) {
-    return sendError(res, "Mail service unavailable.", 500, "mail/config-missing");
+    console.error("[sendProvisioningEmail] Missing SendGrid configuration.");
+    return sendError(res, "Mail service configuration missing.", 500, "mail/config-missing");
   }
 
   sgMail.setApiKey(apiKey);
