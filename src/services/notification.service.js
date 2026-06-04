@@ -1,4 +1,11 @@
-import { ref, push, serverTimestamp } from "firebase/database";
+import { 
+  ref, 
+  push, 
+  serverTimestamp,
+  onValue,
+  query,
+  limitToLast
+} from "firebase/database";
 import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
 import { logger } from "../utils/logger";
@@ -134,4 +141,26 @@ export const notifySecurityIncident = async (incidentType, identifier, details) 
     `EPP Triggered: ${incidentType} detected for identifier ${identifier}. ${details}`,
     NOTIFICATION_TYPES.CRITICAL
   );
+};
+
+/**
+ * Subscribes to real-time notifications.
+ */
+export const subscribeToNotifications = (userId, limit, callback, onError = null) => {
+  if (!userId) return () => {};
+  const notifyRef = ref(db, `notifications/${userId}`);
+  const notifyQuery = query(notifyRef, limitToLast(limit));
+
+  return onValue(notifyQuery, (snapshot) => {
+    const data = snapshot.val();
+    if (!data) {
+      callback([]);
+    } else {
+      const list = Object.entries(data).map(([id, val]) => ({
+        id,
+        ...val
+      })).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+      callback(list);
+    }
+  }, onError);
 };

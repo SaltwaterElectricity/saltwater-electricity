@@ -1,59 +1,87 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Zap, Calendar, RefreshCw, Router, Activity } from "lucide-react";
+import { Router } from "lucide-react";
 import { useAuth } from "../../context/useAuth";
-import { useDevices, useHistory, useNotifications, useDeviceRequests } from "../../hooks";
+import { 
+  useDevices, 
+  useResidentHistory, 
+  useNotifications, 
+  useDeviceRequests,
+  useAssignments
+} from "../../hooks";
 import {
-  DeviceAnalyticsChart,
+  WelcomeSection,
   TotalDevicesCard,
   RequestDeviceCard,
   DeviceHealthCard,
+  PerformanceAnalyticsCard,
+  SystemOverviewCard,
+  ResidentDeviceStatusWidget,
   RecentAlertsFeed,
-  HealthDonutChart,
 } from "../../components";
-import { processLogsInWindows } from "../../utils/chartUtils";
-import { METRICS, METRIC_CONFIG, SENSOR_CONFIG, ROUTES } from "../../constants";
+import { METRICS, SENSOR_CONFIG, ROUTES } from "../../constants";
 import { Footer } from "../../layout";
 
 /**
  * ResidentDashboard Component
  * High-fidelity personal monitoring hub for residents.
- * Aligned with user-dashboard.html design and layout.
+ * Orchestrates data fetching and passes it to specialized sub-components.
  */
 const ResidentDashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { devices, loading: devicesLoading } = useDevices();
+  const { devices, telemetry, loading: devicesLoading } = useDevices();
+  const { assignments, loading: assignmentsLoading } = useAssignments();
   const { requests, loading: requestsLoading } = useDeviceRequests(user?.uid);
 
-  // Find the device assigned to the current resident
-  const userDevice = useMemo(() => {
-    if (!user || !devices) return null;
-    return devices.find((d) => d.assigned_user_id === user.uid || d.assigned_user_id === user.id);
-  }, [user, devices]);
+  // Date Filtering State: Default to today (YYYY-MM-DD)
+  const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split("T")[0]);
 
-  const deviceId = userDevice?.device_id;
+  // Find all devices assigned to the current resident
+  // We check both the primary 'device_assignments' node and the legacy 'assigned_user_id' field
+  const userDevices = useMemo(() => {
+    if (!user || !devices) return [];
+    
+    const userId = String(user.uid || user.id || "");
+    if (!userId) return [];
 
-  // Fetch Logs and Notifications
-  const { logs, loading: logsLoading } = useHistory(deviceId);
+    // 1. Identify IDs from primary assignment node
+    const assignedIds = assignments 
+      ? Object.entries(assignments)
+          .filter(([_, data]) => String(data.userId) === userId)
+          .map(([id]) => id)
+      : [];
+
+    // 2. Filter devices that either have the direct ID match or the legacy field match
+    return devices.filter((d) => {
+      const isPrimaryMatch = assignedIds.includes(d.device_id);
+      const isLegacyMatch = String(d.assigned_user_id || "") === userId;
+      return isPrimaryMatch || isLegacyMatch;
+    });
+  }, [user, devices, assignments]);
+
+  // Primary device for status widgets (usually the first one)
+  const primaryDevice = userDevices.length > 0 ? userDevices[0] : null;
+  const deviceIds = useMemo(() => userDevices.map(d => d.device_id), [userDevices]);
+
+  // Fetch Logs (Merged from all assigned devices) and Notifications
+  const { logs, loading: logsLoading } = useResidentHistory(deviceIds, 50, selectedDate);
   const { notifications, loading: notificationsLoading } = useNotifications(user?.uid);
 
-  // Latest entry for calculations
-  const latestLog = useMemo(() => (logs && logs.length > 0 ? logs[0] : null), [logs]);
+  // Latest entry for calculations: Priority to real-time telemetry, fallback to logs
+  const latestLog = useMemo(() => {
+    if (primaryDevice && telemetry && telemetry[primaryDevice.device_id]) {
+      return telemetry[primaryDevice.device_id];
+    }
+    return logs && logs.length > 0 ? logs[0] : null;
+  }, [primaryDevice, telemetry, logs]);
 
   // KPI Calculations
-  const totalDevices = userDevice ? 1 : 0;
+  const totalDevicesCount = userDevices.length;
   const pendingRequests = useMemo(
     () => requests.filter((r) => r.status === "pending").length,
     [requests]
   );
-
-  const greeting = useMemo(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) return "Good Morning";
-    if (hour < 18) return "Good Afternoon";
-    return "Good Evening";
-  }, []);
 
   const healthScore = useMemo(() => {
     if (!latestLog) return 0;
@@ -64,16 +92,73 @@ const ResidentDashboard = () => {
     return 45;
   }, [latestLog]);
 
-  // Chart Data Processing
-  const voltageChartData = useMemo(() => {
-    if (!logs || logs.length === 0) return [];
-    return processLogsInWindows(logs, {
-      metricKey: "voltage",
-      metricId: METRICS.VOLTAGE,
-    }).current;
-  }, [logs]);
+  // Chart Data Processing: Aggregated from all assigned devices
+  const performanceChartData = useMemo(() => {
+    // Combine logs with the latest real-time telemetry point
+    const allLogs = [...(logs || [])];
+    if (latestLog && !allLogs.find(l => (l.__normalizedTs || l.timestamp) === (latestLog.__normalizedTs || latestLog.timestamp))) {
+      allLogs.push(latestLog);
+    }
 
-  if (devicesLoading || requestsLoading) {
+    if (allLogs.length === 0) return [];
+
+    const vConfig = SENSOR_CONFIG[METRICS.VOLTAGE];
+    const cConfig = SENSOR_CONFIG[METRICS.CURRENT];
+    const sConfig = SENSOR_CONFIG[METRICS.TDS];
+
+    // Group logs by time bucket (e.g., 30-minute intervals) to handle multiple devices at similar times
+    const BUCKET_SIZE = 30 * 60 * 1000; // 30 minutes
+    const buckets = new Map();
+
+    allLogs.forEach((log) => {
+      const ts = log.__normalizedTs || log.timestamp;
+      const bucketTs = Math.floor(ts / BUCKET_SIZE) * BUCKET_SIZE;
+      
+      if (!buckets.has(bucketTs)) {
+        buckets.set(bucketTs, { 
+          v: [], c: [], s: [], 
+          timestamp: bucketTs 
+        });
+      }
+      
+      const b = buckets.get(bucketTs);
+      // Ensure zero values are accepted (not ignored)
+      const v = typeof log.voltage === "number" ? log.voltage : parseFloat(log.voltage);
+      const c = typeof log.current === "number" ? log.current : parseFloat(log.current);
+      const s = typeof log.tds_ppm === "number" ? log.tds_ppm : parseFloat(log.tds_ppm);
+
+      if (!isNaN(v)) b.v.push(v);
+      if (!isNaN(c)) b.c.push(c);
+      if (!isNaN(s)) b.s.push(s);
+    });
+
+    return Array.from(buckets.values())
+      .sort((a, b) => a.timestamp - b.timestamp)
+      .slice(-24) // Show last 24 buckets
+      .map((b) => {
+        // Average values in bucket
+        const avgV = b.v.length > 0 ? b.v.reduce((sum, val) => sum + val, 0) / b.v.length : 0;
+        const avgC = b.c.length > 0 ? b.c.reduce((sum, val) => sum + val, 0) / b.c.length : 0;
+        const avgS = b.s.length > 0 ? b.s.reduce((sum, val) => sum + val, 0) / b.s.length : 0;
+
+        return {
+          timestamp: b.timestamp,
+          timeLabel: new Date(b.timestamp).toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          }),
+          voltageNormalized: Math.min((avgV / (vConfig.max || 15)) * 100, 100),
+          currentNormalized: Math.min((avgC / (cConfig.max || 5)) * 100, 100),
+          salinityNormalized: Math.min((avgS / (sConfig.max || 1000)) * 100, 100),
+          voltage: avgV.toFixed(2),
+          current: avgC.toFixed(2),
+          salinity: avgS.toFixed(0),
+        };
+      });
+  }, [logs, latestLog]);
+
+  if (devicesLoading || requestsLoading || assignmentsLoading) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center">
         <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
@@ -84,7 +169,7 @@ const ResidentDashboard = () => {
     );
   }
 
-  if (!userDevice && totalDevices === 0) {
+  if (userDevices.length === 0 && pendingRequests === 0) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center text-center px-6">
         <div className="max-w-md p-12 glass-card rounded-2xl shadow-xl animate-in fade-in zoom-in-95 duration-500">
@@ -103,170 +188,38 @@ const ResidentDashboard = () => {
 
   return (
     <div className="animate-in fade-in duration-700 space-y-stack-lg antialiased text-on-surface max-w-[1440px] mx-auto">
-      {/* 1. WELCOME SECTION */}
-      <section className="mb-stack-lg">
-        <h3 className="text-h2 font-bold text-on-surface">
-          {greeting}, {user?.firstName || "Resident"}!
-        </h3>
-        <p className="text-body-lg text-on-surface-variant mt-1 font-body-lg">
-          Here’s what’s happening with your saltwater electricity system today.
-        </p>
-      </section>
+      <WelcomeSection firstName={user?.firstName} />
 
-      {/* 2. KPI SECTION */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-        <TotalDevicesCard value={totalDevices} />
-
+        <TotalDevicesCard value={totalDevicesCount} />
         <RequestDeviceCard value={pendingRequests} />
-
         <DeviceHealthCard value={healthScore} trendValue="8%" trend="up" />
       </div>
 
-      {/* 3. ANALYTICS GRID */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
-        {/* Device Performance Chart */}
-        <div className="glass-card rounded-2xl p-6 flex flex-col h-[400px]">
-          <div className="flex justify-between items-center mb-6">
-            <h5 className="text-[12px] font-bold text-on-surface tracking-tight uppercase">
-              Device Performance
-            </h5>
-            <div className="flex items-center gap-2 px-3 py-2 border border-outline-variant/30 rounded-lg bg-white/50 shadow-sm">
-              <Calendar className="w-[18px] h-[18px] text-on-surface-variant" />
-              <span className="text-label-sm text-on-surface font-semibold">
-                {new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-              </span>
-            </div>
-          </div>
-          <div className="flex-1 relative">
-            {logsLoading ? (
-              <div className="flex items-center justify-center h-full opacity-30">
-                <RefreshCw className="animate-spin w-10 h-10" />
-              </div>
-            ) : (
-              <DeviceAnalyticsChart
-                data={voltageChartData}
-                metricConfig={METRIC_CONFIG[METRICS.VOLTAGE]}
-              />
-            )}
-          </div>
-          {/* Stylized Legend */}
-          <div className="flex items-center justify-center gap-6 pt-4 mt-auto">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-primary" />
-              <span className="text-[11px] text-on-surface-variant font-semibold uppercase tracking-wider">
-                Voltage (V)
-              </span>
-            </div>
-            <div className="flex items-center gap-2 opacity-50">
-              <div className="w-3 h-3 rounded-full bg-secondary" />
-              <span className="text-[11px] text-on-surface-variant font-semibold uppercase tracking-wider">
-                Salinity (ppt)
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* System Overview Donut Chart */}
-        <div className="glass-card rounded-2xl p-6 flex flex-col h-[400px]">
-          <h5 className="text-[12px] font-bold text-on-surface tracking-tight uppercase mb-6">
-            System Overview
-          </h5>
-
-          <HealthDonutChart score={healthScore} title="Health" icon={Zap} />
-
-          <div className="grid grid-cols-3 gap-4 pt-6 border-t border-outline-variant/20">
-            <div className="text-center">
-              <p className="text-[10px] text-on-surface-variant uppercase font-bold mb-1">
-                Efficiency
-              </p>
-              <p className="text-body-md font-bold text-green-600">92%</p>
-            </div>
-            <div className="text-center border-x border-outline-variant/20">
-              <p className="text-[10px] text-on-surface-variant uppercase font-bold mb-1">
-                System Load
-              </p>
-              <p className="text-body-md font-bold text-primary">24%</p>
-            </div>
-            <div className="text-center">
-              <p className="text-[10px] text-on-surface-variant uppercase font-bold mb-1">Active</p>
-              <p className="text-body-md font-bold text-on-surface">{totalDevices}/1</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 4. BOTTOM WIDGETS */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-        {/* Widget 1: Device Status Card */}
-        <div className="glass-card rounded-2xl p-6 flex flex-col hover:border-primary/30 transition-all duration-300 group">
-          <div className="flex justify-between items-center mb-6">
-            <span className="text-[14px] font-bold text-on-surface tracking-tight uppercase">
-              Device - {userDevice?.device_name || "Unknown"}
-            </span>
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-600 text-[12px] font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-              Active
-            </div>
-          </div>
-          <div className="space-y-3 mb-6">
-            {/* Voltage Row */}
-            <div className="flex items-center justify-between p-3 rounded-2xl border border-outline-variant/10 bg-surface-bright/50">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                  <Zap size={20} />
-                </div>
-                <span className="text-label-md text-on-surface-variant font-medium font-body-md">
-                  Voltage
-                </span>
-              </div>
-              <div className="flex items-center gap-4">
-                <span className="font-bold text-on-surface font-display">
-                  {latestLog?.voltage || "0.00"} V
-                </span>
-                <span className="text-[11px] font-bold text-green-600 uppercase tracking-tight">
-                  Normal
-                </span>
-              </div>
-            </div>
-            {/* Salinity Row */}
-            <div className="flex items-center justify-between p-3 rounded-2xl border border-outline-variant/10 bg-surface-bright/50">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
-                  <Activity size={20} />
-                </div>
-                <span className="text-label-md text-on-surface-variant font-medium font-body-md">
-                  Salinity
-                </span>
-              </div>
-              <div className="flex items-center gap-4">
-                <span className="font-bold text-on-surface font-display">
-                  {latestLog?.tds_ppm || "0"} ppt
-                </span>
-                <span className="text-[11px] font-bold text-green-600 uppercase tracking-tight">
-                  Normal
-                </span>
-              </div>
-            </div>
-          </div>
-          <button className="w-full py-3.5 primary-gradient rounded-xl text-label-md font-bold text-white shadow-lg mt-auto transition-all duration-300 hover:scale-[1.02] hover:brightness-110">
-            View Real-Time
-          </button>
-        </div>
-
-        {/* Widget 2: System Logs */}
-        <RecentAlertsFeed
-          title="System Logs"
-          variant="widget"
-          alerts={logs?.slice(0, 5).map((log) => ({
-            timestamp: log.timestamp,
-            title: `Device Status: ${log.voltage > 0 ? "ON" : "OFF"}`,
-            details: log.voltage > 0 ? "Node output active" : "Node output inactive",
-            type: log.voltage > 0 ? "info" : "warning",
-          }))}
-          loading={logsLoading}
+        <PerformanceAnalyticsCard 
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+          logsLoading={logsLoading}
+          logs={logs}
+          performanceChartData={performanceChartData}
+          deviceIds={deviceIds}
         />
 
-        {/* Widget 3: Recent Alerts */}
+        <SystemOverviewCard 
+          healthScore={healthScore}
+          totalDevices={totalDevicesCount}
+          activeDevices={totalDevicesCount}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+        <ResidentDeviceStatusWidget 
+          userDevices={userDevices}
+          telemetry={telemetry}
+          onViewAll={() => navigate(ROUTES.SMART_AQUA_MONITOR)}
+        />
+
         <RecentAlertsFeed
           title="Recent Alerts"
           variant="widget"

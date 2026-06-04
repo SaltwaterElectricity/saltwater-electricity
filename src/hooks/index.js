@@ -6,6 +6,7 @@ export { useBruteForce } from "./useBruteForce";
 export { useDeviceRequests } from "./useDeviceRequests";
 export { useDevices } from "./useDevices";
 export { useHistory } from "./useHistory";
+export { useResidentHistory } from "./useResidentHistory";
 export { useMultiDeviceHistory } from "./useMultiDeviceHistory";
 export { useNotifications } from "./useNotifications";
 export { useProfile } from "./useProfile";

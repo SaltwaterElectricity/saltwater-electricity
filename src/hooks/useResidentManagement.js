@@ -37,7 +37,9 @@ export const useResidentManagement = () => {
 
       return {
         ...res,
-        assignedDevice: device ? device.deviceName || device.device_id : "No Device",
+        deviceId: assignment?.deviceId || null,
+        assignedAt: assignment?.assignedAt || null,
+        assignedDevice: device ? device.device_name || device.device_id : "No Device",
         isOnline: !!isOnline,
       };
     });

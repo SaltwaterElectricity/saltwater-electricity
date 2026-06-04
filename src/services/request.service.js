@@ -1,4 +1,14 @@
-import { ref, push, serverTimestamp, update, get } from "firebase/database";
+import { 
+  ref, 
+  push, 
+  serverTimestamp, 
+  update, 
+  get,
+  onValue,
+  query,
+  orderByChild,
+  equalTo
+} from "firebase/database";
 import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
 import logger from "../utils/logger";
@@ -226,4 +236,29 @@ export const updateRequestStatus = async (requestId, status, extraData = {}) => 
       "request/update-failed"
     );
   }
+};
+
+/**
+ * Subscribes to device requests real-time.
+ */
+export const subscribeToDeviceRequests = (userId, callback, onError = null) => {
+  const requestsRef = ref(db, "device-requests");
+  const finalQuery = userId
+    ? query(requestsRef, orderByChild("userId"), equalTo(userId))
+    : requestsRef;
+
+  return onValue(finalQuery, (snapshot) => {
+    const data = snapshot.val();
+    if (!data) {
+      callback([]);
+    } else {
+      const requestList = Object.entries(data).map(([id, val]) => ({
+        id,
+        ...val,
+      }));
+      // Sort descending
+      requestList.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      callback(requestList);
+    }
+  }, onError);
 };

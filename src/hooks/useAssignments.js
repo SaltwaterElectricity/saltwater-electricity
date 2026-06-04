@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { db } from "../firebaseConfig";
-import { ref, onValue } from "firebase/database";
+import { subscribeToAssignments } from "../services/device.service";
 import { logger } from "../utils/logger";
 
 /**
@@ -13,35 +12,20 @@ export const useAssignments = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    let isMounted = true;
-    const assignmentsRef = ref(db, "device_assignments");
-
-    const unsubscribe = onValue(
-      assignmentsRef,
-      (snapshot) => {
-        if (!isMounted) return;
-        try {
-          setAssignments(snapshot.val() || {});
-          setError(null);
-        } catch (err) {
-          logger.error("[Assignment Hook]: Error processing data:", err);
-          setError(new Error("Data processing error: Could not load assignments."));
-        } finally {
-          setLoading(false);
-        }
+    const unsubscribe = subscribeToAssignments(
+      (data) => {
+        setAssignments(data);
+        setError(null);
+        setLoading(false);
       },
       (err) => {
-        if (!isMounted) return;
         logger.error("[Assignment Hook]: Subscription error:", err);
         setError(new Error("Communications link interrupted. Please check your network."));
         setLoading(false);
       }
     );
 
-    return () => {
-      isMounted = false;
-      unsubscribe();
-    };
+    return () => unsubscribe && unsubscribe();
   }, []);
 
   return { assignments, loading, error };

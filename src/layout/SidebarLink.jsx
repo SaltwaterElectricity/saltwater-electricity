@@ -19,9 +19,9 @@ export const SidebarLink = memo(
           "rounded-xl",
           isActive
             ? isResident
-              ? "bg-white/15 text-white font-semibold shadow-black/5"
+              ? "bg-white/20 text-white font-semibold shadow-black/5"
               : isSuperAdmin
-                ? "bg-[#001fff] text-white font-semibold shadow-lg shadow-blue-900/40 active:scale-95"
+                ? "bg-white text-[#1e3a8a] font-bold shadow-lg shadow-black/10 active:scale-95"
                 : "bg-blue-600 text-white font-semibold shadow-lg shadow-blue-900/20 active:scale-95"
             : isResident
               ? "text-white/70 hover:text-white hover:bg-white/10"

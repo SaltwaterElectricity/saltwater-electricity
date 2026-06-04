@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { db } from "../firebaseConfig";
-import { ref, query, orderByChild, equalTo, onValue, limitToFirst } from "firebase/database";
+import { subscribeToUserDevice } from "../services/device.service";
 
 /**
  * Hook: useActiveDevice
@@ -20,46 +19,21 @@ export const useActiveDevice = (userId, isAdmin = false) => {
       });
       return;
     }
-    let unsubscribe;
-    const devicesRef = ref(db, "device_information");
-    const assignmentsRef = ref(db, "device_assignments");
 
-    if (isAdmin) {
-      const q = query(devicesRef, limitToFirst(1));
-      unsubscribe = onValue(q, (snapshot) => {
-        if (snapshot.exists()) {
-          setDeviceId(Object.keys(snapshot.val())[0]);
-        }
+    Promise.resolve().then(() => setLoading(true));
+
+    const unsubscribe = subscribeToUserDevice(
+      userId,
+      isAdmin,
+      (id) => {
+        setDeviceId(id);
         setLoading(false);
-      });
-    } else if (userId) {
-      const q = query(devicesRef, orderByChild("assigned_user_id"), equalTo(userId));
-
-      unsubscribe = onValue(q, (snapshot) => {
-        if (snapshot.exists()) {
-          setDeviceId(Object.keys(snapshot.val())[0]);
-          setLoading(false);
-        } else {
-          // SECONDARY ATTEMPT: Manual scan of device_assignments
-          onValue(
-            assignmentsRef,
-            (assignSnapshot) => {
-              const assignments = assignSnapshot.val();
-              let foundId = null;
-              if (assignments) {
-                const myDevice = Object.entries(assignments).find(
-                  ([_, data]) => data.userId === userId
-                );
-                if (myDevice) foundId = myDevice[0];
-              }
-              setDeviceId(foundId);
-              setLoading(false);
-            },
-            { onlyOnce: true }
-          );
-        }
-      });
-    }
+      },
+      (err) => {
+        console.error("[useActiveDevice] Error:", err);
+        setLoading(false);
+      }
+    );
 
     return () => unsubscribe && unsubscribe();
   }, [userId, isAdmin]);

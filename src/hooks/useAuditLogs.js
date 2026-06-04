@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-import { db } from "../firebaseConfig";
-import { ref, onValue, query, limitToLast, orderByChild } from "firebase/database";
-import { appError } from "../utils/appError";
+import { subscribeToAuditLogs } from "../services/audit.service";
 import logger from "../utils/logger";
 
 /**
@@ -17,70 +15,21 @@ export const useAuditLogs = (limit = 100) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    let isMounted = true;
-
-    // 1. Reference and Query Configuration
-    // We order by 'createdAt' and take the last N entries
-    const logsRef = ref(db, "audit-logs");
-    const logsQuery = query(logsRef, orderByChild("createdAt"), limitToLast(limit));
-
-    // 2. Real-time Subscription
-    const unsubscribe = onValue(
-      logsQuery,
-      (snapshot) => {
-        if (!isMounted) return;
-
-        try {
-          const data = snapshot.val();
-          if (!data) {
-            setLogs([]);
-          } else {
-            // Transform object into an array and inject IDs
-            const logList = Object.entries(data).map(([id, val]) => ({
-              id,
-              ...val,
-            }));
-
-            // 3. Sorting: Firebase limitToLast returns them in ascending order of the key/index.
-            // We sort them descending to show the latest first as per requirements.
-            logList.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-
-            setLogs(logList);
-          }
-          setError(null);
-        } catch (error) {
-          logger.error("[Audit Hook]: Log processing failed.", error);
-          setError(
-            new appError(
-              "Activity Log Error: Could not load recent audit entries.",
-              true,
-              "audit/parse-error"
-            )
-          );
-        } finally {
-          setLoading(false);
-        }
+    const unsubscribe = subscribeToAuditLogs(
+      limit,
+      (logList) => {
+        setLogs(logList);
+        setError(null);
+        setLoading(false);
       },
       (err) => {
-        if (!isMounted) return;
-
         logger.error("[Audit Hook]: Subscription failed.", err);
-        const wrappedError = new appError(
-          "Security Monitor: Lost connection to the audit trail.",
-          true,
-          err.code || "audit/subscription-failed"
-        );
-
-        setError(wrappedError);
+        setError(new Error("Security Monitor: Lost connection to the audit trail."));
         setLoading(false);
       }
     );
 
-    // 4. Cleanup
-    return () => {
-      isMounted = false;
-      unsubscribe();
-    };
+    return () => unsubscribe && unsubscribe();
   }, [limit]);
 
   return { logs, loading, error };

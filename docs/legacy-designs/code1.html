@@ -1,221 +1,213 @@
-<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<!DOCTYPE html><html lang="en" style=""><head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
 <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC;
+        }
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        @keyframes spin-slow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .animate-spin-slow {
-            animation: spin-slow 2s linear infinite;
-        }
-        .glass-morphism {
+        .glass-overlay {
+            background: rgba(25, 27, 36, 0.4);
             backdrop-filter: blur(12px);
-            background: rgba(255, 255, 255, 0.8);
         }
-        .progress-gradient {
-            background: linear-gradient(90deg, #0058be 0%, #2170e4 100%);
-        }
-        .step-transition {
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        .linear-shadow {
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 15px 30px rgba(0, 0, 0, 0.04);
         }
     </style>
 <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "background": "#f9f9ff",
-                        "outline": "#727785",
-                        "surface-container": "#e7eeff",
-                        "surface-dim": "#cfdaf2",
-                        "tertiary-fixed-dim": "#c0c1ff",
-                        "on-error-container": "#93000a",
-                        "on-error": "#ffffff",
-                        "on-secondary-fixed": "#151c23",
-                        "on-primary-fixed": "#001a42",
-                        "on-primary-container": "#fefcff",
-                        "secondary-fixed-dim": "#c0c7d0",
-                        "primary": "#0058be",
-                        "surface-container-lowest": "#ffffff",
-                        "primary-fixed": "#d8e2ff",
-                        "on-secondary": "#ffffff",
-                        "tertiary-container": "#6063ee",
-                        "outline-variant": "#c2c6d6",
-                        "surface-tint": "#005ac2",
-                        "surface-variant": "#d8e3fb",
-                        "inverse-surface": "#263143",
-                        "on-tertiary-fixed": "#07006c",
-                        "secondary-fixed": "#dce3ec",
-                        "on-primary-fixed-variant": "#004395",
-                        "primary-container": "#2170e4",
-                        "inverse-primary": "#adc6ff",
-                        "on-background": "#111c2d",
-                        "secondary-container": "#dce3ec",
-                        "on-tertiary-fixed-variant": "#2f2ebe",
-                        "surface-container-low": "#f0f3ff",
-                        "surface-container-high": "#dee8ff",
-                        "on-tertiary-container": "#fffbff",
-                        "on-secondary-fixed-variant": "#40484f",
-                        "surface": "#f9f9ff",
-                        "on-surface": "#111c2d",
-                        "on-surface-variant": "#424754",
-                        "tertiary-fixed": "#e1e0ff",
-                        "error": "#ba1a1a",
-                        "tertiary": "#4648d4",
-                        "error-container": "#ffdad6",
-                        "surface-container-highest": "#d8e3fb",
-                        "on-secondary-container": "#5e656d",
-                        "secondary": "#585f67",
-                        "primary-fixed-dim": "#adc6ff",
-                        "surface-bright": "#f9f9ff",
-                        "on-tertiary": "#ffffff",
-                        "on-primary": "#ffffff",
-                        "inverse-on-surface": "#ecf1ff"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                    "spacing": {
-                        "sm": "16px",
-                        "container-max": "1200px",
-                        "xs": "8px",
-                        "md": "24px",
-                        "base": "4px",
-                        "xl": "64px",
-                        "lg": "40px",
-                        "auth-card-width": "440px"
-                    },
-                    "fontFamily": {
-                        "body-md": ["Inter"],
-                        "headline-lg-mobile": ["Inter"],
-                        "label-md": ["Inter"],
-                        "label-sm": ["Inter"],
-                        "body-lg": ["Inter"],
-                        "headline-md": ["Inter"],
-                        "headline-lg": ["Inter"],
-                        "display-lg": ["Inter"]
-                    },
-                    "fontSize": {
-                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
-                        "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
-                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
-                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
-                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
-                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
-                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
-                    }
-                },
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#e1e2ee",
+                    "tertiary-fixed-dim": "#ffb59d",
+                    "surface-dim": "#d8d9e6",
+                    "on-secondary": "#ffffff",
+                    "secondary-container": "#d0e1fb",
+                    "on-surface-variant": "#424656",
+                    "error-container": "#ffdad6",
+                    "secondary": "#505f76",
+                    "on-primary-fixed": "#001849",
+                    "inverse-surface": "#2e303a",
+                    "background": "#faf8ff",
+                    "on-tertiary": "#ffffff",
+                    "outline": "#727687",
+                    "primary-fixed": "#dae1ff",
+                    "tertiary": "#a33200",
+                    "on-background": "#191b24",
+                    "on-error-container": "#93000a",
+                    "on-primary-container": "#f8f7ff",
+                    "on-primary-fixed-variant": "#003fa4",
+                    "error": "#ba1a1a",
+                    "on-surface": "#191b24",
+                    "on-secondary-container": "#54647a",
+                    "surface-variant": "#e1e2ee",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "on-tertiary-fixed-variant": "#832600",
+                    "secondary-fixed": "#d3e4fe",
+                    "on-tertiary-fixed": "#390c00",
+                    "surface-container-lowest": "#ffffff",
+                    "outline-variant": "#c2c6d8",
+                    "surface-container-low": "#f2f3ff",
+                    "surface": "#faf8ff",
+                    "primary-fixed-dim": "#b3c5ff",
+                    "tertiary-container": "#cc4204",
+                    "primary-container": "#0066ff",
+                    "surface-container-high": "#e6e7f4",
+                    "surface-container": "#ecedfa",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed": "#ffdbd0",
+                    "on-tertiary-container": "#fff6f4",
+                    "surface-tint": "#0054d6",
+                    "primary": "#0050cb",
+                    "inverse-on-surface": "#eff0fd",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "on-secondary-fixed": "#0b1c30",
+                    "surface-bright": "#faf8ff",
+                    "on-error": "#ffffff",
+                    "inverse-primary": "#b3c5ff"
             },
-        }
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
     </script>
 </head>
-<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col items-center justify-center p-md overflow-hidden">
-<!-- Top App Bar (Hidden in Auth Flow but kept for Identity) -->
-
-<!-- Main Loading Modal Container -->
-<main class="w-full max-w-[600px] bg-surface-container-lowest rounded-[24px] shadow-[0_20px_50px_rgba(59,130,246,0.12)] p-lg flex flex-col items-center relative z-10 transition-transform duration-500 ease-out scale-100" id="modalContainer">
-<!-- Loading Icon Section -->
-<div class="relative w-20 h-20 mb-md">
-<!-- Progress Ring -->
-<svg class="w-20 h-20 animate-spin-slow" viewBox="0 0 80 80">
-<circle class="text-surface-container-high" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" stroke-width="6"></circle>
-<circle class="text-primary" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" stroke-dasharray="213" stroke-dashoffset="140" stroke-linecap="round" stroke-width="6"></circle>
-</svg>
-<!-- Lock Icon Center -->
-<div class="absolute inset-0 flex items-center justify-center">
-<div class="w-10 h-10 bg-primary-container rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(33,112,228,0.4)] animate-pulse">
-<span class="material-symbols-outlined text-on-primary-container text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">check</span>
+<body class="bg-surface">
+<!-- Mock Background for Context -->
+<div class="fixed inset-0 z-0 flex flex-col">
+<!-- SideNav (Simulated via Shared Components Data) -->
+<aside class="fixed left-0 top-0 h-full flex flex-col justify-between py-8 bg-inverse-surface w-64 z-10">
+<div class="px-6 mb-8">
+<h1 class="font-headline-md text-headline-md font-bold text-surface-bright">DEVICE MONITORING</h1>
+<p class="font-label-sm text-label-sm text-outline-variant opacity-70">SALTWATER ELECTRICITY</p>
+</div>
+<nav class="flex-1">
+<div class="text-primary-fixed font-bold border-l-4 border-primary-fixed bg-surface-variant/10 flex items-center gap-4 px-6 py-3 cursor-pointer">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</div>
+<div class="text-outline-variant hover:text-surface-bright flex items-center gap-4 px-6 py-3 cursor-pointer transition-all duration-200">
+<span class="material-symbols-outlined">monitoring</span>
+<span class="font-label-md text-label-md">Realtime Monitor</span>
+</div>
+<div class="text-outline-variant hover:text-surface-bright flex items-center gap-4 px-6 py-3 cursor-pointer transition-all duration-200">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-md text-label-md">User Management</span>
+</div>
+</nav>
+</aside>
+<!-- TopNavBar (Simulated via Shared Components Data) -->
+<header class="flex justify-between items-center ml-64 px-8 py-4 w-[calc(100%-16rem)] bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 z-10">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-lg text-headline-lg font-black text-on-surface">REQUEST VALIDATION</h2>
+</div>
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-secondary cursor-pointer">notifications</span>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a middle-aged male administrator in a clean, high-key studio setting. He wears a neutral-toned professional shirt, suggesting a corporate yet tech-savvy environment. The lighting is soft and directional, creating a polished, authoritative look consistent with a high-end SaaS dashboard aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-cYSII7RWk-Oxy2GApggcowYG1sIfqPQXQaSsvx4xddo9nOwaeCG51Avt1JzmJqm3tnjpDl3wEA3mxDg_HBv7zV2sz4W3N2TuqLIVMP_oNQBlhIqUPQyPeRk6ZkHIJiaUG-CP9YIprugSrRQeQ-HK7nEA3kf4xLBZJbkn9SuC3_pRhiw84nSJ9m7NtyZ9g4EQNipPLLmuBW6G5WiNxadELYM_ub5Jsmy9UtN2ybQThQBUKd-W8mwwbgdSOf1rtZ2AuXjuHjgYjeo">
 </div>
 </div>
-</div>
-<!-- Text Section -->
-<h1 class="font-headline-md text-[28px] text-on-surface font-bold mb-xs"><span class="text-black">Successfully</span> <span class="text-[#2563eb]">Updated!</span></h1>
-<p class="text-on-surface-variant font-body-md text-green-600 text-left max-w-none mb-xs"><span style="font-family: ui-sans-serif, system-ui, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; text-align: center;">Your password has been changed successfully.</span></p><p class="text-primary font-body-md text-center w-full mb-lg"><span class="whitespace-nowrap" style="font-family: ui-sans-serif, system-ui, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;;">You can now sign in with your new credentials.</span></p>
-<!-- Progress Bar -->
-<div class="w-full mb-lg" id="redirect-container">
-<div class="flex justify-between items-center mb-2">
-<div class="flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[18px] text-green-600">terminal</span>
-<span class="font-label-md text-green-600">Redirecting to Login Page...</span>
-</div>
-<span class="text-on-surface font-bold font-label-md text-green-600" id="redirect-percentage">100%</span>
-</div>
-<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
-<div class="h-full rounded-full transition-all duration-[3000ms] ease-linear bg-green-600" id="redirect-progress-fill" style="width: 100%;"></div>
+</header>
+<!-- Page Content Placeholder -->
+<main class="ml-64 p-12 bg-surface-container-low min-h-screen">
+<div class="max-w-container-max mx-auto">
+<div class="grid grid-cols-12 gap-6">
+<div class="col-span-12 bg-white p-8 rounded-[24px] linear-shadow border border-outline-variant/20">
+<div class="h-96 flex items-center justify-center text-outline-variant font-body-md">
+                            Background Dashboard Content
+                        </div>
 </div>
 </div>
-<!-- Security Process Card -->
-
-<!-- Security Message -->
-<div class="w-full bg-surface-container-high/50 rounded-lg p-sm flex items-start gap-xs">
-<span class="material-symbols-outlined text-primary text-[18px]">verified_user</span>
-<p class="text-label-sm text-on-surface-variant leading-tight">
-                Your credentials are being encrypted and securely updated using industry-standard AES-256 protocols.
-            </p>
 </div>
 </main>
-<!-- Footer -->
-<footer class="absolute bottom-0 w-full flex justify-center gap-lg py-lg bg-transparent">
-
-</footer>
+</div>
+<!-- DENIED REQUEST MODAL OVERLAY -->
+<div class="fixed inset-0 z-50 flex items-center justify-center glass-overlay p-4" id="denied-modal">
+<div class="bg-surface-container-lowest w-full max-w-md rounded-[24px] linear-shadow overflow-hidden transform transition-all duration-300 scale-100 flex flex-col opacity-100 translate-y-0">
+<div class="p-8">
+<!-- Top Icon: Circular Decline -->
+<div class="mb-6 flex">
+<div class="w-14 h-14 rounded-full flex items-center justify-center bg-error-container/30 border border-error/20 shadow-sm">
+<span class="material-symbols-outlined !text-3xl text-error" style="font-variation-settings: &quot;FILL&quot; 0, &quot;wght&quot; 600;">close</span>
+</div>
+</div>
+<!-- Title & Context -->
+<div class="space-y-1 mb-8">
+<h3 class="font-headline-md text-headline-md text-on-background font-bold">Request <span class="text-error">Denied!</span></h3>
+<div class="flex items-center gap-2 py-1 px-3 bg-error-container/30 rounded-full w-fit">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Resident:</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">Jasmin Hernandez</span>
+</div>
+</div>
+<!-- Text Box: Reason for Decline -->
+<div class="space-y-3">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1" for="decline-reason">Reason for Decline</label>
+<textarea class="w-full bg-surface-container-low border border-outline-variant/40 rounded-xl p-4 font-body-sm text-on-surface focus:ring-2 focus:ring-error/20 focus:border-error transition-all outline-none resize-none placeholder:text-outline/50" id="decline-reason" placeholder="Please provide a justification for declining this electricity monitoring access request..." rows="4"></textarea>
+</div>
+</div>
+<!-- Footer: Actions -->
+<div class="px-8 pb-10 flex gap-4 items-center justify-center">
+<button class="flex-1 py-4 px-6 bg-white border border-outline-variant text-secondary font-label-md text-label-md hover:bg-surface-container-low transition-all duration-200 active:scale-[0.98] rounded-lg" onclick="document.getElementById('denied-modal').style.display='none'">
+                    Cancel
+                </button>
+<button class="flex-1 py-4 px-6 bg-error text-on-error font-label-md text-label-md font-bold shadow-lg shadow-error/10 hover:brightness-110 transition-all duration-200 active:scale-[0.98] rounded-lg">
+                    Decline Request
+                </button>
+</div>
+</div>
+</div>
 <script>
-        // Micro-interactions and step progression logic
-        document.addEventListener('DOMContentLoaded', () => {
-            const modal = document.getElementById('modalContainer');
-            
-            // Animation for modal entry
+        // Simple micro-interaction for the modal emergence
+        window.addEventListener('load', () => {
+            const modal = document.querySelector('#denied-modal > div');
+            modal.classList.add('opacity-0', 'translate-y-4');
             setTimeout(() => {
-                modal.classList.remove('scale-95');
-                modal.classList.add('scale-100');
+                modal.classList.remove('opacity-0', 'translate-y-4');
+                modal.classList.add('opacity-100', 'translate-y-0');
             }, 100);
+        });
 
-            // Redirect Progress Animation Logic
-            const percentageEl = document.getElementById('redirect-percentage');
-            const progressFill = document.getElementById('redirect-progress-fill');
-            const duration = 3000; // 3 seconds
-            let startTime = null;
-
-            function animateProgress(timestamp) {
-                if (!startTime) startTime = timestamp;
-                const elapsed = timestamp - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const percentage = Math.floor(progress * 100);
-
-                percentageEl.innerText = percentage + '%';
-                progressFill.style.width = percentage + '%';
-
-                if (progress < 1) {
-                    requestAnimationFrame(animateProgress);
-                }
-            }
-
-            // Start redirect animation
-            requestAnimationFrame(animateProgress);
+        // Toggle focus state aesthetics
+        const textarea = document.getElementById('decline-reason');
+        textarea.addEventListener('focus', () => {
+            textarea.parentElement.previousElementSibling.classList.add('text-error');
+        });
+        textarea.addEventListener('blur', () => {
+            textarea.parentElement.previousElementSibling.classList.remove('text-error');
         });
     </script>
-
-
-
-
-
-
-
-
-
-
 
 
 

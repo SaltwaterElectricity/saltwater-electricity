@@ -134,7 +134,7 @@ const LandingPage = () => {
                 src={saltwaterLogo}
               />
               <span className="font-h3 text-h5 font-bold tracking-tight text-on-surface whitespace-nowrap">
-                Saltwater Electricity Device Monitoring
+                 Saltwater Electricity Device Monitoring
               </span>
             </div>
           </div>

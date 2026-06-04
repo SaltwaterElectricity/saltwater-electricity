@@ -10,3 +10,4 @@ export * from "./skeleton";
 export * from "./error-boundary";
 export * from "./device";
 export { default as DeviceAnalyticsChart } from "./charts/DeviceAnalyticsChart.jsx";
+export { default as ComposedDeviceChart } from "./charts/ComposedDeviceChart.jsx";

@@ -8,10 +8,11 @@ import { getHistoricalLogs } from "../services/reading.service";
  * Uses the reading.service for standardized data fetching and transformation.
  *
  * @param {string} deviceId - ID of the device to fetch history for
- * @param {number} limit - Max number of records to retrieve
+ * @param {number} limit - Max number of records to retrieve (ignored if date is provided)
+ * @param {string} date - Optional. Filter logs by date (YYYY-MM-DD)
  * @returns {Object} - { logs, error, loading, refresh }
  */
-export const useHistory = (deviceId, limit = 50) => {
+export const useHistory = (deviceId, limit = 50, date = null) => {
   const [logs, setLogs] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(!!deviceId);
@@ -19,9 +20,9 @@ export const useHistory = (deviceId, limit = 50) => {
   const fetchHistory = useCallback(async () => {
     if (!deviceId) return;
 
-    setLoading(true);
+    Promise.resolve().then(() => setLoading(true));
     try {
-      const data = await getHistoricalLogs(deviceId, limit);
+      const data = await getHistoricalLogs(deviceId, limit, date);
       setLogs(data);
       setError(null);
     } catch (err) {
@@ -33,7 +34,7 @@ export const useHistory = (deviceId, limit = 50) => {
     } finally {
       setLoading(false);
     }
-  }, [deviceId, limit]);
+  }, [deviceId, limit, date]);
 
   useEffect(() => {
     fetchHistory();

@@ -1,5 +1,5 @@
 import { auth, db, FIREBASE_CONFIG } from "../firebaseConfig";
-import { ref, get, update, serverTimestamp } from "firebase/database";
+import { ref, get, update, serverTimestamp, onValue, set } from "firebase/database";
 import { initializeApp, deleteApp } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
@@ -385,5 +385,58 @@ export const resetUserPasswordWithOTP = async (email, newPassword, otp) => {
       true,
       "auth/reset-service-error"
     );
+  }
+};
+
+/**
+ * Subscribes to brute force attempt data.
+ */
+export const subscribeToLoginAttempts = (trackingId, callback) => {
+  if (!trackingId) return () => {};
+  const attemptsRef = ref(db, `login-attempts/${trackingId}`);
+  return onValue(attemptsRef, (snapshot) => {
+    callback(snapshot.val());
+  });
+};
+
+/**
+ * Records a failed login attempt and handles lockout logic.
+ */
+export const recordFailedLoginAttempt = async (trackingId) => {
+  if (!trackingId) return;
+  const attemptsRef = ref(db, `login-attempts/${trackingId}`);
+
+  try {
+    const snap = await get(attemptsRef);
+    const data = snap.val() || { count: 0, lockoutUntil: 0 };
+    const now = Date.now();
+
+    const isExpired = data.lockoutUntil > 0 && data.lockoutUntil < now;
+    const baseCount = isExpired ? 0 : data.count;
+    const newCount = baseCount + 1;
+
+    const isLockingOut = newCount >= 5;
+    const newLockoutUntil = isLockingOut ? now + 300000 : 0;
+
+    await update(attemptsRef, {
+      count: newCount,
+      lockoutUntil: newLockoutUntil,
+      lastAttemptAt: now
+    });
+  } catch (error) {
+    logger.error("[Auth Service] Failed to record attempt:", error);
+  }
+};
+
+/**
+ * Resets login attempts (e.g., after lockout expires).
+ */
+export const resetLoginAttempts = async (trackingId) => {
+  if (!trackingId) return;
+  const attemptsRef = ref(db, `login-attempts/${trackingId}`);
+  try {
+    await set(attemptsRef, null);
+  } catch (err) {
+    logger.warn("[Auth Service] Auto-reset failed:", err.message);
   }
 };

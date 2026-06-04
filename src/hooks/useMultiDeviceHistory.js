@@ -23,7 +23,7 @@ export const useMultiDeviceHistory = (deviceIds = [], limit = 30) => {
       return;
     }
 
-    setLoading(true);
+    Promise.resolve().then(() => setLoading(true));
     try {
       // 1. Fetch all logs in parallel
       const fetchPromises = deviceIds.map((id) =>

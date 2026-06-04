@@ -93,19 +93,19 @@ const RequestManagement = () => {
     setModalType(null);
   }, []);
 
-  const handleProcessRequest = async (e) => {
-    e.preventDefault();
+  const handleProcessRequest = async (e, type, data) => {
+    if (e && e.preventDefault) e.preventDefault();
     if (isSubmitting || !selectedRequest) return;
+
+    const actionType = type || modalType;
+    const actionData = data || (actionType === "approve" ? approveForm : declineForm);
 
     setIsSubmitting(true);
     try {
-      const extraData =
-        modalType === "approve"
-          ? { ...approveForm, adminId: adminUser.uid }
-          : { ...declineForm, adminId: adminUser.uid };
+      const extraData = { ...actionData, adminId: adminUser.uid };
 
       // Map 'approve' to 'approved' and 'decline' to 'declined' for the service
-      const targetStatus = modalType === "approve" ? "approved" : "declined";
+      const targetStatus = actionType === "approve" ? "approved" : "declined";
 
       await updateRequestStatus(selectedRequest.id, targetStatus, extraData);
 
@@ -174,7 +174,6 @@ const RequestManagement = () => {
         approveForm={approveForm}
         setApproveForm={setApproveForm}
         declineForm={declineForm}
-        setDeclineForm={setDeclineForm}
       />
     </div>
   );

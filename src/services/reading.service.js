@@ -5,6 +5,8 @@ import {
   query,
   limitToLast,
   orderByKey,
+  startAt,
+  endAt,
   update,
   serverTimestamp,
 } from "firebase/database";
@@ -85,12 +87,16 @@ export const transformReading = (data) => {
   const transformed = { ...data };
 
   // 1. CALCULATE DERIVED METRICS: Total Current in Amps
+  // Priority: 1. total_ma (if exists), 2. Sum of bulb+esp+sensor
+  const rawTotalMa = transformed.total_ma;
   const bulb = Number(transformed.bulb_ma) || 0;
   const esp = Number(transformed.esp_ma) || 0;
   const sensor = Number(transformed.sensor_ma) || 0;
 
+  const totalMa = rawTotalMa !== undefined ? Number(rawTotalMa) : (bulb + esp + sensor);
+  
   // Convert total milliamps to Amps
-  transformed.current = Number(((bulb + esp + sensor) / 1000).toFixed(2));
+  transformed.current = Number((totalMa / 1000).toFixed(2));
 
   // 2. PRECISION FORMATTING: Ensure numbers and apply toFixed
   Object.keys(PRECISION_CONFIG).forEach((key) => {
@@ -101,7 +107,8 @@ export const transformReading = (data) => {
     }
   });
 
-  // 3. NORMALIZATION: Map hardware-specific keys to UI-standard keys
+  // 3. NORMALIZATION: Map hardware-specific keys to UI-standard keys (e.g., tds_ppm -> tds)
+  // Ensure we don't overwrite already calculated 'current'
   Object.entries(METRIC_MAP).forEach(([uiKey, dbKey]) => {
     if (transformed[dbKey] !== undefined && transformed[uiKey] === undefined) {
       transformed[uiKey] = transformed[dbKey];
@@ -216,7 +223,7 @@ export const updateBulbState = async (deviceId, newState) => {
     updates[`readings/${deviceId}/latest`] = baseReading;
 
     // 3. Add to Historical Logs
-    updates[`readings/${deviceId}/logs/${clientTs}`] = baseReading;
+    updates[`logs/${deviceId}/${clientTs}`] = baseReading;
 
     // 4. Hardware Command Node (Anti-Replay Protection)
     updates[`commands/${deviceId}/relay`] = newState;
@@ -251,9 +258,10 @@ export const updateBulbState = async (deviceId, newState) => {
  *
  * @param {string} deviceId - Unique identifier for the device
  * @param {number} limit - Maximum number of logs to retrieve
+ * @param {string} date - Optional. Filter logs by date (YYYY-MM-DD)
  * @returns {Promise<Array>} - List of formatted logs
  */
-export const getHistoricalLogs = async (deviceId, limit = 50) => {
+export const getHistoricalLogs = async (deviceId, limit = 50, date = null) => {
   if (!deviceId) {
     throw new appError(
       "Device ID is required to fetch history.",
@@ -265,7 +273,27 @@ export const getHistoricalLogs = async (deviceId, limit = 50) => {
   // IDOR DEFENSE: Verify access before fetching logs
   await verifyDeviceAccess(deviceId);
 
-  const logsRef = query(ref(db, `readings/${deviceId}/logs`), orderByKey(), limitToLast(limit));
+  let logsRef;
+
+  if (date) {
+    // Ensure we capture the full 24 hours of the selected date in LOCAL time
+    const day = new Date(date);
+    // Use local time bounds for the query since clientTs uses local machine time (Date.now())
+    const startTs = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0, 0).getTime();
+    const endTs = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 23, 59, 59, 999).getTime();
+
+    // Firebase orderByKey() queries always compare strings. 
+    // We convert timestamps to strings to match the keys written in updateBulbState.
+    logsRef = query(
+      ref(db, `logs/${deviceId}`), 
+      orderByKey(), 
+      startAt(startTs.toString()), 
+      endAt(endTs.toString())
+    );
+  } else {
+    // Default: Get most recent logs
+    logsRef = query(ref(db, `logs/${deviceId}`), orderByKey(), limitToLast(limit));
+  }
 
   try {
     const snapshot = await get(logsRef);
@@ -278,10 +306,12 @@ export const getHistoricalLogs = async (deviceId, limit = 50) => {
       .map(([key, val]) => ({
         id: key,
         ...transformReading(val),
+        // Robust timestamp normalization: Prefer server timestamp, fallback to key, then now
         __normalizedTs: val.timestamp || parseInt(key) || Date.now(),
       }))
       .sort((a, b) => b.__normalizedTs - a.__normalizedTs);
-  } catch {
+  } catch (error) {
+    logger.error("[Reading Service]: Logs fetch failure", error);
     throw new appError(
       "The historical data service is currently unavailable.",
       true,
@@ -290,7 +320,31 @@ export const getHistoricalLogs = async (deviceId, limit = 50) => {
   }
 };
 
+export const subscribeToAllTelemetry = (deviceIds, callback, onError = null) => {
+  const telemetryRef = ref(db, "readings");
+
+  return onValue(telemetryRef, (snapshot) => {
+    const readings = snapshot.val() || {};
+    const normalizedTelemetry = {};
+
+    // First, initialize all provided device IDs with default standby data
+    deviceIds.forEach((id) => {
+      normalizedTelemetry[id] = transformReading(null);
+    });
+
+    // Then, overwrite with actual 'latest' data if it exists
+    Object.keys(readings).forEach((id) => {
+      if (readings[id]?.latest) {
+        normalizedTelemetry[id] = transformReading(readings[id].latest);
+      }
+    });
+
+    callback(normalizedTelemetry);
+  }, onError);
+};
+
 export default {
   subscribeToLatestReading,
   getHistoricalLogs,
+  subscribeToAllTelemetry,
 };

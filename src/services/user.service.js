@@ -211,3 +211,25 @@ export const updateUserProfile = async (uid, formData) => {
     throw new appError("Server Error: Could not update profile info.", true, "db/update-failed");
   }
 };
+
+/**
+ * Subscribes to a specific user's profile updates.
+ */
+export const subscribeToUserProfile = (uid, callback, onError = null) => {
+  if (!uid) return null;
+  const userRef = ref(db, `users/${uid}`);
+
+  return onValue(
+    userRef,
+    (snapshot) => {
+      if (snapshot.exists()) {
+        callback(snapshot.val());
+      } else {
+        if (onError) onError(new appError("Profile not found.", true, "db/not-found"));
+      }
+    },
+    (err) => {
+      if (onError) onError(err);
+    }
+  );
+};

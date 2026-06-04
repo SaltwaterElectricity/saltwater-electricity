@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-import { ref, onValue } from "firebase/database";
-import { db } from "../firebaseConfig";
-import { appError } from "../utils/appError";
+import { subscribeToUserProfile } from "../services/user.service";
 import { logger } from "../utils/logger";
 
 /**
@@ -16,40 +14,21 @@ export const useProfile = (uid) => {
   useEffect(() => {
     if (!uid) return;
 
-    let isMounted = true;
-    const userRef = ref(db, `users/${uid}`);
-
-    // Real-time listener for zero-downtime updates
-    const unsubscribe = onValue(
-      userRef,
-      (snapshot) => {
-        if (!isMounted) return;
-        if (snapshot.exists()) {
-          setProfile(snapshot.val());
-          setError(null);
-        } else {
-          setError(new appError("Profile not found.", true, "db/not-found"));
-        }
+    const unsubscribe = subscribeToUserProfile(
+      uid,
+      (data) => {
+        setProfile(data);
+        setError(null);
         setLoading(false);
       },
       (err) => {
-        if (!isMounted) return;
         logger.error("Profile fetch error:", err);
-        setError(
-          new appError(
-            "Permission denied or connection lost.",
-            true,
-            err.code || "db/permission-denied"
-          )
-        );
+        setError(err);
         setLoading(false);
       }
     );
 
-    return () => {
-      isMounted = false;
-      unsubscribe();
-    };
+    return () => unsubscribe && unsubscribe();
   }, [uid]);
 
   return { profile, loading, error };

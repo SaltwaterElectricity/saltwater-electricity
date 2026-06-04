@@ -1,6 +1,8 @@
 import { NavbarProfile } from "./NavbarProfile";
 import { cn } from "../utils/cn";
 import { useUI } from "../context/useUI";
+import { useAuth } from "../context/useAuth";
+import { ROLES } from "../constants/roles";
 
 /**
  * NavbarHeader Component
@@ -9,6 +11,12 @@ import { useUI } from "../context/useUI";
  */
 export const NavbarHeader = ({ currentUid }) => {
   const { isSidebarCollapsed } = useUI();
+  const { userRole } = useAuth();
+  const isResident = userRole === ROLES.RESIDENT;
+
+  // For residents, we hide header branding because their sidebar is always open on desktop
+  // and already contains the branding. For admins, we hide it if the sidebar is expanded.
+  const shouldShowBranding = !isResident && isSidebarCollapsed;
 
   return (
     <header className="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-white/40 flex justify-between items-center px-6 py-4 w-full">
@@ -16,7 +24,7 @@ export const NavbarHeader = ({ currentUid }) => {
         <div
           className={cn(
             "flex items-center gap-2.5 transition-all duration-500",
-            isSidebarCollapsed
+            shouldShowBranding
               ? "opacity-100 translate-x-0"
               : "opacity-0 -translate-x-4 pointer-events-none"
           )}

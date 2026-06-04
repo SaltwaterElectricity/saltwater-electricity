@@ -1,4 +1,14 @@
-import { ref, push, serverTimestamp, update, runTransaction } from "firebase/database";
+import { 
+  ref, 
+  push, 
+  serverTimestamp, 
+  update, 
+  runTransaction,
+  onValue,
+  query,
+  limitToLast,
+  orderByChild
+} from "firebase/database";
 import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
 import { getUserClaims } from "./auth.service";
@@ -167,4 +177,27 @@ export const deleteAuditLog = async (logId) => {
     if (error instanceof appError) throw error;
     throw new appError("Failed to purge the security log entry.", true, "audit/delete-failed");
   }
+};
+
+/**
+ * Subscribes to audit logs with a limit.
+ */
+export const subscribeToAuditLogs = (limit, callback, onError = null) => {
+  const logsRef = ref(db, "audit-logs");
+  const logsQuery = query(logsRef, orderByChild("createdAt"), limitToLast(limit));
+
+  return onValue(logsQuery, (snapshot) => {
+    const data = snapshot.val();
+    if (!data) {
+      callback([]);
+    } else {
+      const logList = Object.entries(data).map(([id, val]) => ({
+        id,
+        ...val,
+      }));
+      // Sort descending to show latest first
+      logList.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      callback(logList);
+    }
+  }, onError);
 };
