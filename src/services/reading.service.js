@@ -93,8 +93,8 @@ export const transformReading = (data) => {
   const esp = Number(transformed.esp_ma) || 0;
   const sensor = Number(transformed.sensor_ma) || 0;
 
-  const totalMa = rawTotalMa !== undefined ? Number(rawTotalMa) : (bulb + esp + sensor);
-  
+  const totalMa = rawTotalMa !== undefined ? Number(rawTotalMa) : bulb + esp + sensor;
+
   // Convert total milliamps to Amps
   transformed.current = Number((totalMa / 1000).toFixed(2));
 
@@ -279,15 +279,31 @@ export const getHistoricalLogs = async (deviceId, limit = 50, date = null) => {
     // Ensure we capture the full 24 hours of the selected date in LOCAL time
     const day = new Date(date);
     // Use local time bounds for the query since clientTs uses local machine time (Date.now())
-    const startTs = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0, 0).getTime();
-    const endTs = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 23, 59, 59, 999).getTime();
+    const startTs = new Date(
+      day.getFullYear(),
+      day.getMonth(),
+      day.getDate(),
+      0,
+      0,
+      0,
+      0
+    ).getTime();
+    const endTs = new Date(
+      day.getFullYear(),
+      day.getMonth(),
+      day.getDate(),
+      23,
+      59,
+      59,
+      999
+    ).getTime();
 
-    // Firebase orderByKey() queries always compare strings. 
+    // Firebase orderByKey() queries always compare strings.
     // We convert timestamps to strings to match the keys written in updateBulbState.
     logsRef = query(
-      ref(db, `logs/${deviceId}`), 
-      orderByKey(), 
-      startAt(startTs.toString()), 
+      ref(db, `logs/${deviceId}`),
+      orderByKey(),
+      startAt(startTs.toString()),
       endAt(endTs.toString())
     );
   } else {
@@ -323,24 +339,28 @@ export const getHistoricalLogs = async (deviceId, limit = 50, date = null) => {
 export const subscribeToAllTelemetry = (deviceIds, callback, onError = null) => {
   const telemetryRef = ref(db, "readings");
 
-  return onValue(telemetryRef, (snapshot) => {
-    const readings = snapshot.val() || {};
-    const normalizedTelemetry = {};
+  return onValue(
+    telemetryRef,
+    (snapshot) => {
+      const readings = snapshot.val() || {};
+      const normalizedTelemetry = {};
 
-    // First, initialize all provided device IDs with default standby data
-    deviceIds.forEach((id) => {
-      normalizedTelemetry[id] = transformReading(null);
-    });
+      // First, initialize all provided device IDs with default standby data
+      deviceIds.forEach((id) => {
+        normalizedTelemetry[id] = transformReading(null);
+      });
 
-    // Then, overwrite with actual 'latest' data if it exists
-    Object.keys(readings).forEach((id) => {
-      if (readings[id]?.latest) {
-        normalizedTelemetry[id] = transformReading(readings[id].latest);
-      }
-    });
+      // Then, overwrite with actual 'latest' data if it exists
+      Object.keys(readings).forEach((id) => {
+        if (readings[id]?.latest) {
+          normalizedTelemetry[id] = transformReading(readings[id].latest);
+        }
+      });
 
-    callback(normalizedTelemetry);
-  }, onError);
+      callback(normalizedTelemetry);
+    },
+    onError
+  );
 };
 
 export default {

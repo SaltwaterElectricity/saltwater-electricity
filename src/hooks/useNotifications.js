@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { subscribeToNotifications } from '../services/notification.service';
-import { logger } from '../utils/logger';
+import { useState, useEffect } from "react";
+import { subscribeToNotifications } from "../services/notification.service";
+import { logger } from "../utils/logger";
 
 /**
  * useNotifications Hook
- * 
+ *
  * Streams real-time notifications for a specific user.
- * 
+ *
  * @param {string} userId - The unique identifier of the user (or 'admin' for system-wide alerts).
  * @param {number} limit - Maximum number of recent notifications to retrieve.
  */

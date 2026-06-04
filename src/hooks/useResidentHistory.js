@@ -4,9 +4,9 @@ import logger from "../utils/logger";
 
 /**
  * Hook: useResidentHistory
- * 
+ *
  * Fetches and merges historical logs from multiple devices assigned to a resident.
- * 
+ *
  * @param {Array<string>} deviceIds - List of device IDs
  * @param {number} limit - Records per device
  * @param {string} date - Optional date filter (YYYY-MM-DD)
@@ -25,15 +25,15 @@ export const useResidentHistory = (deviceIds = [], limit = 50, date = null) => {
 
     Promise.resolve().then(() => setLoading(true));
     try {
-      const fetchPromises = deviceIds.map(id => 
-        getHistoricalLogs(id, limit, date).catch(err => {
+      const fetchPromises = deviceIds.map((id) =>
+        getHistoricalLogs(id, limit, date).catch((err) => {
           logger.error(`[ResidentHistory]: Failed for ${id}`, err);
           return [];
         })
       );
 
       const results = await Promise.all(fetchPromises);
-      
+
       // Merge all logs and sort by timestamp descending
       const merged = results.flat().sort((a, b) => {
         const tsA = a.__normalizedTs || a.timestamp;

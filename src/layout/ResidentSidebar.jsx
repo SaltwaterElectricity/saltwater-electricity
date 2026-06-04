@@ -71,7 +71,9 @@ const ResidentNav = memo(({ deviceId, unreadCount, handleLinkClick }) => (
     )}
 
     <div className="pt-8 pb-4">
-      <p className="px-4 text-[11px] font-bold text-white/50 uppercase tracking-[2px]">Operations</p>
+      <p className="px-4 text-[11px] font-bold text-white/50 uppercase tracking-[2px]">
+        Operations
+      </p>
     </div>
 
     <SidebarLink
@@ -124,7 +126,7 @@ export const ResidentSidebar = memo(
           )}
         >
           <ResidentBranding />
-          
+
           <ResidentNav
             deviceId={deviceId}
             unreadCount={unreadCount}

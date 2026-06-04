@@ -1,11 +1,4 @@
-import { 
-  ref, 
-  push, 
-  serverTimestamp,
-  onValue,
-  query,
-  limitToLast
-} from "firebase/database";
+import { ref, push, serverTimestamp, onValue, query, limitToLast } from "firebase/database";
 import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
 import { logger } from "../utils/logger";
@@ -151,16 +144,22 @@ export const subscribeToNotifications = (userId, limit, callback, onError = null
   const notifyRef = ref(db, `notifications/${userId}`);
   const notifyQuery = query(notifyRef, limitToLast(limit));
 
-  return onValue(notifyQuery, (snapshot) => {
-    const data = snapshot.val();
-    if (!data) {
-      callback([]);
-    } else {
-      const list = Object.entries(data).map(([id, val]) => ({
-        id,
-        ...val
-      })).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-      callback(list);
-    }
-  }, onError);
+  return onValue(
+    notifyQuery,
+    (snapshot) => {
+      const data = snapshot.val();
+      if (!data) {
+        callback([]);
+      } else {
+        const list = Object.entries(data)
+          .map(([id, val]) => ({
+            id,
+            ...val,
+          }))
+          .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        callback(list);
+      }
+    },
+    onError
+  );
 };

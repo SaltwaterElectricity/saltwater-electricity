@@ -41,7 +41,9 @@ const DeclineRequestModal = ({ isOpen, onClose, onConfirm, isSubmitting, request
               Request <span className="text-error italic font-black">Denied!</span>
             </h3>
             <div className="flex items-center gap-2 py-1 px-2.5 bg-error-container/20 rounded-full w-fit border border-error/10">
-              <span className="text-[9px] font-bold text-on-surface-variant uppercase tracking-wider">Resident:</span>
+              <span className="text-[9px] font-bold text-on-surface-variant uppercase tracking-wider">
+                Resident:
+              </span>
               <span className="text-[9px] font-black text-on-surface uppercase">
                 {request.residentName}
               </span>
@@ -50,7 +52,10 @@ const DeclineRequestModal = ({ isOpen, onClose, onConfirm, isSubmitting, request
 
           {/* Text Box: Reason for Decline */}
           <div className="space-y-2.5">
-            <label className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant ml-1" htmlFor="decline-reason">
+            <label
+              className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant ml-1"
+              htmlFor="decline-reason"
+            >
               Reason for Decline
             </label>
             <textarea

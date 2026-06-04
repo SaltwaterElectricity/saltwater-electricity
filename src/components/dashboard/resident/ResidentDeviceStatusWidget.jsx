@@ -13,7 +13,7 @@ const ResidentDeviceStatusWidget = memo(({ userDevices = [], telemetry = {}, onV
           DEVICE STATUS
         </h5>
         <div className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
-          {userDevices.length} {userDevices.length === 1 ? 'Node' : 'Nodes'}
+          {userDevices.length} {userDevices.length === 1 ? "Node" : "Nodes"}
         </div>
       </div>
 
@@ -23,13 +23,15 @@ const ResidentDeviceStatusWidget = memo(({ userDevices = [], telemetry = {}, onV
           const isActive = reading.voltage > 0;
 
           return (
-            <div 
+            <div
               key={device.device_id}
               className="p-4 rounded-2xl border border-outline-variant/10 bg-surface-bright/50 hover:bg-white transition-colors group/item"
             >
               <div className="flex justify-between items-start mb-3">
                 <div className="flex items-center gap-2">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isActive ? 'bg-green-100 text-green-600' : 'bg-slate-100 text-slate-400'}`}>
+                  <div
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center ${isActive ? "bg-green-100 text-green-600" : "bg-slate-100 text-slate-400"}`}
+                  >
                     <Cpu size={16} />
                   </div>
                   <div>
@@ -41,9 +43,13 @@ const ResidentDeviceStatusWidget = memo(({ userDevices = [], telemetry = {}, onV
                     </p>
                   </div>
                 </div>
-                <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${isActive ? 'bg-green-50 text-green-600' : 'bg-slate-50 text-slate-400'}`}>
-                  <span className={`w-1 h-1 rounded-full ${isActive ? 'bg-green-500' : 'bg-slate-400'}`} />
-                  {isActive ? 'Active' : 'Standby'}
+                <div
+                  className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${isActive ? "bg-green-50 text-green-600" : "bg-slate-50 text-slate-400"}`}
+                >
+                  <span
+                    className={`w-1 h-1 rounded-full ${isActive ? "bg-green-500" : "bg-slate-400"}`}
+                  />
+                  {isActive ? "Active" : "Standby"}
                 </div>
               </div>
 
@@ -66,7 +72,7 @@ const ResidentDeviceStatusWidget = memo(({ userDevices = [], telemetry = {}, onV
         })}
       </div>
 
-      <button 
+      <button
         onClick={onViewAll}
         className="w-full mt-6 py-3.5 primary-gradient rounded-xl text-label-md font-bold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:brightness-110 flex items-center justify-center gap-2"
       >

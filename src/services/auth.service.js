@@ -421,7 +421,7 @@ export const recordFailedLoginAttempt = async (trackingId) => {
     await update(attemptsRef, {
       count: newCount,
       lockoutUntil: newLockoutUntil,
-      lastAttemptAt: now
+      lastAttemptAt: now,
     });
   } catch (error) {
     logger.error("[Auth Service] Failed to record attempt:", error);

@@ -40,12 +40,14 @@ const AdminDashboard = () => {
   const stats = useMemo(() => {
     const total = devices.length;
     let onlineCount = 0;
-    let sumV = 0, sumS = 0, sumC = 0;
+    let sumV = 0,
+      sumS = 0,
+      sumC = 0;
 
     devices.forEach((d) => {
       const tel = telemetry[d.device_id];
       const isOnline = tel && tel.timestamp && now - tel.timestamp < onlineThreshold;
-      
+
       if (isOnline) {
         onlineCount++;
         sumV += tel.voltage || 0;
@@ -148,9 +150,7 @@ const AdminDashboard = () => {
                 .map((req) => (
                   <div key={req.id} className="border border-outline-variant/30 rounded-xl p-4">
                     <div className="text-center mb-4">
-                      <p className="text-base font-bold text-on-surface">
-                        {req.deviceName}
-                      </p>
+                      <p className="text-base font-bold text-on-surface">{req.deviceName}</p>
                       <p className="text-[11px] text-outline mt-1 font-medium uppercase tracking-widest">
                         {new Date(req.createdAt).toLocaleDateString()} •{" "}
                         {new Date(req.createdAt).toLocaleTimeString([], {
@@ -160,13 +160,13 @@ const AdminDashboard = () => {
                       </p>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
-                      <button 
+                      <button
                         onClick={() => navigate(ROUTES.ADMIN_REQUEST_MANAGEMENT)}
                         className="py-2.5 px-4 text-primary font-bold text-[11px] border border-primary/20 rounded-lg hover:bg-primary/5 transition-all"
                       >
                         View Details
                       </button>
-                      <button 
+                      <button
                         onClick={() => navigate(ROUTES.ADMIN_REQUEST_MANAGEMENT)}
                         className="py-2.5 px-4 bg-primary text-white font-bold text-[11px] rounded-lg shadow-sm hover:brightness-110 transition-all"
                       >
@@ -182,7 +182,7 @@ const AdminDashboard = () => {
               )}
             </div>
             <div className="mt-6">
-              <button 
+              <button
                 onClick={() => navigate(ROUTES.ADMIN_REQUEST_MANAGEMENT)}
                 className="w-full text-primary font-bold text-xs flex items-center justify-center gap-2 py-3 border border-primary/10 bg-primary/5 rounded-lg hover:bg-primary/10 transition-all"
               >
@@ -196,9 +196,9 @@ const AdminDashboard = () => {
         {/* Right Column: Feature Data & Table */}
         <div className="lg:col-span-8 space-y-6">
           <DeviceFeatureBarChart data={deviceFeatureData} />
-          <DeviceUsersTable 
-            users={residents?.filter(r => r.deviceId).slice(0, 3) || []} 
-            loading={residentsLoading} 
+          <DeviceUsersTable
+            users={residents?.filter((r) => r.deviceId).slice(0, 3) || []}
+            loading={residentsLoading}
           />
         </div>
       </div>

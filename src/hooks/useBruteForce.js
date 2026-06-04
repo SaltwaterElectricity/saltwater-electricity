@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { 
-  subscribeToLoginAttempts, 
-  recordFailedLoginAttempt, 
-  resetLoginAttempts 
+import {
+  subscribeToLoginAttempts,
+  recordFailedLoginAttempt,
+  resetLoginAttempts,
 } from "../services/auth.service";
 
 /**
@@ -18,7 +18,7 @@ export const useBruteForce = (trackingId) => {
   const formatTime = useCallback((seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   }, []);
 
   const formattedTime = useMemo(() => formatTime(secondsRemaining), [secondsRemaining, formatTime]);
@@ -47,7 +47,7 @@ export const useBruteForce = (trackingId) => {
         setAttempts(data.count || 0);
         const until = data.lockoutUntil || 0;
         setLockoutUntil(until);
-        
+
         const diff = Math.max(0, Math.floor((until - now) / 1000));
         setSecondsRemaining(diff);
       } else {
@@ -63,7 +63,7 @@ export const useBruteForce = (trackingId) => {
   // 3. Lockout Timer & Firebase Auto-Reset Logic
   useEffect(() => {
     let timer;
-    
+
     if (lockoutUntil > Date.now()) {
       timer = setInterval(async () => {
         const now = Date.now();
@@ -94,5 +94,11 @@ export const useBruteForce = (trackingId) => {
     await recordFailedLoginAttempt(trackingId);
   }, [trackingId]);
 
-  return { attempts, isLocked, secondsRemaining, formattedTime, recordFailedAttempt: recordAttempt };
+  return {
+    attempts,
+    isLocked,
+    secondsRemaining,
+    formattedTime,
+    recordFailedAttempt: recordAttempt,
+  };
 };

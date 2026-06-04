@@ -36,7 +36,7 @@ export const useDevices = (onlyAvailable = false) => {
   // 2. Subscribe to Readings
   useEffect(() => {
     const unsubscribe = subscribeToAllTelemetry(
-      devices.map(d => d.device_id),
+      devices.map((d) => d.device_id),
       (normalizedTelemetry) => {
         setTelemetry(normalizedTelemetry);
       },

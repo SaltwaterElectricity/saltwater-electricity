@@ -27,16 +27,8 @@ const ComposedDeviceChart = ({ data = [] }) => {
       </div>
 
       <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart
-          data={data}
-          margin={{ top: 10, right: 10, left: 20, bottom: 20 }}
-          barGap={0}
-        >
-          <CartesianGrid
-            strokeDasharray="3 3"
-            vertical={false}
-            stroke="#e0e2e7"
-          />
+        <ComposedChart data={data} margin={{ top: 10, right: 10, left: 20, bottom: 20 }} barGap={0}>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e0e2e7" />
           <XAxis
             dataKey="timeLabel"
             axisLine={false}
@@ -46,7 +38,7 @@ const ComposedDeviceChart = ({ data = [] }) => {
           />
           {/* Hide internal YAxis to use custom labels */}
           <YAxis hide domain={[0, 100]} />
-          
+
           <Tooltip
             contentStyle={{
               backgroundColor: "#181c20",

@@ -19,14 +19,7 @@ import { ModalBackdrop, DeclineRequestModal } from "../../modal";
  * Footer updated: Cancel button removed, Approve changed to green.
  */
 const ProcessRequestModal = memo(
-  ({
-    isOpen,
-    onClose,
-    request,
-    setModalType,
-    isSubmitting,
-    onSubmit,
-  }) => {
+  ({ isOpen, onClose, request, setModalType, isSubmitting, onSubmit }) => {
     const [showDeclineModal, setShowDeclineModal] = useState(false);
 
     if (!isOpen || !request) return null;
@@ -111,9 +104,7 @@ const ProcessRequestModal = memo(
                     <h3 className="font-bold text-base leading-tight text-black">
                       {request.residentName}
                     </h3>
-                    <p className="text-[#75849a] text-xs">
-                      {request.residentEmail}
-                    </p>
+                    <p className="text-[#75849a] text-xs">{request.residentEmail}</p>
                   </div>
                 </div>
                 {/* Status Badge */}

@@ -28,8 +28,12 @@ const SystemOverviewCard = memo(({ healthScore, totalDevices, activeDevices = to
         <p className="text-body-md font-extrabold text-primary">24%</p>
       </div>
       <div className="text-center">
-        <p className="text-[10px] text-on-surface-variant uppercase font-bold mb-1 tracking-tight">Active</p>
-        <p className="text-body-md font-extrabold text-on-surface">{activeDevices}/{totalDevices}</p>
+        <p className="text-[10px] text-on-surface-variant uppercase font-bold mb-1 tracking-tight">
+          Active
+        </p>
+        <p className="text-body-md font-extrabold text-on-surface">
+          {activeDevices}/{totalDevices}
+        </p>
       </div>
     </div>
   </div>

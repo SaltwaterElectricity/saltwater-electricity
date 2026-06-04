@@ -2,12 +2,12 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Router } from "lucide-react";
 import { useAuth } from "../../context/useAuth";
-import { 
-  useDevices, 
-  useResidentHistory, 
-  useNotifications, 
+import {
+  useDevices,
+  useResidentHistory,
+  useNotifications,
   useDeviceRequests,
-  useAssignments
+  useAssignments,
 } from "../../hooks";
 import {
   WelcomeSection,
@@ -41,12 +41,12 @@ const ResidentDashboard = () => {
   // We check both the primary 'device_assignments' node and the legacy 'assigned_user_id' field
   const userDevices = useMemo(() => {
     if (!user || !devices) return [];
-    
+
     const userId = String(user.uid || user.id || "");
     if (!userId) return [];
 
     // 1. Identify IDs from primary assignment node
-    const assignedIds = assignments 
+    const assignedIds = assignments
       ? Object.entries(assignments)
           .filter(([_, data]) => String(data.userId) === userId)
           .map(([id]) => id)
@@ -62,7 +62,7 @@ const ResidentDashboard = () => {
 
   // Primary device for status widgets (usually the first one)
   const primaryDevice = userDevices.length > 0 ? userDevices[0] : null;
-  const deviceIds = useMemo(() => userDevices.map(d => d.device_id), [userDevices]);
+  const deviceIds = useMemo(() => userDevices.map((d) => d.device_id), [userDevices]);
 
   // Fetch Logs (Merged from all assigned devices) and Notifications
   const { logs, loading: logsLoading } = useResidentHistory(deviceIds, 50, selectedDate);
@@ -96,7 +96,13 @@ const ResidentDashboard = () => {
   const performanceChartData = useMemo(() => {
     // Combine logs with the latest real-time telemetry point
     const allLogs = [...(logs || [])];
-    if (latestLog && !allLogs.find(l => (l.__normalizedTs || l.timestamp) === (latestLog.__normalizedTs || latestLog.timestamp))) {
+    if (
+      latestLog &&
+      !allLogs.find(
+        (l) =>
+          (l.__normalizedTs || l.timestamp) === (latestLog.__normalizedTs || latestLog.timestamp)
+      )
+    ) {
       allLogs.push(latestLog);
     }
 
@@ -113,14 +119,16 @@ const ResidentDashboard = () => {
     allLogs.forEach((log) => {
       const ts = log.__normalizedTs || log.timestamp;
       const bucketTs = Math.floor(ts / BUCKET_SIZE) * BUCKET_SIZE;
-      
+
       if (!buckets.has(bucketTs)) {
-        buckets.set(bucketTs, { 
-          v: [], c: [], s: [], 
-          timestamp: bucketTs 
+        buckets.set(bucketTs, {
+          v: [],
+          c: [],
+          s: [],
+          timestamp: bucketTs,
         });
       }
-      
+
       const b = buckets.get(bucketTs);
       // Ensure zero values are accepted (not ignored)
       const v = typeof log.voltage === "number" ? log.voltage : parseFloat(log.voltage);
@@ -197,7 +205,7 @@ const ResidentDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
-        <PerformanceAnalyticsCard 
+        <PerformanceAnalyticsCard
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
           logsLoading={logsLoading}
@@ -206,7 +214,7 @@ const ResidentDashboard = () => {
           deviceIds={deviceIds}
         />
 
-        <SystemOverviewCard 
+        <SystemOverviewCard
           healthScore={healthScore}
           totalDevices={totalDevicesCount}
           activeDevices={totalDevicesCount}
@@ -214,7 +222,7 @@ const ResidentDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-        <ResidentDeviceStatusWidget 
+        <ResidentDeviceStatusWidget
           userDevices={userDevices}
           telemetry={telemetry}
           onViewAll={() => navigate(ROUTES.SMART_AQUA_MONITOR)}

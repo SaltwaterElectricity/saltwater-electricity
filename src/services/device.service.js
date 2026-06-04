@@ -1,13 +1,13 @@
-import { 
-  ref, 
-  update, 
-  get, 
-  serverTimestamp, 
-  onValue, 
-  query, 
-  orderByChild, 
-  equalTo, 
-  limitToFirst 
+import {
+  ref,
+  update,
+  get,
+  serverTimestamp,
+  onValue,
+  query,
+  orderByChild,
+  equalTo,
+  limitToFirst,
 } from "firebase/database";
 import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
@@ -154,9 +154,13 @@ export const deprovisionDevice = async (deviceId) => {
  */
 export const subscribeToAssignments = (callback, onError = null) => {
   const assignmentsRef = ref(db, "device_assignments");
-  return onValue(assignmentsRef, (snapshot) => {
-    callback(snapshot.val() || {});
-  }, onError);
+  return onValue(
+    assignmentsRef,
+    (snapshot) => {
+      callback(snapshot.val() || {});
+    },
+    onError
+  );
 };
 
 /**
@@ -168,18 +172,22 @@ export const subscribeToDevices = (onlyAvailable, callback, onError = null) => {
     ? query(devicesRef, orderByChild("availability"), equalTo("available"))
     : devicesRef;
 
-  return onValue(finalQuery, (snapshot) => {
-    const data = snapshot.val();
-    if (!data) {
-      callback([]);
-    } else {
-      const deviceList = Object.entries(data).map(([id, val]) => ({
-        device_id: id,
-        ...val,
-      }));
-      callback(deviceList);
-    }
-  }, onError);
+  return onValue(
+    finalQuery,
+    (snapshot) => {
+      const data = snapshot.val();
+      if (!data) {
+        callback([]);
+      } else {
+        const deviceList = Object.entries(data).map(([id, val]) => ({
+          device_id: id,
+          ...val,
+        }));
+        callback(deviceList);
+      }
+    },
+    onError
+  );
 };
 
 /**
@@ -191,33 +199,45 @@ export const subscribeToUserDevice = (userId, isAdmin, callback, onError = null)
 
   if (isAdmin) {
     const q = query(devicesRef, limitToFirst(1));
-    return onValue(q, (snapshot) => {
-      if (snapshot.exists()) {
-        callback(Object.keys(snapshot.val())[0]);
-      } else {
-        callback(null);
-      }
-    }, onError);
+    return onValue(
+      q,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          callback(Object.keys(snapshot.val())[0]);
+        } else {
+          callback(null);
+        }
+      },
+      onError
+    );
   } else if (userId) {
     const q = query(devicesRef, orderByChild("assigned_user_id"), equalTo(userId));
-    return onValue(q, (snapshot) => {
-      if (snapshot.exists()) {
-        callback(Object.keys(snapshot.val())[0]);
-      } else {
-        // SECONDARY ATTEMPT: Manual scan of device_assignments
-        onValue(assignmentsRef, (assignSnapshot) => {
-          const assignments = assignSnapshot.val();
-          let foundId = null;
-          if (assignments) {
-            const myDevice = Object.entries(assignments).find(
-              ([_, data]) => data.userId === userId
-            );
-            if (myDevice) foundId = myDevice[0];
-          }
-          callback(foundId);
-        }, { onlyOnce: true });
-      }
-    }, onError);
+    return onValue(
+      q,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          callback(Object.keys(snapshot.val())[0]);
+        } else {
+          // SECONDARY ATTEMPT: Manual scan of device_assignments
+          onValue(
+            assignmentsRef,
+            (assignSnapshot) => {
+              const assignments = assignSnapshot.val();
+              let foundId = null;
+              if (assignments) {
+                const myDevice = Object.entries(assignments).find(
+                  ([_, data]) => data.userId === userId
+                );
+                if (myDevice) foundId = myDevice[0];
+              }
+              callback(foundId);
+            },
+            { onlyOnce: true }
+          );
+        }
+      },
+      onError
+    );
   }
   return () => {};
 };
@@ -229,34 +249,43 @@ export const subscribeToAssignmentDetails = (deviceId, callback, onError = null)
   if (!deviceId) return () => {};
   const assignmentRef = ref(db, `device_assignments/${deviceId}`);
 
-  return onValue(assignmentRef, (snapshot) => {
-    const assignmentData = snapshot.val();
-    if (assignmentData?.userId) {
-      const userRef = ref(db, `users/${assignmentData.userId}`);
-      onValue(userRef, (userSnapshot) => {
-        const userData = userSnapshot.val();
-        if (userData) {
-          callback({
-            fullName: `${userData.firstName || ""} ${userData.lastName || ""}`.trim() || "Unnamed User",
-            address: userData.address || "No Address Provided",
-            assignedAt: assignmentData.assignedAt,
-          });
-        } else {
-          callback({
-            fullName: "User Not Found",
-            address: "N/A",
-            assignedAt: null,
-          });
-        }
-      }, { onlyOnce: true });
-    } else {
-      callback({
-        fullName: "Not Assigned",
-        address: "N/A",
-        assignedAt: null,
-      });
-    }
-  }, onError);
+  return onValue(
+    assignmentRef,
+    (snapshot) => {
+      const assignmentData = snapshot.val();
+      if (assignmentData?.userId) {
+        const userRef = ref(db, `users/${assignmentData.userId}`);
+        onValue(
+          userRef,
+          (userSnapshot) => {
+            const userData = userSnapshot.val();
+            if (userData) {
+              callback({
+                fullName:
+                  `${userData.firstName || ""} ${userData.lastName || ""}`.trim() || "Unnamed User",
+                address: userData.address || "No Address Provided",
+                assignedAt: assignmentData.assignedAt,
+              });
+            } else {
+              callback({
+                fullName: "User Not Found",
+                address: "N/A",
+                assignedAt: null,
+              });
+            }
+          },
+          { onlyOnce: true }
+        );
+      } else {
+        callback({
+          fullName: "Not Assigned",
+          address: "N/A",
+          assignedAt: null,
+        });
+      }
+    },
+    onError
+  );
 };
 
 const logInternalError = (err) => {

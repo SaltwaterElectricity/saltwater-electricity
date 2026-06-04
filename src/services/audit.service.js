@@ -1,13 +1,13 @@
-import { 
-  ref, 
-  push, 
-  serverTimestamp, 
-  update, 
+import {
+  ref,
+  push,
+  serverTimestamp,
+  update,
   runTransaction,
   onValue,
   query,
   limitToLast,
-  orderByChild
+  orderByChild,
 } from "firebase/database";
 import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
@@ -186,18 +186,22 @@ export const subscribeToAuditLogs = (limit, callback, onError = null) => {
   const logsRef = ref(db, "audit-logs");
   const logsQuery = query(logsRef, orderByChild("createdAt"), limitToLast(limit));
 
-  return onValue(logsQuery, (snapshot) => {
-    const data = snapshot.val();
-    if (!data) {
-      callback([]);
-    } else {
-      const logList = Object.entries(data).map(([id, val]) => ({
-        id,
-        ...val,
-      }));
-      // Sort descending to show latest first
-      logList.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-      callback(logList);
-    }
-  }, onError);
+  return onValue(
+    logsQuery,
+    (snapshot) => {
+      const data = snapshot.val();
+      if (!data) {
+        callback([]);
+      } else {
+        const logList = Object.entries(data).map(([id, val]) => ({
+          id,
+          ...val,
+        }));
+        // Sort descending to show latest first
+        logList.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        callback(logList);
+      }
+    },
+    onError
+  );
 };
