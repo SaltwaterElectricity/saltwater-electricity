@@ -51,7 +51,9 @@ const DeviceCard = ({ device, isSelected, onSelect, formatDate }) => (
         <span className="text-[9px] font-bold text-green-600 uppercase">Available</span>
       </div>
       <span className="text-[9px] text-slate-400 text-right leading-tight">
-        Created On:<br />{formatDate ? formatDate(device.createdAt) : "May 20, 2023"}
+        Created On:
+        <br />
+        {formatDate ? formatDate(device.createdAt) : "May 20, 2023"}
       </span>
     </div>
 

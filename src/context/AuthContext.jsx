@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
         setUser(data || null);
 
         // ONLY reset expiration if we are actively sync-ing a valid user
-        // and it wasn't a forced timeout. 
+        // and it wasn't a forced timeout.
         // We'll let the user acknowledge the timeout modal.
       } else {
         setCurrentUser(null);

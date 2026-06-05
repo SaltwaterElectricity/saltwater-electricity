@@ -21,7 +21,9 @@ const GlobalSearch = ({
         )}
       >
         {isSearching ? (
-          <Loader2 className={cn("text-blue-500 animate-spin", isMinimal ? "w-3.5 h-3.5" : "w-5 h-5")} />
+          <Loader2
+            className={cn("text-blue-500 animate-spin", isMinimal ? "w-3.5 h-3.5" : "w-5 h-5")}
+          />
         ) : (
           <Search
             className={cn(
@@ -30,8 +32,8 @@ const GlobalSearch = ({
               variant === "glass"
                 ? "text-gray-400 group-focus-within:text-blue-500"
                 : variant === "minimal"
-                ? "text-slate-400 group-focus-within:text-blue-500"
-                : "text-outline group-focus-within:text-primary"
+                  ? "text-slate-400 group-focus-within:text-blue-500"
+                  : "text-outline group-focus-within:text-primary"
             )}
           />
         )}

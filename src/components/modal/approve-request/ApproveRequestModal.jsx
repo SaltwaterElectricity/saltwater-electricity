@@ -59,7 +59,7 @@ const ApproveRequestModal = ({ isOpen, onClose, request, onConfirm, isSubmitting
   // Filter and Sort devices
   const processedDevices = useMemo(() => {
     if (!availableDevices) return [];
-    
+
     let result = availableDevices.filter(
       (d) =>
         d.device_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -126,10 +126,12 @@ const ApproveRequestModal = ({ isOpen, onClose, request, onConfirm, isSubmitting
               />
               <div className="mt-0.5">
                 <h1 className="text-xl font-bold text-slate-900 leading-tight">
-                  <span className="text-slate-900">Assign</span> <span className="text-blue-600">Device</span>
+                  <span className="text-slate-900">Assign</span>{" "}
+                  <span className="text-blue-600">Device</span>
                 </h1>
                 <p className="text-slate-500 text-[10px] font-medium mt-1 leading-tight max-w-[500px]">
-                  Assign an available monitoring device to a household user for real-time voltage and salinity monitoring.
+                  Assign an available monitoring device to a household user for real-time voltage
+                  and salinity monitoring.
                 </p>
               </div>
             </div>
@@ -186,7 +188,7 @@ const ApproveRequestModal = ({ isOpen, onClose, request, onConfirm, isSubmitting
                   variant="minimal"
                   className="w-full md:w-56"
                 />
-                
+
                 {/* SORT DROPDOWN */}
                 <div className="relative" ref={sortRef}>
                   <button
@@ -194,31 +196,42 @@ const ApproveRequestModal = ({ isOpen, onClose, request, onConfirm, isSubmitting
                     title="Sort Inventory"
                     className={cn(
                       "p-1.5 border rounded-lg transition-all text-slate-400 shrink-0 h-9 flex items-center justify-center aspect-square hover:bg-slate-50",
-                      showSortOptions ? "bg-blue-50 border-blue-200 text-blue-600" : "border-slate-200"
+                      showSortOptions
+                        ? "bg-blue-50 border-blue-200 text-blue-600"
+                        : "border-slate-200"
                     )}
                   >
                     <Filter size={16} />
                   </button>
-                  
+
                   {showSortOptions && (
                     <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-100 rounded-xl shadow-xl z-50 py-1.5 animate-in fade-in slide-in-from-top-2 duration-200">
                       <p className="px-3 py-1.5 text-[9px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 mb-1">
                         Sort Inventory
                       </p>
-                      <SortOption 
-                        active={sortBy === "newest"} 
-                        onClick={() => { setSortBy("newest"); setShowSortOptions(false); }} 
-                        label="Newest Devices" 
+                      <SortOption
+                        active={sortBy === "newest"}
+                        onClick={() => {
+                          setSortBy("newest");
+                          setShowSortOptions(false);
+                        }}
+                        label="Newest Devices"
                       />
-                      <SortOption 
-                        active={sortBy === "oldest"} 
-                        onClick={() => { setSortBy("oldest"); setShowSortOptions(false); }} 
-                        label="Oldest Devices" 
+                      <SortOption
+                        active={sortBy === "oldest"}
+                        onClick={() => {
+                          setSortBy("oldest");
+                          setShowSortOptions(false);
+                        }}
+                        label="Oldest Devices"
                       />
-                      <SortOption 
-                        active={sortBy === "id"} 
-                        onClick={() => { setSortBy("id"); setShowSortOptions(false); }} 
-                        label="Sort by Device ID" 
+                      <SortOption
+                        active={sortBy === "id"}
+                        onClick={() => {
+                          setSortBy("id");
+                          setShowSortOptions(false);
+                        }}
+                        label="Sort by Device ID"
                       />
                     </div>
                   )}
@@ -267,7 +280,11 @@ const ApproveRequestModal = ({ isOpen, onClose, request, onConfirm, isSubmitting
                 value={selectedDevice?.device_id || "None Selected"}
                 highlight={!!selectedDevice}
               />
-              <SummaryItem label="Location" value={request.residentLocation} className="col-span-1" />
+              <SummaryItem
+                label="Location"
+                value={request.residentLocation}
+                className="col-span-1"
+              />
               <SummaryItem label="Assignment Date" value={formatDate(currentTime)} />
               <div className="flex flex-col gap-0.5 items-end">
                 <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">
@@ -283,7 +300,8 @@ const ApproveRequestModal = ({ isOpen, onClose, request, onConfirm, isSubmitting
                 >
                   {selectedDevice ? (
                     <>
-                      READY FOR LINK <CheckCircle2 size={10} fill="currentColor" className="text-white" />
+                      READY FOR LINK{" "}
+                      <CheckCircle2 size={10} fill="currentColor" className="text-white" />
                     </>
                   ) : (
                     "AWAITING SELECTION"
@@ -345,4 +363,3 @@ const SortOption = ({ active, onClick, label }) => (
 );
 
 export default memo(ApproveRequestModal);
-

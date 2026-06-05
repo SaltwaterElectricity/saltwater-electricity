@@ -1,11 +1,11 @@
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../../context/useAuth';
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
 
-import { ROLES } from '../../constants/roles';
+import { ROLES } from "../../constants/roles";
 
 // Import mula sa iyong subfolders
-import AdminDashboard from '../admin/AdminDashboard';
-import ResidentDashboard from '../user/ResidentDashboard';
+import AdminDashboard from "../admin/AdminDashboard";
+import ResidentDashboard from "../user/ResidentDashboard";
 
 const DashboardController = () => {
   const { currentUser, userRole, isSessionExpired } = useAuth();
@@ -22,6 +22,5 @@ const DashboardController = () => {
 
   return dashboards[userRole] || <ResidentDashboard />;
 };
-
 
 export default DashboardController;
