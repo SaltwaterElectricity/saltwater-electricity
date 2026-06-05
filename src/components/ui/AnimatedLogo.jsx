@@ -9,10 +9,10 @@ import { cn } from "../../utils/cn";
 
 // 🕒 ANIMATION CONFIGURATION
 const ANIMATION_TIMINGS = {
-  SHINE_DELAY: 1200, // Initial entrance delay
-  LOOP_DELAY: 300, // Gap between shine effect and floating loop
-  ZOOM_DELAY: 6000, // Duration of the looping animation
-  EXIT_DURATION: 1200, // Transition time to next state
+  SHINE_DELAY: 800, // Initial entrance delay
+  LOOP_DELAY: 200, // Gap between shine effect and floating loop
+  ZOOM_DELAY: 1500, // Duration of the looping animation
+  EXIT_DURATION: 800, // Transition time to next state
 };
 
 const AnimatedLogo = ({ onComplete }) => {
