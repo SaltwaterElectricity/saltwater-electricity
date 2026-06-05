@@ -8,9 +8,9 @@ import AdminDashboard from '../admin/AdminDashboard';
 import ResidentDashboard from '../user/ResidentDashboard';
 
 const DashboardController = () => {
-  const { currentUser, userRole } = useAuth();
+  const { currentUser, userRole, isSessionExpired } = useAuth();
 
-  if (!currentUser) return <Navigate to="/login" replace />;
+  if (!currentUser && !isSessionExpired) return <Navigate to="/login" replace />;
 
   // Mas madaling basahin kung maraming roles
   const dashboards = {

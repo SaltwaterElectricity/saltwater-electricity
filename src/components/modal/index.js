@@ -1,5 +1,6 @@
 export { default as AccessGrantedModal } from "./AccessGrantedModal.jsx";
 export { default as AccountProvisioningModal } from "./AccountProvisioningModal.jsx";
+export { default as ApproveRequestModal } from "./approve-request";
 export { default as AssignDeviceModal } from "./AssignDeviceModal.jsx";
 export { default as CancelRequestModal } from "./CancelRequestModal.jsx";
 export { default as DeclineRequestModal } from "./DeclineRequestModal.jsx";

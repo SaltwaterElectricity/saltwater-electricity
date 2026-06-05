@@ -11,7 +11,7 @@ import NotFound from "../pages/NotFound"; // ENUMERATION PREVENTION: Use NotFoun
  * this component returns <NotFound /> to hide the existence of private routes.
  */
 const PrivateRoute = ({ requiredRole, children }) => {
-  const { currentUser, userRole, mustChangePassword, loading } = useAuth();
+  const { currentUser, userRole, mustChangePassword, loading, isSessionExpired } = useAuth();
   const location = useLocation();
 
   // 1. LOADING STATE
@@ -27,7 +27,7 @@ const PrivateRoute = ({ requiredRole, children }) => {
   // If not logged in OR role check fails, return <NotFound />
   // This prevents unprivileged users or scanners from discovering valid paths.
 
-  if (!currentUser) {
+  if (!currentUser && !isSessionExpired) {
     // Redirect to login if session has expired or user is unauthenticated
     return <Navigate to="/login" state={{ from: location }} replace />;
   }

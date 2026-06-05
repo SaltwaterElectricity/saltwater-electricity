@@ -25,7 +25,10 @@ export const AuthProvider = ({ children }) => {
         const data = await getFullUserData(firebaseUser.uid, firebaseUser, forceRefresh);
         setCurrentUser(firebaseUser);
         setUser(data || null);
-        setIsSessionExpired(false); // Reset on active session
+
+        // ONLY reset expiration if we are actively sync-ing a valid user
+        // and it wasn't a forced timeout. 
+        // We'll let the user acknowledge the timeout modal.
       } else {
         setCurrentUser(null);
         setUser(null);
@@ -51,6 +54,10 @@ export const AuthProvider = ({ children }) => {
   // 2. Auth State Persistence Subscription
   useEffect(() => {
     const unsubscribeAuth = subscribeToAuthChanges((firebaseUser) => {
+      // If user logs in (transition from null to user), clear expiration flag
+      if (firebaseUser) {
+        setIsSessionExpired(false);
+      }
       syncUserContext(firebaseUser);
     });
     return () => unsubscribeAuth();
@@ -58,7 +65,7 @@ export const AuthProvider = ({ children }) => {
 
   // 3. Real-time DB Monitoring (Scoped to UID to avoid loops)
   useEffect(() => {
-    if (!currentUser?.uid) {
+    if (!currentUser?.uid || isSessionExpired) {
       if (listeners.current.role) listeners.current.role();
       if (listeners.current.account) listeners.current.account();
       listeners.current = { role: null, account: null };
@@ -87,7 +94,7 @@ export const AuthProvider = ({ children }) => {
       if (listeners.current.role) listeners.current.role();
       if (listeners.current.account) listeners.current.account();
     };
-  }, [currentUser, forceTokenRefresh, syncUserContext]);
+  }, [currentUser, forceTokenRefresh, syncUserContext, isSessionExpired]);
 
   // Memoized Helpers for App.jsx and ProtectedRoute
   const value = useMemo(() => {

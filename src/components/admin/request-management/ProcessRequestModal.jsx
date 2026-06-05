@@ -10,7 +10,7 @@ import {
   Clock,
   XCircle,
 } from "lucide-react";
-import { ModalBackdrop, DeclineRequestModal } from "../../modal";
+import { ModalBackdrop, DeclineRequestModal, ApproveRequestModal } from "../../modal";
 
 /**
  * ProcessRequestModal Component
@@ -19,8 +19,9 @@ import { ModalBackdrop, DeclineRequestModal } from "../../modal";
  * Footer updated: Cancel button removed, Approve changed to green.
  */
 const ProcessRequestModal = memo(
-  ({ isOpen, onClose, request, setModalType, isSubmitting, onSubmit }) => {
+  ({ isOpen, onClose, request, isSubmitting, onSubmit }) => {
     const [showDeclineModal, setShowDeclineModal] = useState(false);
+    const [showApproveModal, setShowApproveModal] = useState(false);
 
     if (!isOpen || !request) return null;
 
@@ -47,10 +48,8 @@ const ProcessRequestModal = memo(
     const handleAction = (type) => {
       if (type === "decline") {
         setShowDeclineModal(true);
-      } else {
-        setModalType(type);
-        // We simulate a form submission event since handleProcessRequest expects one
-        onSubmit({ preventDefault: () => {} });
+      } else if (type === "approve") {
+        setShowApproveModal(true);
       }
     };
 
@@ -59,6 +58,13 @@ const ProcessRequestModal = memo(
       setShowDeclineModal(false);
       // Then trigger submission with the type and data directly to avoid stale state
       onSubmit(null, "decline", formData);
+    };
+
+    const handleConfirmApprove = (formData) => {
+      // Close local approve modal first
+      setShowApproveModal(false);
+      // Then trigger submission with the type and data directly to avoid stale state
+      onSubmit(null, "approve", formData);
     };
 
     return (
@@ -234,6 +240,14 @@ const ProcessRequestModal = memo(
           request={request}
           isSubmitting={isSubmitting}
           onConfirm={handleConfirmDecline}
+        />
+
+        <ApproveRequestModal
+          isOpen={showApproveModal}
+          onClose={() => setShowApproveModal(false)}
+          request={request}
+          isSubmitting={isSubmitting}
+          onConfirm={handleConfirmApprove}
         />
       </>
     );

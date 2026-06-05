@@ -12,10 +12,10 @@ import ResidentRealTimeMonitor from "../user/ResidentRealTimeMonitor";
  * Standardizes the entry point for the Real-Time Monitor module.
  */
 const RealTimeMonitor = () => {
-  const { currentUser, userRole, isAdmin, isSuperAdmin } = useAuth();
+  const { currentUser, userRole, isAdmin, isSuperAdmin, isSessionExpired } = useAuth();
 
   // 1. Security Guard: Ensure authenticated access
-  if (!currentUser) {
+  if (!currentUser && !isSessionExpired) {
     return <Navigate to="/login" replace />;
   }
 
