@@ -98,8 +98,11 @@ export const AppRoutes = () => {
         </Route>
       </Route>
 
-      {/* 4. SILENT 404: Catch-all renders NotFound directly */}
-      <Route path="*" element={<NotFound />} />
+      {/* 4. SILENT 404: Catch-all renders NotFound directly if authenticated, otherwise redirects to login */}
+      <Route
+        path="*"
+        element={currentUser ? <NotFound /> : <Navigate to={ROUTES.LOGIN} replace />}
+      />
     </Routes>
   );
 };

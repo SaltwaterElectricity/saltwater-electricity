@@ -44,14 +44,14 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
       await logoutUser();
       sessionStorage.clear();
       setIsLogoutModalOpen(false);
-      navigate("/login", { replace: true });
+      navigate(ROUTES.LOGIN, { replace: true });
     } catch {
-      setToastConfig({ message: "Terminating session... Forcing local wipe.", type: "warning" });
+      setToastConfig({ message: "Terminating session... Forcing secure reset.", type: "warning" });
       setShowToast(true);
       sessionStorage.clear();
       localStorage.clear();
       setTimeout(() => {
-        window.location.href = ROUTES.LOGIN;
+        navigate(ROUTES.LOGIN, { replace: true });
       }, 2000);
     } finally {
       setIsLoggingOut(false);

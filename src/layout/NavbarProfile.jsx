@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, memo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { useProfile } from "../hooks/useProfile";
 import { logoutUser } from "../services/auth.service";
 import { useUI } from "../context/useUI";
@@ -6,8 +7,10 @@ import { useNotification } from "../context/useNotification";
 import { cn } from "../utils/cn";
 import SpinnerIcon from "../components/ui/SpinnerIcon";
 import { ConfirmationModal } from "../components/modal/ConfirmationModal";
+import { ROUTES } from "../constants/routes";
 
 export const NavbarProfile = memo(({ currentUid = "" }) => {
+  const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
   const { profile, loading } = useProfile(currentUid);
@@ -39,13 +42,13 @@ export const NavbarProfile = memo(({ currentUid = "" }) => {
     setIsLoggingOut(true);
     try {
       await logoutUser();
-      window.location.href = "/login";
+      navigate(ROUTES.LOGIN, { replace: true });
     } catch {
       showNotification("Terminating session... Forcing secure reset.", "warning");
       sessionStorage.clear();
       localStorage.clear();
       setTimeout(() => {
-        window.location.href = "/login";
+        navigate(ROUTES.LOGIN, { replace: true });
       }, 2000);
     } finally {
       setIsLoggingOut(false);

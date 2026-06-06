@@ -1,15 +1,18 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Clock, ShieldAlert } from "lucide-react";
 import { logoutUser } from "../../services/auth.service";
 import { useAuth } from "../../context/useAuth";
 import ModalBackdrop from "./ModalBackdrop";
 import { cn } from "../../utils/cn";
+import { ROUTES } from "../../constants/routes";
 
 /**
  * SessionExpiredModal Component
  * Forced interaction modal shown when security timeout is reached.
  */
 const SessionExpiredModal = () => {
+  const navigate = useNavigate();
   const { isSessionExpired, setIsSessionExpired } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -23,10 +26,11 @@ const SessionExpiredModal = () => {
 
       // 2. Clear state and redirect
       setIsSessionExpired(false);
-      window.location.href = "/login";
+      navigate(ROUTES.LOGIN, { replace: true });
     } catch {
       // Fallback for extreme network failure
-      window.location.href = "/login";
+      setIsSessionExpired(false);
+      navigate(ROUTES.LOGIN, { replace: true });
     }
   };
 
