@@ -12,7 +12,8 @@ const AuditLogHeader = () => {
           Audit <span className="text-primary">Logs</span>
         </h2>
         <p className="text-gray-500 text-sm mt-1 max-w-2xl leading-relaxed">
-          Monitor user activities, security events, device actions, and system operations across the platform.
+          Monitor user activities, security events, device actions, and system operations across the
+          platform.
         </p>
       </div>
     </header>

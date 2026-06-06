@@ -7,13 +7,7 @@ import GlobalSearch from "../../ui/GlobalSearch";
  * AuditLogFilters Component
  * Advanced filtering suite including search, date range, and role/activity/severity/status dropdowns.
  */
-const AuditLogFilters = ({
-  searchTerm,
-  setSearchTerm,
-  filters,
-  setFilters,
-  onClearFilters,
-}) => {
+const AuditLogFilters = ({ searchTerm, setSearchTerm, filters, setFilters, onClearFilters }) => {
   const [showDatePicker, setShowSortOptions] = useState(false);
   const dateRef = useRef(null);
 
@@ -56,14 +50,19 @@ const AuditLogFilters = ({
               <Calendar size={16} className="text-slate-500" />
               <span>May 15, 2025 - May 20, 2025</span>
             </div>
-            <ChevronDown size={16} className={cn("text-slate-400 transition-transform", showDatePicker && "rotate-180")} />
+            <ChevronDown
+              size={16}
+              className={cn("text-slate-400 transition-transform", showDatePicker && "rotate-180")}
+            />
           </button>
 
           {showDatePicker && (
             <div className="absolute top-full right-0 mt-3 bg-white border border-gray-200 rounded-2xl shadow-2xl z-50 flex flex-col md:flex-row overflow-hidden min-w-[320px] md:min-w-[700px] animate-in fade-in slide-in-from-top-2">
               {/* Quick Select Sidebar */}
               <div className="w-full md:w-40 border-b md:border-b-0 md:border-r border-gray-100 p-4 space-y-2">
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Quick Select</p>
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">
+                  Quick Select
+                </p>
                 <QuickSelectButton label="Today" />
                 <QuickSelectButton label="Yesterday" />
                 <QuickSelectButton label="Last 7 Days" />
@@ -71,17 +70,27 @@ const AuditLogFilters = ({
                 <QuickSelectButton label="This Month" />
                 <QuickSelectButton label="Custom Range" active />
               </div>
-              
+
               {/* Calendar View Mockup */}
               <div className="flex-1 p-6 relative bg-white">
-                 <div className="flex flex-col sm:flex-row gap-8 mb-4 pb-12">
-                    <MonthMockup month="May 2025" />
-                    <MonthMockup month="June 2025" className="hidden lg:block" />
-                 </div>
-                 <div className="absolute bottom-4 right-6 flex gap-2 pt-4">
-                    <button className="px-4 py-2 text-xs font-bold text-gray-500 hover:bg-gray-50 rounded-lg" onClick={() => setShowSortOptions(false)}>Cancel</button>
-                    <button className="px-4 py-2 text-xs font-bold bg-primary text-white rounded-lg shadow-sm active:scale-95 transition-all" onClick={() => setShowSortOptions(false)}>Apply Range</button>
-                 </div>
+                <div className="flex flex-col sm:flex-row gap-8 mb-4 pb-12">
+                  <MonthMockup month="May 2025" />
+                  <MonthMockup month="June 2025" className="hidden lg:block" />
+                </div>
+                <div className="absolute bottom-4 right-6 flex gap-2 pt-4">
+                  <button
+                    className="px-4 py-2 text-xs font-bold text-gray-500 hover:bg-gray-50 rounded-lg"
+                    onClick={() => setShowSortOptions(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="px-4 py-2 text-xs font-bold bg-primary text-white rounded-lg shadow-sm active:scale-95 transition-all"
+                    onClick={() => setShowSortOptions(false)}
+                  >
+                    Apply Range
+                  </button>
+                </div>
               </div>
             </div>
           )}
@@ -141,10 +150,12 @@ const AuditLogFilters = ({
 };
 
 const QuickSelectButton = ({ label, active }) => (
-  <button className={cn(
-    "w-full text-left text-[11px] font-bold px-2 py-2 rounded-lg transition-all",
-    active ? "bg-blue-50 text-primary" : "text-slate-500 hover:bg-slate-50"
-  )}>
+  <button
+    className={cn(
+      "w-full text-left text-[11px] font-bold px-2 py-2 rounded-lg transition-all",
+      active ? "bg-blue-50 text-primary" : "text-slate-500 hover:bg-slate-50"
+    )}
+  >
     {label}
   </button>
 );
@@ -152,17 +163,24 @@ const QuickSelectButton = ({ label, active }) => (
 const MonthMockup = ({ month, className }) => (
   <div className={cn("min-w-[200px]", className)}>
     <div className="flex items-center justify-between mb-4">
-      <span className="text-[11px] font-black text-slate-700 uppercase tracking-tight">{month}</span>
+      <span className="text-[11px] font-black text-slate-700 uppercase tracking-tight">
+        {month}
+      </span>
     </div>
     <div className="grid grid-cols-7 gap-y-1 text-center text-[9px] font-bold">
-      {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map(d => (
-        <span key={d} className="text-slate-400 py-1">{d}</span>
+      {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
+        <span key={d} className="text-slate-400 py-1">
+          {d}
+        </span>
       ))}
       {Array.from({ length: 31 }, (_, i) => (
-        <span key={i} className={cn(
-          "py-1.5 cursor-pointer rounded-full transition-all hover:bg-blue-50 text-slate-600",
-          i + 1 === 15 && "bg-primary text-white hover:bg-primary shadow-lg shadow-blue-200"
-        )}>
+        <span
+          key={i}
+          className={cn(
+            "py-1.5 cursor-pointer rounded-full transition-all hover:bg-blue-50 text-slate-600",
+            i + 1 === 15 && "bg-primary text-white hover:bg-primary shadow-lg shadow-blue-200"
+          )}
+        >
           {i + 1}
         </span>
       ))}

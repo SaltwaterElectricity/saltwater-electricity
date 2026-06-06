@@ -46,12 +46,7 @@ const AuditLogTable = ({ logs, loading }) => {
                 </td>
               </tr>
             ) : (
-              logs.map((log) => (
-                <AuditLogTableRow 
-                  key={log.id} 
-                  log={log} 
-                />
-              ))
+              logs.map((log) => <AuditLogTableRow key={log.id} log={log} />)
             )}
           </tbody>
         </table>

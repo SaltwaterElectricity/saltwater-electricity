@@ -24,7 +24,12 @@ const DeviceAnalytics = () => {
 
   useEffect(() => {
     if (deviceId) {
-      logActivity("VIEW_READINGS", deviceId, `User viewed analytical readings for Unit ${deviceId}`, { severity: "low" }).catch(() => {});
+      logActivity(
+        "VIEW_READINGS",
+        deviceId,
+        `User viewed analytical readings for Unit ${deviceId}`,
+        { severity: "low" }
+      ).catch(() => {});
     }
   }, [deviceId]);
 

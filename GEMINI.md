@@ -128,13 +128,13 @@ C:\Users\Admin\testcode\
 
 - **Base Unit:** All spacing (padding, margin, gap) MUST be multiples of 8px.
 - **Internal Padding:**
-  - Small Components (Chips/Badges): `8px` (unit * 1).
-  - Standard Cards: `16px` (unit * 2) or `24px` (unit * 3).
-  - Page Containers: `32px` (unit * 4).
+  - Small Components (Chips/Badges): `8px` (unit \* 1).
+  - Standard Cards: `16px` (unit _ 2) or `24px` (unit _ 3).
+  - Page Containers: `32px` (unit \* 4).
 
 ### 🛠️ Page Layout Protocol
 
-- **Redundancy Prevention:** Page components in `src/pages` (specifically those rendered inside `MainLayout.jsx`) MUST NOT apply their own outer padding (`p-`, `md:p-`) or centering margins (`mx-auto`, `max-w-`). 
+- **Redundancy Prevention:** Page components in `src/pages` (specifically those rendered inside `MainLayout.jsx`) MUST NOT apply their own outer padding (`p-`, `md:p-`) or centering margins (`mx-auto`, `max-w-`).
 - **Centralized Spacing:** `MainLayout.jsx` provides standardized spacing via `p-gutter` and `md:p-margin`. Page components should focus exclusively on internal section spacing (e.g., `space-y-8`).
 - **Sidebar Alignment:** To ensure perfect alignment with the sidebar and header, page-level content must remain flush with the container provided by the layout.
 

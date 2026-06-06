@@ -35,37 +35,35 @@ const AuditLogPagination = ({
           >
             <ChevronLeft size={16} />
           </button>
-          
+
           <div className="flex items-center gap-1">
-             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-               const pg = i + 1;
-               return (
-                 <button
-                   key={pg}
-                   onClick={() => onPageChange(pg)}
-                   className={cn(
-                     "w-8 h-8 flex items-center justify-center rounded-lg text-xs font-bold transition-all",
-                     currentPage === pg 
-                      ? "bg-primary text-white" 
-                      : "hover:bg-gray-50 font-medium"
-                   )}
-                 >
-                   {pg}
-                 </button>
-               );
-             })}
-             {totalPages > 5 && <span className="px-2 text-gray-400 font-bold">...</span>}
-             {totalPages > 5 && (
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              const pg = i + 1;
+              return (
                 <button
-                  onClick={() => onPageChange(totalPages)}
+                  key={pg}
+                  onClick={() => onPageChange(pg)}
                   className={cn(
-                    "w-8 h-8 flex items-center justify-center rounded-lg text-xs font-medium hover:bg-gray-50 transition-all",
-                    currentPage === totalPages && "bg-primary text-white font-bold"
+                    "w-8 h-8 flex items-center justify-center rounded-lg text-xs font-bold transition-all",
+                    currentPage === pg ? "bg-primary text-white" : "hover:bg-gray-50 font-medium"
                   )}
                 >
-                  {totalPages}
+                  {pg}
                 </button>
-             )}
+              );
+            })}
+            {totalPages > 5 && <span className="px-2 text-gray-400 font-bold">...</span>}
+            {totalPages > 5 && (
+              <button
+                onClick={() => onPageChange(totalPages)}
+                className={cn(
+                  "w-8 h-8 flex items-center justify-center rounded-lg text-xs font-medium hover:bg-gray-50 transition-all",
+                  currentPage === totalPages && "bg-primary text-white font-bold"
+                )}
+              >
+                {totalPages}
+              </button>
+            )}
           </div>
 
           <button

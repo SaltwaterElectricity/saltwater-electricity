@@ -31,7 +31,12 @@ import { logger } from "../utils/logger";
  * @param {Object} options - Optional parameters: { actorUid, status, severity }
  * @returns {Promise<Object>} - Success confirmation.
  */
-export const logActivity = async (action, targetId, details, { actorUid = null, status = "success", severity = "informational" } = {}) => {
+export const logActivity = async (
+  action,
+  targetId,
+  details,
+  { actorUid = null, status = "success", severity = "informational" } = {}
+) => {
   const currentUser = auth.currentUser;
   const effectiveUid = actorUid || currentUser?.uid;
 
@@ -60,7 +65,7 @@ export const logActivity = async (action, targetId, details, { actorUid = null, 
           firstName = (userData.firstName || "").trim();
           lastName = (userData.lastName || "").trim();
           const fullName = `${firstName} ${lastName}`.trim();
-          adminName = fullName || userData.userName || userData.email?.split('@')[0] || "User";
+          adminName = fullName || userData.userName || userData.email?.split("@")[0] || "User";
         }
 
         if (roleSnap.exists()) {
@@ -144,7 +149,7 @@ export const logSecurityIncident = async (incidentType, identifier, context) => 
       // 1. Audit Log
       await logActivity(`SECURITY_ALERT/${incidentType}`, identifier, details, {
         severity: "critical",
-        status: "blocked"
+        status: "blocked",
       });
 
       // 2. Persistent In-App Notification for Admins (EPP Protocol)
@@ -163,12 +168,10 @@ export const logSecurityIncident = async (incidentType, identifier, context) => 
  * LOGGING HELPER: Records successful user login.
  */
 export const logLoginSuccess = async (email, uid) => {
-  return await logActivity(
-    "USER_LOGIN",
-    uid,
-    `Session established successfully for ${email}.`,
-    { actorUid: uid, severity: "low" }
-  );
+  return await logActivity("USER_LOGIN", uid, `Session established successfully for ${email}.`, {
+    actorUid: uid,
+    severity: "low",
+  });
 };
 
 /**
@@ -188,12 +191,10 @@ export const logLoginFailure = async (email, reason = "Invalid credentials") => 
  */
 export const logLogout = async (email, uid) => {
   if (!email || !uid) return;
-  return await logActivity(
-    "USER_LOGOUT",
-    uid,
-    `Session terminated by user ${email}.`,
-    { actorUid: uid, severity: "low" }
-  );
+  return await logActivity("USER_LOGOUT", uid, `Session terminated by user ${email}.`, {
+    actorUid: uid,
+    severity: "low",
+  });
 };
 
 /**

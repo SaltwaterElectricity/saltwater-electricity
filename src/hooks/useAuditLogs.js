@@ -30,11 +30,13 @@ export const useAuditLogs = (limit = 100) => {
             logList.map(async (log) => {
               // Priority UID: Explicit actorUid, then check targetId as fallback (Target UID for user-centric actions)
               // Firebase UIDs are exactly 28 characters
-              const isLikelyUid = (id) => id && typeof id === 'string' && id.length >= 20;
-              
-              const uid = isLikelyUid(log.actorUid) 
-                ? log.actorUid 
-                : (isLikelyUid(log.targetId) ? log.targetId : null);
+              const isLikelyUid = (id) => id && typeof id === "string" && id.length >= 20;
+
+              const uid = isLikelyUid(log.actorUid)
+                ? log.actorUid
+                : isLikelyUid(log.targetId)
+                  ? log.targetId
+                  : null;
 
               // Skip hydration if no valid UID or explicitly unauthenticated
               if (!uid || uid === "unauthenticated") return log;
@@ -59,7 +61,8 @@ export const useAuditLogs = (limit = 100) => {
                   profile.lastName = (userData.lastName || "").trim();
                   profile.adminEmail = userData.email || log.adminEmail;
                   const fullName = `${profile.firstName} ${profile.lastName}`.trim();
-                  profile.adminName = fullName || userData.userName || userData.email?.split('@')[0] || "User";
+                  profile.adminName =
+                    fullName || userData.userName || userData.email?.split("@")[0] || "User";
                 }
 
                 if (roleSnap.exists()) {

@@ -214,7 +214,9 @@ export const updateUserProfile = async (uid, formData) => {
 
   try {
     await update(ref(db), updates); // Gumagamit ng Atomic Multi-path Update
-    await logActivity("PROFILE_UPDATED", uid, "User profile information updated.", { severity: "medium" });
+    await logActivity("PROFILE_UPDATED", uid, "User profile information updated.", {
+      severity: "medium",
+    });
     return { success: true };
   } catch {
     throw new appError("Server Error: Could not update profile info.", true, "db/update-failed");

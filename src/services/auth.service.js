@@ -111,7 +111,9 @@ export const changeUserPassword = async (
     // 🔑 Magpalit ng Password
     await updatePassword(user, newPassword);
 
-    logActivity("PASSWORD_RESET", user.email, "User password changed successfully.", { severity: "medium" }).catch(() => {});
+    logActivity("PASSWORD_RESET", user.email, "User password changed successfully.", {
+      severity: "medium",
+    }).catch(() => {});
 
     // 📊 I-update ang Realtime Database Flags
     const { uid } = user;
@@ -391,7 +393,9 @@ export const resetUserPasswordWithOTP = async (email, newPassword, otp) => {
       );
     }
 
-    logActivity("PASSWORD_RESET", email, `Password reset successfully via OTP.`, { severity: "medium" }).catch(() => {});
+    logActivity("PASSWORD_RESET", email, `Password reset successfully via OTP.`, {
+      severity: "medium",
+    }).catch(() => {});
 
     return result;
   } catch (error) {

@@ -110,7 +110,12 @@ const MetricCard = ({ label, value, subLabel, icon: Icon, color, percentage }) =
           </div>
           <div className="min-w-0">
             <p className="text-xs font-bold text-slate-900">{label}</p>
-            <h3 className={cn("font-bold text-slate-900", label === "Total Log Entries" ? "text-3xl" : "text-2xl")}>
+            <h3
+              className={cn(
+                "font-bold text-slate-900",
+                label === "Total Log Entries" ? "text-3xl" : "text-2xl"
+              )}
+            >
               {value}
             </h3>
             <p className="text-[10px] text-gray-400 font-bold uppercase">{subLabel}</p>

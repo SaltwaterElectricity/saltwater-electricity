@@ -36,25 +36,25 @@ const AuditLogPage = () => {
   const metrics = useMemo(() => {
     if (!logs.length) return { total: 0, security: 0, device: 0, failed: 0 };
 
-    const securityCount = logs.filter(l => 
-      l.severity?.toLowerCase() === 'high' || 
-      l.severity?.toLowerCase() === 'critical' || 
-      l.action?.toLowerCase().includes('auth') ||
-      l.action?.toLowerCase().includes('permission') ||
-      l.action?.toLowerCase().includes('security') ||
-      l.action?.includes('LOGIN') ||
-      l.action?.includes('LOGOUT') ||
-      l.action?.includes('ENUMERATION')
+    const securityCount = logs.filter(
+      (l) =>
+        l.severity?.toLowerCase() === "high" ||
+        l.severity?.toLowerCase() === "critical" ||
+        l.action?.toLowerCase().includes("auth") ||
+        l.action?.toLowerCase().includes("permission") ||
+        l.action?.toLowerCase().includes("security") ||
+        l.action?.includes("LOGIN") ||
+        l.action?.includes("LOGOUT") ||
+        l.action?.includes("ENUMERATION")
     ).length;
 
-    const deviceCount = logs.filter(l => 
-      l.action?.toLowerCase().includes('device') || 
-      l.action?.toLowerCase().includes('reading')
+    const deviceCount = logs.filter(
+      (l) =>
+        l.action?.toLowerCase().includes("device") || l.action?.toLowerCase().includes("reading")
     ).length;
 
-    const failedCount = logs.filter(l => 
-      l.status?.toLowerCase() === 'failed' ||
-      l.action?.includes('FAILURE')
+    const failedCount = logs.filter(
+      (l) => l.status?.toLowerCase() === "failed" || l.action?.includes("FAILURE")
     ).length;
 
     return {
@@ -75,18 +75,27 @@ const AuditLogPage = () => {
       const firstName = log.firstName?.trim() || "";
       const lastName = log.lastName?.trim() || "";
       const fullName = `${firstName} ${lastName}`.trim().toLowerCase();
-      
-      const isSystem = log.adminEmail === "system@saltwaterelectricity.internal" || 
-                       (log.adminName === "System" && !log.actorUid);
+
+      const isSystem =
+        log.adminEmail === "system@saltwaterelectricity.internal" ||
+        (log.adminName === "System" && !log.actorUid);
       const isGuest = log.actorUid === "unauthenticated";
-      
-      const derivedRole = (log.role || (isSystem ? "System" : (isGuest ? "Guest" : "User"))).toLowerCase();
-      const actorName = (fullName || (log.adminName && log.adminName !== "System" ? log.adminName : "")).toLowerCase();
-      const displayName = (actorName || (isGuest ? "unauthenticated guest" : (isSystem ? "system" : log.adminEmail || ""))).toLowerCase();
+
+      const derivedRole = (
+        log.role || (isSystem ? "System" : isGuest ? "Guest" : "User")
+      ).toLowerCase();
+      const actorName = (
+        fullName || (log.adminName && log.adminName !== "System" ? log.adminName : "")
+      ).toLowerCase();
+      const displayName = (
+        actorName ||
+        (isGuest ? "unauthenticated guest" : isSystem ? "system" : log.adminEmail || "")
+      ).toLowerCase();
 
       // 1. Search Logic
       const cleanSearch = searchTerm.toLowerCase().trim();
-      const matchesSearch = !cleanSearch || 
+      const matchesSearch =
+        !cleanSearch ||
         log.adminEmail?.toLowerCase().includes(cleanSearch) ||
         displayName.includes(cleanSearch) ||
         fullName.includes(cleanSearch) ||
@@ -101,12 +110,12 @@ const AuditLogPage = () => {
       if (filters.role !== "All Roles") {
         const targetRole = filters.role.replace(/\s+/g, "").toLowerCase(); // "Super Admin" -> "superadmin"
         const currentRole = derivedRole.replace(/\s+/g, ""); // "super admin" -> "superadmin"
-        
+
         // Handle "household" vs "resident" mapping
         if (targetRole === "resident" || targetRole === "householduser") {
-           if (currentRole !== "resident" && currentRole !== "household") return false;
+          if (currentRole !== "resident" && currentRole !== "household") return false;
         } else if (currentRole !== targetRole) {
-           return false;
+          return false;
         }
       }
 
@@ -160,10 +169,18 @@ const AuditLogPage = () => {
       }
 
       // 4. Severity Filter
-      if (filters.severity !== "All Severity" && log.severity?.toLowerCase() !== filters.severity.toLowerCase()) return false;
+      if (
+        filters.severity !== "All Severity" &&
+        log.severity?.toLowerCase() !== filters.severity.toLowerCase()
+      )
+        return false;
 
       // 5. Status Filter
-      if (filters.status !== "All Status" && log.status?.toLowerCase() !== filters.status.toLowerCase()) return false;
+      if (
+        filters.status !== "All Status" &&
+        log.status?.toLowerCase() !== filters.status.toLowerCase()
+      )
+        return false;
 
       return true;
     });
@@ -190,10 +207,10 @@ const AuditLogPage = () => {
   return (
     <div className="space-y-4 antialiased font-sans">
       <AuditLogHeader />
-      
+
       <AuditLogMetrics metrics={metrics} />
 
-      <AuditLogFilters 
+      <AuditLogFilters
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         filters={filters}
@@ -201,12 +218,9 @@ const AuditLogPage = () => {
         onClearFilters={handleClearFilters}
       />
 
-      <AuditLogTable 
-        logs={paginatedLogs} 
-        loading={loading} 
-      />
+      <AuditLogTable logs={paginatedLogs} loading={loading} />
 
-      <AuditLogPagination 
+      <AuditLogPagination
         totalLogs={filteredLogs.length}
         currentPage={currentPage}
         logsPerPage={logsPerPage}
