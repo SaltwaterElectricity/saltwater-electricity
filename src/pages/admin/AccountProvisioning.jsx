@@ -138,7 +138,7 @@ const AccountProvisioning = ({ mode = "user" }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-8 my-8 bg-white border border-slate-200 rounded-3xl shadow-sm relative animate-in fade-in slide-in-from-bottom-2 duration-500">
+    <div className="bg-white border border-slate-200 rounded-3xl shadow-sm relative animate-in fade-in slide-in-from-bottom-2 duration-500 p-8">
       <button
         onClick={() => navigate(ROUTES.ADMIN_USER_MANAGEMENT)}
         className="absolute top-8 right-8 z-10 p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-all"

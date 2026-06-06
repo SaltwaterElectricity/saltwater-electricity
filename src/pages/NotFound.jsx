@@ -21,7 +21,8 @@ const NotFound = () => {
         await logActivity(
           "POTENTIAL_ENUMERATION",
           "navigation_failure",
-          `User attempted to access non-existent path: ${location.pathname}`
+          `User attempted to access non-existent path: ${location.pathname}`,
+          { severity: "medium", status: "warning" }
         );
       } catch {
         // Silent fail for logging to ensure UI performance

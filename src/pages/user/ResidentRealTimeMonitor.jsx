@@ -77,7 +77,7 @@ const ResidentRealTimeMonitor = () => {
   const totalDevicesFormatted = personalUnits.length.toString().padStart(2, "0");
 
   return (
-    <div className="animate-fade-in antialiased min-h-screen pb-16">
+    <div className="animate-fade-in antialiased">
       <Toast
         isOpen={toastConfig.isOpen}
         message={toastConfig.message}

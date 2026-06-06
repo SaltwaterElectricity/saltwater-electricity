@@ -1,8 +1,8 @@
 import {
   ref,
   push,
+  get,
   serverTimestamp,
-  update,
   runTransaction,
   onValue,
   query,
@@ -11,7 +11,6 @@ import {
 } from "firebase/database";
 import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
-import { getUserClaims } from "./auth.service";
 import { notifySecurityIncident } from "./notification.service";
 import { logger } from "../utils/logger";
 
@@ -20,25 +19,8 @@ import { logger } from "../utils/logger";
  *
  * Handles the recording of administrative and system activities for accountability.
  * Adheres to SOLID principles by focusing strictly on 'Write' operations.
+ * IMMUTABILITY: All logs are write-only. Edit and delete operations are prohibited.
  */
-
-/**
- * INTERNAL GUARD: Verifies SuperAdmin clearance via Token Claims
- */
-const verifySuperAdminClearance = async () => {
-  const currentUser = auth.currentUser;
-  if (!currentUser) throw new appError("Authentication required.", true, "auth/unauthorized");
-
-  const claims = await getUserClaims(currentUser);
-  if (!claims?.superAdmin) {
-    throw new appError(
-      "Access Denied: SuperAdmin clearance required for this operation.",
-      true,
-      "auth/insufficient-clearance"
-    );
-  }
-  return true;
-};
 
 /**
  * Logs an administrative activity to the Realtime Database.
@@ -46,10 +28,12 @@ const verifySuperAdminClearance = async () => {
  * @param {string} action - The descriptive action performed (e.g., 'user_disabled', 'request_approved').
  * @param {string} targetId - The ID of the affected entity (User UID, Request ID, etc.).
  * @param {string} details - A brief summary or context of the action.
+ * @param {Object} options - Optional parameters: { actorUid, status, severity }
  * @returns {Promise<Object>} - Success confirmation.
  */
-export const logActivity = async (action, targetId, details) => {
+export const logActivity = async (action, targetId, details, { actorUid = null, status = "success", severity = "informational" } = {}) => {
   const currentUser = auth.currentUser;
+  const effectiveUid = actorUid || currentUser?.uid;
 
   // Requirement: Get current user's email from Auth
   const adminEmail = currentUser?.email || "system@saltwaterelectricity.internal";
@@ -57,11 +41,49 @@ export const logActivity = async (action, targetId, details) => {
   try {
     const auditRef = ref(db, "audit-logs");
 
+    let firstName = "";
+    let lastName = "";
+    let adminName = "System";
+    let role = "System";
+
+    // Use the effective UID to fetch profile and role data (handles login/logout races)
+    if (effectiveUid && effectiveUid !== "unauthenticated") {
+      try {
+        const [userSnap, roleSnap] = await Promise.all([
+          get(ref(db, `users/${effectiveUid}`)),
+          get(ref(db, `roles/${effectiveUid}`)),
+        ]);
+
+        if (userSnap.exists()) {
+          const userData = userSnap.val();
+          // Requirement: Use explicit property names from the database schema
+          firstName = (userData.firstName || "").trim();
+          lastName = (userData.lastName || "").trim();
+          const fullName = `${firstName} ${lastName}`.trim();
+          adminName = fullName || userData.userName || userData.email?.split('@')[0] || "User";
+        }
+
+        if (roleSnap.exists()) {
+          role = roleSnap.val().role || "User";
+        }
+      } catch (err) {
+        logger.warn(`[Audit Service] Failed to fetch identity for UID: ${effectiveUid}`, err);
+      }
+    }
+
     const logEntry = {
       adminEmail,
+      adminName,
+      firstName,
+      lastName,
+      role,
+      actorUid: effectiveUid,
       action,
       targetId,
       details,
+      status,
+      severity,
+      ipAddress: "Terminal Client", // Requirement: Technical context
       createdAt: serverTimestamp(),
     };
 
@@ -75,7 +97,7 @@ export const logActivity = async (action, targetId, details) => {
 
     // Mask internal DB errors with operational appError
     throw new appError(
-      "Activity log failure: Could not save recent changes.",
+      "The activity log is currently unavailable. We could not save your recent changes.",
       true,
       "audit/log-failed"
     );
@@ -120,7 +142,10 @@ export const logSecurityIncident = async (incidentType, identifier, context) => 
       const details = `Security escalation: ${data.count} incidents detected within window. Context: ${JSON.stringify(context)}`;
 
       // 1. Audit Log
-      await logActivity(`SECURITY_ALERT/${incidentType}`, identifier, details);
+      await logActivity(`SECURITY_ALERT/${incidentType}`, identifier, details, {
+        severity: "critical",
+        status: "blocked"
+      });
 
       // 2. Persistent In-App Notification for Admins (EPP Protocol)
       await notifySecurityIncident(incidentType, identifier, details);
@@ -135,48 +160,40 @@ export const logSecurityIncident = async (incidentType, identifier, context) => 
 };
 
 /**
- * Updates an existing audit log entry. (SuperAdmin only)
+ * LOGGING HELPER: Records successful user login.
  */
-export const updateAuditLog = async (logId, updatedData) => {
-  if (!logId) throw new appError("Log ID required.", true, "audit/invalid-id");
-
-  // 🛡️ SECONDARY ROLE CHECK: Authoritative Token Verification
-  await verifySuperAdminClearance();
-
-  // 🛡️ SECURITY: Prevent NoSQL injection by explicitly mapping allowed fields
-  const safeUpdate = {
-    details: updatedData.details?.toString().trim() || "Manual override",
-    action: updatedData.action || "audit_entry_updated",
-    updatedAt: serverTimestamp(),
-  };
-
-  try {
-    const logRef = ref(db, `audit-logs/${logId}`);
-    await update(logRef, safeUpdate);
-    return { success: true };
-  } catch (error) {
-    if (error instanceof appError) throw error;
-    throw new appError("Failed to modify the audit record.", true, "audit/update-failed");
-  }
+export const logLoginSuccess = async (email, uid) => {
+  return await logActivity(
+    "USER_LOGIN",
+    uid,
+    `Session established successfully for ${email}.`,
+    { actorUid: uid, severity: "low" }
+  );
 };
 
 /**
- * Removes an audit log entry. (SuperAdmin only)
+ * LOGGING HELPER: Records failed login attempts.
  */
-export const deleteAuditLog = async (logId) => {
-  if (!logId) throw new appError("Log ID required.", true, "audit/invalid-id");
+export const logLoginFailure = async (email, reason = "Invalid credentials") => {
+  return await logActivity(
+    "LOGIN_FAILURE",
+    "unauthenticated",
+    `Failed login attempt for ${email}. Reason: ${reason}`,
+    { status: "failed", severity: "medium" }
+  );
+};
 
-  // 🛡️ SECONDARY ROLE CHECK: Authoritative Token Verification
-  await verifySuperAdminClearance();
-
-  try {
-    const logRef = ref(db, `audit-logs/${logId}`);
-    await update(logRef, null); // Equivalent to remove
-    return { success: true };
-  } catch (error) {
-    if (error instanceof appError) throw error;
-    throw new appError("Failed to purge the security log entry.", true, "audit/delete-failed");
-  }
+/**
+ * LOGGING HELPER: Records user logout.
+ */
+export const logLogout = async (email, uid) => {
+  if (!email || !uid) return;
+  return await logActivity(
+    "USER_LOGOUT",
+    uid,
+    `Session terminated by user ${email}.`,
+    { actorUid: uid, severity: "low" }
+  );
 };
 
 /**

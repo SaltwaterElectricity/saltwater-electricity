@@ -90,7 +90,8 @@ export const assignDevice = async (deviceId, userId, newDeviceName) => {
     await logActivity(
       "DEVICE_ASSIGNED",
       cleanDeviceId,
-      `Device assigned to User: ${cleanUserId}${cleanName ? ` with name: ${cleanName}` : ""}`
+      `Device assigned to User: ${cleanUserId}${cleanName ? ` with name: ${cleanName}` : ""}`,
+      { severity: "low" }
     );
 
     return { success: true };
@@ -135,7 +136,8 @@ export const deprovisionDevice = async (deviceId) => {
     await logActivity(
       "DEVICE_DEPROVISIONED",
       deviceId,
-      `Device deprovisioned and returned to available inventory.`
+      `Device deprovisioned and returned to available inventory.`,
+      { severity: "low" }
     );
 
     return { success: true };

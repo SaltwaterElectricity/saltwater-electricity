@@ -15,6 +15,7 @@ import { appError } from "../utils/appError";
 import logger from "../utils/logger";
 import { getUserClaims } from "./auth.service";
 import { createNotification, NOTIFICATION_TYPES } from "./notification.service";
+import { logActivity } from "./audit.service";
 import { SENSOR_CONFIG, METRICS, METRIC_MAP } from "../constants";
 
 /**
@@ -228,6 +229,14 @@ export const updateBulbState = async (deviceId, newState) => {
     // 4. Hardware Command Node (Anti-Replay Protection)
     updates[`commands/${deviceId}/relay`] = newState;
     updates[`commands/${deviceId}/lastUpdated`] = now;
+
+    // 🛡️ UNIFIED AUDIT LOG: Record hardware control action
+    await logActivity(
+      "RELAY_TOGGLED",
+      deviceId,
+      `Hardware relay state changed to: ${newState ? "ON" : "OFF"}`,
+      { severity: "low" }
+    ).catch((err) => logger.error("[Reading Service]: Audit logging failed for relay toggle", err));
 
     // CRITICAL ALERT CHECK: Trigger notification if TDS exceeds critical threshold
     const tds = currentData.tds_ppm || 0;

@@ -103,7 +103,7 @@ const AdminDashboard = () => {
   }, [devices, telemetry]);
 
   return (
-    <div className="mx-auto space-y-6 max-w-[1800px] animate-in fade-in duration-700">
+    <div className="space-y-6 animate-in fade-in duration-700">
       {/* 1. METRICS GRID */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <TotalDevicesAdminCard value={stats.total || 0} trendValue="12%" trend="up" />

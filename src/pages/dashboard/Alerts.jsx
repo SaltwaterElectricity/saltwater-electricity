@@ -66,7 +66,7 @@ const Alerts = () => {
   };
 
   return (
-    <div className="animate-in fade-in duration-700 max-w-[1440px] mx-auto space-y-8">
+    <div className="animate-in fade-in duration-700 space-y-8">
       {/* 1. CONTENT HEADER SECTION */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>

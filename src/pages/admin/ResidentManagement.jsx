@@ -88,7 +88,7 @@ const ResidentManagement = () => {
   const isTargetActive = selectedUser?.status === USER_STATUS.ACTIVE;
 
   return (
-    <div className="p-gutter max-w-[1440px] mx-auto w-full antialiased space-y-8">
+    <div className="w-full antialiased space-y-8">
       <Toast
         isOpen={showToast || !!error}
         message={error?.message || toastConfig.message}

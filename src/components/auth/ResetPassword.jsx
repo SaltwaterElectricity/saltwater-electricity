@@ -1,5 +1,5 @@
 import { useState, memo, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { resetUserPasswordWithOTP } from "../../services/auth.service";
 import { cn } from "../../utils/cn";
 import ChecklistItem from "./ChecklistItem";
@@ -21,13 +21,13 @@ const ResetPassword = ({ email, otp, onSuccess, _onClose }) => {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors },
   } = useForm({
     mode: "onChange",
   });
 
-  const newPassword = watch("newPassword", "");
+  const newPassword = useWatch({ control, name: "newPassword", defaultValue: "" });
 
   // Strength Logic from code1.html (25% increments)
   const checks = useMemo(

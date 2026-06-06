@@ -130,7 +130,7 @@ const AdminRealTimeMonitor = () => {
 
   return (
     <>
-      <div className="flex flex-col h-full relative overflow-hidden transition-all-custom animate-fade-in p-8 bg-[#F0F2F5]">
+      <div className="flex flex-col h-full relative overflow-hidden transition-all-custom animate-fade-in">
         {/* 1. HEADER SECTION */}
         <MonitorHeader />
 

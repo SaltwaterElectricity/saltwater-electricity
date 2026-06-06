@@ -82,6 +82,14 @@ export const createDeviceRequest = async (deviceData) => {
 
     const result = await push(requestRef, newRequest);
 
+    // 🛡️ UNIFIED AUDIT LOG: Record request creation
+    await logActivity(
+      "DEVICE_REQUESTED",
+      result.key,
+      `New request submitted for device: ${deviceData.deviceName}`,
+      { severity: "low" }
+    ).catch((err) => logger.error("[Request Service]: Audit logging failed for new request", err));
+
     return {
       success: true,
       requestId: result.key,
@@ -166,7 +174,8 @@ export const cancelDeviceRequest = async (requestId, reasonData) => {
     await logActivity(
       "REQUEST_CANCELLED",
       requestId,
-      `User cancelled request. Reason: ${reasonData.reason}`
+      `User cancelled request. Reason: ${reasonData.reason}`,
+      { severity: "low" }
     );
 
     return { success: true };
@@ -225,7 +234,7 @@ export const updateRequestStatus = async (requestId, status, extraData = {}) => 
         ? `Approved device request for Unit ${extraData.deviceId}`
         : `Declined device request: ${extraData.reason || "N/A"}`;
 
-    await logActivity(`request_${status}`, requestId, auditDetails);
+    await logActivity(`request_${status}`, requestId, auditDetails, { severity: "medium" });
 
     return { success: true };
   } catch (error) {

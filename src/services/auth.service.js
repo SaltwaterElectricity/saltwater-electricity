@@ -20,6 +20,7 @@ import { logger } from "../utils/logger";
 import { generateDefaultPassword } from "../utils/passwordGenerator";
 import { sendOnboardingEmail } from "./email.service";
 import { sanitizeForFirebaseKey } from "../utils/sanitization";
+import { logLoginSuccess, logLoginFailure, logLogout, logActivity } from "./audit.service";
 
 /**
  * ERROR MAPPER: Centralized for all auth actions.
@@ -109,6 +110,8 @@ export const changeUserPassword = async (
 
     // 🔑 Magpalit ng Password
     await updatePassword(user, newPassword);
+
+    logActivity("PASSWORD_RESET", user.email, "User password changed successfully.", { severity: "medium" }).catch(() => {});
 
     // 📊 I-update ang Realtime Database Flags
     const { uid } = user;
@@ -232,11 +235,18 @@ export const loginUser = async (email, password) => {
       );
     }
 
+    logLoginSuccess(cleanEmail, uid).catch(() => {});
+
     return {
       user: userCredential.user,
       userData: { ...userData, uid },
     };
   } catch (error) {
+    const cleanEmail = email?.toLowerCase().trim();
+    if (cleanEmail) {
+      logLoginFailure(cleanEmail, error.message || "Unknown error").catch(() => {});
+    }
+
     if (error instanceof appError) throw error;
 
     const errorCode = [
@@ -260,6 +270,11 @@ export const loginUser = async (email, password) => {
  */
 export const logoutUser = async () => {
   try {
+    const user = auth.currentUser;
+    if (user) {
+      logLogout(user.email, user.uid).catch(() => {});
+    }
+
     //FIREBASE SIGNOUT
     await signOut(auth);
 
@@ -375,6 +390,8 @@ export const resetUserPasswordWithOTP = async (email, newPassword, otp) => {
         result.code || "auth/reset-failed"
       );
     }
+
+    logActivity("PASSWORD_RESET", email, `Password reset successfully via OTP.`, { severity: "medium" }).catch(() => {});
 
     return result;
   } catch (error) {

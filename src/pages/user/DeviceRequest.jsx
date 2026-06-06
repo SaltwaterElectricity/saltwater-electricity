@@ -44,7 +44,7 @@ const DeviceRequest = () => {
   };
 
   return (
-    <div className="space-y-12 animate-in fade-in duration-700 antialiased text-on-surface pb-12">
+    <div className="space-y-12 animate-in fade-in duration-700 antialiased text-on-surface">
       <Toast
         isOpen={toastConfig.isOpen || !!error}
         message={error?.message || toastConfig.message}

@@ -195,7 +195,7 @@ const ResidentDashboard = () => {
   }
 
   return (
-    <div className="animate-in fade-in duration-700 space-y-stack-lg antialiased text-on-surface max-w-[1440px] mx-auto">
+    <div className="animate-in fade-in duration-700 space-y-stack-lg antialiased text-on-surface">
       <WelcomeSection firstName={user?.firstName} />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">

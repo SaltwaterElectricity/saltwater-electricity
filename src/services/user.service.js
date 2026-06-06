@@ -94,7 +94,8 @@ export const provisionUserSystem = async (uid, formData) => {
     await logActivity(
       "USER_PROVISIONED",
       uid,
-      `User ${cleanProfile.email} provisioned with role: ${finalRole}`
+      `User ${cleanProfile.email} provisioned with role: ${finalRole}`,
+      { severity: "low" }
     );
     return { success: true };
   } catch {
@@ -179,6 +180,13 @@ export const updateUserStatus = async (uid, newStatus) => {
 
   try {
     await update(ref(db), updates);
+    // 🛡️ UNIFIED AUDIT LOG: Record status change
+    await logActivity(
+      `USER_${newStatus.toUpperCase()}`,
+      uid,
+      `User account status updated to ${newStatus}`,
+      { severity: "medium" }
+    );
     return { success: true };
   } catch {
     throw new appError(DB_ERRORS.UPDATE_FAILED, true, "db/update-failed");
@@ -206,6 +214,7 @@ export const updateUserProfile = async (uid, formData) => {
 
   try {
     await update(ref(db), updates); // Gumagamit ng Atomic Multi-path Update
+    await logActivity("PROFILE_UPDATED", uid, "User profile information updated.", { severity: "medium" });
     return { success: true };
   } catch {
     throw new appError("Server Error: Could not update profile info.", true, "db/update-failed");

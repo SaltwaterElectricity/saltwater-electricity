@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, History, Download, ShieldCheck, Activity, Zap } from "lucide-react";
 import { cn } from "../../utils/cn";
@@ -7,6 +7,7 @@ import { DeviceAnalyticsChart } from "../../components";
 import { SalinityGauge, VoltageGauge, BulbPowerUsageGauge, BulbToggle } from "../../components/ui";
 import { processLogsInWindows } from "../../utils/chartUtils";
 import { METRICS, METRIC_CONFIG } from "../../constants";
+import { logActivity } from "../../services/audit.service";
 
 /**
  * DeviceAnalytics Page
@@ -20,6 +21,12 @@ const DeviceAnalytics = () => {
   // Real-time telemetry & History
   const { reading, loading: readingLoading } = useReadings(deviceId);
   const { logs, loading: logsLoading } = useHistory(deviceId);
+
+  useEffect(() => {
+    if (deviceId) {
+      logActivity("VIEW_READINGS", deviceId, `User viewed analytical readings for Unit ${deviceId}`, { severity: "low" }).catch(() => {});
+    }
+  }, [deviceId]);
 
   // Chart Processing
   const chartData = useMemo(() => {
@@ -48,7 +55,7 @@ const DeviceAnalytics = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6 md:p-10 space-y-10 antialiased">
+    <div className="space-y-10 antialiased">
       {/* 1. NAVIGATION HEADER */}
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex items-center gap-6">

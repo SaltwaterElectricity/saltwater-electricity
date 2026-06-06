@@ -135,7 +135,7 @@ const RequestManagement = () => {
   };
 
   return (
-    <div className="p-8 space-y-8 max-w-[1400px] mx-auto antialiased bg-[#F8FAFC] min-h-screen">
+    <div className="space-y-8 antialiased">
       <Toast
         isOpen={showToast}
         message={toastConfig.message}
