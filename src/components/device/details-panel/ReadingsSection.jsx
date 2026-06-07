@@ -13,28 +13,28 @@ export const ReadingsSection = ({ deviceId, telemetry }) => {
 
   const voltage = telemetry?.voltage || 0;
   const tds = telemetry?.tds || 0;
-  const timestamp = telemetry?.timestamp 
-    ? new Date(telemetry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  const timestamp = telemetry?.timestamp
+    ? new Date(telemetry.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
     : "--:--";
 
   // Requirement: Transform historical logs into chart bars and summary stats
   const metrics = useMemo(() => {
     if (!logs || logs.length === 0) {
-      return { 
-        voltageBars: Array(18).fill(0), 
-        tdsBars: Array(18).fill(0), 
-        peakVoltage: voltage, 
-        avgTds: tds 
+      return {
+        voltageBars: Array(18).fill(0),
+        tdsBars: Array(18).fill(0),
+        peakVoltage: voltage,
+        avgTds: tds,
       };
     }
 
     const sortedLogs = [...logs].reverse(); // Timeline: Left (Old) -> Right (New)
-    
+
     // Normalize values to 0-100% based on typical ranges
-    const voltageBars = sortedLogs.map(l => Math.min(100, (Number(l.voltage) / 250) * 100));
-    const tdsBars = sortedLogs.map(l => Math.min(100, (Number(l.tds) / 500) * 100));
-    
-    const peakVoltage = Math.max(...logs.map(l => Number(l.voltage)));
+    const voltageBars = sortedLogs.map((l) => Math.min(100, (Number(l.voltage) / 250) * 100));
+    const tdsBars = sortedLogs.map((l) => Math.min(100, (Number(l.tds) / 500) * 100));
+
+    const peakVoltage = Math.max(...logs.map((l) => Number(l.voltage)));
     const avgTds = Math.round(logs.reduce((acc, l) => acc + Number(l.tds), 0) / logs.length);
 
     return { voltageBars, tdsBars, peakVoltage, avgTds };
@@ -92,13 +92,17 @@ export const ReadingsSection = ({ deviceId, telemetry }) => {
 };
 
 const ReadingGraphCard = ({ icon: Icon, label, value, subValue, color, bars, telemetry }) => (
-  <div className={cn(
-    "bg-white border rounded-[24px] p-6 hover:shadow-md transition-all border-slate-100 group overflow-hidden",
-    color === "primary" ? "hover:border-primary/50" : "hover:border-orange-500/50"
-  )}>
+  <div
+    className={cn(
+      "bg-white border rounded-[24px] p-6 hover:shadow-md transition-all border-slate-100 group overflow-hidden",
+      color === "primary" ? "hover:border-primary/50" : "hover:border-orange-500/50"
+    )}
+  >
     <div className="flex justify-between items-start mb-6">
       <div>
-        <p className="font-display text-[12px] uppercase tracking-wider text-slate-400 mb-1">{label}</p>
+        <p className="font-display text-[12px] uppercase tracking-wider text-slate-400 mb-1">
+          {label}
+        </p>
         <div className="flex items-baseline gap-3">
           <span className="font-display text-3xl font-bold text-slate-900">{value}</span>
         </div>
@@ -106,10 +110,14 @@ const ReadingGraphCard = ({ icon: Icon, label, value, subValue, color, bars, tel
           <Clock size={12} /> {subValue}
         </p>
       </div>
-      <div className={cn(
-        "p-3 rounded-xl transition-colors border",
-        color === "primary" ? "bg-blue-50 text-primary border-blue-100" : "bg-orange-50 text-orange-600 border-orange-100"
-      )}>
+      <div
+        className={cn(
+          "p-3 rounded-xl transition-colors border",
+          color === "primary"
+            ? "bg-blue-50 text-primary border-blue-100"
+            : "bg-orange-50 text-orange-600 border-orange-100"
+        )}
+      >
         <Icon size={24} />
       </div>
     </div>
@@ -121,7 +129,7 @@ const ReadingGraphCard = ({ icon: Icon, label, value, subValue, color, bars, tel
         <span>{color === "primary" ? "125V" : "250"}</span>
         <span>0</span>
       </div>
-      
+
       {/* Chart Area */}
       <div className="flex-1 relative h-24 pt-2 border-l border-slate-50">
         {/* Grid Lines */}
@@ -137,22 +145,24 @@ const ReadingGraphCard = ({ icon: Icon, label, value, subValue, color, bars, tel
             bars.map((h, i) => (
               <div
                 // eslint-disable-next-line react/no-array-index-key
-                key={`bar-${color}-${telemetry?.timestamp || 'default'}-${i}`}
+                key={`bar-${color}-${telemetry?.timestamp || "default"}-${i}`}
                 className={cn(
                   "flex-1 rounded-t-sm transition-all duration-1000",
-                  color === "primary" 
-                    ? "bg-gradient-to-t from-blue-600 to-blue-400" 
+                  color === "primary"
+                    ? "bg-gradient-to-t from-blue-600 to-blue-400"
                     : "bg-gradient-to-t from-orange-600 to-orange-400"
                 )}
-                style={{ 
+                style={{
                   height: `${Math.max(2, h)}%`, // Ensure even small values are visible
-                  opacity: 0.2 + (i / bars.length) * 0.8
+                  opacity: 0.2 + (i / bars.length) * 0.8,
                 }}
               />
             ))
           ) : (
             <div className="h-full w-full flex items-center justify-center">
-              <span className="text-[10px] text-slate-200 uppercase font-bold tracking-widest">No History</span>
+              <span className="text-[10px] text-slate-200 uppercase font-bold tracking-widest">
+                No History
+              </span>
             </div>
           )}
         </div>

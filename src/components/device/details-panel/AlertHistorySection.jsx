@@ -67,7 +67,10 @@ const AlertItem = ({ log }) => {
       <div className="text-right shrink-0">
         <p className="text-[10px] font-bold text-slate-300 uppercase">{timeAgo}</p>
         <div
-          className={cn("w-2 h-2 rounded-full ml-auto mt-1 shadow-sm", config.color.replace("text", "bg"))}
+          className={cn(
+            "w-2 h-2 rounded-full ml-auto mt-1 shadow-sm",
+            config.color.replace("text", "bg")
+          )}
         />
       </div>
     </div>
