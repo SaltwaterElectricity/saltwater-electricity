@@ -77,7 +77,7 @@ const DeviceDetailsPanel = ({ isOpen, onClose, device, telemetry, assignment, au
       const top = element.offsetTop - 20; // Slight offset for padding
       scrollContainerRef.current.scrollTo({
         top,
-        behavior: "smooth"
+        behavior: "smooth",
       });
       setActiveSection(id);
     }
@@ -152,8 +152,8 @@ const DeviceDetailsPanel = ({ isOpen, onClose, device, telemetry, assignment, au
                 onClick={(e) => handleTabClick(e, id)}
                 className={cn(
                   "font-display text-[13px] font-bold tracking-tight transition-all pb-2 border-b-2 whitespace-nowrap",
-                  isActive 
-                    ? "text-primary border-primary" 
+                  isActive
+                    ? "text-primary border-primary"
                     : "text-slate-400 border-transparent hover:text-slate-600"
                 )}
               >
@@ -166,8 +166,8 @@ const DeviceDetailsPanel = ({ isOpen, onClose, device, telemetry, assignment, au
 
       {/* 2. SCROLLABLE CONTENT */}
       {/* Requirement: Use key={device_id} to force a full reset of sub-components and scroll position when switching devices */}
-      <div 
-        key={device_id} 
+      <div
+        key={device_id}
         ref={scrollContainerRef}
         className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-10 pb-10 scroll-smooth"
       >
