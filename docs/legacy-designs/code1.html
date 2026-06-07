@@ -1,666 +1,749 @@
-<!DOCTYPE html><html lang="en" style=""><head>
+<!DOCTYPE html><html class="light" lang="en" style="width: 806px; height: 1098px; overflow: hidden; position: relative;"><head></head><body class="bg-background text-on-surface font-body-md overflow-hidden h-screen flex"><svg aria-hidden="true" class="inline-defs-container" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>Saltwater Electricity Monitoring - Audit Logs</title>
-<!-- Google Font: Sora -->
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-<!-- Tailwind CSS CDN -->
+<title>SaltGrid - Device Analytics</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Sora', 'sans-serif'],
-          },
-          colors: {
-            primary: '#2563eb',
-            surface: '#f8f9ff',
-            'surface-container': '#ffffff',
-          },
-          borderRadius: {
-            'custom': '16px',
-          }
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@450&amp;family=Sora:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#2563eb",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#360f00",
+                        "on-secondary-fixed": "#001c37",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#0053db",
+                        "surface-variant": "#e0e3e5",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "background": "#f7f9fb",
+                        "surface-dim": "#d8dadc",
+                        "success": "#10B981",
+                        "outline": "#737686",
+                        "on-surface-variant": "#434655",
+                        "on-primary-container": "#eeefff",
+                        "on-secondary-container": "#49617f",
+                        "surface-container": "#eceef0",
+                        "primary": "#004ac6",
+                        "on-primary-fixed": "#00174b",
+                        "secondary-fixed-dim": "#b0c8eb",
+                        "primary-fixed": "#dbe1ff",
+                        "on-tertiary-container": "#ffede6",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-container": "#bc4800",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "outline-variant": "#c3c6d7",
+                        "data-glow": "rgba(37, 99, 235, 0.15)",
+                        "inverse-primary": "#b4c5ff",
+                        "on-secondary-fixed-variant": "#314865",
+                        "danger": "#EF4444",
+                        "on-background": "#191c1e",
+                        "warning": "#F59E0B",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#ffdbcd",
+                        "inverse-surface": "#2d3133",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-tertiary": "#ffffff",
+                        "border-subtle": "#EAEAEA",
+                        "surface-bright": "#f7f9fb",
+                        "secondary-fixed": "#d2e4ff",
+                        "secondary": "#49607e",
+                        "surface": "#f7f9fb",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "on-surface": "#191c1e",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-container": "#c4dcff",
+                        "tertiary": "#943700"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "unit": "4px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "48px",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Geist"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Geist"],
+                        "label-md": ["Geist"],
+                        "mono-data": ["JetBrains Mono"],
+                        "body-lg": ["Inter"],
+                        "display": ["Geist"],
+                        "sora": ["Sora"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "mono-data": ["14px", {"lineHeight": "20px", "fontWeight": "450"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+                    }
+                }
+            }
         }
-      }
-    }
-  </script>
-<style data-purpose="custom-styling">
-    body {
-      background-color: #f8f9ff;
-      color: #1e293b;
-    }
-    .circular-progress {
-      position: relative;
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .sidebar-active {
-      background-color: #eff4ff;
-      color: #2563eb;
-      border-right: 4px solid #2563eb;
-    }
-    .badge-success { background-color: #ecfdf5; color: #059669; border: 1px solid #d1fae5; }
-    .badge-failed { background-color: #fef2f2; color: #dc2626; border: 1px solid #fee2e2; }
-    .badge-warning { background-color: #fffbeb; color: #d97706; border: 1px solid #fef3c7; }
-    
-    .severity-medium { background-color: #fff7ed; color: #ea580c; }
-    .severity-low { background-color: #eff6ff; color: #2563eb; }
-    .severity-informational { background-color: #f0f9ff; color: #0891b2; }
-    .severity-high { background-color: #fff1f2; color: #e11d48; }
-    .severity-critical { background-color: #450a0a; color: #ffffff; }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e0e3e5;
+            border-radius: 10px;
+        }
+        .chart-bar-primary {
+            background: linear-gradient(180deg, #2563eb 0%, #60a5fa 100%);
+            box-shadow: 0 0-12px rgba(37, 99, 235, 0.2);
+        }
+        .chart-bar-tertiary {
+            background: linear-gradient(180deg, #943700 0%, #bc4800 100%);
+            box-shadow: 0 0 12px rgba(188, 72, 0, 0.2);
+        }
+        .toggle-switch:checked + .toggle-slider {
+            background-color: #2563eb;
+        }
+        .toggle-switch:checked + .toggle-slider::before {
+            transform: translateX(20px);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        @keyframes subtle-pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 8px rgba(249, 115, 22, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+        }
+        .animate-subtle-pulse {
+            animation: subtle-pulse 1.5s ease-in-out 2;
+        }
 
-    /* Custom scrollbar for better look */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #f1f1f1; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-  </style>
-</head>
-<body class="font-sans antialiased">
-<div class="flex min-h-screen">
-<!-- BEGIN: Sidebar Navigation -->
-<aside class="w-64 bg-white border-r border-gray-200 flex flex-col fixed h-full z-30" data-purpose="sidebar">
-<div class="p-6 flex items-center gap-3">
-<div class="bg-primary p-2 rounded-xl text-white">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-</div>
-<div>
-<h1 class="font-bold text-sm tracking-tight">SALTWATER</h1>
-<p class="text-[10px] text-gray-500 font-medium">Electricity Monitoring</p>
-</div>
-</div>
-<nav class="flex-1 px-4 space-y-1 mt-4">
-<p class="px-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Super Admin</p>
-<a class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50" href="#">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a11 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-          Dashboard
-        </a>
-<a class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50" href="#">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-          Real Time Monitor
-        </a>
-<a class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50" href="#">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-          Devices
-        </a>
-<a class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50" href="#">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-          Households
-        </a>
-<a class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50" href="#">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-          Residents
-        </a>
-<a class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50" href="#">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-          Assignments
-        </a>
-<a class="flex items-center justify-between px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50" href="#">
-<div class="flex items-center gap-3">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-            Alerts
-          </div>
-<span class="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">6</span>
-</a>
-<a class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50" href="#">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
-          Analytics
-        </a>
-<a class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50" href="#">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-          Reports
-        </a>
-<a class="flex items-center gap-3 px-3 py-2.5 text-sm font-bold sidebar-active rounded-lg" href="#">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-          Audit Logs
-        </a>
-<a class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50" href="#">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-          Settings
-        </a>
-</nav>
-<div class="p-4 mt-auto">
-<div class="bg-blue-50 p-4 rounded-xl flex items-center gap-3">
-<div class="relative">
-<img alt="User" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOKS7OlKpQUpR43D385OKKJD_C37WgQavEe83iAL2nSBmSOYArv3aRXbcfGki_x4M3XtkRENgt9FfPFICUr0UPtZa8ayp1RIm4aPKUbDIjN2nPuPEHcEgIlbMyqX3qXwJP0otKpnqwzdygXWHcmHwVd11HPqC-VPIGMlOv9tGQnNguyaFj9dgZDYbpRVqsFpVPZ6HPPaPpw_lNitZhX05ClFRNMEKKqWF5jPqBQfjFkZ_PcP6mIVJb2Oo7ZT4BGYOHk14zKwwLcW4">
-<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
-</div>
-<div class="flex-1 overflow-hidden">
-<p class="text-xs font-bold truncate">Super Admin</p>
-<p class="text-[10px] text-gray-500 truncate">superadmin@saltwater.com</p>
-<p class="text-[9px] text-green-600 font-bold mt-0.5">• Online</p>
-</div>
-<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
-</div>
-</div>
-</aside>
-<!-- END: Sidebar Navigation -->
-<!-- BEGIN: Main Content Area -->
-<main class="flex-1 ml-64 p-8">
-<!-- BEGIN: Page Header -->
-<header class="flex justify-between items-start mb-8" data-purpose="page-header">
-<div>
-<h2 class="text-3xl font-bold text-slate-900 mt-8">Audit <span class="text-primary">Logs</span></h2>
-<p class="text-gray-500 text-sm mt-1">Monitor user activities, security events, device actions, and system operations across the platform.</p>
-</div>
-<div class="flex items-center gap-3">
-<div class="flex items-center gap-2 bg-white border border-gray-200 px-4 py-2 rounded-lg shadow-sm">
-<span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-<span class="text-sm font-semibold">Live Monitoring</span>
-</div>
-<button class="flex items-center gap-2 bg-white border border-gray-200 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-50">
-<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-<span class="text-sm font-semibold">Export Logs</span>
-<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
-</button>
-<button class="flex items-center gap-2 bg-white border border-gray-200 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-50">
-<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-<span class="text-sm font-semibold">Refresh Logs</span>
-</button>
-</div>
-</header>
-<!-- END: Page Header -->
-<!-- BEGIN: Metrics Cards -->
-<section class="grid grid-cols-4 gap-6 mb-8" data-purpose="metrics-summary">
-<!-- Metric 1 -->
-<div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between" style="border: 2px solid rgb(37, 99, 235);">
-  <div>
-    <div class="flex items-center gap-4 mb-4">
-      <div class="bg-blue-50 w-12 h-12 rounded-2xl flex items-center justify-center text-blue-600">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-        </svg>
-      </div>
-      <div>
-        <p class="text-xs font-bold text-slate-900">Total Log Entries</p>
-        <h3 class="text-3xl font-bold text-slate-900">84</h3>
-        <p class="text-[10px] text-gray-400 font-bold">Total Logs</p>
-      </div>
-    </div>
-    
-  </div>
-  <div class="relative w-[70px] h-[70px] flex items-center justify-center">
-    <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
-      <path class="text-gray-100" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
-      <path class="text-blue-500" stroke-width="3.5" stroke-dasharray="84, 100" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
-    </svg>
-    <span class="absolute text-sm font-bold text-blue-600">84%</span>
-  </div>
-</div>
-<!-- Metric 2 -->
-<div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between" style="border: 2px solid rgb(37, 99, 235);">
-<div>
-<div class="flex items-center gap-3 mb-4">
-<div class="bg-green-50 p-2.5 rounded-xl text-green-600">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-</div>
-<div>
-<p class="text-xs font-bold text-gray-600">Security Events</p>
-<h3 class="text-2xl font-bold">34</h3>
-<p class="text-[10px] text-gray-400 uppercase font-bold">Security Events</p>
-</div>
-</div>
-<div class="flex items-center gap-1.5 text-green-600 text-xs font-bold">
+        @keyframes needle-sweep {
+            0% { transform: rotate(-90deg); }
+            100% { transform: rotate(54deg); } /* Based on 218mA out of max roughly 300mA scale */
+        }
+        .animate-needle {
+            animation: needle-sweep 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            transform-origin: bottom center;
+        }
 
+        @keyframes dot-pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .animate-dot-pulse {
+            animation: dot-pulse 1.5s infinite;
+        }
 
-</div>
-</div>
-<div class="relative w-[70px] h-[70px] flex items-center justify-center">
-    <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
-      <path class="text-green-50" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
-      <path class="text-green-500" stroke-width="3.5" stroke-dasharray="68, 100" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
-    </svg>
-    <span class="absolute text-sm font-bold text-green-600">68%</span>
-  </div>
-</div>
-<!-- Metric 3 -->
-<div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between" style="border: 2px solid rgb(37, 99, 235);">
-<div>
-<div class="flex items-center gap-3 mb-4">
-<div class="bg-purple-50 p-2.5 rounded-xl text-purple-600">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-</div>
-<div>
-<p class="text-xs font-bold text-gray-600">Device Activities</p>
-<h3 class="text-2xl font-bold">72</h3>
-<p class="text-[10px] text-gray-400 uppercase font-bold">Device Events</p>
-</div>
-</div>
-<div class="flex items-center gap-1.5 text-green-600 text-xs font-bold">
+        .tab-transition {
+            transition: opacity 250ms ease-in-out, transform 250ms ease-in-out;
+        }
 
-
+        .gradient-gauge {
+            background: conic-gradient(from -90deg at 50% 100%, #a855f7 0deg, #ec4899 180deg, transparent 180deg);
+        }
+    </style>
+<!-- Main Content Simulation (Background) -->
+<main class="flex-1 p-margin-desktop opacity-30 pointer-events-none transition-opacity">
+<h1 class="font-headline-lg text-headline-lg mb-8">Real-Time Monitor</h1>
+<div class="grid grid-cols-12 gap-gutter">
+<div class="col-span-8 h-64 bg-white rounded-[24px] border border-border-subtle shadow-sm"></div>
+<div class="col-span-4 h-64 bg-white rounded-[24px] border border-border-subtle shadow-sm"></div>
+<div class="col-span-12 h-96 bg-white rounded-[24px] border border-border-subtle shadow-sm"></div>
 </div>
-</div>
-<div class="relative w-[70px] h-[70px] flex items-center justify-center">
-    <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
-      <path class="text-purple-50" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
-      <path class="text-purple-600" stroke-width="3.5" stroke-dasharray="72, 100" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
-    </svg>
-    <span class="absolute text-sm font-bold text-purple-600">72%</span>
-  </div>
-</div>
-<!-- Metric 4 -->
-<div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between" style="border: 2px solid rgb(37, 99, 235);">
-<div>
-<div class="flex items-center gap-3 mb-4">
-<div class="bg-red-50 p-2.5 rounded-xl text-red-600">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-</div>
-<div>
-<p class="text-xs font-bold text-gray-600">Failed Actions</p>
-<h3 class="text-2xl font-bold">24</h3>
-<p class="text-[10px] text-gray-400 uppercase font-bold">Failed Operations</p>
-</div>
-</div>
-
-</div>
-<div class="relative w-[70px] h-[70px] flex items-center justify-center">
-    <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
-      <path class="text-red-50" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
-      <path class="text-red-500" stroke-width="3.5" stroke-dasharray="48, 100" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
-    </svg>
-    <span class="absolute text-sm font-bold text-red-600">48%</span>
-  </div>
-</div>
-</section>
-<!-- END: Metrics Cards -->
-<!-- BEGIN: Filters and Search -->
-<section class="mb-6" data-purpose="table-filters">
-<div class="flex gap-4 items-center mb-6">
-<div class="flex-1 relative">
-<svg class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-<input class="w-full pl-12 pr-10 py-3 bg-white border border-gray-200 rounded-xl focus:ring-primary focus:border-primary text-sm shadow-sm" placeholder="Search username, email, action, device, IP address..." type="text" id="search-input">
-<button class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
-<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
-</button>
-</div>
-<div class="relative">
-<button class="flex items-center gap-3 bg-white border border-gray-200 px-4 py-3 rounded-xl text-sm font-semibold shadow-sm min-w-[200px] justify-between" id="date-range-picker-trigger" onclick="document.getElementById('date-range-picker-dropdown').classList.toggle('hidden')">
-<div class="flex items-center gap-2" id="date-range-display"><svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> May 15, 2025 - May 20, 2025</div>
-<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
-</button>
-<!-- BEGIN: Date Range Dropdown (Simulated Open) -->
-<div class="absolute top-full right-0 mt-3 bg-white border border-gray-200 rounded-2xl shadow-2xl z-50 flex overflow-hidden min-w-[700px] hidden" data-purpose="datepicker-dropdown" id="date-range-picker-dropdown">
-<!-- Quick Select -->
-<div class="w-40 border-r border-gray-100 p-4 space-y-2">
-<p class="text-[10px] font-bold text-gray-400 uppercase mb-4">Quick Select</p>
-<button class="w-full text-left text-xs font-medium px-2 py-2 rounded-lg hover:bg-gray-50 transition-colors active:bg-blue-100" onclick="document.getElementById('date-range-display').innerHTML = '&lt;svg class=&quot;w-4 h-4 text-gray-500&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z&quot;&gt;&lt;/path&gt;&lt;/svg&gt; Today'; document.getElementById('date-range-picker-dropdown').classList.add('hidden')">Today</button>
-<button class="w-full text-left text-xs font-medium px-2 py-2 rounded-lg hover:bg-gray-50 transition-colors active:bg-blue-100">Yesterday</button>
-<button class="w-full text-left text-xs font-medium px-2 py-2 rounded-lg hover:bg-gray-50 transition-colors active:bg-blue-100" onclick="document.getElementById('date-range-display').innerHTML = '&lt;svg class=&quot;w-4 h-4 text-gray-500&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z&quot;&gt;&lt;/path&gt;&lt;/svg&gt; Last 7 Days'; document.getElementById('date-range-picker-dropdown').classList.add('hidden')">Last 7 Days</button>
-<button class="w-full text-left text-xs font-medium px-2 py-2 rounded-lg hover:bg-gray-50 transition-colors active:bg-blue-100" onclick="document.getElementById('date-range-display').innerHTML = '&lt;svg class=&quot;w-4 h-4 text-gray-500&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z&quot;&gt;&lt;/path&gt;&lt;/svg&gt; Last 30 Days'; document.getElementById('date-range-picker-dropdown').classList.add('hidden')">Last 30 Days</button>
-<button class="w-full text-left text-xs font-medium px-2 py-2 rounded-lg hover:bg-gray-50 transition-colors active:bg-blue-100" onclick="document.getElementById('date-range-display').innerHTML = '&lt;svg class=&quot;w-4 h-4 text-gray-500&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z&quot;&gt;&lt;/path&gt;&lt;/svg&gt; This Month'; document.getElementById('date-range-picker-dropdown').classList.add('hidden')">This Month</button>
-<button class="w-full text-left text-xs font-bold px-2 py-2 rounded-lg bg-blue-50 text-primary transition-colors active:bg-blue-100 ring-1 ring-inset ring-blue-200" onclick="document.getElementById('search-input').value = ''; document.getElementById('filter-user-role').selectedIndex = 0; document.getElementById('filter-activity-type').selectedIndex = 0; document.getElementById('filter-severity').selectedIndex = 0; document.getElementById('filter-status').selectedIndex = 0; document.getElementById('date-range-display').innerHTML = '&lt;svg class=&quot;w-4 h-4 text-gray-500&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z&quot;&gt;&lt;/path&gt;&lt;/svg&gt; May 15, 2025 - May 20, 2025'; document.querySelectorAll('tbody tr').forEach(tr =&gt; tr.classList.remove('hidden'));">Custom Range</button>
-</div>
-<!-- Calendar View -->
-<div class="flex-1 p-6 flex gap-8 pb-16">
-<!-- Month 1 -->
-<div class="flex-1">
-<div class="flex items-center justify-between mb-4">
-<button class=""><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"></path></svg></button>
-<span class="text-xs font-bold">May 2025</span>
-<button class=""><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg></button>
-</div>
-<div class="grid grid-cols-7 gap-y-2 text-center text-[10px]">
-<span class="text-gray-400">Su</span><span class="text-gray-400">Mo</span><span class="text-gray-400">Tu</span><span class="text-gray-400">We</span><span class="text-gray-400">Th</span><span class="text-gray-400">Fr</span><span class="text-gray-400">Sa</span>
-<span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">1</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">2</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">3</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">4</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">5</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">6</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">7</span>
-<span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">8</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">9</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">10</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">11</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">12</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">13</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">14</span>
-<span class="py-1 bg-primary text-white rounded-full cursor-pointer hover:bg-blue-50 transition-all active:scale-95">15</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">16</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">17</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">18</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">19</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">20</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">21</span>
-<span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">22</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">23</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">24</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">25</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">26</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">27</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">28</span>
-<span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">29</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">30</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">31</span>
-</div>
-</div>
-<!-- Month 2 -->
-<div class="flex-1">
-<div class="flex items-center justify-between mb-4">
-<button class=""><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"></path></svg></button>
-<span class="text-xs font-bold">May 2025</span>
-<button class=""><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg></button>
-</div>
-<div class="grid grid-cols-7 gap-y-2 text-center text-[10px]">
-<span class="text-gray-400">Su</span><span class="text-gray-400">Mo</span><span class="text-gray-400">Tu</span><span class="text-gray-400">We</span><span class="text-gray-400">Th</span><span class="text-gray-400">Fr</span><span class="text-gray-400">Sa</span>
-<span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">1</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">2</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">3</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">4</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">5</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">6</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">7</span>
-<span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">8</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">9</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">10</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">11</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">12</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">13</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">14</span>
-<span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">15</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">16</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">17</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">18</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">19</span><span class="py-1 bg-primary text-white rounded-full cursor-pointer hover:bg-blue-50 transition-all active:scale-95">20</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">21</span>
-<span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">22</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">23</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">24</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">25</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">26</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">27</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">28</span>
-<span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">29</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">30</span><span class="py-1 cursor-pointer hover:bg-blue-50 rounded-full transition-all active:scale-95">31</span>
-</div>
-</div>
-<div class="absolute bottom-4 right-6 flex gap-2"><button class="px-4 py-2 text-xs font-bold text-gray-500 hover:bg-gray-50 rounded-lg" onclick="document.getElementById('date-range-picker-dropdown').classList.add('hidden')">Cancel</button><button class="px-4 py-2 text-xs font-bold bg-primary text-white rounded-lg shadow-sm active:scale-95 transition-all" onclick="document.getElementById('date-range-display').innerHTML = '&lt;svg class=\'w-4 h-4 text-gray-500\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'&gt;&lt;path d=\'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z\'&gt;&lt;/path&gt;&lt;/svg&gt; May 15, 2025 - May 20, 2025'; document.getElementById('date-range-picker-dropdown').classList.add('hidden')">Apply Range</button></div></div>
-</div>
-<!-- END: Date Range Dropdown -->
-</div>
-</div>
-<div class="flex gap-4 items-center">
-<!-- Dropdown 1 -->
-<div class="flex-1">
-<label class="text-[10px] font-bold uppercase block mb-1.5 ml-1 text-primary">User Role</label>
-<div class="relative">
-<select class="w-full appearance-none bg-white border border-gray-200 py-2.5 pl-4 pr-10 rounded-xl text-sm font-medium focus:ring-primary shadow-sm" id="filter-user-role">
-<option>All Roles</option>
-<option>Super Admin</option>
-<option>Household User</option>
-<option>System</option>
-</select>
-<svg class="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
-</div>
-</div>
-<!-- Dropdown 2 -->
-<div class="flex-1">
-<label class="text-[10px] font-bold uppercase block mb-1.5 ml-1 text-primary">Activity Type</label>
-<div class="relative">
-<select class="w-full appearance-none bg-white border border-gray-200 py-2.5 pl-4 pr-10 rounded-xl text-sm font-medium focus:ring-primary shadow-sm" id="filter-activity-type"><option class="">All Types</option><option class="">Login</option><option class="">Logout</option><option class="">Password Reset</option><option class="">View Readings</option><option class="">Assign Device</option><option class="">Edit Profile</option><option class="">Update Settings</option><option class="">Device Registration</option><option class="">Device Removal</option><option class="">Firmware Update</option><option class="">System Event</option></select>
-<svg class="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
-</div>
-</div>
-<!-- Dropdown 3 -->
-<div class="flex-1">
-<label class="text-[10px] font-bold uppercase block mb-1.5 ml-1 text-primary">Severity</label>
-<div class="relative">
-<select class="w-full appearance-none bg-white border border-gray-200 py-2.5 pl-4 pr-10 rounded-xl text-sm font-medium focus:ring-primary shadow-sm" id="filter-severity"><option class="">All Severity</option><option class="">Informational</option><option class="">Low</option><option class="">Medium</option><option class="">High</option><option class="">Critical</option></select>
-<svg class="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
-</div>
-</div>
-<!-- Dropdown 4 -->
-<div class="flex-1">
-<label class="text-[10px] font-bold uppercase block mb-1.5 ml-1 text-primary">Status</label>
-<div class="relative">
-<select class="w-full appearance-none bg-white border border-gray-200 py-2.5 pl-4 pr-10 rounded-xl text-sm font-medium focus:ring-primary shadow-sm" id="filter-status"><option selected="" class="">All Status</option><option class="">Success</option><option class="">Warning</option><option class="">Failed</option><option class="">Blocked</option><option class="">Pending</option></select>
-<svg class="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
-</div>
-</div>
-<div class="flex items-end h-full">
-<button class="flex items-center gap-2 text-primary font-bold text-xs hover:underline mb-1 ml-4" onclick="document.getElementById('search-input').value = ''; document.getElementById('filter-user-role').selectedIndex = 0; document.getElementById('filter-activity-type').selectedIndex = 0; document.getElementById('filter-severity').selectedIndex = 0; document.getElementById('filter-status').selectedIndex = 0; document.getElementById('date-range-display').innerHTML = '&lt;svg class=&quot;w-4 h-4 text-gray-500&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z&quot;&gt;&lt;/path&gt;&lt;/svg&gt; May 15, 2025 - May 20, 2025'; document.querySelectorAll('tbody tr').forEach(tr =&gt; tr.classList.remove('hidden'));">
-<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-              Clear Filters
-            </button>
-</div>
-</div>
-</section>
-<!-- END: Filters and Search -->
-<!-- BEGIN: Audit Table -->
-<section class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" data-purpose="audit-logs-table">
-<div class="p-6 border-b border-gray-100">
-<h4 class="font-bold text-primary">System Audit Logs</h4>
-</div>
-<table class="w-full text-left border-collapse">
-<thead>
-<tr class="bg-gray-50 border-b border-gray-100 text-black">
-<th class="px-6 py-4 text-[10px] font-bold uppercase">Username</th>
-<th class="px-6 py-4 text-[10px] font-bold uppercase">Role</th>
-<th class="px-6 py-4 text-[10px] font-bold uppercase">Action</th>
-<th class="px-6 py-4 text-[10px] font-bold uppercase text-slate-900">Status</th>
-<th class="px-6 py-4 text-[10px] font-bold uppercase">Severity</th>
-<th class="px-6 py-4 text-[10px] font-bold uppercase">IP Address</th>
-<th class="px-6 py-4 text-[10px] font-bold uppercase text-center">Date &amp; Time</th>
-<th class="px-6 py-4"></th>
-</tr>
-</thead>
-<tbody class="divide-y divide-gray-100">
-<!-- Row 1 -->
-<tr class="hover:bg-gray-50/50">
-<td class="px-6 py-4">
-<div class="flex items-center gap-3">
-<img alt="User" class="w-8 h-8 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAO-P4OJk9QImfNPKw0EuFOK9n-_BFkm7ikncXKKRvRS0x7pJp5AcPn9358N8TI1KGWS3pYrVKPxg8AfBXMNiRub2t4ulD5VohwyYTGJ6LIrf9BHulre--XQ8V-AZfs1AOoYMBjv1CwZky_a-H2NHKs0Zx6wWDrq26jmupjKvItUNFLUd9w_H3wRrrblKUdso6pbT2LQDoHktaHjPcGiaVtLzeJ3J4XjSvD7Y2uUQSOyIRRHecQAORi2Hf9LdAP7-IrqjteyYhWhb4">
-<div>
-<p class="text-xs font-bold">Janicca Hernandez</p>
-<p class="text-[10px] text-gray-400">janiccahernandez@gmail.com</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 text-xs font-medium">Super Admin</td>
-<td class="px-6 py-4 text-xs">
-                Assigned DEVICE-001<br>to Jasmine Sanchez
-              </td>
-<td class="px-6 py-4">
-<span class="badge-success px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1.5 w-fit">
-<span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Success
-                </span>
-</td>
-<td class="px-6 py-4">
-<span class="severity-medium px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1.5 w-fit">
-<span class="w-1.5 h-1.5 bg-orange-500 rounded-full"></span> Medium
-                </span>
-</td>
-<td class="px-6 py-4 text-xs text-gray-500 font-medium">192.168.1.15</td>
-<td class="px-6 py-4 whitespace-nowrap">
-<div class="flex items-center gap-2 text-xs text-gray-500 font-medium">
-<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                  May 20, 2025
-                  <svg class="w-3.5 h-3.5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                  10:25 PM
-                </div>
-</td>
-<td class="px-6 py-4 text-gray-400"><div class="relative group flex justify-center"><button class="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-500 active:scale-95" title="View Details" onclick="const icon = this.querySelector('svg path'); const isDown = icon.getAttribute('d').includes('M19 9l-7 7-7-7'); if(isDown) { icon.setAttribute('d', 'M5 15l7-7 7 7'); } else { icon.setAttribute('d', 'M19 9l-7 7-7-7'); }"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></button>
-  </div></td>
-</tr>
-<!-- Row 2 -->
-<tr class="hover:bg-gray-50/50">
-<td class="px-6 py-4">
-<div class="flex items-center gap-3">
-<img alt="User" class="w-8 h-8 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUOOz_Jib_7t0kHuRXXOPsGBUDKaJi_Uu4v9lk6VCrR2affA0OEgqzZ5V079LbqP9nxyRKD1LtUZX4DfVfj0Yn_o3pqvIkXFmg_q46JYWPv4zk4u3sPjOoyjRaAQT3BIom_Ri5N0YwbxGXmRsGu5YkbWwxg2DfGikD0G-lHG1MAgInjtkZZ0Q7-TluOrTX9xmq7Qbhpdi-oERZS5l5OQVzhLFsfO-q7lcRKtBaRoOlOAhE3ERFOT-4o2IAlIyz4V1OM6gxUpKH-iQ">
-<div>
-<p class="text-xs font-bold">Jasmine Sanchez</p>
-<p class="text-[10px] text-gray-400">jasmine@email.com</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 text-xs font-medium">Household User</td>
-<td class="px-6 py-4 text-xs">
-                Viewed Device Readings<br>(DEVICE-001)
-              </td>
-<td class="px-6 py-4">
-<span class="badge-success px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1.5 w-fit">
-<span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Success
-                </span>
-</td>
-<td class="px-6 py-4">
-<span class="severity-low px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1.5 w-fit">
-<span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span> Low
-                </span>
-</td>
-<td class="px-6 py-4 text-xs text-gray-500 font-medium">192.168.1.15</td>
-<td class="px-6 py-4 whitespace-nowrap">
-<div class="flex items-center gap-2 text-xs text-gray-500 font-medium">
-<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                  May 20, 2025
-                  <svg class="w-3.5 h-3.5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                  10:25 PM
-                </div>
-</td>
-<td class="px-6 py-4 text-gray-400">
-<div class="relative group flex justify-center">
-  <button class="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-500 active:scale-95 flex items-center justify-center" title="View Details" onclick="const icon = this.querySelector('svg path'); const isDown = icon.getAttribute('d').includes('M19 9l-7 7-7-7'); if(isDown) { icon.setAttribute('d', 'M5 15l7-7 7 7'); } else { icon.setAttribute('d', 'M19 9l-7 7-7-7'); } this.nextElementSibling?.classList.toggle('hidden');">
-  <svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-  </svg>
-</button>
-  
-</div>
-</td>
-</tr>
-<!-- Row 3 (System) -->
-<tr class="hover:bg-gray-50/50">
-<td class="px-6 py-4">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-</div>
-<div>
-<p class="text-xs font-bold">DEVICE-001</p>
-<p class="text-[10px] text-gray-400">device001@saltwater.com</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 text-xs font-medium">System</td>
-<td class="px-6 py-4 text-xs">
-                Voltage Reading Updated<br>(230V)
-              </td>
-<td class="px-6 py-4">
-<span class="badge-success px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1.5 w-fit">
-<span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Success
-                </span>
-</td>
-<td class="px-6 py-4">
-<span class="severity-informational px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1.5 w-fit">
-<span class="w-1.5 h-1.5 bg-cyan-500 rounded-full"></span> Informational
-                </span>
-</td>
-<td class="px-6 py-4 text-xs text-gray-500 font-medium">10.0.0.5</td>
-<td class="px-6 py-4 whitespace-nowrap">
-<div class="flex items-center gap-2 text-xs text-gray-500 font-medium">
-<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                  May 20, 2025
-                  <svg class="w-3.5 h-3.5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                  10:22 PM
-                </div>
-</td>
-<td class="px-6 py-4 text-gray-400">
-<div class="relative group flex justify-center">
-  <button class="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-500 active:scale-95" title="View Details" onclick="const icon = this.querySelector('svg path'); const isDown = icon.getAttribute('d').includes('M19 9l-7 7-7-7'); if(isDown) { icon.setAttribute('d', 'M5 15l7-7 7 7'); } else { icon.setAttribute('d', 'M19 9l-7 7-7-7'); } this.parentElement.querySelector('.absolute').classList.toggle('hidden');"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></button>
-  
-</div>
-</td>
-</tr>
-<!-- Row 4 (Warning/High) -->
-<tr class="hover:bg-gray-50/50">
-<td class="px-6 py-4">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-</div>
-<div>
-<p class="text-xs font-bold">DEVICE-003</p>
-<p class="text-[10px] text-gray-400">device003@saltwater.com</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 text-xs font-medium">System</td>
-<td class="px-6 py-4 text-xs">
-                Salinity Threshold Warning<br>(420ppm detected)
-              </td>
-<td class="px-6 py-4">
-<span class="badge-warning px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1.5 w-fit">
-<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                  Warning
-                </span>
-</td>
-<td class="px-6 py-4">
-<span class="severity-high px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1.5 w-fit">
-<span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> High
-                </span>
-</td>
-<td class="px-6 py-4 text-xs text-gray-500 font-medium">10.0.0.8</td>
-<td class="px-6 py-4 whitespace-nowrap">
-<div class="flex items-center gap-2 text-xs text-gray-500 font-medium">
-<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                  May 20, 2025
-                  <svg class="w-3.5 h-3.5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                  10:20 PM
-                </div>
-</td>
-<td class="px-6 py-4 text-gray-400">
-<div class="relative group flex justify-center">
-  <button class="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-500 active:scale-95 flex items-center justify-center" title="View Details" onclick="const svg = this.querySelector('svg'); svg.classList.toggle('rotate-180'); this.nextElementSibling?.classList.toggle('hidden');">
-  <svg class="w-4 h-4 transition-transform duration-200 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-  </svg>
-</button>
-  
-</div>
-</td>
-</tr>
-<!-- Row 5 (Critical/Failed) -->
-<tr class="hover:bg-gray-50/50">
-<td class="px-6 py-4">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-</div>
-<div>
-<p class="text-xs font-bold">Unknown User</p>
-<p class="text-[10px] text-gray-400">unknown@example.com</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 text-xs font-medium">Unknown</td>
-<td class="px-6 py-4 text-xs">
-                Failed Login Attempt<br>(Multiple invalid attempts)
-              </td>
-<td class="px-6 py-4">
-<span class="badge-failed px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1.5 w-fit">
-<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                  Failed
-                </span>
-</td>
-<td class="px-6 py-4">
-<span class="severity-critical px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1.5 w-fit">
-<span class="w-1.5 h-1.5 bg-white rounded-full"></span> Critical
-                </span>
-</td>
-<td class="px-6 py-4 text-xs text-gray-500 font-medium">185.91.20.13</td>
-<td class="px-6 py-4 whitespace-nowrap">
-<div class="flex items-center gap-2 text-xs text-gray-500 font-medium">
-<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                  May 20, 2025
-                  <svg class="w-3.5 h-3.5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                  10:15 PM
-                </div>
-</td>
-<td class="px-6 py-4 text-gray-400">
-<div class="relative group flex justify-center">
-  <button class="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-500 active:scale-95 flex items-center justify-center" title="View Details" onclick="const icon = this.querySelector('svg'); icon.classList.toggle('rotate-180'); this.nextElementSibling?.classList.toggle('hidden');">
-    <svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-    </svg>
-  </button>
-  <div class="absolute right-0 top-full mt-2 w-40 bg-white border border-gray-100 rounded-xl shadow-2xl z-50 py-1 overflow-hidden">
-    <button class="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-500 active:scale-95 flex items-center justify-center" title="View Details" onclick="const icon = this.querySelector('svg'); icon.classList.toggle('rotate-180'); this.nextElementSibling?.classList.toggle('hidden');">
-    <svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-    </svg>
-  </button>
-  </div>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-<!-- Table Pagination -->
-<div class="p-4 border-t border-gray-100 flex items-center justify-between">
-<p class="text-xs text-gray-500 font-medium">Showing 1 to 10 of 84 logs</p>
-<div class="flex items-center gap-4">
-<div class="flex items-center gap-1">
-<button class="p-2 border border-gray-200 rounded-lg text-gray-400 hover:bg-gray-50">
-<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"></path></svg>
-</button>
-<button class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-lg text-xs font-bold">1</button>
-<button class="w-8 h-8 flex items-center justify-center hover:bg-gray-50 rounded-lg text-xs font-medium">2</button>
-<button class="w-8 h-8 flex items-center justify-center hover:bg-gray-50 rounded-lg text-xs font-medium">3</button>
-<button class="w-8 h-8 flex items-center justify-center hover:bg-gray-50 rounded-lg text-xs font-medium">4</button>
-<button class="w-8 h-8 flex items-center justify-center hover:bg-gray-50 rounded-lg text-xs font-medium">5</button>
-<span class="px-2 text-gray-400">...</span>
-<button class="w-8 h-8 flex items-center justify-center hover:bg-gray-50 rounded-lg text-xs font-medium">9</button>
-<button class="p-2 border border-gray-200 rounded-lg text-gray-400 hover:bg-gray-50">
-<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
-</button>
-</div>
-<div class="flex items-center gap-2 border border-gray-200 px-3 py-1.5 rounded-lg">
-<span class="text-xs font-medium">10 per page</span>
-<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
-</div>
-</div>
-</div>
-</section>
-<!-- END: Audit Table -->
 </main>
-<!-- END: Main Content Area -->
+<!-- Side Panel / NavigationDrawer -->
+<aside class="fixed right-0 top-0 h-full w-[440px] bg-white border-l border-border-subtle shadow-2xl z-50 flex flex-col transition-all duration-300 transform translate-x-0 overflow-hidden overflow-x-hidden">
+<!-- Fixed Header -->
+<header class="p-gutter flex flex-col gap-unit flex-none bg-white"><div class="relative flex items-start gap-4 mb-6 pt-4">
+<!-- Branding Icon -->
+<div class="flex-none w-14 h-14 bg-surface-container-low rounded-xl border border-border-subtle flex items-center justify-center">
+<img alt="ESM Logo" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGbenkunQzUHSkMBAMRKwDhd7BPLesqscNXB0Rn_29TTLOmqoSS9Wjqarf8dIoBzbV3gXMe9rAO6wvFkZc-FnUXBz7bxaV3SAuFFW82ZhcpyvrPDZV85CWDkQeqxP2LzyvLkWNXDnFtVpYx289Zn2mxDSwydmQJFz6GfBhdwBrI_sFHf_GgVgXcqrzJSyKr2WKTsgxyNFbcXbSi_XRxMtzoqDo8sFr249zQ4oUt7X9Y-Pzn7IU_G6QpL1mdkii-B88fr9IaHaKP42O">
 </div>
+<!-- Text Content -->
+<div class="flex-1 pr-10 pt-1">
+<div class="flex items-center gap-2 mb-1">
+<h2 class="font-headline-md text-headline-md leading-none">DEVICE-001</h2>
+<span class="px-1.5 py-0.5 rounded bg-success/10 text-success text-[10px] font-bold tracking-wider uppercase leading-none border border-success/20">ONLINE</span>
+</div>
+<div class="space-y-0.5">
+<p class="text-on-surface-variant font-medium text-[14px] leading-tight">Jasmine Sanchez</p>
+<p class="text-outline text-[13px] leading-tight">jasmine@email.com</p>
+</div>
+</div>
+<!-- Close Button -->
+<button class="absolute top-0 right-0 p-2 hover:bg-surface-container rounded-full transition-colors" onclick="closePanel()">
+<span class="material-symbols-outlined text-outline">close</span>
+</button>
+</div>
+<!-- Navigation Anchor Links -->
+<nav class="flex gap-4 border-b border-border-subtle overflow-x-auto no-scrollbar">
+<a class="font-label-md hover:text-primary pb-2 transition-colors whitespace-nowrap flex items-center gap-1 text-primary border-primary border-b-2" href="#section-control" onclick="switchTab('section-control')">
+        Device Control
+    </a>
+<a class="font-label-md hover:text-primary pb-2 transition-colors whitespace-nowrap flex items-center gap-1 text-primary border-primary border-b-2" href="#section-readings" onclick="switchTab('section-readings')">
+        Readings
+    </a>
+<a class="font-label-md hover:text-primary pb-2 transition-colors whitespace-nowrap flex items-center gap-1 text-primary border-primary border-b-2" href="#section-components" onclick="switchTab('section-components')">
+        Components Current
+    </a>
+<a class="font-label-md hover:text-primary pb-2 transition-colors whitespace-nowrap flex items-center gap-1 text-primary border-primary border-b-2" href="#section-alerts" onclick="switchTab('section-alerts')">
+        Alerts
+    </a>
+</nav></header>
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto custom-scrollbar px-gutter pb-gutter space-y-12">
+<!-- Overview Section -->
+<section class="scroll-mt-6 pt-4 tab-transition" id="section-overview" style="opacity: 0.95; transform: translateX(0px);">
+<h3 class="font-headline-md text-body-lg font-semibold mb-4 text-primary">Overview</h3>
+<div class="grid grid-cols-2 gap-y-6 gap-x-gutter">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[20px] text-primary-container">person</span>
+<div>
+<p class="font-label-md text-[11px] uppercase tracking-wider text-outline mb-0.5">HOUSEHOLD USER INFO</p>
+<p class="font-body-md font-medium">Jasmine Sanchez</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[20px] text-primary-container">calendar_today</span>
+<div>
+<p class="font-label-md text-[11px] uppercase tracking-wider text-outline mb-0.5">Assigned Date</p>
+<p class="font-body-md font-medium">May 12, 2025</p>
+</div>
+</div>
+<div class="col-span-2 flex items-start gap-3">
+<span class="material-symbols-outlined text-[20px] text-primary-container">location_on</span>
+<div>
+<p class="font-label-md text-[11px] uppercase tracking-wider text-outline mb-0.5">Address</p>
+<p class="font-body-md font-medium">Purok 1, Alibijaban Island,&nbsp; San Andres,Quezon&nbsp;</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Control Section -->
+<section class="scroll-mt-6 tab-transition" id="section-control" style="opacity: 1; transform: translateX(0px);">
+<h3 class="font-headline-md text-body-lg font-semibold mb-6 text-primary">Device Controls</h3>
+<div class="bg-white border rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border-primary"><div class="flex flex-col items-center text-center space-y-6">
+<div class="flex flex-col items-center gap-4 w-full">
+<div class="w-14 h-14 flex items-center justify-center rounded-2xl transition-all duration-300 bg-orange-100 shadow-[0_0_15px_rgba(249,115,22,0.2)]" id="bulb-icon-container">
+<span class="material-symbols-outlined text-[32px] transition-colors duration-300 text-orange-500" id="bulb-icon">lightbulb</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="flex items-center gap-2 mb-1">
+<p class="font-semibold text-on-surface text-lg">Smart Bulb Power</p>
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 rounded-full bg-success shadow-[0_0_8px_rgba(16,185,129,0.4)]" id="power-status-dot"></div>
+<span class="text-[11px] font-bold text-success uppercase tracking-widest" id="power-status-text">Online</span>
+</div>
+</div>
+<p class="text-[14px] text-on-surface-variant leading-relaxed">Remote toggle for manual override</p>
+</div>
+</div>
+<div class="relative flex items-center justify-center">
+<div class="flex items-center gap-4">
+<span class="text-[12px] font-medium text-outline uppercase tracking-wider">Off</span>
+<label class="relative inline-flex items-center cursor-pointer group">
+<input checked="" class="sr-only peer toggle-switch" id="bulb-toggle" onchange="togglePowerStatus()" type="checkbox">
+<div class="w-16 h-8 bg-surface-container rounded-full peer peer-focus:ring-0 peer-checked:bg-primary-container transition-all duration-500 ease-in-out shadow-inner"></div>
+<div class="absolute left-[4px] top-[4px] bg-white w-6 h-6 rounded-full transition-all duration-500 ease-in-out shadow-md peer-checked:translate-x-8 peer-checked:shadow-[0_2px_4px_rgba(0,0,0,0.2)] after:content-[''] after:absolute after:inset-0 after:rounded-full after:bg-white"></div>
+</label>
+<span class="text-[12px] font-medium text-primary uppercase tracking-wider">On</span>
+</div>
+</div>
+
+</div></div>
+</section>
+<!-- Readings Section -->
+<section class="scroll-mt-6 tab-transition" id="section-readings" style="opacity: 1; transform: translateX(0px);">
+<div class="flex justify-between items-center mb-6"><h3 class="font-headline-md text-body-lg font-semibold text-primary">Real-Time Readings</h3></div><div class="flex justify-center mb-6">
+<div class="flex gap-1 p-1 bg-surface-container rounded-lg"><button class="px-2 py-1 text-outline text-[11px] font-medium hover:text-primary">1HR</button>
+<button class="px-2 py-1 text-outline text-[11px] font-medium hover:text-primary">3HR</button>
+<button class="px-2 py-1 text-outline text-[11px] font-medium hover:text-primary">6HR</button>
+<button class="px-2 py-1 text-outline text-[11px] font-medium hover:text-primary">24HR</button>
+<button class="px-2 py-1 bg-white shadow-sm rounded-md text-[11px] font-bold">1D</button>
+<button class="px-2 py-1 text-outline text-[11px] font-medium hover:text-primary">7D</button>
+<button class="px-2 py-1 text-outline text-[11px] font-medium hover:text-primary">1M</button></div>
+</div>
+<!-- Voltage Graph Card -->
+<div class="bg-white border rounded-[24px] p-6 mb-gutter hover:shadow-md transition-shadow cursor-default group overflow-hidden border-primary"><div class="flex justify-between items-start mb-6">
+<div>
+<p class="font-label-md text-on-surface-variant text-[12px] uppercase tracking-wider mb-1">Voltage (V)</p>
+<div class="flex items-baseline gap-3">
+<span class="font-display text-headline-lg font-bold">230V</span>
+</div>
+<p class="text-[12px] text-outline font-mono-data mt-2">10:25 AM | <span class="text-on-surface font-semibold">238V</span></p>
+</div>
+<div class="bg-primary/5 p-3 rounded-xl group-hover:bg-primary/10 transition-colors border border-primary/10">
+<span class="material-symbols-outlined text-primary text-[24px]">bolt</span>
+</div>
+</div>
+<div class="flex gap-4">
+<!-- Y-Axis -->
+<div class="flex flex-col justify-between text-[10px] text-outline font-mono-data h-32 py-1 mb-6">
+<span class="">250V</span>
+<span class="">200V</span>
+<span class="">150V</span>
+<span class="">0V</span>
+</div>
+<!-- Chart Area Container -->
+<div class="flex-1 max-w-full">
+<div class="relative h-32 w-full pt-4 border-l border-surface-variant overflow-x-auto custom-scrollbar">
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-1 pt-4">
+<div class="border-t border-surface-variant/30 w-full"></div>
+<div class="border-t border-surface-variant/30 w-full"></div>
+<div class="border-t border-surface-variant/30 w-full"></div>
+<div class="border-t border-surface-variant/30 w-full"></div>
+</div>
+<!-- Bars Container -->
+<div class="flex items-end gap-2 h-full w-full relative z-10 overflow-x-auto custom-scrollbar overflow-x-visible">
+<div class="flex items-end gap-2 h-full min-w-[600px] pb-1 flex-nowrap">
+<div class="chart-bar-primary flex-none w-4 h-[40%] rounded-t-lg opacity-30"></div>
+<div class="chart-bar-primary flex-none w-4 h-[55%] rounded-t-lg opacity-40"></div>
+<div class="chart-bar-primary flex-none w-4 h-[45%] rounded-t-lg opacity-30"></div>
+<div class="chart-bar-primary flex-none w-4 h-[70%] rounded-t-lg opacity-50"></div>
+<div class="chart-bar-primary flex-none w-4 h-[60%] rounded-t-lg opacity-60"></div>
+<div class="chart-bar-primary flex-none w-4 h-[85%] rounded-t-lg opacity-70"></div>
+<div class="chart-bar-primary flex-none w-4 h-[95%] rounded-t-lg opacity-80 shadow-[0_0_12px_rgba(37,99,235,0.3)]"></div>
+<div class="chart-bar-primary flex-none w-4 h-[80%] rounded-t-lg opacity-70"></div>
+<div class="chart-bar-primary flex-none w-4 h-[65%] rounded-t-lg opacity-60"></div>
+<div class="chart-bar-primary flex-none w-4 h-[50%] rounded-t-lg opacity-50"></div>
+<div class="chart-bar-primary flex-none w-4 h-[75%] rounded-t-lg opacity-60"></div>
+<div class="chart-bar-primary flex-none w-4 h-[90%] rounded-t-lg opacity-70"></div>
+<div class="chart-bar-primary flex-none w-4 h-[70%] rounded-t-lg opacity-60"></div>
+<div class="chart-bar-primary flex-none w-4 h-[55%] rounded-t-lg opacity-50"></div>
+<div class="chart-bar-primary flex-none w-4 h-[40%] rounded-t-lg opacity-40"></div>
+<div class="chart-bar-primary flex-none w-4 h-[60%] rounded-t-lg opacity-50"></div>
+<div class="chart-bar-primary flex-none w-4 h-[75%] rounded-t-lg opacity-60"></div>
+<div class="chart-bar-primary flex-none w-4 h-[85%] rounded-t-lg opacity-70"></div>
+<div class="chart-bar-primary flex-none w-4 h-[50%] rounded-t-lg opacity-40"></div>
+<div class="chart-bar-primary flex-none w-4 h-[65%] rounded-t-lg opacity-55"></div>
+<div class="chart-bar-primary flex-none w-4 h-[45%] rounded-t-lg opacity-35"></div>
+<div class="chart-bar-primary flex-none w-4 h-[80%] rounded-t-lg opacity-75"></div>
+<div class="chart-bar-primary flex-none w-4 h-[90%] rounded-t-lg opacity-85"></div>
+<div class="chart-bar-primary flex-none w-4 h-[70%] rounded-t-lg opacity-65"></div>
+</div>
+</div>
+</div>
+<!-- X-Axis -->
+<div class="flex justify-between mt-4 text-[10px] font-mono-data border-t border-surface-variant pt-2 gap-x-1 min-w-\[600px\] whitespace-nowrap overflow-x-auto" style="color: #8b5cf6;"><span class="">00:00</span><span class="">04:00</span><span class="">08:00</span><span class="">12:00</span><span class="">16:00</span><span class="">20:00</span><span class="">23:59</span></div>
+</div>
+</div></div><div class="bg-white border border-border-subtle rounded-[24px] p-6 mb-gutter hover:shadow-md transition-shadow cursor-default group overflow-hidden border-primary">
+<div class="flex justify-between items-start mb-6">
+<div>
+<p class="font-label-md text-on-surface-variant text-[12px] uppercase tracking-wider mb-1">Salinity (ppm)</p>
+<div class="flex items-baseline gap-3">
+<span class="font-display text-headline-lg font-bold">350ppm</span>
+<div class="flex items-center text-danger text-[12px] font-bold">
+</div>
+</div>
+<p class="text-[12px] text-outline font-mono-data mt-2">10:25 AM | <span class="text-on-surface font-semibold">342ppm</span></p>
+</div>
+<div class="bg-primary/5 p-3 rounded-xl group-hover:bg-primary/10 transition-colors border border-primary/10">
+<span class="material-symbols-outlined text-primary text-[24px]">water_drop</span>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex flex-col justify-between text-[10px] text-outline font-mono-data h-32 py-1 mb-6">
+<span class="">500ppm</span>
+<span class="">400ppm</span>
+<span class="">300ppm</span>
+<span class="">200ppm</span>
+<span class="">0ppm</span>
+</div>
+<div class="flex-1 max-w-full">
+<div class="relative h-32 w-full pt-4 border-l border-surface-variant overflow-x-auto custom-scrollbar">
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-1 pt-4">
+<div class="border-t border-surface-variant/30 w-full"></div>
+<div class="border-t border-surface-variant/30 w-full"></div>
+<div class="border-t border-surface-variant/30 w-full"></div>
+<div class="border-t border-surface-variant/30 w-full"></div>
+</div>
+<div class="flex items-end gap-2 h-full w-full relative z-10 overflow-x-auto custom-scrollbar overflow-x-visible">
+<div class="flex items-end gap-2 h-full min-w-[600px] pb-1 flex-nowrap">
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[60%] rounded-t-lg opacity-40"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[65%] rounded-t-lg opacity-50"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[70%] rounded-t-lg opacity-60"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[75%] rounded-t-lg opacity-70"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[70%] rounded-t-lg opacity-80"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[65%] rounded-t-lg opacity-70"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[60%] rounded-t-lg opacity-60"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[55%] rounded-t-lg opacity-50"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[50%] rounded-t-lg opacity-40"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[55%] rounded-t-lg opacity-50"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[60%] rounded-t-lg opacity-60"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[65%] rounded-t-lg opacity-70"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[70%] rounded-t-lg opacity-80"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[75%] rounded-t-lg opacity-70"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[70%] rounded-t-lg opacity-60"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[65%] rounded-t-lg opacity-50"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[60%] rounded-t-lg opacity-40"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[55%] rounded-t-lg opacity-50"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[50%] rounded-t-lg opacity-60"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[45%] rounded-t-lg opacity-70"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[50%] rounded-t-lg opacity-80"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[55%] rounded-t-lg opacity-70"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[60%] rounded-t-lg opacity-60"></div>
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[65%] rounded-t-lg opacity-50"></div>
+</div>
+</div>
+</div>
+<div class="flex justify-between mt-4 text-[10px] font-mono-data border-t border-surface-variant pt-2 gap-x-1 min-w-[600px] whitespace-nowrap overflow-x-auto text-outline">
+<span class="">00:00</span>
+<span class="">04:00</span>
+<span class="">08:00</span>
+<span class="">12:00</span>
+<span class="">16:00</span>
+<span class="">20:00</span>
+<span class="">23:59</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Components Current Section -->
+<section class="scroll-mt-6 tab-transition" id="section-components" style="opacity: 1; transform: translateX(0px);">
+<div class="flex flex-col gap-1 mb-6">
+<div class="flex justify-between items-center">
+<h3 class="font-headline-md text-body-lg font-semibold text-primary">Hardware Component Usage</h3>
+<div class="flex items-center gap-1.5 px-3 py-1 bg-success/10 rounded-full border border-success/20">
+<div class="w-1.5 h-1.5 rounded-full bg-success animate-dot-pulse"></div>
+<span class="text-[10px] font-bold text-success uppercase tracking-widest">Live Monitoring</span>
+</div>
+</div>
+<p class="text-[13px] text-on-surface-variant">Real-time current consumption of hardware components.</p>
+</div>
+<!-- Circular Dial Gauge -->
+<div class="bg-white border border-border-subtle rounded-[24px] p-8 mb-gutter shadow-sm relative overflow-hidden flex flex-col items-center border-primary border-b-2">
+<div class="relative w-64 h-64 flex items-center justify-center">
+<!-- SVG for Segmented Ticks -->
+<svg class="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+<defs>
+<linearGradient id="tick-gradient" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#2563eb"></stop> <!-- Blue -->
+<stop offset="30%" stop-color="#a855f7"></stop> <!-- Purple -->
+<stop offset="70%" stop-color="#ec4899"></stop> <!-- Pink -->
+<stop offset="100%" stop-color="#ef4444"></stop> <!-- Red -->
+</linearGradient>
+</defs>
+<g id="ticks">
+<!-- Generating ticks via script or manually for visual accuracy -->
+<script>
+                    const group = document.currentScript.parentElement;
+                    for (let i = 0; i &lt; 60; i++) {
+                        const angle = (i * 360 / 60) * (Math.PI / 180);
+                        const x1 = 50 + 42 * Math.cos(angle);
+                        const y1 = 50 + 42 * Math.sin(angle);
+                        const x2 = 50 + 46 * Math.cos(angle);
+                        const y2 = 50 + 46 * Math.sin(angle);
+                        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                        line.setAttribute("x1", x1);
+                        line.setAttribute("y1", y1);
+                        line.setAttribute("x2", x2);
+                        line.setAttribute("y2", y2);
+                        line.setAttribute("stroke", "url(#tick-gradient)");
+                        line.setAttribute("stroke-width", "0.6");
+                        line.setAttribute("stroke-linecap", "round");
+                        // Optional: fade ticks to match Image 12's lighter side if needed, 
+                        // but request says gradient around entire perimeter.
+                        group.appendChild(line);
+                    }
+                </script><line x1="92" y1="50" x2="96" y2="50" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.76991960546748" y1="54.39019545724145" x2="95.74800718694057" y2="54.80830931031206" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.08219923081984" y1="58.73229101434589" x2="94.99478963375506" y2="59.56393777761693" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="89.94437368439645" y1="62.97871376374779" x2="93.74859974957707" y2="64.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="88.36890922098924" y1="67.0829390091836" x2="92.02309105155965" y2="68.70988558148682" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="86.37306695894642" y1="71" x2="89.83716857408419" y2="73" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="83.97871376374779" y1="74.68698059628387" x2="87.21478174124758" y2="77.03812160545377" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="81.21208267005056" y1="78.10348546707205" x2="84.18466197196014" y2="80.78000789250748" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="78.10348546707205" y1="81.21208267005056" x2="80.78000789250748" y2="84.18466197196014" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="74.68698059628387" y1="83.97871376374779" x2="77.03812160545377" y2="87.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="71" y1="86.37306695894642" x2="73" y2="89.83716857408417" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="67.0829390091836" y1="88.36890922098924" x2="68.70988558148682" y2="92.02309105155965" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="62.97871376374779" y1="89.94437368439645" x2="64.21478174124758" y2="93.74859974957707" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="58.7322910143459" y1="91.08219923081984" x2="59.563937777616935" y2="94.99478963375506" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="54.39019545724145" y1="91.76991960546748" x2="54.80830931031206" y2="95.74800718694057" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="50" y1="92" x2="50" y2="96" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="45.60980454275855" y1="91.76991960546748" x2="45.19169068968794" y2="95.74800718694057" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="41.26770898565411" y1="91.08219923081984" x2="40.43606222238307" y2="94.99478963375506" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="37.02128623625221" y1="89.94437368439645" x2="35.78521825875242" y2="93.74859974957707" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="32.91706099081639" y1="88.36890922098924" x2="31.290114418513188" y2="92.02309105155965" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="29.00000000000001" y1="86.37306695894642" x2="27.00000000000001" y2="89.83716857408419" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="25.313019403716133" y1="83.97871376374779" x2="22.96187839454624" y2="87.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="21.896514532927952" y1="81.21208267005056" x2="19.219992107492523" y2="84.18466197196014" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="18.78791732994945" y1="78.10348546707205" x2="15.815338028039875" y2="80.78000789250748" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="16.02128623625221" y1="74.68698059628387" x2="12.785218258752423" y2="77.03812160545377" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="13.626933041053576" y1="71" x2="10.162831425915819" y2="73" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="11.63109077901077" y1="67.08293900918362" x2="7.976908948440368" y2="68.70988558148682" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="10.055626315603554" y1="62.97871376374779" x2="6.25140025042294" y2="64.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.917800769180161" y1="58.73229101434589" x2="5.005210366244938" y2="59.56393777761693" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.230080394532521" y1="54.390195457241454" x2="4.251992813059431" y2="54.80830931031207" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8" y1="50.00000000000001" x2="4" y2="50.00000000000001" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.230080394532521" y1="45.60980454275855" x2="4.251992813059431" y2="45.19169068968794" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.917800769180168" y1="41.2677089856541" x2="5.005210366244945" y2="40.436062222383065" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="10.055626315603547" y1="37.021286236252216" x2="6.2514002504229325" y2="35.78521825875242" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="11.631090779010762" y1="32.917060990816395" x2="7.976908948440361" y2="31.29011441851319" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="13.626933041053576" y1="28.999999999999996" x2="10.162831425915826" y2="26.999999999999996" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="16.0212862362522" y1="25.313019403716133" x2="12.785218258752415" y2="22.96187839454624" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="18.78791732994944" y1="21.896514532927952" x2="15.815338028039868" y2="19.219992107492523" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="21.89651453292796" y1="18.787917329949437" x2="19.219992107492526" y2="15.81533802803986" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="25.313019403716122" y1="16.02128623625221" x2="22.96187839454623" y2="12.785218258752423" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="28.999999999999982" y1="13.62693304105359" x2="26.99999999999998" y2="10.162831425915833" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="32.917060990816395" y1="11.631090779010762" x2="31.290114418513195" y2="7.976908948440354" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="37.0212862362522" y1="10.055626315603554" x2="35.78521825875241" y2="6.25140025042294" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="41.26770898565409" y1="8.917800769180168" x2="40.43606222238305" y2="5.005210366244945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="45.60980454275856" y1="8.230080394532514" x2="45.191690689687945" y2="4.251992813059424" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="49.99999999999999" y1="8" x2="49.99999999999999" y2="4" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="54.390195457241425" y1="8.230080394532514" x2="54.80830931031204" y2="4.251992813059424" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="58.7322910143459" y1="8.917800769180168" x2="59.563937777616935" y2="5.005210366244945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="62.978713763747784" y1="10.055626315603547" x2="64.21478174124758" y2="6.2514002504229325" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="67.08293900918359" y1="11.631090779010755" x2="68.70988558148679" y2="7.976908948440347" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="71" y1="13.626933041053576" x2="73" y2="10.162831425915826" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="74.68698059628386" y1="16.0212862362522" x2="77.03812160545375" y2="12.785218258752415" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="78.10348546707203" y1="18.787917329949426" x2="80.78000789250746" y2="15.815338028039847" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="81.21208267005056" y1="21.89651453292796" x2="84.18466197196014" y2="19.219992107492526" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="83.97871376374779" y1="25.31301940371612" x2="87.21478174124758" y2="22.961878394546225" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="86.37306695894641" y1="28.999999999999982" x2="89.83716857408416" y2="26.99999999999998" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="88.36890922098924" y1="32.917060990816395" x2="92.02309105155965" y2="31.29011441851319" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="89.94437368439645" y1="37.021286236252195" x2="93.74859974957707" y2="35.78521825875241" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.08219923081984" y1="41.26770898565408" x2="94.99478963375506" y2="40.43606222238304" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.76991960546748" y1="45.60980454275855" x2="95.74800718694057" y2="45.191690689687945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="92" y1="50" x2="96" y2="50" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.76991960546748" y1="54.39019545724145" x2="95.74800718694057" y2="54.80830931031206" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.08219923081984" y1="58.73229101434589" x2="94.99478963375506" y2="59.56393777761693" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="89.94437368439645" y1="62.97871376374779" x2="93.74859974957707" y2="64.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="88.36890922098924" y1="67.0829390091836" x2="92.02309105155965" y2="68.70988558148682" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="86.37306695894642" y1="71" x2="89.83716857408419" y2="73" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="83.97871376374779" y1="74.68698059628387" x2="87.21478174124758" y2="77.03812160545377" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="81.21208267005056" y1="78.10348546707205" x2="84.18466197196014" y2="80.78000789250748" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="78.10348546707205" y1="81.21208267005056" x2="80.78000789250748" y2="84.18466197196014" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="74.68698059628387" y1="83.97871376374779" x2="77.03812160545377" y2="87.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="71" y1="86.37306695894642" x2="73" y2="89.83716857408417" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="67.0829390091836" y1="88.36890922098924" x2="68.70988558148682" y2="92.02309105155965" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="62.97871376374779" y1="89.94437368439645" x2="64.21478174124758" y2="93.74859974957707" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="58.7322910143459" y1="91.08219923081984" x2="59.563937777616935" y2="94.99478963375506" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="54.39019545724145" y1="91.76991960546748" x2="54.80830931031206" y2="95.74800718694057" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="50" y1="92" x2="50" y2="96" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="45.60980454275855" y1="91.76991960546748" x2="45.19169068968794" y2="95.74800718694057" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="41.26770898565411" y1="91.08219923081984" x2="40.43606222238307" y2="94.99478963375506" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="37.02128623625221" y1="89.94437368439645" x2="35.78521825875242" y2="93.74859974957707" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="32.91706099081639" y1="88.36890922098924" x2="31.290114418513188" y2="92.02309105155965" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="29.00000000000001" y1="86.37306695894642" x2="27.00000000000001" y2="89.83716857408419" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="25.313019403716133" y1="83.97871376374779" x2="22.96187839454624" y2="87.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="21.896514532927952" y1="81.21208267005056" x2="19.219992107492523" y2="84.18466197196014" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="18.78791732994945" y1="78.10348546707205" x2="15.815338028039875" y2="80.78000789250748" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="16.02128623625221" y1="74.68698059628387" x2="12.785218258752423" y2="77.03812160545377" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="13.626933041053576" y1="71" x2="10.162831425915819" y2="73" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="11.63109077901077" y1="67.08293900918362" x2="7.976908948440368" y2="68.70988558148682" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="10.055626315603554" y1="62.97871376374779" x2="6.25140025042294" y2="64.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.917800769180161" y1="58.73229101434589" x2="5.005210366244938" y2="59.56393777761693" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.230080394532521" y1="54.390195457241454" x2="4.251992813059431" y2="54.80830931031207" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8" y1="50.00000000000001" x2="4" y2="50.00000000000001" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.230080394532521" y1="45.60980454275855" x2="4.251992813059431" y2="45.19169068968794" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.917800769180168" y1="41.2677089856541" x2="5.005210366244945" y2="40.436062222383065" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="10.055626315603547" y1="37.021286236252216" x2="6.2514002504229325" y2="35.78521825875242" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="11.631090779010762" y1="32.917060990816395" x2="7.976908948440361" y2="31.29011441851319" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="13.626933041053576" y1="28.999999999999996" x2="10.162831425915826" y2="26.999999999999996" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="16.0212862362522" y1="25.313019403716133" x2="12.785218258752415" y2="22.96187839454624" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="18.78791732994944" y1="21.896514532927952" x2="15.815338028039868" y2="19.219992107492523" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="21.89651453292796" y1="18.787917329949437" x2="19.219992107492526" y2="15.81533802803986" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="25.313019403716122" y1="16.02128623625221" x2="22.96187839454623" y2="12.785218258752423" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="28.999999999999982" y1="13.62693304105359" x2="26.99999999999998" y2="10.162831425915833" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="32.917060990816395" y1="11.631090779010762" x2="31.290114418513195" y2="7.976908948440354" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="37.0212862362522" y1="10.055626315603554" x2="35.78521825875241" y2="6.25140025042294" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="41.26770898565409" y1="8.917800769180168" x2="40.43606222238305" y2="5.005210366244945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="45.60980454275856" y1="8.230080394532514" x2="45.191690689687945" y2="4.251992813059424" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="49.99999999999999" y1="8" x2="49.99999999999999" y2="4" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="54.390195457241425" y1="8.230080394532514" x2="54.80830931031204" y2="4.251992813059424" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="58.7322910143459" y1="8.917800769180168" x2="59.563937777616935" y2="5.005210366244945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="62.978713763747784" y1="10.055626315603547" x2="64.21478174124758" y2="6.2514002504229325" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="67.08293900918359" y1="11.631090779010755" x2="68.70988558148679" y2="7.976908948440347" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="71" y1="13.626933041053576" x2="73" y2="10.162831425915826" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="74.68698059628386" y1="16.0212862362522" x2="77.03812160545375" y2="12.785218258752415" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="78.10348546707203" y1="18.787917329949426" x2="80.78000789250746" y2="15.815338028039847" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="81.21208267005056" y1="21.89651453292796" x2="84.18466197196014" y2="19.219992107492526" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="83.97871376374779" y1="25.31301940371612" x2="87.21478174124758" y2="22.961878394546225" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="86.37306695894641" y1="28.999999999999982" x2="89.83716857408416" y2="26.99999999999998" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="88.36890922098924" y1="32.917060990816395" x2="92.02309105155965" y2="31.29011441851319" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="89.94437368439645" y1="37.021286236252195" x2="93.74859974957707" y2="35.78521825875241" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.08219923081984" y1="41.26770898565408" x2="94.99478963375506" y2="40.43606222238304" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.76991960546748" y1="45.60980454275855" x2="95.74800718694057" y2="45.191690689687945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="92" y1="50" x2="96" y2="50" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.76991960546748" y1="54.39019545724145" x2="95.74800718694057" y2="54.80830931031206" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.08219923081984" y1="58.73229101434589" x2="94.99478963375506" y2="59.56393777761693" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="89.94437368439645" y1="62.97871376374779" x2="93.74859974957707" y2="64.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="88.36890922098924" y1="67.0829390091836" x2="92.02309105155965" y2="68.70988558148682" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="86.37306695894642" y1="71" x2="89.83716857408419" y2="73" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="83.97871376374779" y1="74.68698059628387" x2="87.21478174124758" y2="77.03812160545377" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="81.21208267005056" y1="78.10348546707205" x2="84.18466197196014" y2="80.78000789250748" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="78.10348546707205" y1="81.21208267005056" x2="80.78000789250748" y2="84.18466197196014" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="74.68698059628387" y1="83.97871376374779" x2="77.03812160545377" y2="87.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="71" y1="86.37306695894642" x2="73" y2="89.83716857408417" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="67.0829390091836" y1="88.36890922098924" x2="68.70988558148682" y2="92.02309105155965" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="62.97871376374779" y1="89.94437368439645" x2="64.21478174124758" y2="93.74859974957707" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="58.7322910143459" y1="91.08219923081984" x2="59.563937777616935" y2="94.99478963375506" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="54.39019545724145" y1="91.76991960546748" x2="54.80830931031206" y2="95.74800718694057" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="50" y1="92" x2="50" y2="96" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="45.60980454275855" y1="91.76991960546748" x2="45.19169068968794" y2="95.74800718694057" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="41.26770898565411" y1="91.08219923081984" x2="40.43606222238307" y2="94.99478963375506" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="37.02128623625221" y1="89.94437368439645" x2="35.78521825875242" y2="93.74859974957707" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="32.91706099081639" y1="88.36890922098924" x2="31.290114418513188" y2="92.02309105155965" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="29.00000000000001" y1="86.37306695894642" x2="27.00000000000001" y2="89.83716857408419" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="25.313019403716133" y1="83.97871376374779" x2="22.96187839454624" y2="87.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="21.896514532927952" y1="81.21208267005056" x2="19.219992107492523" y2="84.18466197196014" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="18.78791732994945" y1="78.10348546707205" x2="15.815338028039875" y2="80.78000789250748" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="16.02128623625221" y1="74.68698059628387" x2="12.785218258752423" y2="77.03812160545377" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="13.626933041053576" y1="71" x2="10.162831425915819" y2="73" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="11.63109077901077" y1="67.08293900918362" x2="7.976908948440368" y2="68.70988558148682" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="10.055626315603554" y1="62.97871376374779" x2="6.25140025042294" y2="64.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.917800769180161" y1="58.73229101434589" x2="5.005210366244938" y2="59.56393777761693" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.230080394532521" y1="54.390195457241454" x2="4.251992813059431" y2="54.80830931031207" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8" y1="50.00000000000001" x2="4" y2="50.00000000000001" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.230080394532521" y1="45.60980454275855" x2="4.251992813059431" y2="45.19169068968794" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.917800769180168" y1="41.2677089856541" x2="5.005210366244945" y2="40.436062222383065" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="10.055626315603547" y1="37.021286236252216" x2="6.2514002504229325" y2="35.78521825875242" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="11.631090779010762" y1="32.917060990816395" x2="7.976908948440361" y2="31.29011441851319" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="13.626933041053576" y1="28.999999999999996" x2="10.162831425915826" y2="26.999999999999996" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="16.0212862362522" y1="25.313019403716133" x2="12.785218258752415" y2="22.96187839454624" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="18.78791732994944" y1="21.896514532927952" x2="15.815338028039868" y2="19.219992107492523" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="21.89651453292796" y1="18.787917329949437" x2="19.219992107492526" y2="15.81533802803986" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="25.313019403716122" y1="16.02128623625221" x2="22.96187839454623" y2="12.785218258752423" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="28.999999999999982" y1="13.62693304105359" x2="26.99999999999998" y2="10.162831425915833" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="32.917060990816395" y1="11.631090779010762" x2="31.290114418513195" y2="7.976908948440354" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="37.0212862362522" y1="10.055626315603554" x2="35.78521825875241" y2="6.25140025042294" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="41.26770898565409" y1="8.917800769180168" x2="40.43606222238305" y2="5.005210366244945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="45.60980454275856" y1="8.230080394532514" x2="45.191690689687945" y2="4.251992813059424" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="49.99999999999999" y1="8" x2="49.99999999999999" y2="4" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="54.390195457241425" y1="8.230080394532514" x2="54.80830931031204" y2="4.251992813059424" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="58.7322910143459" y1="8.917800769180168" x2="59.563937777616935" y2="5.005210366244945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="62.978713763747784" y1="10.055626315603547" x2="64.21478174124758" y2="6.2514002504229325" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="67.08293900918359" y1="11.631090779010755" x2="68.70988558148679" y2="7.976908948440347" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="71" y1="13.626933041053576" x2="73" y2="10.162831425915826" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="74.68698059628386" y1="16.0212862362522" x2="77.03812160545375" y2="12.785218258752415" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="78.10348546707203" y1="18.787917329949426" x2="80.78000789250746" y2="15.815338028039847" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="81.21208267005056" y1="21.89651453292796" x2="84.18466197196014" y2="19.219992107492526" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="83.97871376374779" y1="25.31301940371612" x2="87.21478174124758" y2="22.961878394546225" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="86.37306695894641" y1="28.999999999999982" x2="89.83716857408416" y2="26.99999999999998" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="88.36890922098924" y1="32.917060990816395" x2="92.02309105155965" y2="31.29011441851319" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="89.94437368439645" y1="37.021286236252195" x2="93.74859974957707" y2="35.78521825875241" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.08219923081984" y1="41.26770898565408" x2="94.99478963375506" y2="40.43606222238304" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.76991960546748" y1="45.60980454275855" x2="95.74800718694057" y2="45.191690689687945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="92" y1="50" x2="96" y2="50" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.76991960546748" y1="54.39019545724145" x2="95.74800718694057" y2="54.80830931031206" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.08219923081984" y1="58.73229101434589" x2="94.99478963375506" y2="59.56393777761693" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="89.94437368439645" y1="62.97871376374779" x2="93.74859974957707" y2="64.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="88.36890922098924" y1="67.0829390091836" x2="92.02309105155965" y2="68.70988558148682" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="86.37306695894642" y1="71" x2="89.83716857408419" y2="73" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="83.97871376374779" y1="74.68698059628387" x2="87.21478174124758" y2="77.03812160545377" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="81.21208267005056" y1="78.10348546707205" x2="84.18466197196014" y2="80.78000789250748" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="78.10348546707205" y1="81.21208267005056" x2="80.78000789250748" y2="84.18466197196014" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="74.68698059628387" y1="83.97871376374779" x2="77.03812160545377" y2="87.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="71" y1="86.37306695894642" x2="73" y2="89.83716857408417" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="67.0829390091836" y1="88.36890922098924" x2="68.70988558148682" y2="92.02309105155965" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="62.97871376374779" y1="89.94437368439645" x2="64.21478174124758" y2="93.74859974957707" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="58.7322910143459" y1="91.08219923081984" x2="59.563937777616935" y2="94.99478963375506" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="54.39019545724145" y1="91.76991960546748" x2="54.80830931031206" y2="95.74800718694057" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="50" y1="92" x2="50" y2="96" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="45.60980454275855" y1="91.76991960546748" x2="45.19169068968794" y2="95.74800718694057" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="41.26770898565411" y1="91.08219923081984" x2="40.43606222238307" y2="94.99478963375506" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="37.02128623625221" y1="89.94437368439645" x2="35.78521825875242" y2="93.74859974957707" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="32.91706099081639" y1="88.36890922098924" x2="31.290114418513188" y2="92.02309105155965" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="29.00000000000001" y1="86.37306695894642" x2="27.00000000000001" y2="89.83716857408419" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="25.313019403716133" y1="83.97871376374779" x2="22.96187839454624" y2="87.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="21.896514532927952" y1="81.21208267005056" x2="19.219992107492523" y2="84.18466197196014" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="18.78791732994945" y1="78.10348546707205" x2="15.815338028039875" y2="80.78000789250748" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="16.02128623625221" y1="74.68698059628387" x2="12.785218258752423" y2="77.03812160545377" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="13.626933041053576" y1="71" x2="10.162831425915819" y2="73" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="11.63109077901077" y1="67.08293900918362" x2="7.976908948440368" y2="68.70988558148682" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="10.055626315603554" y1="62.97871376374779" x2="6.25140025042294" y2="64.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.917800769180161" y1="58.73229101434589" x2="5.005210366244938" y2="59.56393777761693" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.230080394532521" y1="54.390195457241454" x2="4.251992813059431" y2="54.80830931031207" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8" y1="50.00000000000001" x2="4" y2="50.00000000000001" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.230080394532521" y1="45.60980454275855" x2="4.251992813059431" y2="45.19169068968794" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.917800769180168" y1="41.2677089856541" x2="5.005210366244945" y2="40.436062222383065" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="10.055626315603547" y1="37.021286236252216" x2="6.2514002504229325" y2="35.78521825875242" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="11.631090779010762" y1="32.917060990816395" x2="7.976908948440361" y2="31.29011441851319" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="13.626933041053576" y1="28.999999999999996" x2="10.162831425915826" y2="26.999999999999996" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="16.0212862362522" y1="25.313019403716133" x2="12.785218258752415" y2="22.96187839454624" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="18.78791732994944" y1="21.896514532927952" x2="15.815338028039868" y2="19.219992107492523" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="21.89651453292796" y1="18.787917329949437" x2="19.219992107492526" y2="15.81533802803986" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="25.313019403716122" y1="16.02128623625221" x2="22.96187839454623" y2="12.785218258752423" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="28.999999999999982" y1="13.62693304105359" x2="26.99999999999998" y2="10.162831425915833" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="32.917060990816395" y1="11.631090779010762" x2="31.290114418513195" y2="7.976908948440354" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="37.0212862362522" y1="10.055626315603554" x2="35.78521825875241" y2="6.25140025042294" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="41.26770898565409" y1="8.917800769180168" x2="40.43606222238305" y2="5.005210366244945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="45.60980454275856" y1="8.230080394532514" x2="45.191690689687945" y2="4.251992813059424" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="49.99999999999999" y1="8" x2="49.99999999999999" y2="4" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="54.390195457241425" y1="8.230080394532514" x2="54.80830931031204" y2="4.251992813059424" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="58.7322910143459" y1="8.917800769180168" x2="59.563937777616935" y2="5.005210366244945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="62.978713763747784" y1="10.055626315603547" x2="64.21478174124758" y2="6.2514002504229325" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="67.08293900918359" y1="11.631090779010755" x2="68.70988558148679" y2="7.976908948440347" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="71" y1="13.626933041053576" x2="73" y2="10.162831425915826" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="74.68698059628386" y1="16.0212862362522" x2="77.03812160545375" y2="12.785218258752415" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="78.10348546707203" y1="18.787917329949426" x2="80.78000789250746" y2="15.815338028039847" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="81.21208267005056" y1="21.89651453292796" x2="84.18466197196014" y2="19.219992107492526" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="83.97871376374779" y1="25.31301940371612" x2="87.21478174124758" y2="22.961878394546225" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="86.37306695894641" y1="28.999999999999982" x2="89.83716857408416" y2="26.99999999999998" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="88.36890922098924" y1="32.917060990816395" x2="92.02309105155965" y2="31.29011441851319" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="89.94437368439645" y1="37.021286236252195" x2="93.74859974957707" y2="35.78521825875241" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.08219923081984" y1="41.26770898565408" x2="94.99478963375506" y2="40.43606222238304" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.76991960546748" y1="45.60980454275855" x2="95.74800718694057" y2="45.191690689687945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line>
+</g>
+</svg>
+<!-- Center Content -->
+<div class="text-center z-10 flex flex-col items-center">
+<span class="text-[56px] font-bold font-sora leading-none text-on-surface">218</span>
+<span class="text-[18px] font-semibold font-sora text-on-surface-variant mt-1">mA</span>
+<span class="text-[10px] font-bold font-sora text-outline uppercase tracking-[0.2em] mt-4">Total Current Draw</span>
+</div>
+</div>
+<!-- Status & Timestamp -->
+<div class="flex flex-col items-center mt-6 gap-2">
+<div class="flex items-center gap-1.5 opacity-70">
+<span class="material-symbols-outlined text-[16px] text-outline">schedule</span>
+<span class="font-mono-data font-bold text-[12px] text-on-surface-variant">10:25:34 PM</span>
+</div>
+<div class="px-4 py-1.5 bg-success/5 border border-success/10 rounded-full">
+<span class="text-[11px] font-bold text-success uppercase tracking-widest">Excellent Status</span>
+</div>
+</div>
+</div>
+<!-- Hardware Component Cards Vertical Stack -->
+<div class="space-y-3 mb-8">
+<!-- ESP32 -->
+<div class="bg-white border border-border-subtle rounded-xl p-4 flex items-center gap-4 hover:shadow-sm transition-shadow border-surface-variant/30 border-purple-500">
+<div class="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">memory</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-0.5">
+<h4 class="font-semibold text-[14px]">ESP32 Controller</h4>
+<span class="text-[9px] font-bold text-success uppercase">Online</span>
+</div>
+<div class="w-full bg-surface-container h-1 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 w-[60%]"></div>
+</div>
+</div>
+<div class="text-right">
+<p class="font-mono-data font-bold text-primary">120 mA</p>
+</div>
+</div>
+<!-- Voltage Sensor -->
+<div class="bg-white border border-border-subtle rounded-xl p-4 flex items-center gap-4 hover:shadow-sm transition-shadow border-surface-variant/30 border-primary border-purple-500">
+<div class="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-0.5">
+<h4 class="font-semibold text-[14px]">Voltage Sensor</h4>
+<span class="text-[9px] font-bold text-success uppercase">Online</span>
+</div>
+<div class="w-full bg-surface-container h-1 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 w-[15%]"></div>
+</div>
+</div>
+<div class="text-right">
+<p class="font-mono-data font-bold text-primary">8 mA</p>
+</div>
+</div>
+<!-- Salinity Sensor -->
+<div class="bg-white border border-border-subtle rounded-xl p-4 flex items-center gap-4 hover:shadow-sm transition-shadow border-surface-variant/30 border-purple-500">
+<div class="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-0.5">
+<h4 class="font-semibold text-[14px]">Salinity Sensor</h4>
+<span class="text-[9px] font-bold text-success uppercase">Online</span>
+</div>
+<div class="w-full bg-surface-container h-1 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 w-[25%]"></div>
+</div>
+</div>
+<div class="text-right">
+<p class="font-mono-data font-bold text-primary">20 mA</p>
+</div>
+</div>
+<!-- Relay Driver -->
+<div class="bg-white border border-border-subtle rounded-xl p-4 flex items-center gap-4 hover:shadow-sm transition-shadow border-surface-variant/30 border-purple-500">
+<div class="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">settings_input_component</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-0.5">
+<h4 class="font-semibold text-[14px]">Relay Driver Module</h4>
+<span class="text-[9px] font-bold text-success uppercase">Online</span>
+</div>
+<div class="w-full bg-surface-container h-1 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 w-[10%]"></div>
+</div>
+</div>
+<div class="text-right">
+<p class="font-mono-data font-bold text-primary">5 mA</p>
+</div>
+</div><div class="bg-white border border-border-subtle rounded-xl p-4 flex items-center gap-4 hover:shadow-sm transition-shadow border-surface-variant/30 border-purple-500">
+<div class="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">lightbulb</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-0.5">
+<h4 class="font-semibold text-[14px]">Smart Bulb</h4>
+<span class="text-[9px] font-bold text-success uppercase">Online</span>
+</div>
+<div class="w-full bg-surface-container h-1 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 w-[18%]"></div>
+</div>
+</div>
+<div class="text-right">
+<p class="font-mono-data font-bold text-primary">12 mA</p>
+</div>
+</div>
+<!-- WiFi -->
+
+</div>
+<!-- Component Status Icons (Bottom) -->
+
+</section>
+<!-- Alerts Section -->
+<section class="scroll-mt-6 pb-4 tab-transition" id="section-alerts" style="opacity: 1; transform: translateX(0px);">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-headline-md text-body-lg font-semibold text-primary">Alert History</h3>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-4 p-4 rounded-xl hover:bg-surface-container transition-colors">
+<div class="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center text-success">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md font-semibold text-[14px]">Voltage Stable</p>
+<p class="text-[12px] text-on-surface-variant">Voltage reading is within normal range.</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-outline font-medium">Just now</p>
+<div class="w-2 h-2 rounded-full bg-success ml-auto mt-1"></div>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-xl hover:bg-surface-container transition-colors">
+<div class="w-10 h-10 rounded-full bg-warning/10 flex items-center justify-center text-warning">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+</div>
+<div class="flex-1 max-w-full">
+<p class="font-body-md font-semibold text-[14px]">Salinity High</p>
+<p class="text-[12px] text-on-surface-variant">Salinity level is above normal threshold.</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-outline font-medium">10 mins ago</p>
+<div class="w-2 h-2 rounded-full bg-warning ml-auto mt-1"></div>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-xl hover:bg-surface-container transition-colors">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center text-outline">
+<span class="material-symbols-outlined text-[20px]">cloud_off</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md font-semibold text-[14px]">Device Offline</p>
+<p class="text-[12px] text-on-surface-variant">Device was offline for 5 minutes.</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-outline font-medium">25 mins ago</p>
+<div class="w-2 h-2 rounded-full bg-outline ml-auto mt-1"></div>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-xl hover:bg-surface-container transition-colors">
+<div class="w-10 h-10 rounded-full bg-danger/10 flex items-center justify-center text-danger">
+<span class="material-symbols-outlined text-[20px]">error</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md font-semibold text-[14px]">Voltage Spike Detected</p>
+<p class="text-[12px] text-on-surface-variant">Voltage reached 240V at 09:45 AM.</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-outline font-medium">1 hour ago</p>
+<div class="w-2 h-2 rounded-full bg-danger ml-auto mt-1"></div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Sticky Footer CTA -->
+<footer class="p-gutter bg-white border-t border-border-subtle flex-none">
+<button class="w-full py-4 bg-primary text-on-primary font-bold rounded-xl hover:bg-primary-container transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">ios_share</span>
+                Back to Dashboard</button>
+</footer>
+</aside>
+<script>
+        // Close panel logic
+        function closePanel() {
+            document.querySelector('aside').style.transform = 'translateX(100%)';
+            document.querySelector('main').classList.remove('opacity-30');
+        }
+
+        // Toggle power logic
+        function togglePowerStatus() {
+            const toggle = document.getElementById('bulb-toggle');
+            const dot = document.getElementById('power-status-dot');
+            const statusText = document.getElementById('power-status-text');
+            const iconContainer = document.getElementById('bulb-icon-container');
+            const icon = document.getElementById('bulb-icon');
+
+            if (toggle.checked) {
+                // UI status update
+                dot.classList.replace('bg-outline', 'bg-success');
+                statusText.innerText = 'Online';
+                statusText.classList.replace('text-outline', 'text-success');
+
+                // Apply ON styles (Light Orange BG, Vibrant Orange Icon)
+                iconContainer.classList.remove('bg-primary/10', 'shadow-none');
+                iconContainer.classList.add('bg-orange-100', 'shadow-[0_0_15px_rgba(249,115,22,0.2)]');
+                icon.classList.remove('text-primary');
+                icon.classList.add('text-orange-500');
+                
+                // Add pulse animation
+                iconContainer.classList.add('animate-subtle-pulse');
+                
+                // Remove animation after its duration
+                setTimeout(() => {
+                    iconContainer.classList.remove('animate-subtle-pulse');
+                }, 3000);
+            } else {
+                // UI status update
+                dot.classList.replace('bg-success', 'bg-outline');
+                statusText.innerText = 'Offline';
+                statusText.classList.replace('text-success', 'text-outline');
+
+                // Apply OFF styles (Light Blue BG, Primary Blue Icon)
+                iconContainer.classList.remove('bg-orange-100', 'shadow-[0_0_15px_rgba(249,115,22,0.2)]', 'animate-subtle-pulse');
+                iconContainer.classList.add('bg-primary/10', 'shadow-none');
+                icon.classList.remove('text-orange-500');
+                icon.classList.add('text-primary');
+            }
+        }
+
+        // Active state for navigation links on scroll and tab animations
+        const scrollContainer = document.querySelector('.custom-scrollbar');
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('nav a');
+
+        scrollContainer.addEventListener('scroll', () => {
+            let current = "";
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollContainer.scrollTop >= (sectionTop - 150)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                const targetId = link.getAttribute('href').replace('#', '');
+                const targetSection = document.getElementById(targetId);
+
+                link.classList.remove('text-primary', 'border-primary', 'border-b-2');
+                link.classList.add('text-outline', 'border-transparent');
+                
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('text-primary', 'border-primary', 'border-b-2');
+                    link.classList.remove('text-outline', 'border-transparent');
+                    
+                    // Interaction: Fade & Slide-in effect simulation for section
+                    if (targetSection) {
+                        targetSection.style.opacity = '1';
+                        targetSection.style.transform = 'translateX(0)';
+                    }
+                } else {
+                    if (targetSection) {
+                        targetSection.style.opacity = '0.95';
+                    }
+                }
+            });
+        });
+    </script>
 
 
 

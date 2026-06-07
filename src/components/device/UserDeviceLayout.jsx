@@ -86,6 +86,7 @@ export const UserDeviceLayout = ({
   deviceId,
   assignment,
   onViewHistory,
+  onViewDetails,
 }) => {
   const navigate = useNavigate();
 
@@ -125,7 +126,9 @@ export const UserDeviceLayout = ({
   const status = getStatusConfig(tds);
 
   const handleAnalyticsRedirect = () => {
-    if (onViewHistory) {
+    if (onViewDetails) {
+      onViewDetails();
+    } else if (onViewHistory) {
       onViewHistory();
     } else {
       const targetPath = ROUTES.DEVICE_ANALYTICS.replace(":deviceId", deviceId);

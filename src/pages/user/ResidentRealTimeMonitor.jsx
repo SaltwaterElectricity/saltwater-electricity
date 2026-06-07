@@ -11,6 +11,7 @@ import {
   SummaryCard,
   RecentAlertsFeed,
   EmptyState,
+  DeviceDetailsPanel,
 } from "../../components";
 import { ROUTES } from "../../constants/routes";
 import Toast from "../../components/ui/Toast";
@@ -25,10 +26,12 @@ const ResidentRealTimeMonitor = () => {
   const { user } = useAuth();
   const { devices, telemetry, loading: devicesLoading } = useDevices();
   const { assignments, loading: assignmentsLoading } = useAssignments();
-  const { logs: auditLogs } = useAuditLogs(15);
+  const { logs: auditLogs } = useAuditLogs(50); // Fetch more for detailed view
 
-  // MODAL STATES
+  // MODAL & PANEL STATES
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+  const [selectedDeviceId, setSelectedDeviceId] = useState(null);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   // TOAST STATE
   const [toastConfig, setToastConfig] = useState({
@@ -49,8 +52,19 @@ const ResidentRealTimeMonitor = () => {
     return devices.filter((d) => assignments[d.device_id]?.userId === myUid);
   }, [devices, assignments, user, assignmentsLoading]);
 
+  // Derive selected device data
+  const selectedDevice = React.useMemo(() => 
+    personalUnits.find(d => d.device_id === selectedDeviceId),
+    [personalUnits, selectedDeviceId]
+  );
+
   const handleRequestDevice = () => {
     setIsRequestModalOpen(true);
+  };
+
+  const handleViewDetails = (deviceId) => {
+    setSelectedDeviceId(deviceId);
+    setIsPanelOpen(true);
   };
 
   const isLoading = devicesLoading || assignmentsLoading;
@@ -131,6 +145,7 @@ const ResidentRealTimeMonitor = () => {
                     deviceName={device.device_name}
                     telemetry={telemetry?.[device.device_id]}
                     assignment={assignments[device.device_id]}
+                    onViewDetails={() => handleViewDetails(device.device_id)}
                     onViewHistory={() =>
                       navigate(ROUTES.DEVICE_ANALYTICS.replace(":deviceId", device.device_id))
                     }
@@ -151,11 +166,23 @@ const ResidentRealTimeMonitor = () => {
         </div>
       </div>
 
-      {/* MODALS */}
+      {/* MODALS & PANELS */}
       <DeviceRequestModal
         isOpen={isRequestModalOpen}
         onClose={() => setIsRequestModalOpen(false)}
         onShowToast={triggerToast}
+      />
+
+      <DeviceDetailsPanel 
+        isOpen={isPanelOpen}
+        onClose={() => setIsPanelOpen(false)}
+        device={selectedDevice}
+        telemetry={telemetry?.[selectedDeviceId]}
+        assignment={{
+          ...assignments[selectedDeviceId],
+          ...user, // Hydrate with current user profile data
+        }}
+        auditLogs={auditLogs}
       />
     </div>
   );
