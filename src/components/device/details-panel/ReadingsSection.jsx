@@ -11,11 +11,13 @@ export const ReadingsSection = ({ telemetry }) => {
 
   return (
     <section id="section-readings" className="scroll-mt-6">
-      <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-5">Real-Time Readings</h3>
-      
+      <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-5">
+        Real-Time Readings
+      </h3>
+
       <div className="grid grid-cols-1 gap-3.5">
         {/* Voltage Card */}
-        <ReadingCard 
+        <ReadingCard
           icon={Zap}
           label="Voltage (V)"
           value={`${voltage}V`}
@@ -25,7 +27,7 @@ export const ReadingsSection = ({ telemetry }) => {
         />
 
         {/* Salinity Card */}
-        <ReadingCard 
+        <ReadingCard
           icon={Droplets}
           label="Salinity (ppm)"
           value={`${tds}ppm`}
@@ -39,9 +41,16 @@ export const ReadingsSection = ({ telemetry }) => {
 };
 
 const ReadingCard = ({ icon: Icon, label, value, subValue, color, bg }) => (
-  <div className={cn("border border-slate-100 rounded-xl p-4.5 flex justify-between items-start transition-all hover:shadow-md", bg)}>
+  <div
+    className={cn(
+      "border border-slate-100 rounded-xl p-4.5 flex justify-between items-start transition-all hover:shadow-md",
+      bg
+    )}
+  >
     <div>
-      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">{label}</p>
+      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">
+        {label}
+      </p>
       <div className="flex items-baseline gap-1.5">
         <span className="text-2xl font-black text-slate-900 font-display">{value}</span>
       </div>

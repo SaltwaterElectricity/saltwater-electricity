@@ -11,14 +11,7 @@ import { AlertHistorySection } from "./AlertHistorySection";
  * Slide-out drawer for detailed device oversight.
  * Mirrored from code1.html legacy design.
  */
-const DeviceDetailsPanel = ({
-  isOpen,
-  onClose,
-  device,
-  telemetry,
-  assignment,
-  auditLogs = [],
-}) => {
+const DeviceDetailsPanel = ({ isOpen, onClose, device, telemetry, assignment, auditLogs = [] }) => {
   const [now, setNow] = useState(0);
 
   // Update 'now' when panel opens or telemetry updates
@@ -33,20 +26,24 @@ const DeviceDetailsPanel = ({
   if (!device) return null;
 
   const { device_id, device_name } = device;
-  
+
   // Requirement: Ensure isOnline is accurate even during the first tick after opening
-  const isOnline = now > 0 && telemetry?.timestamp && (now - telemetry.timestamp < 300000);
+  const isOnline = now > 0 && telemetry?.timestamp && now - telemetry.timestamp < 300000;
 
   const firstName = assignment?.firstName || "Unknown";
   const lastName = assignment?.lastName || "";
   const fullName = `${firstName} ${lastName}`.trim();
-  const assignedDate = assignment?.assignedAt 
-    ? new Date(assignment.assignedAt).toLocaleDateString("en-US", { month: 'long', day: 'numeric', year: 'numeric' })
+  const assignedDate = assignment?.assignedAt
+    ? new Date(assignment.assignedAt).toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
     : "Not Assigned";
   const address = assignment?.address?.baranggay || "Location unset";
 
   return (
-    <aside 
+    <aside
       className={cn(
         "fixed right-0 top-[65px] h-[calc(100vh-65px)] w-full sm:w-[400px] bg-white border-l border-slate-100 shadow-2xl z-[50] flex flex-col transition-transform duration-500 ease-in-out transform",
         isOpen ? "translate-x-0" : "translate-x-full"
@@ -57,12 +54,15 @@ const DeviceDetailsPanel = ({
         <div className="relative flex items-start gap-3 mb-4">
           {/* Branding Icon */}
           <div className="flex-none w-12 h-12 bg-blue-50 rounded-xl border border-blue-100 flex items-center justify-center overflow-hidden">
-             <img 
-               src="/favicon.png" 
-               alt="ESM" 
-               className="w-8 h-8 object-contain opacity-80"
-               onError={(e) => { e.target.src = 'https://ui-avatars.com/api/?name=ESM&background=eff6ff&color=2563eb&bold=true'; }}
-             />
+            <img
+              src="/favicon.png"
+              alt="ESM"
+              className="w-8 h-8 object-contain opacity-80"
+              onError={(e) => {
+                e.target.src =
+                  "https://ui-avatars.com/api/?name=ESM&background=eff6ff&color=2563eb&bold=true";
+              }}
+            />
           </div>
 
           {/* Text Content */}
@@ -71,21 +71,27 @@ const DeviceDetailsPanel = ({
               <h2 className="font-display text-lg font-black text-slate-900 uppercase tracking-tight truncate">
                 {device_name || device_id}
               </h2>
-              <span className={cn(
-                "px-1.5 py-0.5 rounded text-[8px] font-bold tracking-widest uppercase border",
-                isOnline ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-slate-50 text-slate-400 border-slate-100"
-              )}>
+              <span
+                className={cn(
+                  "px-1.5 py-0.5 rounded text-[8px] font-bold tracking-widest uppercase border",
+                  isOnline
+                    ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                    : "bg-slate-50 text-slate-400 border-slate-100"
+                )}
+              >
                 {isOnline ? "Online" : "Offline"}
               </span>
             </div>
             <div className="space-y-0.5">
               <p className="text-slate-600 font-bold text-[12px] leading-tight">{fullName}</p>
-              <p className="text-slate-400 text-[10px] font-medium leading-tight truncate">{assignment?.email || "Account Connected"}</p>
+              <p className="text-slate-400 text-[10px] font-medium leading-tight truncate">
+                {assignment?.email || "Account Connected"}
+              </p>
             </div>
           </div>
 
           {/* Close Button */}
-          <button 
+          <button
             onClick={onClose}
             className="absolute -top-1 -right-1 p-1.5 hover:bg-slate-50 rounded-full transition-colors text-slate-400 hover:text-slate-600"
           >
@@ -96,7 +102,7 @@ const DeviceDetailsPanel = ({
         {/* Navigation Anchor Links */}
         <nav className="flex gap-5 overflow-x-auto no-scrollbar pt-1">
           {["Control", "Readings", "Components", "Alerts"].map((tab) => (
-            <a 
+            <a
               key={tab}
               href={`#section-${tab.toLowerCase()}`}
               className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-primary transition-colors pb-1.5 relative group"
@@ -113,7 +119,9 @@ const DeviceDetailsPanel = ({
       <div key={device_id} className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-10 pb-20">
         {/* Overview Section */}
         <section id="section-overview" className="scroll-mt-6">
-          <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-5">Overview</h3>
+          <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-5">
+            Overview
+          </h3>
           <div className="grid grid-cols-2 gap-y-5 gap-x-3">
             <DetailItem icon={User} label="Household User" value={fullName} />
             <DetailItem icon={Calendar} label="Assigned Date" value={assignedDate} />
@@ -143,7 +151,9 @@ const DetailItem = ({ icon: Icon, label, value, fullWidth }) => (
       <Icon size={14} className="text-primary/60" />
     </div>
     <div>
-      <p className="text-[8px] font-black text-slate-400 uppercase tracking-tighter mb-0.5">{label}</p>
+      <p className="text-[8px] font-black text-slate-400 uppercase tracking-tighter mb-0.5">
+        {label}
+      </p>
       <p className="text-[12px] font-bold text-slate-700 leading-tight">{value}</p>
     </div>
   </div>

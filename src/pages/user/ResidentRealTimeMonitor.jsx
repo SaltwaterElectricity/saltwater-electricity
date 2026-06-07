@@ -53,8 +53,8 @@ const ResidentRealTimeMonitor = () => {
   }, [devices, assignments, user, assignmentsLoading]);
 
   // Derive selected device data
-  const selectedDevice = React.useMemo(() => 
-    personalUnits.find(d => d.device_id === selectedDeviceId),
+  const selectedDevice = React.useMemo(
+    () => personalUnits.find((d) => d.device_id === selectedDeviceId),
     [personalUnits, selectedDeviceId]
   );
 
@@ -173,7 +173,7 @@ const ResidentRealTimeMonitor = () => {
         onShowToast={triggerToast}
       />
 
-      <DeviceDetailsPanel 
+      <DeviceDetailsPanel
         isOpen={isPanelOpen}
         onClose={() => setIsPanelOpen(false)}
         device={selectedDevice}
