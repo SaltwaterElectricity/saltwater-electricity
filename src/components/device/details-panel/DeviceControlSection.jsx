@@ -30,109 +30,85 @@ export const DeviceControlSection = ({ deviceId, telemetry }) => {
 
   return (
     <section id="section-control" className="scroll-mt-6">
-      <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-5">
-        Device Controls
-      </h3>
+      <h3 className="font-display text-lg font-bold mb-6 text-primary">Device Controls</h3>
 
-      <div
-        className={cn(
-          "bg-white border rounded-2xl p-6 transition-all duration-300",
-          isBulbOn
-            ? "border-orange-200 shadow-lg shadow-orange-50/50"
-            : "border-slate-100 shadow-sm"
-        )}
-      >
-        <div className="flex flex-col items-center text-center space-y-5">
+      <div className={cn(
+        "bg-white border rounded-2xl p-6 transition-all duration-300 shadow-sm hover:shadow-md",
+        isBulbOn ? "border-primary" : "border-slate-100"
+      )}>
+        <div className="flex flex-col items-center text-center space-y-6">
           {/* Bulb Icon with Visual Feedback */}
-          <div className="relative">
-            <div
-              className={cn(
-                "w-16 h-16 flex items-center justify-center rounded-2xl transition-all duration-500",
-                isBulbOn
-                  ? "bg-orange-100 shadow-[0_0_20px_rgba(249,115,22,0.3)] animate-subtle-pulse"
-                  : "bg-slate-50 shadow-inner"
-              )}
-            >
-              <Lightbulb
-                size={32}
+          <div className="flex flex-col items-center gap-4 w-full">
+            <div className={cn(
+              "w-14 h-14 flex items-center justify-center rounded-2xl transition-all duration-300",
+              isBulbOn 
+                ? "bg-orange-100 shadow-[0_0_15px_rgba(249,115,22,0.2)]" 
+                : "bg-blue-50/50"
+            )}>
+              <Lightbulb 
+                size={32} 
                 className={cn(
-                  "transition-colors duration-500",
-                  isBulbOn ? "text-orange-500 fill-orange-500/20" : "text-slate-300"
-                )}
+                  "transition-colors duration-300",
+                  isBulbOn ? "text-orange-500" : "text-primary/40"
+                )} 
               />
             </div>
 
-            {/* Status Dot */}
-            <div
-              className={cn(
-                "absolute -top-1 -right-1 w-5 h-5 rounded-full border-4 border-white flex items-center justify-center transition-colors",
-                isOnline ? "bg-emerald-500" : "bg-slate-300"
-              )}
-            />
-          </div>
-
-          <div className="space-y-1">
-            <div className="flex items-center justify-center gap-2">
-              <p className="font-display text-base font-black text-slate-900 uppercase">
-                Smart Bulb Power
-              </p>
-              <span
-                className={cn(
-                  "px-1.5 py-0.5 rounded text-[8px] font-bold tracking-widest uppercase border",
-                  isOnline
-                    ? "bg-emerald-50 text-emerald-600 border-emerald-100"
-                    : "bg-slate-50 text-slate-400 border-slate-100"
-                )}
-              >
-                {isOnline ? "Sync" : "No Sync"}
-              </span>
+            <div className="flex flex-col items-center">
+              <div className="flex items-center gap-2 mb-1">
+                <p className="font-bold text-slate-900 text-lg">Smart Bulb Power</p>
+                <div className="flex items-center gap-1.5">
+                  <div className={cn(
+                    "w-2 h-2 rounded-full transition-all shadow-[0_0_8px_rgba(16,185,129,0.4)]",
+                    isOnline ? "bg-emerald-500" : "bg-slate-300"
+                  )} />
+                  <span className={cn(
+                    "text-[11px] font-bold uppercase tracking-widest",
+                    isOnline ? "text-emerald-500" : "text-slate-400"
+                  )}>{isOnline ? "Online" : "Offline"}</span>
+                </div>
+              </div>
+              <p className="text-[14px] text-slate-500 leading-relaxed">Remote toggle for manual override</p>
             </div>
-            <p className="text-[11px] text-slate-400 font-medium leading-relaxed max-w-[180px]">
-              Remote toggle for manual lighting override.
-            </p>
           </div>
 
           {/* iOS-Style Toggle Switch */}
-          <div className="flex items-center gap-4 pt-1">
-            <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest">
-              OFF
-            </span>
-            <button
-              onClick={handleToggle}
-              disabled={isUpdating || !isOnline}
-              className={cn(
-                "relative inline-flex h-7 w-14 items-center rounded-full transition-all duration-500 focus:outline-none",
-                isBulbOn ? "bg-primary shadow-lg shadow-primary/20" : "bg-slate-200",
-                (isUpdating || !isOnline) && "opacity-50 cursor-not-allowed"
-              )}
-            >
-              <span
+          <div className="relative flex items-center justify-center pt-2">
+            <div className="flex items-center gap-4">
+              <span className="text-[12px] font-medium text-slate-400 uppercase tracking-wider">Off</span>
+              <button
+                onClick={handleToggle}
+                disabled={isUpdating || !isOnline}
                 className={cn(
-                  "inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-500 shadow-md",
-                  isBulbOn ? "translate-x-8" : "translate-x-1"
+                  "relative inline-flex h-8 w-16 items-center rounded-full transition-all duration-500 ease-in-out focus:outline-none",
+                  isBulbOn ? "bg-primary shadow-sm" : "bg-slate-100 shadow-inner",
+                  (isUpdating || !isOnline) && "opacity-50 cursor-not-allowed"
                 )}
               >
-                {isUpdating && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-2.5 h-2.5 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
-                  </div>
-                )}
-              </span>
-            </button>
-            <span
-              className={cn(
-                "text-[9px] font-black uppercase tracking-widest",
-                isBulbOn ? "text-primary" : "text-slate-300"
-              )}
-            >
-              ON
-            </span>
+                <span
+                  className={cn(
+                    "inline-block h-6 w-6 transform rounded-full bg-white transition-all duration-500 shadow-md",
+                    isBulbOn ? "translate-x-9" : "translate-x-1"
+                  )}
+                >
+                  {isUpdating && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-3 h-3 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
+                    </div>
+                  )}
+                </span>
+              </button>
+              <span className={cn(
+                "text-[12px] font-medium uppercase tracking-wider",
+                isBulbOn ? "text-primary" : "text-slate-400"
+              )}>On</span>
+            </div>
           </div>
 
           {!isOnline && (
-            <div className="flex items-center gap-2 text-[9px] font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-100">
-              <Info size={10} />
-              CONTROLS RESTRICTED
+            <div className="flex items-center gap-2 text-[10px] font-bold text-amber-600 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100">
+              <Info size={12} />
+              HARDWARE CONNECTION REQUIRED
             </div>
           )}
         </div>
