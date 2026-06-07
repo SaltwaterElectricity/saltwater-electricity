@@ -1,4 +1,4 @@
-import { memo, useState, useEffect } from "react";
+import { memo, useState, useEffect, useRef } from "react";
 import { X, User, Calendar, MapPin } from "lucide-react";
 import { cn } from "../../../utils/cn";
 import { DeviceControlSection } from "./DeviceControlSection";
@@ -13,6 +13,8 @@ import { AlertHistorySection } from "./AlertHistorySection";
  */
 const DeviceDetailsPanel = ({ isOpen, onClose, device, telemetry, assignment, auditLogs = [] }) => {
   const [now, setNow] = useState(0);
+  const [activeSection, setActiveSection] = useState("control");
+  const scrollContainerRef = useRef(null);
 
   // Update 'now' when panel opens or telemetry updates
   useEffect(() => {
@@ -22,6 +24,32 @@ const DeviceDetailsPanel = ({ isOpen, onClose, device, telemetry, assignment, au
       return () => clearTimeout(timer);
     }
   }, [isOpen, telemetry?.timestamp]);
+
+  // Handle active section detection on scroll
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container || !isOpen) return;
+
+    const handleScroll = () => {
+      const sections = ["control", "readings", "components", "alerts"];
+      let current = activeSection;
+
+      for (const id of sections) {
+        const element = document.getElementById(`section-${id}`);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          // Use a threshold (e.g., top of element is near top of panel)
+          if (rect.top <= 200) {
+            current = id;
+          }
+        }
+      }
+      if (current !== activeSection) setActiveSection(current);
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [isOpen, activeSection]);
 
   if (!device) return null;
 
@@ -41,6 +69,19 @@ const DeviceDetailsPanel = ({ isOpen, onClose, device, telemetry, assignment, au
       })
     : "Not Assigned";
   const address = assignment?.address?.baranggay || "Location unset";
+
+  const handleTabClick = (e, id) => {
+    e.preventDefault();
+    const element = document.getElementById(`section-${id}`);
+    if (element && scrollContainerRef.current) {
+      const top = element.offsetTop - 20; // Slight offset for padding
+      scrollContainerRef.current.scrollTo({
+        top,
+        behavior: "smooth"
+      });
+      setActiveSection(id);
+    }
+  };
 
   return (
     <aside
@@ -100,22 +141,36 @@ const DeviceDetailsPanel = ({ isOpen, onClose, device, telemetry, assignment, au
         </div>
 
         {/* Navigation Anchor Links */}
-        <nav className="flex gap-4 border-b border-transparent overflow-x-auto no-scrollbar">
-          {["Control", "Readings", "Components", "Alerts"].map((tab) => (
-            <a
-              key={tab}
-              href={`#section-${tab.toLowerCase()}`}
-              className="font-display text-[13px] font-bold tracking-tight text-slate-400 hover:text-primary transition-all pb-2 border-b-2 border-transparent hover:border-primary/30 whitespace-nowrap"
-            >
-              {tab}
-            </a>
-          ))}
+        <nav className="flex gap-5 border-b border-transparent overflow-x-auto no-scrollbar">
+          {["Control", "Readings", "Components", "Alerts"].map((tab) => {
+            const id = tab.toLowerCase();
+            const isActive = activeSection === id;
+            return (
+              <a
+                key={tab}
+                href={`#section-${id}`}
+                onClick={(e) => handleTabClick(e, id)}
+                className={cn(
+                  "font-display text-[13px] font-bold tracking-tight transition-all pb-2 border-b-2 whitespace-nowrap",
+                  isActive 
+                    ? "text-primary border-primary" 
+                    : "text-slate-400 border-transparent hover:text-slate-600"
+                )}
+              >
+                {tab}
+              </a>
+            );
+          })}
         </nav>
       </header>
 
       {/* 2. SCROLLABLE CONTENT */}
       {/* Requirement: Use key={device_id} to force a full reset of sub-components and scroll position when switching devices */}
-      <div key={device_id} className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-10 pb-10">
+      <div 
+        key={device_id} 
+        ref={scrollContainerRef}
+        className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-10 pb-10 scroll-smooth"
+      >
         {/* Overview Section */}
         <section id="section-overview" className="scroll-mt-6 pt-2">
           <h3 className="font-display text-base font-bold mb-4 text-primary">Overview</h3>
