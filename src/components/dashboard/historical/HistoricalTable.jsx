@@ -40,16 +40,21 @@ const HistoricalTable = ({ logs = [], residentsMap = {}, loading = false }) => {
         <div className="p-lg flex justify-between items-center bg-surface-container-lowest">
           <div>
             <h4 className="font-headline-md text-headline-md">
-              <span className="text-on-surface">Historical</span> <span className="text-primary">Data Records</span>
+              <span className="text-on-surface">Historical</span>{" "}
+              <span className="text-primary">Data Records</span>
             </h4>
-            <p className="text-body-sm text-secondary">Detailed historical electricity generation records from all monitored devices.</p>
+            <p className="text-body-sm text-secondary">
+              Detailed historical electricity generation records from all monitored devices.
+            </p>
           </div>
           <div className="flex items-center gap-sm">
-            <button 
+            <button
               onClick={() => window.location.reload()}
               className="flex items-center gap-2 px-3 py-1.5 border border-primary rounded-lg text-label-xs font-bold hover:bg-surface-container-low transition-colors"
             >
-              <span className="material-symbols-outlined text-[18px] text-primary-fixed-dim">refresh</span>
+              <span className="material-symbols-outlined text-[18px] text-primary-fixed-dim">
+                refresh
+              </span>
               Refresh Page
             </button>
           </div>
@@ -59,15 +64,31 @@ const HistoricalTable = ({ logs = [], residentsMap = {}, loading = false }) => {
           <table className="w-full text-left border-collapse">
             <thead className="bg-surface-container-low border-y border-outline-variant">
               <tr>
-                <th className="p-md text-label-caps text-secondary whitespace-nowrap">DATE & TIME</th>
-                <th className="p-md text-label-caps text-secondary whitespace-nowrap">HOUSEHOLD USER</th>
-                <th className="p-md text-label-caps text-secondary whitespace-nowrap">DEVICE NAME</th>
+                <th className="p-md text-label-caps text-secondary whitespace-nowrap">
+                  DATE & TIME
+                </th>
+                <th className="p-md text-label-caps text-secondary whitespace-nowrap">
+                  HOUSEHOLD USER
+                </th>
+                <th className="p-md text-label-caps text-secondary whitespace-nowrap">
+                  DEVICE NAME
+                </th>
                 <th className="p-md text-label-caps text-secondary whitespace-nowrap">LOCATION</th>
-                <th className="p-md text-label-caps text-secondary whitespace-nowrap text-center">VOLTAGE</th>
-                <th className="p-md text-label-caps text-secondary whitespace-nowrap text-center">SALINITY</th>
-                <th className="p-md text-label-caps text-secondary whitespace-nowrap text-center">CURRENT</th>
-                <th className="p-md text-label-caps text-secondary whitespace-nowrap text-center">STATUS</th>
-                <th className="p-md text-label-caps text-secondary whitespace-nowrap text-right">ACTION</th>
+                <th className="p-md text-label-caps text-secondary whitespace-nowrap text-center">
+                  VOLTAGE
+                </th>
+                <th className="p-md text-label-caps text-secondary whitespace-nowrap text-center">
+                  SALINITY
+                </th>
+                <th className="p-md text-label-caps text-secondary whitespace-nowrap text-center">
+                  CURRENT
+                </th>
+                <th className="p-md text-label-caps text-secondary whitespace-nowrap text-center">
+                  STATUS
+                </th>
+                <th className="p-md text-label-caps text-secondary whitespace-nowrap text-right">
+                  ACTION
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant">
@@ -90,22 +111,38 @@ const HistoricalTable = ({ logs = [], residentsMap = {}, loading = false }) => {
                 currentLogs.map((log) => {
                   const user = residentsMap[log.userId] || {};
                   const date = new Date(log.__normalizedTs);
-                  
+
                   return (
-                    <tr key={log.id} className="hover:bg-surface-container-low transition-colors group">
+                    <tr
+                      key={log.id}
+                      className="hover:bg-surface-container-low transition-colors group"
+                    >
                       <td className="p-md">
-                        <p className="text-body-sm font-bold">{date.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}</p>
-                        <p className="text-label-xs text-outline">{date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                        <p className="text-body-sm font-bold">
+                          {date.toLocaleDateString([], {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </p>
+                        <p className="text-label-xs text-outline">
+                          {date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                        </p>
                       </td>
                       <td className="p-md">
                         <div className="flex items-center gap-3">
-                          <img 
-                            className="w-8 h-8 rounded-full border border-outline-variant bg-surface-container" 
-                            src={user.photoURL || `https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=random`} 
+                          <img
+                            className="w-8 h-8 rounded-full border border-outline-variant bg-surface-container"
+                            src={
+                              user.photoURL ||
+                              `https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=random`
+                            }
                             alt={user.firstName}
                           />
                           <div>
-                            <p className="text-body-sm font-bold">{user.firstName} {user.lastName}</p>
+                            <p className="text-body-sm font-bold">
+                              {user.firstName} {user.lastName}
+                            </p>
                             <p className="text-label-xs text-outline">{user.email}</p>
                           </div>
                         </div>
@@ -121,13 +158,13 @@ const HistoricalTable = ({ logs = [], residentsMap = {}, loading = false }) => {
                       <td className="p-md text-body-sm text-center font-bold">{log.voltage} V</td>
                       <td className="p-md text-body-sm text-center">{log.tds} ppm</td>
                       <td className="p-md text-body-sm text-center">{log.current} A</td>
-                      <td className="p-md text-center">
-                        {getStatusBadge(log.voltage, log.tds)}
-                      </td>
+                      <td className="p-md text-center">{getStatusBadge(log.voltage, log.tds)}</td>
                       <td className="p-md text-right">
                         <div className="flex justify-end gap-2">
                           <button className="p-1.5 hover:bg-surface-container-high rounded-lg text-outline">
-                            <span className="material-symbols-outlined text-[18px]">visibility</span>
+                            <span className="material-symbols-outlined text-[18px]">
+                              visibility
+                            </span>
                           </button>
                           <button className="p-1.5 hover:bg-surface-container-high rounded-lg text-outline">
                             <span className="material-symbols-outlined text-[18px]">analytics</span>
@@ -145,7 +182,8 @@ const HistoricalTable = ({ logs = [], residentsMap = {}, loading = false }) => {
         {/* Pagination Footer */}
         <div className="p-md bg-surface-container-lowest border-t border-outline-variant flex justify-between items-center">
           <p className="text-body-sm text-secondary">
-            Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, logs.length)} of {logs.length} records
+            Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
+            {Math.min(currentPage * itemsPerPage, logs.length)} of {logs.length} records
           </p>
           <div className="flex items-center gap-md">
             <div className="flex items-center gap-2">
@@ -157,31 +195,31 @@ const HistoricalTable = ({ logs = [], residentsMap = {}, loading = false }) => {
               </select>
             </div>
             <div className="flex items-center gap-1">
-              <button 
-                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
                 className="p-1 text-outline hover:text-primary transition-colors disabled:opacity-30"
               >
                 <span className="material-symbols-outlined">chevron_left</span>
               </button>
-              
+
               {[...Array(Math.min(5, totalPages))].map((_, i) => {
                 const pageNum = i + 1;
                 return (
-                  <button 
+                  <button
                     key={`page-${pageNum}`}
                     onClick={() => setCurrentPage(pageNum)}
-                    className={`w-8 h-8 rounded-lg font-bold text-body-sm transition-colors ${currentPage === pageNum ? 'bg-primary text-on-primary' : 'hover:bg-surface-container-low'}`}
+                    className={`w-8 h-8 rounded-lg font-bold text-body-sm transition-colors ${currentPage === pageNum ? "bg-primary text-on-primary" : "hover:bg-surface-container-low"}`}
                   >
                     {pageNum}
                   </button>
                 );
               })}
-              
+
               {totalPages > 5 && <span className="px-2 text-outline">...</span>}
-              
-              <button 
-                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages || totalPages === 0}
                 className="p-1 text-outline hover:text-primary transition-colors disabled:opacity-30"
               >
