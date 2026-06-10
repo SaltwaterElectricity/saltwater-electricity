@@ -6,20 +6,19 @@ import {
   useDevices,
   useMultiDeviceHistory,
   useResidentManagement,
-} from "../../hooks";
-import {
-  AnalyticsChart,
-  SystemHealthGauge,
-  DeviceFeatureBarChart,
-  DeviceUsersTable,
-  TotalDevicesAdminCard,
-  OnlineDevicesCard,
-  OfflineDevicesCard,
-  SystemHealthCard,
-  RecentAlertsFeed,
-} from "../../components";
-import { ROUTES } from "../../constants/routes";
-import { SENSOR_CONFIG, METRICS } from "../../constants";
+} from "../../../hooks";
+import AnalyticsChart from "./AnalyticsChart";
+import SystemHealthGauge from "./SystemHealthGauge";
+import DeviceFeatureBarChart from "./DeviceFeatureBarChart";
+import DeviceUsersTable from "./DeviceUsersTable";
+import TotalDevicesAdminCard from "./TotalDevicesAdminCard";
+import OnlineDevicesCard from "./OnlineDevicesCard";
+import OfflineDevicesCard from "./OfflineDevicesCard";
+import SystemHealthCard from "./SystemHealthCard";
+import { RecentAlertsFeed } from "../../../components/dashboard";
+import DeviceRequestWidget from "./DeviceRequestWidget";
+import { ROUTES } from "../../../constants/routes";
+import { SENSOR_CONFIG, METRICS } from "../../../constants";
 
 /**
  * MAIN ADMIN DASHBOARD PAGE
@@ -30,7 +29,7 @@ const AdminDashboard = () => {
   const { residents, loading: residentsLoading } = useResidentManagement();
   const { logs: auditLogs, loading: auditLoading } = useAuditLogs(10);
   const { requests } = useDeviceRequests();
-  const { devices, telemetry } = useDevices();
+  const { devices, telemetry, loading: devicesLoading } = useDevices();
 
   // Use a stable 'now' for the duration of a render cycle
   const [now] = useState(() => Date.now());
@@ -93,8 +92,9 @@ const AdminDashboard = () => {
 
     return devices.slice(0, 4).map((d) => {
       const tel = telemetry[d.device_id] || {};
+      const name = d.device_name || `Unit ${d.device_id.substring(0, 4)}`;
       return {
-        name: d.device_name?.split(" ")[0] || d.device_id.substring(0, 6),
+        name: name.length > 12 ? name.substring(0, 10) + ".." : name,
         voltage: Math.min((tel.voltage / (vConfig.max || 15)) * 100, 100) || 0,
         salinity: Math.min((tel.tds / (sConfig.max || 1000)) * 100, 100) || 0,
         current: Math.min((tel.current / (cConfig.max || 5)) * 100, 100) || 0,
@@ -139,63 +139,12 @@ const AdminDashboard = () => {
             onViewAll={() => navigate(ROUTES.ADMIN_AUDIT_LOGS)}
           />
 
-          <div className="bg-white p-6 rounded-xl shadow-sm flex flex-col">
-            <h3 className="font-bold text-sm uppercase tracking-wider text-on-surface-variant mb-6 text-center">
-              DEVICE REQUEST
-            </h3>
-            <div className="space-y-6 flex-1">
-              {requests
-                ?.filter((r) => r.status === "pending")
-                .slice(0, 2)
-                .map((req) => (
-                  <div key={req.id} className="border border-outline-variant/30 rounded-xl p-4">
-                    <div className="text-center mb-4">
-                      <p className="text-base font-bold text-on-surface">{req.deviceName}</p>
-                      <p className="text-[11px] text-outline mt-1 font-medium uppercase tracking-widest">
-                        {new Date(req.createdAt).toLocaleDateString()} •{" "}
-                        {new Date(req.createdAt).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </p>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        onClick={() => navigate(ROUTES.ADMIN_REQUEST_MANAGEMENT)}
-                        className="py-2.5 px-4 text-primary font-bold text-[11px] border border-primary/20 rounded-lg hover:bg-primary/5 transition-all"
-                      >
-                        View Details
-                      </button>
-                      <button
-                        onClick={() => navigate(ROUTES.ADMIN_REQUEST_MANAGEMENT)}
-                        className="py-2.5 px-4 bg-primary text-white font-bold text-[11px] rounded-lg shadow-sm hover:brightness-110 transition-all"
-                      >
-                        Request Review
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              {requests?.filter((r) => r.status === "pending").length === 0 && (
-                <p className="text-center py-10 text-[11px] font-bold text-outline uppercase tracking-widest">
-                  No pending requests
-                </p>
-              )}
-            </div>
-            <div className="mt-6">
-              <button
-                onClick={() => navigate(ROUTES.ADMIN_REQUEST_MANAGEMENT)}
-                className="w-full text-primary font-bold text-xs flex items-center justify-center gap-2 py-3 border border-primary/10 bg-primary/5 rounded-lg hover:bg-primary/10 transition-all"
-              >
-                View all requests{" "}
-                <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-              </button>
-            </div>
-          </div>
+          <DeviceRequestWidget requests={requests} />
         </div>
 
         {/* Right Column: Feature Data & Table */}
         <div className="lg:col-span-8 space-y-6">
-          <DeviceFeatureBarChart data={deviceFeatureData} />
+          <DeviceFeatureBarChart data={deviceFeatureData} loading={devicesLoading} />
           <DeviceUsersTable
             users={residents?.filter((r) => r.deviceId).slice(0, 3) || []}
             loading={residentsLoading}

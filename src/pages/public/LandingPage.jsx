@@ -56,12 +56,6 @@ const LandingPage = () => {
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate(ROUTES.LOGIN)}
-            className="text-[11px] font-bold text-primary hover:underline uppercase tracking-wider font-body-md hidden sm:block"
-          >
-            Forgot Password?
-          </button>
-          <button
-            onClick={() => navigate(ROUTES.LOGIN)}
             className="bg-primary text-on-primary px-6 py-2.5 rounded-full font-body-md text-body-md font-semibold hover:backdrop-brightness-110 transition-all duration-300 shadow-lg shadow-primary/20 scale-95 active:scale-90"
           >
             Login Now

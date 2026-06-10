@@ -2,7 +2,6 @@
 
 export * from "./roles";
 export * from "./routes";
-export * from "./ui";
 
 // 1. GLOBAL SETTINGS: Control logic thresholds
 export const APP_SETTINGS = Object.freeze({
@@ -60,33 +59,6 @@ export const METRIC_CONFIG = Object.freeze({
   },
 });
 
-// 5. SAFETY STATES: Defensive programming for loading/error states
-export const EMPTY_STATE = Object.freeze({
-  data: [],
-  hasData: false,
-  stats: { current: 0, avg: 0, min: 0, max: 0, trendValue: 0, isRising: false },
-});
-
-// 6. UTILITIES & THEME
-export const TIME_FORMATTER = new Intl.DateTimeFormat("en-US", {
-  hour: "2-digit",
-  minute: "2-digit",
-  hour12: false,
-});
-
-export const STATUS_COLORS = Object.freeze({
-  up: "text-emerald-500 bg-emerald-50",
-  down: "text-rose-500 bg-rose-50",
-  stable: "text-slate-400 bg-slate-50",
-});
-
-export const TIME_RANGES = Object.freeze([
-  { label: "1H", value: 1 },
-  { label: "6H", value: 6 },
-  { label: "24H", value: 24 },
-  { label: "7D", value: 168 },
-]);
-
 /**
  * 7. CHART VISUAL CONFIGURATION
  * Centralized styles for Recharts/Chart.js components.
@@ -119,12 +91,6 @@ export const CHART_STYLES = Object.freeze({
     tension: 0.4, // Makes the line curvy/smooth
   },
 });
-
-/**
- * 8. SENSOR OPERATIONAL CONFIGURATION
- * Defines technical thresholds and safety limits for the hardware.
- */
-// src/constants/index.js
 
 export const SENSOR_CONFIG = Object.freeze({
   [METRICS.TDS]: {

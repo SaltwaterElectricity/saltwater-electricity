@@ -32,7 +32,7 @@ const ResidentBranding = memo(() => (
  * INTERNAL COMPONENT: ResidentNav
  * Main navigation links and sections mirrored from legacy design (code1.html).
  */
-const ResidentNav = memo(({ deviceId, unreadCount, handleLinkClick }) => (
+const ResidentNav = memo(({ unreadCount, handleLinkClick }) => (
   <nav className="flex-1 px-4 space-y-1 overflow-y-auto overflow-x-hidden custom-scrollbar-hide flex flex-col pb-32">
     <SidebarLink
       to={ROUTES.DASHBOARD}
@@ -59,16 +59,14 @@ const ResidentNav = memo(({ deviceId, unreadCount, handleLinkClick }) => (
       isCollapsed={false}
       onClick={handleLinkClick}
     />
-    {deviceId && (
-      <SidebarLink
-        to={ROUTES.DEVICE_ANALYTICS.replace(":deviceId", deviceId)}
-        icon="history"
-        label="Historical Data"
-        isResident={true}
-        isCollapsed={false}
-        onClick={handleLinkClick}
-      />
-    )}
+    <SidebarLink
+      to={ROUTES.HISTORY_OVERVIEW}
+      icon="history"
+      label="Historical Data"
+      isResident={true}
+      isCollapsed={false}
+      onClick={handleLinkClick}
+    />
 
     <div className="pt-8 pb-4">
       <p className="px-4 text-[11px] font-bold text-white/50 uppercase tracking-[2px]">
@@ -79,7 +77,7 @@ const ResidentNav = memo(({ deviceId, unreadCount, handleLinkClick }) => (
     <SidebarLink
       to={ROUTES.DEVICE_REQUESTS}
       icon="manage_accounts"
-      label="Request Device"
+      label="Request History"
       isResident={true}
       isCollapsed={false}
       onClick={handleLinkClick}
@@ -108,7 +106,7 @@ const ResidentNav = memo(({ deviceId, unreadCount, handleLinkClick }) => (
  * Theme: Solid Royal Blue (#001fff) and Navigation mirrored from code1.html.
  */
 export const ResidentSidebar = memo(
-  ({ isOpen, toggleSidebar, deviceId, unreadCount, handleLinkClick, onLogout }) => {
+  ({ isOpen, toggleSidebar, unreadCount, handleLinkClick, onLogout }) => {
     return (
       <>
         {isOpen && (
@@ -127,11 +125,7 @@ export const ResidentSidebar = memo(
         >
           <ResidentBranding />
 
-          <ResidentNav
-            deviceId={deviceId}
-            unreadCount={unreadCount}
-            handleLinkClick={handleLinkClick}
-          />
+          <ResidentNav unreadCount={unreadCount} handleLinkClick={handleLinkClick} />
 
           {/* Styled Logout Footer mirrored from code1.html */}
           <div className="pt-6 px-4 border-t border-white/5 space-y-2 absolute bottom-0 left-0 right-0 pb-4 bg-[#001fff]">

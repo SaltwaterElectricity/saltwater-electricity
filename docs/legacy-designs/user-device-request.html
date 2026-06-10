@@ -1,471 +1,661 @@
-<!DOCTYPE html><html data-stitch-anim-opacity="true" lang="en"><head>
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>Saltwater - Device Request History</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .custom-shadow {
-            box-shadow: 0px 12px 32px -4px rgba(10, 46, 255, 0.04);
-        }
-        .primary-gradient {
-            background: linear-gradient(135deg, #0A2EFF 0%, #3D73FF 100%);
-        }
-        .sidebar-gradient {
-            background: linear-gradient(180deg, #0034b5 0%, #0047ff 100%);
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        body {
-            background-color: #f7f9fe;
-            color: #181c20;
-        }
+<!doctype html>
+<html data-stitch-anim-opacity="true" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Saltwater - Device Request History</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      .custom-shadow {
+        box-shadow: 0px 12px 32px -4px rgba(10, 46, 255, 0.04);
+      }
+      .primary-gradient {
+        background: linear-gradient(135deg, #0a2eff 0%, #3d73ff 100%);
+      }
+      .sidebar-gradient {
+        background: linear-gradient(180deg, #0034b5 0%, #0047ff 100%);
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      body {
+        background-color: #f7f9fe;
+        color: #181c20;
+      }
     </style>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "primary-fixed": "#dfe0ff",
-                        "surface-variant": "#e0e2e7",
-                        "secondary-container": "#23d5fe",
-                        "surface-tint": "#2640ff",
-                        "background": "#f7f9fe",
-                        "tertiary": "#00473f",
-                        "surface-bright": "#f7f9fe",
-                        "tertiary-fixed-dim": "#2fddc8",
-                        "surface-container-high": "#e6e8ed",
-                        "on-tertiary": "#ffffff",
-                        "on-error": "#ffffff",
-                        "secondary-fixed": "#b3ebff",
-                        "tertiary-fixed": "#5afae4",
-                        "on-tertiary-fixed-variant": "#005047",
-                        "on-primary-fixed": "#000a63",
-                        "inverse-on-surface": "#eff1f6",
-                        "on-secondary-fixed-variant": "#004e5f",
-                        "tertiary-container": "#006157",
-                        "error-container": "#ffdad6",
-                        "surface-container-low": "#f1f4f9",
-                        "on-error-container": "#93000a",
-                        "secondary-fixed-dim": "#37d7ff",
-                        "on-primary-fixed-variant": "#0022da",
-                        "on-surface-variant": "#444557",
-                        "on-secondary-fixed": "#001f27",
-                        "primary-fixed-dim": "#bcc2ff",
-                        "inverse-surface": "#2d3135",
-                        "inverse-primary": "#bcc2ff",
-                        "on-tertiary-container": "#38e2cd",
-                        "surface": "#f7f9fe",
-                        "surface-container-lowest": "#ffffff",
-                        "on-secondary-container": "#00586b",
-                        "error": "#ba1a1a",
-                        "surface-dim": "#d8dadf",
-                        "outline": "#757689",
-                        "on-surface": "#181c20",
-                        "surface-container-highest": "#e0e2e7",
-                        "on-background": "#181c20",
-                        "on-tertiary-fixed": "#00201c",
-                        "on-primary-container": "#c2c7ff",
-                        "surface-container": "#eceef3",
-                        "on-secondary": "#ffffff",
-                        "primary": "#001ec4",
-                        "secondary": "#00677d",
-                        "outline-variant": "#c5c5da",
-                        "primary-container": "#0a2eff",
-                        "on-primary": "#ffffff"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "2xl": "1.5rem",
-                        "full": "9999px"
-                    },
-                    "spacing": {
-                        "container-max": "1440px",
-                        "base": "8px",
-                        "stack-md": "16px",
-                        "stack-lg": "24px",
-                        "stack-sm": "8px",
-                        "margin-desktop": "32px",
-                        "margin-mobile": "16px",
-                        "gutter": "24px"
-                    },
-                    "fontFamily": {
-                        "headline-md": ["Manrope"],
-                        "body-md": ["Inter"],
-                        "label-sm": ["Inter"],
-                        "headline-lg": ["Manrope"],
-                        "body-lg": ["Inter"],
-                        "headline-lg-mobile": ["Manrope"],
-                        "label-md": ["Inter"],
-                        "display-lg": ["Manrope"]
-                    },
-                    "fontSize": {
-                        "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
-                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
-                        "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "500"}],
-                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "700"}],
-                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
-                        "headline-lg-mobile": ["28px", {"lineHeight": "1.3", "fontWeight": "700"}],
-                        "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "600"}],
-                        "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800"}]
-                    }
-                },
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed": "#dfe0ff",
+              "surface-variant": "#e0e2e7",
+              "secondary-container": "#23d5fe",
+              "surface-tint": "#2640ff",
+              background: "#f7f9fe",
+              tertiary: "#00473f",
+              "surface-bright": "#f7f9fe",
+              "tertiary-fixed-dim": "#2fddc8",
+              "surface-container-high": "#e6e8ed",
+              "on-tertiary": "#ffffff",
+              "on-error": "#ffffff",
+              "secondary-fixed": "#b3ebff",
+              "tertiary-fixed": "#5afae4",
+              "on-tertiary-fixed-variant": "#005047",
+              "on-primary-fixed": "#000a63",
+              "inverse-on-surface": "#eff1f6",
+              "on-secondary-fixed-variant": "#004e5f",
+              "tertiary-container": "#006157",
+              "error-container": "#ffdad6",
+              "surface-container-low": "#f1f4f9",
+              "on-error-container": "#93000a",
+              "secondary-fixed-dim": "#37d7ff",
+              "on-primary-fixed-variant": "#0022da",
+              "on-surface-variant": "#444557",
+              "on-secondary-fixed": "#001f27",
+              "primary-fixed-dim": "#bcc2ff",
+              "inverse-surface": "#2d3135",
+              "inverse-primary": "#bcc2ff",
+              "on-tertiary-container": "#38e2cd",
+              surface: "#f7f9fe",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-container": "#00586b",
+              error: "#ba1a1a",
+              "surface-dim": "#d8dadf",
+              outline: "#757689",
+              "on-surface": "#181c20",
+              "surface-container-highest": "#e0e2e7",
+              "on-background": "#181c20",
+              "on-tertiary-fixed": "#00201c",
+              "on-primary-container": "#c2c7ff",
+              "surface-container": "#eceef3",
+              "on-secondary": "#ffffff",
+              primary: "#001ec4",
+              secondary: "#00677d",
+              "outline-variant": "#c5c5da",
+              "primary-container": "#0a2eff",
+              "on-primary": "#ffffff",
             },
-        }
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              "2xl": "1.5rem",
+              full: "9999px",
+            },
+            spacing: {
+              "container-max": "1440px",
+              base: "8px",
+              "stack-md": "16px",
+              "stack-lg": "24px",
+              "stack-sm": "8px",
+              "margin-desktop": "32px",
+              "margin-mobile": "16px",
+              gutter: "24px",
+            },
+            fontFamily: {
+              "headline-md": ["Manrope"],
+              "body-md": ["Inter"],
+              "label-sm": ["Inter"],
+              "headline-lg": ["Manrope"],
+              "body-lg": ["Inter"],
+              "headline-lg-mobile": ["Manrope"],
+              "label-md": ["Inter"],
+              "display-lg": ["Manrope"],
+            },
+            fontSize: {
+              "headline-md": ["24px", { lineHeight: "1.4", fontWeight: "600" }],
+              "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+              "label-sm": ["12px", { lineHeight: "1.2", fontWeight: "500" }],
+              "headline-lg": ["32px", { lineHeight: "1.3", fontWeight: "700" }],
+              "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+              "headline-lg-mobile": ["28px", { lineHeight: "1.3", fontWeight: "700" }],
+              "label-md": [
+                "14px",
+                { lineHeight: "1.2", letterSpacing: "0.01em", fontWeight: "600" },
+              ],
+              "display-lg": [
+                "48px",
+                { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "800" },
+              ],
+            },
+          },
+        },
+      };
     </script>
-</head>
-<body class="font-body-md text-on-surface bg-background min-h-screen">
-<!-- Side Navigation Shell -->
-<aside class="fixed left-0 top-0 h-screen w-64 sidebar-gradient z-50 flex flex-col p-6 shadow-xl text-white">
-<div class="mb-10 flex items-center gap-3">
-<div class="bg-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg relative">
-<span class="material-symbols-outlined text-[#001ec4] text-2xl" style="font-variation-settings: &quot;FILL&quot; 1;">water_drop</span>
-<span class="material-symbols-outlined absolute text-[10px] text-white" style="font-variation-settings: &quot;FILL&quot; 1;">bolt</span>
-</div>
-<div>
-<h1 class="font-display-lg text-[20px] font-bold leading-tight">Saltwater</h1>
-<p class="text-[10px] text-white/70 font-medium">Electricity Monitoring</p>
-</div>
-</div>
-<nav class="flex-1 space-y-2">
-<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 rounded-xl" href="#">
-<span class="material-symbols-outlined">home</span>
-<span class="font-body-md text-sm">Dashboard</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 rounded-xl" href="#">
-<span class="material-symbols-outlined">monitor_heart</span>
-<span class="font-body-md text-sm">Real-Time Monitor</span>
-</a>
-<a class="flex items-center justify-between px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 rounded-xl" href="#">
-<div class="flex items-center gap-3">
-<span class="material-symbols-outlined">notifications</span>
-<span class="font-body-md text-sm">Device Alerts</span>
-</div>
-<span class="bg-[#0a2eff]/50 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">4</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/15 text-white font-bold shadow-lg" href="#">
-<span class="material-symbols-outlined">description</span>
-<span class="font-body-md text-sm">Device Request</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 rounded-xl" href="#">
-<span class="material-symbols-outlined">bar_chart</span>
-<span class="font-body-md text-sm">Historical Data</span>
-</a>
-</nav>
-<div class="mt-auto">
-
-</div>
-</aside>
-<!-- Top Navigation Shell -->
-<header class="flex justify-between items-center h-20 px-8 w-full ml-64 sticky top-0 bg-surface/80 backdrop-blur-md z-40 border-b border-outline-variant/30">
-<div class="flex items-center gap-4 bg-surface-container-low px-4 py-2 rounded-full border border-outline-variant/20 w-96">
-<span class="material-symbols-outlined text-outline">search</span>
-<input class="bg-transparent border-none focus:ring-0 text-label-md w-full" placeholder="Search devices or requests..." type="text">
-</div>
-<div class="flex items-center gap-6">
-<button class="relative p-2 text-on-surface-variant hover:text-primary transition-colors">
-<span class="material-symbols-outlined">notifications</span>
-<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
-</button>
-<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
-<span class="material-symbols-outlined">calendar_today</span>
-</button>
-<div class="h-8 w-[1px] bg-outline-variant/30 mx-2"></div>
-<div class="flex items-center gap-3 cursor-pointer group">
-<div class="text-right">
-<p class="font-label-md text-on-surface group-hover:text-primary transition-colors">Alex Johnson</p>
-<p class="text-[10px] text-outline uppercase font-bold tracking-tighter">Premium Account</p>
-</div>
-<img alt="Alex Johnson Profile" class="w-10 h-10 rounded-full border-2 border-primary/20 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVTEPJHBL87kWRmRUXRwJC0QgDRvb_2341WYCE1VLPHwInr3yXeEBNZoXOP2ivQZy2Haja2es4YNEJ5z2-dAg_Z9o0F5IFifbHbrrPDqHV3N9iCU0cB2Y3ttYc-j7IWkyEjsQvsKEEPsUBb3ppgmV2ICRDbzUn2yjCYgB0EMZdFwOxbSWJKdkFDZgrGd3Z1dHxzy5XAGGwkvmUucOdbkE19Vc9Ai3-ho3AlpVbL2MV5fj16d3SZBV7mVQEm0rUlxE5TmkdoieI6t5j">
-</div>
-</div>
-</header>
-<!-- Main Content Canvas -->
-<main class="ml-64 p-8 max-w-[1440px] min-h-screen">
-<!-- Header Section -->
-<div class="flex justify-between items-end mb-8">
-<div>
-<h2 class="font-headline-lg text-headline-lg text-on-surface uppercase tracking-tight">Your Device Request History</h2>
-<p class="text-on-surface-variant mt-1">Monitor the lifecycle of your utility expansion and hardware requests.</p>
-</div>
-<a class="text-primary font-label-md flex items-center gap-1 hover:underline" href="#">
-                View All Requests
-                <span class="material-symbols-outlined text-sm">arrow_forward</span>
-</a>
-</div>
-<!-- Progress Tracker Card -->
-<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-10 mb-8 custom-shadow">
-<div class="flex items-center justify-between mb-12">
-<h3 class="font-headline-md text-headline-md text-on-surface">Active Request Pipeline</h3>
-<span class="bg-primary/10 text-primary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">DEVICE-006 ONGOING</span>
-</div>
-<div class="relative flex items-center justify-between px-10">
-<div class="absolute top-6 left-20 right-20 h-1 bg-outline-variant/20 -translate-y-1/2"></div>
-<div class="absolute top-6 left-20 w-2/3 h-1 bg-primary -translate-y-1/2"></div>
-<div class="relative z-10 flex flex-col items-center">
-<div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-lg">
-<span class="material-symbols-outlined text-2xl" style="font-variation-settings: &quot;FILL&quot; 1;">check_circle</span>
-</div>
-<div class="mt-4 text-center">
-<p class="font-manrope font-bold text-xs uppercase tracking-wider text-on-surface">Requested</p>
-<p class="text-[10px] font-bold uppercase mt-1 text-primary">COMPLETE</p>
-</div>
-</div>
-<div class="relative z-10 flex flex-col items-center">
-<div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-lg">
-<span class="material-symbols-outlined text-2xl" style="font-variation-settings: &quot;FILL&quot; 1;">check_circle</span>
-</div>
-<div class="mt-4 text-center">
-<p class="font-manrope font-bold text-xs uppercase tracking-wider text-on-surface">Review</p>
-<p class="text-[10px] font-bold uppercase mt-1 text-primary">COMPLETE</p>
-</div>
-</div>
-<div class="relative z-10 flex flex-col items-center">
-<div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-lg">
-<span class="material-symbols-outlined text-2xl" style="font-variation-settings: &quot;FILL&quot; 1;">check_circle</span>
-</div>
-<div class="mt-4 text-center">
-<p class="font-manrope font-bold text-xs uppercase tracking-wider text-on-surface">Approved</p>
-<p class="text-[10px] font-bold uppercase mt-1 text-primary">COMPLETE</p>
-</div>
-</div>
-<div class="relative z-10 flex flex-col items-center">
-<div class="w-12 h-12 rounded-full bg-surface-container-high text-outline flex items-center justify-center">
-<span class="font-manrope font-bold">4</span>
-</div>
-<div class="mt-4 text-center">
-<p class="font-manrope font-bold text-xs uppercase tracking-wider text-on-surface">Device Ready</p>
-<p class="text-[10px] text-outline font-bold uppercase mt-1">IN PROGRESS</p>
-</div>
-</div>
-</div>
-</div>
-<!-- History Table Card -->
-<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-3xl overflow-hidden custom-shadow">
-<div class="p-6 border-b border-outline-variant/20 flex justify-between items-center">
-<h3 class="font-headline-md text-headline-md uppercase tracking-tight">Request History</h3>
-<div class="flex items-center gap-2">
-<button class="p-2 hover:bg-surface-container rounded-lg transition-colors">
-<span class="material-symbols-outlined text-outline">filter_list</span>
-</button>
-<button class="p-2 hover:bg-surface-container rounded-lg transition-colors">
-<span class="material-symbols-outlined text-outline">download</span>
-</button>
-</div>
-</div>
-<div class="overflow-x-auto">
-<table class="w-full text-left border-collapse">
-<thead>
-<tr class="bg-surface-container-low/50">
-<th class="px-6 py-4 font-label-md text-outline uppercase text-[11px] tracking-widest">Request Number</th>
-<th class="px-6 py-4 font-label-md text-outline uppercase text-[11px] tracking-widest">Date Requested</th>
-<th class="px-6 py-4 font-label-md text-outline uppercase text-[11px] tracking-widest">Date Device Release</th>
-<th class="px-6 py-4 font-label-md text-outline uppercase text-[11px] tracking-widest">Status</th>
-<th class="px-6 py-4 font-label-md text-outline uppercase text-[11px] tracking-widest">Action</th>
-</tr>
-</thead>
-<tbody class="divide-y divide-outline-variant/10">
-<tr class="hover:bg-surface-container-low/30 transition-colors group">
-<td class="px-6 py-5">
-<div class="flex items-center gap-4">
-<div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center">
-<span class="material-symbols-outlined text-xl">description</span>
-</div>
-<div>
-<p class="font-bold text-on-surface text-sm uppercase">Request 001</p>
-<p class="text-[11px] text-outline font-medium">Electrode Expansion (Device-001)</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-5">
-<p class="font-bold text-on-surface text-xs">March 02, 2026</p>
-<p class="text-[10px] text-outline">10:45 AM</p>
-</td>
-<td class="px-6 py-5">
-<p class="font-bold text-on-surface text-xs">May 12, 2026</p>
-<p class="text-[10px] text-outline">10:30 AM</p>
-</td>
-<td class="px-6 py-5">
-<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-green-50 text-green-700 text-[10px] font-bold uppercase">
-<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-            Completed
-        </span>
-</td>
-<td class="px-6 py-5">
-<button class="px-4 py-1.5 border border-primary/20 text-primary rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-all shadow-sm">
-            View Details
+  </head>
+  <body class="font-body-md text-on-surface bg-background min-h-screen">
+    <!-- Side Navigation Shell -->
+    <aside
+      class="fixed left-0 top-0 h-screen w-64 sidebar-gradient z-50 flex flex-col p-6 shadow-xl text-white"
+    >
+      <div class="mb-10 flex items-center gap-3">
+        <div
+          class="bg-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg relative"
+        >
+          <span
+            class="material-symbols-outlined text-[#001ec4] text-2xl"
+            style="font-variation-settings: &quot;FILL&quot; 1"
+            >water_drop</span
+          >
+          <span
+            class="material-symbols-outlined absolute text-[10px] text-white"
+            style="font-variation-settings: &quot;FILL&quot; 1"
+            >bolt</span
+          >
+        </div>
+        <div>
+          <h1 class="font-display-lg text-[20px] font-bold leading-tight">Saltwater</h1>
+          <p class="text-[10px] text-white/70 font-medium">Electricity Monitoring</p>
+        </div>
+      </div>
+      <nav class="flex-1 space-y-2">
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 rounded-xl"
+          href="#"
+        >
+          <span class="material-symbols-outlined">home</span>
+          <span class="font-body-md text-sm">Dashboard</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 rounded-xl"
+          href="#"
+        >
+          <span class="material-symbols-outlined">monitor_heart</span>
+          <span class="font-body-md text-sm">Real-Time Monitor</span>
+        </a>
+        <a
+          class="flex items-center justify-between px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 rounded-xl"
+          href="#"
+        >
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined">notifications</span>
+            <span class="font-body-md text-sm">Device Alerts</span>
+          </div>
+          <span
+            class="bg-[#0a2eff]/50 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full"
+            >4</span
+          >
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/15 text-white font-bold shadow-lg"
+          href="#"
+        >
+          <span class="material-symbols-outlined">description</span>
+          <span class="font-body-md text-sm">Device Request</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 rounded-xl"
+          href="#"
+        >
+          <span class="material-symbols-outlined">bar_chart</span>
+          <span class="font-body-md text-sm">Historical Data</span>
+        </a>
+      </nav>
+      <div class="mt-auto"></div>
+    </aside>
+    <!-- Top Navigation Shell -->
+    <header
+      class="flex justify-between items-center h-20 px-8 w-full ml-64 sticky top-0 bg-surface/80 backdrop-blur-md z-40 border-b border-outline-variant/30"
+    >
+      <div
+        class="flex items-center gap-4 bg-surface-container-low px-4 py-2 rounded-full border border-outline-variant/20 w-96"
+      >
+        <span class="material-symbols-outlined text-outline">search</span>
+        <input
+          class="bg-transparent border-none focus:ring-0 text-label-md w-full"
+          placeholder="Search devices or requests..."
+          type="text"
+        />
+      </div>
+      <div class="flex items-center gap-6">
+        <button class="relative p-2 text-on-surface-variant hover:text-primary transition-colors">
+          <span class="material-symbols-outlined">notifications</span>
+          <span
+            class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full border-2 border-surface"
+          ></span>
         </button>
-</td>
-</tr>
-<tr class="hover:bg-surface-container-low/30 transition-colors group">
-<td class="px-6 py-5">
-<div class="flex items-center gap-4">
-<div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center">
-<span class="material-symbols-outlined text-xl">smart_toy</span>
-</div>
-<div>
-<p class="font-bold text-on-surface text-sm uppercase">Request 002</p>
-<p class="text-[11px] text-outline font-medium">AIO Battery Expansion (Device-002)</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-5">
-<p class="font-bold text-on-surface text-xs">April 27, 2026</p>
-<p class="text-[10px] text-outline">09:22 AM</p>
-</td>
-<td class="px-6 py-5">
-<p class="font-bold text-on-surface text-xs">May 28, 2026</p>
-<p class="text-[10px] text-outline">09:00 AM</p>
-</td>
-<td class="px-6 py-5">
-<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-orange-50 text-orange-700 text-[10px] font-bold uppercase">
-<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
-            Pending
-        </span>
-</td>
-<td class="px-6 py-5">
-<button class="px-4 py-1.5 border border-primary/20 text-primary rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-all shadow-sm">
-            View Details
+        <button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+          <span class="material-symbols-outlined">calendar_today</span>
         </button>
-</td>
-</tr>
-<tr class="hover:bg-surface-container-low/30 transition-colors group">
-<td class="px-6 py-5">
-<div class="flex items-center gap-4">
-<div class="w-10 h-10 rounded-xl bg-green-50 text-green-600 flex items-center justify-center">
-<span class="material-symbols-outlined text-xl">desktop_windows</span>
-</div>
-<div>
-<p class="font-bold text-on-surface text-sm uppercase">Request 003</p>
-<p class="text-[11px] text-outline font-medium">Monitoring Device (Device-003)</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-5">
-<p class="font-bold text-on-surface text-xs">April 15, 2026</p>
-<p class="text-[10px] text-outline">03:15 PM</p>
-</td>
-<td class="px-6 py-5">
-<p class="font-bold text-on-surface text-xs">May 05, 2026</p>
-<p class="text-[10px] text-outline">02:45 PM</p>
-</td>
-<td class="px-6 py-5">
-<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-green-50 text-green-700 text-[10px] font-bold uppercase">
-<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-            Completed
-        </span>
-</td>
-<td class="px-6 py-5">
-<button class="px-4 py-1.5 border border-primary/20 text-primary rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-all shadow-sm">
-            View Details
-        </button>
-</td>
-</tr>
-<tr class="hover:bg-surface-container-low/30 transition-colors group">
-<td class="px-6 py-5">
-<div class="flex items-center gap-4">
-<div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
-<span class="material-symbols-outlined text-xl">wifi</span>
-</div>
-<div>
-<p class="font-bold text-on-surface text-sm uppercase">Request 004</p>
-<p class="text-[11px] text-outline font-medium">Salinity Sensor (Device-004)</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-5">
-<p class="font-bold text-on-surface text-xs">May 05, 2026</p>
-<p class="text-[10px] text-outline">11:30 AM</p>
-</td>
-<td class="px-6 py-5">
-<p class="font-bold text-on-surface text-xs">May 22, 2026</p>
-<p class="text-[10px] text-outline">11:00 AM</p>
-</td>
-<td class="px-6 py-5">
-<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-orange-50 text-orange-700 text-[10px] font-bold uppercase">
-<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
-            Pending
-        </span>
-</td>
-<td class="px-6 py-5">
-<button class="px-4 py-1.5 border border-primary/20 text-primary rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-all shadow-sm">
-            View Details
-        </button>
-</td>
-</tr>
-<tr class="hover:bg-surface-container-low/30 transition-colors group">
-<td class="px-6 py-5">
-<div class="flex items-center gap-4">
-<div class="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center">
-<span class="material-symbols-outlined text-xl">assignment_turned_in</span>
-</div>
-<div>
-<p class="font-bold text-on-surface text-sm uppercase">Request 005</p>
-<p class="text-[11px] text-outline font-medium">Power Management Unit (Device-005)</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-5">
-<p class="font-bold text-on-surface text-xs">May 10, 2026</p>
-<p class="text-[10px] text-outline">08:10 AM</p>
-</td>
-<td class="px-6 py-5">
-<p class="font-bold text-on-surface text-xs">—</p>
-<p class="text-[10px] text-outline">Not scheduled</p>
-</td>
-<td class="px-6 py-5">
-<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-orange-50 text-orange-700 text-[10px] font-bold uppercase">
-<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
-            Pending
-        </span>
-</td>
-<td class="px-6 py-5">
-<button class="px-4 py-1.5 border border-primary/20 text-primary rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-all shadow-sm">
-            View Details
-        </button>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<!-- Pagination Footer -->
-<div class="p-6 border-t border-outline-variant/20 flex flex-col md:flex-row justify-between items-center gap-4">
-<div class="flex items-center gap-4">
-<span class="text-label-md text-on-surface-variant font-manrope">Show</span>
-<div class="relative">
-<select class="appearance-none bg-surface-container-low border border-outline-variant/30 rounded-lg px-4 py-2 pr-8 text-xs font-bold text-on-surface focus:ring-2 focus:ring-primary/20 outline-none">
-<option>10 per page</option>
-<option>20 per page</option>
-<option>50 per page</option>
-</select>
-<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-sm pointer-events-none">expand_more</span>
-</div>
-</div>
-<div class="flex items-center gap-2">
-<button class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 rounded-xl text-outline hover:text-primary hover:border-primary transition-all">
-<span class="material-symbols-outlined">chevron_left</span>
-</button>
-<button class="w-10 h-10 flex items-center justify-center bg-primary text-white rounded-xl font-bold shadow-md shadow-primary/20">1</button>
-<button class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-colors font-label-md">2</button>
-<button class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-colors font-label-md">3</button>
-<span class="px-2 text-outline">...</span>
-<button class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-colors font-label-md">12</button>
-<button class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 rounded-xl text-outline hover:text-primary hover:border-primary transition-all">
-<span class="material-symbols-outlined">chevron_right</span>
-</button>
-</div>
-</div>
-</div>
-</main>
-
-
-</body></html>
+        <div class="h-8 w-[1px] bg-outline-variant/30 mx-2"></div>
+        <div class="flex items-center gap-3 cursor-pointer group">
+          <div class="text-right">
+            <p class="font-label-md text-on-surface group-hover:text-primary transition-colors">
+              Alex Johnson
+            </p>
+            <p class="text-[10px] text-outline uppercase font-bold tracking-tighter">
+              Premium Account
+            </p>
+          </div>
+          <img
+            alt="Alex Johnson Profile"
+            class="w-10 h-10 rounded-full border-2 border-primary/20 object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVTEPJHBL87kWRmRUXRwJC0QgDRvb_2341WYCE1VLPHwInr3yXeEBNZoXOP2ivQZy2Haja2es4YNEJ5z2-dAg_Z9o0F5IFifbHbrrPDqHV3N9iCU0cB2Y3ttYc-j7IWkyEjsQvsKEEPsUBb3ppgmV2ICRDbzUn2yjCYgB0EMZdFwOxbSWJKdkFDZgrGd3Z1dHxzy5XAGGwkvmUucOdbkE19Vc9Ai3-ho3AlpVbL2MV5fj16d3SZBV7mVQEm0rUlxE5TmkdoieI6t5j"
+          />
+        </div>
+      </div>
+    </header>
+    <!-- Main Content Canvas -->
+    <main class="ml-64 p-8 max-w-[1440px] min-h-screen">
+      <!-- Header Section -->
+      <div class="flex justify-between items-end mb-8">
+        <div>
+          <h2 class="font-headline-lg text-headline-lg text-on-surface uppercase tracking-tight">
+            Your Device Request History
+          </h2>
+          <p class="text-on-surface-variant mt-1">
+            Monitor the lifecycle of your utility expansion and hardware requests.
+          </p>
+        </div>
+        <a class="text-primary font-label-md flex items-center gap-1 hover:underline" href="#">
+          View All Requests
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
+      </div>
+      <!-- Progress Tracker Card -->
+      <div
+        class="bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-10 mb-8 custom-shadow"
+      >
+        <div class="flex items-center justify-between mb-12">
+          <h3 class="font-headline-md text-headline-md text-on-surface">Active Request Pipeline</h3>
+          <span
+            class="bg-primary/10 text-primary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"
+            >DEVICE-006 ONGOING</span
+          >
+        </div>
+        <div class="relative flex items-center justify-between px-10">
+          <div
+            class="absolute top-6 left-20 right-20 h-1 bg-outline-variant/20 -translate-y-1/2"
+          ></div>
+          <div class="absolute top-6 left-20 w-2/3 h-1 bg-primary -translate-y-1/2"></div>
+          <div class="relative z-10 flex flex-col items-center">
+            <div
+              class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-lg"
+            >
+              <span
+                class="material-symbols-outlined text-2xl"
+                style="font-variation-settings: &quot;FILL&quot; 1"
+                >check_circle</span
+              >
+            </div>
+            <div class="mt-4 text-center">
+              <p class="font-manrope font-bold text-xs uppercase tracking-wider text-on-surface">
+                Requested
+              </p>
+              <p class="text-[10px] font-bold uppercase mt-1 text-primary">COMPLETE</p>
+            </div>
+          </div>
+          <div class="relative z-10 flex flex-col items-center">
+            <div
+              class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-lg"
+            >
+              <span
+                class="material-symbols-outlined text-2xl"
+                style="font-variation-settings: &quot;FILL&quot; 1"
+                >check_circle</span
+              >
+            </div>
+            <div class="mt-4 text-center">
+              <p class="font-manrope font-bold text-xs uppercase tracking-wider text-on-surface">
+                Review
+              </p>
+              <p class="text-[10px] font-bold uppercase mt-1 text-primary">COMPLETE</p>
+            </div>
+          </div>
+          <div class="relative z-10 flex flex-col items-center">
+            <div
+              class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-lg"
+            >
+              <span
+                class="material-symbols-outlined text-2xl"
+                style="font-variation-settings: &quot;FILL&quot; 1"
+                >check_circle</span
+              >
+            </div>
+            <div class="mt-4 text-center">
+              <p class="font-manrope font-bold text-xs uppercase tracking-wider text-on-surface">
+                Approved
+              </p>
+              <p class="text-[10px] font-bold uppercase mt-1 text-primary">COMPLETE</p>
+            </div>
+          </div>
+          <div class="relative z-10 flex flex-col items-center">
+            <div
+              class="w-12 h-12 rounded-full bg-surface-container-high text-outline flex items-center justify-center"
+            >
+              <span class="font-manrope font-bold">4</span>
+            </div>
+            <div class="mt-4 text-center">
+              <p class="font-manrope font-bold text-xs uppercase tracking-wider text-on-surface">
+                Device Ready
+              </p>
+              <p class="text-[10px] text-outline font-bold uppercase mt-1">IN PROGRESS</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- History Table Card -->
+      <div
+        class="bg-surface-container-lowest border border-outline-variant/30 rounded-3xl overflow-hidden custom-shadow"
+      >
+        <div class="p-6 border-b border-outline-variant/20 flex justify-between items-center">
+          <h3 class="font-headline-md text-headline-md uppercase tracking-tight">
+            Request History
+          </h3>
+          <div class="flex items-center gap-2">
+            <button class="p-2 hover:bg-surface-container rounded-lg transition-colors">
+              <span class="material-symbols-outlined text-outline">filter_list</span>
+            </button>
+            <button class="p-2 hover:bg-surface-container rounded-lg transition-colors">
+              <span class="material-symbols-outlined text-outline">download</span>
+            </button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-surface-container-low/50">
+                <th
+                  class="px-6 py-4 font-label-md text-outline uppercase text-[11px] tracking-widest"
+                >
+                  Request Number
+                </th>
+                <th
+                  class="px-6 py-4 font-label-md text-outline uppercase text-[11px] tracking-widest"
+                >
+                  Date Requested
+                </th>
+                <th
+                  class="px-6 py-4 font-label-md text-outline uppercase text-[11px] tracking-widest"
+                >
+                  Date Device Release
+                </th>
+                <th
+                  class="px-6 py-4 font-label-md text-outline uppercase text-[11px] tracking-widest"
+                >
+                  Status
+                </th>
+                <th
+                  class="px-6 py-4 font-label-md text-outline uppercase text-[11px] tracking-widest"
+                >
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant/10">
+              <tr class="hover:bg-surface-container-low/30 transition-colors group">
+                <td class="px-6 py-5">
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center"
+                    >
+                      <span class="material-symbols-outlined text-xl">description</span>
+                    </div>
+                    <div>
+                      <p class="font-bold text-on-surface text-sm uppercase">Request 001</p>
+                      <p class="text-[11px] text-outline font-medium">
+                        Electrode Expansion (Device-001)
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-5">
+                  <p class="font-bold text-on-surface text-xs">March 02, 2026</p>
+                  <p class="text-[10px] text-outline">10:45 AM</p>
+                </td>
+                <td class="px-6 py-5">
+                  <p class="font-bold text-on-surface text-xs">May 12, 2026</p>
+                  <p class="text-[10px] text-outline">10:30 AM</p>
+                </td>
+                <td class="px-6 py-5">
+                  <span
+                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-green-50 text-green-700 text-[10px] font-bold uppercase"
+                  >
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                    Completed
+                  </span>
+                </td>
+                <td class="px-6 py-5">
+                  <button
+                    class="px-4 py-1.5 border border-primary/20 text-primary rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-all shadow-sm"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+              <tr class="hover:bg-surface-container-low/30 transition-colors group">
+                <td class="px-6 py-5">
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center"
+                    >
+                      <span class="material-symbols-outlined text-xl">smart_toy</span>
+                    </div>
+                    <div>
+                      <p class="font-bold text-on-surface text-sm uppercase">Request 002</p>
+                      <p class="text-[11px] text-outline font-medium">
+                        AIO Battery Expansion (Device-002)
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-5">
+                  <p class="font-bold text-on-surface text-xs">April 27, 2026</p>
+                  <p class="text-[10px] text-outline">09:22 AM</p>
+                </td>
+                <td class="px-6 py-5">
+                  <p class="font-bold text-on-surface text-xs">May 28, 2026</p>
+                  <p class="text-[10px] text-outline">09:00 AM</p>
+                </td>
+                <td class="px-6 py-5">
+                  <span
+                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-orange-50 text-orange-700 text-[10px] font-bold uppercase"
+                  >
+                    <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                    Pending
+                  </span>
+                </td>
+                <td class="px-6 py-5">
+                  <button
+                    class="px-4 py-1.5 border border-primary/20 text-primary rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-all shadow-sm"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+              <tr class="hover:bg-surface-container-low/30 transition-colors group">
+                <td class="px-6 py-5">
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-10 h-10 rounded-xl bg-green-50 text-green-600 flex items-center justify-center"
+                    >
+                      <span class="material-symbols-outlined text-xl">desktop_windows</span>
+                    </div>
+                    <div>
+                      <p class="font-bold text-on-surface text-sm uppercase">Request 003</p>
+                      <p class="text-[11px] text-outline font-medium">
+                        Monitoring Device (Device-003)
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-5">
+                  <p class="font-bold text-on-surface text-xs">April 15, 2026</p>
+                  <p class="text-[10px] text-outline">03:15 PM</p>
+                </td>
+                <td class="px-6 py-5">
+                  <p class="font-bold text-on-surface text-xs">May 05, 2026</p>
+                  <p class="text-[10px] text-outline">02:45 PM</p>
+                </td>
+                <td class="px-6 py-5">
+                  <span
+                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-green-50 text-green-700 text-[10px] font-bold uppercase"
+                  >
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                    Completed
+                  </span>
+                </td>
+                <td class="px-6 py-5">
+                  <button
+                    class="px-4 py-1.5 border border-primary/20 text-primary rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-all shadow-sm"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+              <tr class="hover:bg-surface-container-low/30 transition-colors group">
+                <td class="px-6 py-5">
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center"
+                    >
+                      <span class="material-symbols-outlined text-xl">wifi</span>
+                    </div>
+                    <div>
+                      <p class="font-bold text-on-surface text-sm uppercase">Request 004</p>
+                      <p class="text-[11px] text-outline font-medium">
+                        Salinity Sensor (Device-004)
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-5">
+                  <p class="font-bold text-on-surface text-xs">May 05, 2026</p>
+                  <p class="text-[10px] text-outline">11:30 AM</p>
+                </td>
+                <td class="px-6 py-5">
+                  <p class="font-bold text-on-surface text-xs">May 22, 2026</p>
+                  <p class="text-[10px] text-outline">11:00 AM</p>
+                </td>
+                <td class="px-6 py-5">
+                  <span
+                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-orange-50 text-orange-700 text-[10px] font-bold uppercase"
+                  >
+                    <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                    Pending
+                  </span>
+                </td>
+                <td class="px-6 py-5">
+                  <button
+                    class="px-4 py-1.5 border border-primary/20 text-primary rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-all shadow-sm"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+              <tr class="hover:bg-surface-container-low/30 transition-colors group">
+                <td class="px-6 py-5">
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center"
+                    >
+                      <span class="material-symbols-outlined text-xl">assignment_turned_in</span>
+                    </div>
+                    <div>
+                      <p class="font-bold text-on-surface text-sm uppercase">Request 005</p>
+                      <p class="text-[11px] text-outline font-medium">
+                        Power Management Unit (Device-005)
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-5">
+                  <p class="font-bold text-on-surface text-xs">May 10, 2026</p>
+                  <p class="text-[10px] text-outline">08:10 AM</p>
+                </td>
+                <td class="px-6 py-5">
+                  <p class="font-bold text-on-surface text-xs">—</p>
+                  <p class="text-[10px] text-outline">Not scheduled</p>
+                </td>
+                <td class="px-6 py-5">
+                  <span
+                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-orange-50 text-orange-700 text-[10px] font-bold uppercase"
+                  >
+                    <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                    Pending
+                  </span>
+                </td>
+                <td class="px-6 py-5">
+                  <button
+                    class="px-4 py-1.5 border border-primary/20 text-primary rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-all shadow-sm"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Pagination Footer -->
+        <div
+          class="p-6 border-t border-outline-variant/20 flex flex-col md:flex-row justify-between items-center gap-4"
+        >
+          <div class="flex items-center gap-4">
+            <span class="text-label-md text-on-surface-variant font-manrope">Show</span>
+            <div class="relative">
+              <select
+                class="appearance-none bg-surface-container-low border border-outline-variant/30 rounded-lg px-4 py-2 pr-8 text-xs font-bold text-on-surface focus:ring-2 focus:ring-primary/20 outline-none"
+              >
+                <option>10 per page</option>
+                <option>20 per page</option>
+                <option>50 per page</option>
+              </select>
+              <span
+                class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-sm pointer-events-none"
+                >expand_more</span
+              >
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 rounded-xl text-outline hover:text-primary hover:border-primary transition-all"
+            >
+              <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            <button
+              class="w-10 h-10 flex items-center justify-center bg-primary text-white rounded-xl font-bold shadow-md shadow-primary/20"
+            >
+              1
+            </button>
+            <button
+              class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-colors font-label-md"
+            >
+              2
+            </button>
+            <button
+              class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-colors font-label-md"
+            >
+              3
+            </button>
+            <span class="px-2 text-outline">...</span>
+            <button
+              class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-colors font-label-md"
+            >
+              12
+            </button>
+            <button
+              class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 rounded-xl text-outline hover:text-primary hover:border-primary transition-all"
+            >
+              <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

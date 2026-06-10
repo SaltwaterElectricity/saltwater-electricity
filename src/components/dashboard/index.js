@@ -1,4 +1,4 @@
-export { default as AnalyticsChart } from "./AnalyticsChart.jsx";
 export { default as HealthDonutChart } from "./HealthDonutChart.jsx";
+export { default as RecentAlertsFeed } from "./RecentAlertsFeed.jsx";
 export * from "./resident";
-export * from "./admin";
+export * from "./historical";

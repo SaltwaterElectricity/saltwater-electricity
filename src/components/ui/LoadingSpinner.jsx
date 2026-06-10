@@ -10,7 +10,7 @@ const LoadingSpinner = ({ message = "Loading...", size = "w-12 h-12" }) => {
     <div className="flex flex-col items-center justify-center gap-4 animate-in fade-in duration-500">
       {/* 8pt Grid (w-12 = 48px) - Uses the SVG Atom for better performance */}
       <SpinnerIcon size={size} color="text-blue-600" />
-      
+
       {/* Message logic: IoT professional look */}
       {message && (
         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] animate-pulse">

@@ -1,11 +1,11 @@
 /**
  * Logger Utility
- * 
+ *
  * Provides a unified interface for logging across the application.
  * Automatically silences logs in production mode to maintain security and performance.
  */
 
-const isProduction = import.meta.env.MODE === 'production';
+const isProduction = import.meta.env.MODE === "production";
 
 export const logger = {
   log: (...args) => {
@@ -31,7 +31,7 @@ export const logger = {
     if (!isProduction) {
       console.debug(...args);
     }
-  }
+  },
 };
 
 export default logger;

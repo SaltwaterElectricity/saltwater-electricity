@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Undo2 } from "lucide-react";
 import { useAuth } from "../../context/useAuth";
 import LoginForm from "../../components/auth/LoginForm";
 import LoginHero from "../../components/auth/LoginHero";
@@ -37,6 +38,15 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen w-full bg-[#f7f9fb] relative antialiased flex flex-col overflow-hidden">
+      {/* Back Button */}
+      <button
+        onClick={() => navigate("/")}
+        className="absolute top-8 left-8 p-3 rounded-full bg-transparent hover:bg-white hover:shadow-lg border border-transparent hover:border-outline-variant/20 transition-all group z-50 flex items-center justify-center"
+        aria-label="Go back to home"
+      >
+        <Undo2 className="w-5 h-5 text-outline group-hover:text-primary group-hover:-translate-x-0.5 transition-transform" />
+      </button>
+
       {/* Background Decorative Gradients */}
       <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
         <div className="absolute top-[-10%] left-[-10%] w-[450px] h-[450px] bg-secondary-container/5 rounded-full blur-[70px]" />

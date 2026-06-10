@@ -17,6 +17,7 @@ import DeviceManagement from "../pages/admin/DeviceManagement";
 import RequestManagement from "../pages/admin/RequestManagement";
 import AuditLogPage from "../pages/admin/AuditLogPage";
 import DeviceAnalytics from "../pages/dashboard/DeviceAnalytics";
+import HistoricalData from "../pages/dashboard/HistoricalData";
 import DeviceRequest from "../pages/user/DeviceRequest";
 import Alerts from "../pages/dashboard/Alerts";
 import LandingPage from "../pages/public/LandingPage";
@@ -92,7 +93,9 @@ export const AppRoutes = () => {
 
           {/* Shared Application Views */}
           <Route path={ROUTES.ALERTS} element={<Alerts />} />
+          <Route path={ROUTES.HISTORY_OVERVIEW} element={<HistoricalData />} />
           <Route path={ROUTES.DEVICE_ANALYTICS} element={<DeviceAnalytics />} />
+          <Route path={ROUTES.DEVICE_HISTORY} element={<HistoricalData />} />
           <Route path={ROUTES.DEVICE_REQUESTS} element={<DeviceRequest />} />
           <Route path={ROUTES.SMART_AQUA_MONITOR} element={<RealTimeMonitor />} />
         </Route>

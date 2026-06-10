@@ -1,16 +1,20 @@
-import { Check, Circle } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { memo } from "react";
+import { cn } from "../../utils/cn";
 
 const RequirementItem = memo(({ label, isMet }) => (
   <div
-    className={`flex items-center gap-2 transition-colors duration-300 ${isMet ? "text-green-600" : "text-slate-400"}`}
+    className={cn(
+      "flex items-center gap-3 text-[13px] font-medium transition-colors duration-300",
+      isMet ? "text-emerald-600" : "text-slate-400"
+    )}
   >
     {isMet ? (
-      <Check size={12} className="animate-in zoom-in duration-300" strokeWidth={3} />
+      <CheckCircle2 size={18} className="text-emerald-500 animate-in zoom-in duration-300" />
     ) : (
-      <Circle size={12} className="text-slate-200" strokeWidth={2} />
+      <div className="w-4.5 h-4.5 rounded-full border-2 border-slate-200 flex-shrink-0" />
     )}
-    <span className="text-[10px] font-bold uppercase tracking-tight">{label}</span>
+    <span>{label}</span>
   </div>
 ));
 
@@ -18,16 +22,25 @@ RequirementItem.displayName = "RequirementItem";
 
 const PasswordChecklist = ({ password = "" }) => {
   const requirements = [
-    { label: "8+ Characters", met: password.length >= 8 },
-    { label: "At least 1 Number", met: /[0-9]/.test(password) },
-    { label: "At least 1 Symbol", met: /[^A-Za-z0-9]/.test(password) },
+    { label: "At least 12 characters long", met: password.length >= 12 },
+    {
+      label: "Includes uppercase & lowercase",
+      met: /[a-z]/.test(password) && /[A-Z]/.test(password),
+    },
+    { label: "Includes at least one number", met: /\d/.test(password) },
+    { label: "Includes a special character", met: /[^A-Za-z0-9]/.test(password) },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-2 p-3 bg-slate-50 rounded-xl border border-slate-100">
-      {requirements.map((req) => (
-        <RequirementItem key={req.label} label={req.label} isMet={req.met} />
-      ))}
+    <div className="space-y-3 mt-2 p-5 bg-slate-50/50 rounded-xl border border-slate-100">
+      <h4 className="text-[10px] font-bold text-[#0b1c30] mb-3.5 uppercase tracking-wider">
+        Password Requirements
+      </h4>
+      <div className="flex flex-col gap-3">
+        {requirements.map((req) => (
+          <RequirementItem key={req.label} label={req.label} isMet={req.met} />
+        ))}
+      </div>
     </div>
   );
 };

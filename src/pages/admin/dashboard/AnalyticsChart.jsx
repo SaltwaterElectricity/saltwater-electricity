@@ -9,7 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { METRIC_CONFIG, METRICS } from "../../constants";
+import { METRIC_CONFIG, METRICS } from "../../../constants";
 
 /**
  * AnalyticsChart Component

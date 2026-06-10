@@ -3,7 +3,6 @@ import {
   push,
   get,
   serverTimestamp,
-  runTransaction,
   onValue,
   query,
   limitToLast,
@@ -11,7 +10,6 @@ import {
 } from "firebase/database";
 import { auth, db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
-import { notifySecurityIncident } from "./notification.service";
 import { logger } from "../utils/logger";
 
 /**
@@ -106,61 +104,6 @@ export const logActivity = async (
       true,
       "audit/log-failed"
     );
-  }
-};
-
-/**
- * Logs and monitors high-priority security incidents.
- * Automatically escalates to a CRITICAL audit log if thresholds are met
- * (e.g., multiple 404s in a short window indicating a directory scan).
- *
- * @param {string} incidentType - Category of incident (e.g. 'PATH_ENUMERATION')
- * @param {string} identifier - Key for tracking (e.g. User UID or IP)
- * @param {Object} context - Metadata about the event
- */
-export const logSecurityIncident = async (incidentType, identifier, context) => {
-  // Use internal tracking node for pattern detection
-  const monitorRef = ref(db, `internal/security_monitoring/${identifier}/${incidentType}`);
-
-  // Protocol: 5 events within 1 minute triggers an escalation
-  const ALERT_THRESHOLD = 5;
-  const WINDOW_MS = 60000;
-
-  try {
-    const { snapshot } = await runTransaction(monitorRef, (current) => {
-      const now = Date.now();
-      // Reset if no record or window expired
-      if (!current || now - current.lastTimestamp > WINDOW_MS) {
-        return { count: 1, lastTimestamp: now };
-      }
-      return {
-        ...current,
-        count: current.count + 1,
-        lastTimestamp: now,
-      };
-    });
-
-    const data = snapshot.val();
-
-    // ESCALATION: Record formal security incident to audit-logs if pattern is confirmed
-    if (data.count >= ALERT_THRESHOLD) {
-      const details = `Security escalation: ${data.count} incidents detected within window. Context: ${JSON.stringify(context)}`;
-
-      // 1. Audit Log
-      await logActivity(`SECURITY_ALERT/${incidentType}`, identifier, details, {
-        severity: "critical",
-        status: "blocked",
-      });
-
-      // 2. Persistent In-App Notification for Admins (EPP Protocol)
-      await notifySecurityIncident(incidentType, identifier, details);
-    }
-
-    return { success: true, count: data.count };
-  } catch (error) {
-    // Fail silent for security telemetry to ensure app availability
-    logger.error("[Audit Service]: Incident monitoring transaction failed.", error);
-    return { success: false };
   }
 };
 

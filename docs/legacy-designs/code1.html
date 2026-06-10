@@ -1,9 +1,10 @@
-<!DOCTYPE html><html class="light" lang="en" style="width: 806px; height: 1098px; overflow: hidden; position: relative;"><head></head><body class="bg-background text-on-surface font-body-md overflow-hidden h-screen flex"><svg aria-hidden="true" class="inline-defs-container" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
+<!DOCTYPE html><html class="light" lang="en" style="width: 1477px; height: 1694px; overflow: hidden; position: relative;"><head></head><body class="text-on-surface"><svg aria-hidden="true" class="inline-defs-container" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>SaltGrid - Device Analytics</title>
+<title>Historical Data - Saltwater Insight</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@450&amp;family=Sora:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
 <script id="tailwind-config">
         tailwind.config = {
@@ -11,58 +12,63 @@
             theme: {
                 extend: {
                     "colors": {
-                        "primary-container": "#2563eb",
-                        "error-container": "#ffdad6",
-                        "on-error": "#ffffff",
-                        "on-tertiary-fixed": "#360f00",
-                        "on-secondary-fixed": "#001c37",
-                        "surface-container-lowest": "#ffffff",
-                        "surface-tint": "#0053db",
-                        "surface-variant": "#e0e3e5",
-                        "tertiary-fixed-dim": "#ffb596",
-                        "background": "#f7f9fb",
-                        "surface-dim": "#d8dadc",
-                        "success": "#10B981",
-                        "outline": "#737686",
-                        "on-surface-variant": "#434655",
-                        "on-primary-container": "#eeefff",
-                        "on-secondary-container": "#49617f",
-                        "surface-container": "#eceef0",
-                        "primary": "#004ac6",
-                        "on-primary-fixed": "#00174b",
-                        "secondary-fixed-dim": "#b0c8eb",
-                        "primary-fixed": "#dbe1ff",
-                        "on-tertiary-container": "#ffede6",
+                        "success-badge": "#059669",
+                        "surface-container-highest": "#dfe1f4",
+                        "on-secondary-fixed": "#131b2e",
+                        "secondary-container": "#d7dff9",
+                        "inverse-surface": "#2c303e",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "severity-medium": "#ea580c",
+                        "on-secondary-container": "#5a6278",
+                        "surface-variant": "#dfe1f4",
                         "on-primary": "#ffffff",
-                        "on-secondary": "#ffffff",
-                        "surface-container-high": "#e6e8ea",
-                        "tertiary-container": "#bc4800",
-                        "primary-fixed-dim": "#b4c5ff",
-                        "outline-variant": "#c3c6d7",
-                        "data-glow": "rgba(37, 99, 235, 0.15)",
-                        "inverse-primary": "#b4c5ff",
-                        "on-secondary-fixed-variant": "#314865",
-                        "danger": "#EF4444",
-                        "on-background": "#191c1e",
-                        "warning": "#F59E0B",
                         "error": "#ba1a1a",
                         "on-error-container": "#93000a",
-                        "tertiary-fixed": "#ffdbcd",
-                        "inverse-surface": "#2d3133",
-                        "on-primary-fixed-variant": "#003ea8",
+                        "outline": "#737685",
+                        "error-badge": "#dc2626",
+                        "tertiary-fixed-dim": "#c0c1ff",
+                        "on-background": "#181b28",
+                        "inverse-primary": "#b4c5ff",
+                        "tertiary": "#231fb5",
+                        "primary-fixed": "#dbe1ff",
+                        "error-container": "#ffdad6",
+                        "background": "#f8f9ff",
+                        "severity-high": "#e11d48",
+                        "surface": "#faf8ff",
+                        "outline-variant": "#c3c6d6",
                         "on-tertiary": "#ffffff",
-                        "border-subtle": "#EAEAEA",
-                        "surface-bright": "#f7f9fb",
-                        "secondary-fixed": "#d2e4ff",
-                        "secondary": "#49607e",
-                        "surface": "#f7f9fb",
-                        "inverse-on-surface": "#eff1f3",
-                        "surface-container-highest": "#e0e3e5",
-                        "on-tertiary-fixed-variant": "#7d2d00",
-                        "on-surface": "#191c1e",
-                        "surface-container-low": "#f2f4f6",
-                        "secondary-container": "#c4dcff",
-                        "tertiary": "#943700"
+                        "on-surface-variant": "#434654",
+                        "surface-bright": "#faf8ff",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#e1e0ff",
+                        "surface-dim": "#d7d9eb",
+                        "surface-sidebar": "#ffffff",
+                        "surface-container-low": "#f3f3ff",
+                        "surface-container-high": "#e5e7fa",
+                        "on-surface": "#181b28",
+                        "surface-tint": "#1b55d0",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-tertiary-container": "#c4c4ff",
+                        "severity-info": "#0891b2",
+                        "on-tertiary-fixed-variant": "#2e2dbe",
+                        "secondary": "#565e74",
+                        "on-primary-container": "#b8c8ff",
+                        "secondary-fixed": "#dae2fc",
+                        "primary": "#003594",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#3e3fcc",
+                        "on-primary-fixed": "#00174b",
+                        "severity-critical": "#450a0a",
+                        "severity-low": "#2563eb",
+                        "on-tertiary-fixed": "#06006c",
+                        "surface-container": "#ebedff",
+                        "active-indicator": "#eff4ff",
+                        "warning-badge": "#d97706",
+                        "primary-container": "#004ac6",
+                        "on-secondary-fixed-variant": "#3e465b",
+                        "inverse-on-surface": "#eff0ff"
                     },
                     "borderRadius": {
                         "DEFAULT": "0.25rem",
@@ -71,682 +77,673 @@
                         "full": "9999px"
                     },
                     "spacing": {
-                        "gutter": "24px",
-                        "unit": "4px",
-                        "margin-mobile": "16px",
-                        "margin-desktop": "48px",
-                        "container-max": "1440px"
+                        "2xl": "48px",
+                        "sidebar-width": "256px",
+                        "gutter": "20px",
+                        "md": "16px",
+                        "container-margin": "32px",
+                        "xl": "32px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "xs": "4px"
                     },
                     "fontFamily": {
-                        "headline-md": ["Geist"],
-                        "body-md": ["Inter"],
-                        "headline-lg": ["Geist"],
-                        "label-md": ["Geist"],
-                        "mono-data": ["JetBrains Mono"],
-                        "body-lg": ["Inter"],
-                        "display": ["Geist"],
-                        "sora": ["Sora"]
+                        "label-caps": ["Sora"],
+                        "body-base": ["Sora"],
+                        "label-xs": ["Sora"],
+                        "display-lg": ["Sora"],
+                        "headline-md": ["Sora"],
+                        "body-sm": ["Sora"]
                     },
                     "fontSize": {
-                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
-                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
-                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
-                        "mono-data": ["14px", {"lineHeight": "20px", "fontWeight": "450"}],
-                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
-                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+                        "label-caps": ["10px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "body-base": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-xs": ["9px", {"lineHeight": "12px", "fontWeight": "600"}],
+                        "display-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["18px", {"lineHeight": "24px", "fontWeight": "700"}],
+                        "body-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
                     }
-                }
-            }
+                },
+            },
         }
     </script>
 <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #e0e3e5;
-            border-radius: 10px;
-        }
-        .chart-bar-primary {
-            background: linear-gradient(180deg, #2563eb 0%, #60a5fa 100%);
-            box-shadow: 0 0-12px rgba(37, 99, 235, 0.2);
-        }
-        .chart-bar-tertiary {
-            background: linear-gradient(180deg, #943700 0%, #bc4800 100%);
-            box-shadow: 0 0 12px rgba(188, 72, 0, 0.2);
-        }
-        .toggle-switch:checked + .toggle-slider {
-            background-color: #2563eb;
-        }
-        .toggle-switch:checked + .toggle-slider::before {
-            transform: translateX(20px);
-        }
-        html {
-            scroll-behavior: smooth;
-        }
-        
-        @keyframes subtle-pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); }
-            50% { transform: scale(1.05); box-shadow: 0 0 0 8px rgba(249, 115, 22, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
-        }
-        .animate-subtle-pulse {
-            animation: subtle-pulse 1.5s ease-in-out 2;
-        }
-
-        @keyframes needle-sweep {
-            0% { transform: rotate(-90deg); }
-            100% { transform: rotate(54deg); } /* Based on 218mA out of max roughly 300mA scale */
-        }
-        .animate-needle {
-            animation: needle-sweep 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-            transform-origin: bottom center;
-        }
-
-        @keyframes dot-pulse {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(1.2); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-        .animate-dot-pulse {
-            animation: dot-pulse 1.5s infinite;
-        }
-
-        .tab-transition {
-            transition: opacity 250ms ease-in-out, transform 250ms ease-in-out;
-        }
-
-        .gradient-gauge {
-            background: conic-gradient(from -90deg at 50% 100%, #a855f7 0deg, #ec4899 180deg, transparent 180deg);
-        }
+        body { font-family: 'Sora', sans-serif; background-color: #f8f9ff; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .glass-header { background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(243,244,255,0.8) 100%); }
+        .chart-bar { transition: height 0.3s ease; }
     </style>
-<!-- Main Content Simulation (Background) -->
-<main class="flex-1 p-margin-desktop opacity-30 pointer-events-none transition-opacity">
-<h1 class="font-headline-lg text-headline-lg mb-8">Real-Time Monitor</h1>
-<div class="grid grid-cols-12 gap-gutter">
-<div class="col-span-8 h-64 bg-white rounded-[24px] border border-border-subtle shadow-sm"></div>
-<div class="col-span-4 h-64 bg-white rounded-[24px] border border-border-subtle shadow-sm"></div>
-<div class="col-span-12 h-96 bg-white rounded-[24px] border border-border-subtle shadow-sm"></div>
+<!-- Sidebar Navigation -->
+<aside class="w-sidebar-width h-screen fixed left-0 top-0 border-r border-outline-variant bg-surface-sidebar z-50 flex flex-col shadow-sm">
+<div class="p-lg">
+<h1 class="font-headline-md text-headline-md text-primary font-bold">Saltwater Insight</h1>
+<p class="text-body-sm text-secondary">Infrastructure Monitor</p>
 </div>
-</main>
-<!-- Side Panel / NavigationDrawer -->
-<aside class="fixed right-0 top-0 h-full w-[440px] bg-white border-l border-border-subtle shadow-2xl z-50 flex flex-col transition-all duration-300 transform translate-x-0 overflow-hidden overflow-x-hidden">
-<!-- Fixed Header -->
-<header class="p-gutter flex flex-col gap-unit flex-none bg-white"><div class="relative flex items-start gap-4 mb-6 pt-4">
-<!-- Branding Icon -->
-<div class="flex-none w-14 h-14 bg-surface-container-low rounded-xl border border-border-subtle flex items-center justify-center">
-<img alt="ESM Logo" class="w-10 h-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGbenkunQzUHSkMBAMRKwDhd7BPLesqscNXB0Rn_29TTLOmqoSS9Wjqarf8dIoBzbV3gXMe9rAO6wvFkZc-FnUXBz7bxaV3SAuFFW82ZhcpyvrPDZV85CWDkQeqxP2LzyvLkWNXDnFtVpYx289Zn2mxDSwydmQJFz6GfBhdwBrI_sFHf_GgVgXcqrzJSyKr2WKTsgxyNFbcXbSi_XRxMtzoqDo8sFr249zQ4oUt7X9Y-Pzn7IU_G6QpL1mdkii-B88fr9IaHaKP42O">
+<nav class="flex-1 overflow-y-auto px-sm space-y-1">
+<!-- Nav Items -->
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-low transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-base text-body-base">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-low transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span class="font-body-base text-body-base">Real-Time Monitor</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-low transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="sensors">sensors</span>
+<span class="font-body-base text-body-base">Devices</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-low transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="home_work">home_work</span>
+<span class="font-body-base text-body-base">Households</span>
+</a>
+<!-- Active State -->
+<a class="flex items-center gap-3 px-4 py-3 bg-active-indicator text-primary font-bold border-r-4 border-primary rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-body-base text-body-base">Historical Data</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-low transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-body-base text-body-base">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-low transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="notifications_active">notifications_active</span>
+<span class="font-body-base text-body-base">Alerts</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-low transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-body-base text-body-base">Audit Logs</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-low transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-base text-body-base">Settings</span>
+</a>
+</nav>
+<div class="p-md border-t border-outline-variant">
+<div class="flex items-center gap-3">
+<img alt="User Avatar" class="w-10 h-10 rounded-full bg-surface-container" data-alt="A professional close-up headshot of a smiling system administrator in a high-tech control center environment. The lighting is bright and clean with soft blue and white tones that match a corporate light-mode UI aesthetic. The background is slightly blurred showing sophisticated monitoring equipment and data displays." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABpeC_ORa2HSC3OnPq_3icEnvr-uD0In0JHVGfgV1kxfcrO7Ef9ju_U4lox363_E0ML24uT7EXsO3AWrFUOSWXrlawRCuKw4kvI0D8uZ5JSGKc6kDsPNU86C-Hw_4VUY6oM_Yo4cw5Dm55RTWqN3Pk6UGP-Yi6lkPRVIdiCRd3FSgiSm1TAA0ODNxJeezEuO32cHTibKvvDziK8VdLMea2kZya4qfoMoEX0N5nqaaY5TH3983PAAMhVo3MsyhbPHYNmk2pgoGEcyk">
+<div class="flex-1 min-w-0">
+<p class="text-body-sm font-bold truncate">Juan Dela Cruz</p>
+<div class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-success-badge"></span>
+<p class="text-label-xs text-secondary">Super Administrator</p>
 </div>
-<!-- Text Content -->
-<div class="flex-1 pr-10 pt-1">
-<div class="flex items-center gap-2 mb-1">
-<h2 class="font-headline-md text-headline-md leading-none">DEVICE-001</h2>
-<span class="px-1.5 py-0.5 rounded bg-success/10 text-success text-[10px] font-bold tracking-wider uppercase leading-none border border-success/20">ONLINE</span>
 </div>
-<div class="space-y-0.5">
-<p class="text-on-surface-variant font-medium text-[14px] leading-tight">Jasmine Sanchez</p>
-<p class="text-outline text-[13px] leading-tight">jasmine@email.com</p>
+<span class="material-symbols-outlined text-outline cursor-pointer" data-icon="expand_more">expand_more</span>
 </div>
+</div>\
+
+</aside>
+<!-- Main Content Area -->
+<main class="ml-sidebar-width min-h-screen">
+<!-- Header with Illustration -->
+<header class="relative px-xl pt-lg pb-2xl border-b border-outline-variant overflow-hidden">
+<!-- Simplified Vector Background -->
+<div class="absolute right-0 top-0 w-1/3 h-full opacity-10 pointer-events-none">
+<img class="w-full h-full object-cover" data-alt="A minimalist architectural illustration of high-voltage transmission towers and electrical power lines stretching across a clean, bright horizon under a soft blue sky. The visual style is light-mode corporate tech with crisp lines and high-key lighting, maintaining the Saltwater Insight brand's blue and white color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmg6d6yWpJsjdtvgIuaj2GCcu29_9SJZF8mDqY48wYiJENRhiujBK40Tj0XCAzCzezEftps8BsvIoFr0ww204cIPINT3i4ap4dn07MRkqjDQKg9qJPZv6Sdk6VBGBgbg8w1PbVwn4mM-RMrYSvzRQBwW7GMLwWtkYTbYGXPQFej47yMeBfa3aIB8E-DGMPq6lnST4g-uQ1C60G4Vvrzp1IZgF8Rlj3wwbRYpgtb9gdznykg8LgFAodsRK8X944Zw1ZUPZMOSsI2Kk">
 </div>
-<!-- Close Button -->
-<button class="absolute top-0 right-0 p-2 hover:bg-surface-container rounded-full transition-colors" onclick="closePanel()">
-<span class="material-symbols-outlined text-outline">close</span>
+<div class="flex justify-between items-start relative z-10">
+<div>
+<h2 class="font-display-lg text-display-lg text-primary mt-20"><span class="text-on-surface">Historical</span> <span class="text-primary">Data</span></h2>
+<p class="text-body-base text-secondary mt-1">View and analyze historical data of saltwater electricity and system performance.</p>
+</div>
+<div class="flex items-center gap-md">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-xl text-body-sm focus:ring-2 focus:ring-primary w-64 transition-all" placeholder="Search historical records..." type="text">
+</div>
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors relative">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="help_outline">help_outline</span>
 </button>
 </div>
-<!-- Navigation Anchor Links -->
-<nav class="flex gap-4 border-b border-border-subtle overflow-x-auto no-scrollbar">
-<a class="font-label-md hover:text-primary pb-2 transition-colors whitespace-nowrap flex items-center gap-1 text-primary border-primary border-b-2" href="#section-control" onclick="switchTab('section-control')">
-        Device Control
-    </a>
-<a class="font-label-md hover:text-primary pb-2 transition-colors whitespace-nowrap flex items-center gap-1 text-primary border-primary border-b-2" href="#section-readings" onclick="switchTab('section-readings')">
-        Readings
-    </a>
-<a class="font-label-md hover:text-primary pb-2 transition-colors whitespace-nowrap flex items-center gap-1 text-primary border-primary border-b-2" href="#section-components" onclick="switchTab('section-components')">
-        Components Current
-    </a>
-<a class="font-label-md hover:text-primary pb-2 transition-colors whitespace-nowrap flex items-center gap-1 text-primary border-primary border-b-2" href="#section-alerts" onclick="switchTab('section-alerts')">
-        Alerts
-    </a>
-</nav></header>
-<!-- Scrollable Content Area -->
-<div class="flex-1 overflow-y-auto custom-scrollbar px-gutter pb-gutter space-y-12">
-<!-- Overview Section -->
-<section class="scroll-mt-6 pt-4 tab-transition" id="section-overview" style="opacity: 0.95; transform: translateX(0px);">
-<h3 class="font-headline-md text-body-lg font-semibold mb-4 text-primary">Overview</h3>
-<div class="grid grid-cols-2 gap-y-6 gap-x-gutter">
-<div class="flex items-start gap-3">
-<span class="material-symbols-outlined text-[20px] text-primary-container">person</span>
+</div>
+</header>
+<!-- Metric Cards Row -->
+<section class="px-xl -mt-8 relative z-20 grid grid-cols-5 gap-md">
+<!-- Card 1 -->
+<div class="bg-white p-lg rounded-xl shadow-sm border border-outline-variant flex flex-col justify-between group hover:border-primary transition-all">
+<div class="flex justify-between items-start mb-2">
+<div class="p-2 bg-surface-container-low rounded-lg text-primary">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+</div>
+<div class="flex items-center gap-1 text-success-badge bg-green-50 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span>
+<span class="text-label-xs">12.5%</span>
+</div>
+</div>
 <div>
-<p class="font-label-md text-[11px] uppercase tracking-wider text-outline mb-0.5">HOUSEHOLD USER INFO</p>
-<p class="font-body-md font-medium">Jasmine Sanchez</p>
+<p class="text-label-xs text-secondary uppercase tracking-wider mb-1">Total Voltage Readings</p>
+<h3 class="text-headline-md font-extrabold">240,580</h3>
+<p class="text-label-xs text-outline">Readings</p>
+</div>
+<div class="mt-4 h-12 flex items-end gap-[2px]">
+<div class="flex-1 bg-primary-fixed-dim/30 h-1/2 rounded-sm group-hover:bg-primary transition-all"></div>
+<div class="flex-1 bg-primary-fixed-dim/30 h-3/4 rounded-sm group-hover:bg-primary transition-all"></div>
+<div class="flex-1 bg-primary-fixed-dim/30 h-1/3 rounded-sm group-hover:bg-primary transition-all"></div>
+<div class="flex-1 bg-primary-fixed-dim/30 h-full rounded-sm group-hover:bg-primary transition-all"></div>
+<div class="flex-1 bg-primary-fixed-dim/30 h-2/3 rounded-sm group-hover:bg-primary transition-all"></div>
 </div>
 </div>
-<div class="flex items-start gap-3">
-<span class="material-symbols-outlined text-[20px] text-primary-container">calendar_today</span>
+<!-- Card 2 -->
+<div class="bg-white p-lg rounded-xl shadow-sm border border-outline-variant flex flex-col justify-between group hover:border-primary transition-all">
+<div class="flex justify-between items-start mb-2">
+<div class="p-2 bg-surface-container-low rounded-lg text-severity-info">
+<span class="material-symbols-outlined" data-icon="water_drop">water_drop</span>
+</div>
+</div>
 <div>
-<p class="font-label-md text-[11px] uppercase tracking-wider text-outline mb-0.5">Assigned Date</p>
-<p class="font-body-md font-medium">May 12, 2025</p>
+<p class="text-label-xs text-secondary uppercase tracking-wider mb-1">Total Salinity Readings</p>
+<h3 class="text-headline-md font-extrabold">185,430</h3>
+<p class="text-label-xs text-outline">Readings</p>
+</div>
+<div class="mt-4 h-12 flex items-end gap-[2px]">
+<div class="flex-1 bg-severity-info/30 h-2/3 rounded-sm group-hover:bg-severity-info transition-all"></div>
+<div class="flex-1 bg-severity-info/30 h-1/2 rounded-sm group-hover:bg-severity-info transition-all"></div>
+<div class="flex-1 bg-severity-info/30 h-3/4 rounded-sm group-hover:bg-severity-info transition-all"></div>
+<div class="flex-1 bg-severity-info/30 h-2/3 rounded-sm group-hover:bg-severity-info transition-all"></div>
+<div class="flex-1 bg-severity-info/30 h-full rounded-sm group-hover:bg-severity-info transition-all"></div>
 </div>
 </div>
-<div class="col-span-2 flex items-start gap-3">
-<span class="material-symbols-outlined text-[20px] text-primary-container">location_on</span>
+<!-- Card 3 -->
+<div class="bg-white p-lg rounded-xl shadow-sm border border-outline-variant flex flex-col justify-between group hover:border-primary transition-all">
+<div class="flex justify-between items-start mb-2">
+<div class="p-2 bg-surface-container-low rounded-lg text-severity-medium">
+<span class="material-symbols-outlined" data-icon="pulse">pause</span>
+</div>
+</div>
 <div>
-<p class="font-label-md text-[11px] uppercase tracking-wider text-outline mb-0.5">Address</p>
-<p class="font-body-md font-medium">Purok 1, Alibijaban Island,&nbsp; San Andres,Quezon&nbsp;</p>
-</div>
-</div>
-</div>
-</section>
-<!-- Control Section -->
-<section class="scroll-mt-6 tab-transition" id="section-control" style="opacity: 1; transform: translateX(0px);">
-<h3 class="font-headline-md text-body-lg font-semibold mb-6 text-primary">Device Controls</h3>
-<div class="bg-white border rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border-primary"><div class="flex flex-col items-center text-center space-y-6">
-<div class="flex flex-col items-center gap-4 w-full">
-<div class="w-14 h-14 flex items-center justify-center rounded-2xl transition-all duration-300 bg-orange-100 shadow-[0_0_15px_rgba(249,115,22,0.2)]" id="bulb-icon-container">
-<span class="material-symbols-outlined text-[32px] transition-colors duration-300 text-orange-500" id="bulb-icon">lightbulb</span>
-</div>
-<div class="flex flex-col items-center">
-<div class="flex items-center gap-2 mb-1">
-<p class="font-semibold text-on-surface text-lg">Smart Bulb Power</p>
-<div class="flex items-center gap-1.5">
-<div class="w-2 h-2 rounded-full bg-success shadow-[0_0_8px_rgba(16,185,129,0.4)]" id="power-status-dot"></div>
-<span class="text-[11px] font-bold text-success uppercase tracking-widest" id="power-status-text">Online</span>
-</div>
-</div>
-<p class="text-[14px] text-on-surface-variant leading-relaxed">Remote toggle for manual override</p>
-</div>
-</div>
-<div class="relative flex items-center justify-center">
-<div class="flex items-center gap-4">
-<span class="text-[12px] font-medium text-outline uppercase tracking-wider">Off</span>
-<label class="relative inline-flex items-center cursor-pointer group">
-<input checked="" class="sr-only peer toggle-switch" id="bulb-toggle" onchange="togglePowerStatus()" type="checkbox">
-<div class="w-16 h-8 bg-surface-container rounded-full peer peer-focus:ring-0 peer-checked:bg-primary-container transition-all duration-500 ease-in-out shadow-inner"></div>
-<div class="absolute left-[4px] top-[4px] bg-white w-6 h-6 rounded-full transition-all duration-500 ease-in-out shadow-md peer-checked:translate-x-8 peer-checked:shadow-[0_2px_4px_rgba(0,0,0,0.2)] after:content-[''] after:absolute after:inset-0 after:rounded-full after:bg-white"></div>
-</label>
-<span class="text-[12px] font-medium text-primary uppercase tracking-wider">On</span>
-</div>
-</div>
-
-</div></div>
-</section>
-<!-- Readings Section -->
-<section class="scroll-mt-6 tab-transition" id="section-readings" style="opacity: 1; transform: translateX(0px);">
-<div class="flex justify-between items-center mb-6"><h3 class="font-headline-md text-body-lg font-semibold text-primary">Real-Time Readings</h3></div><div class="flex justify-center mb-6">
-<div class="flex gap-1 p-1 bg-surface-container rounded-lg"><button class="px-2 py-1 text-outline text-[11px] font-medium hover:text-primary">1HR</button>
-<button class="px-2 py-1 text-outline text-[11px] font-medium hover:text-primary">3HR</button>
-<button class="px-2 py-1 text-outline text-[11px] font-medium hover:text-primary">6HR</button>
-<button class="px-2 py-1 text-outline text-[11px] font-medium hover:text-primary">24HR</button>
-<button class="px-2 py-1 bg-white shadow-sm rounded-md text-[11px] font-bold">1D</button>
-<button class="px-2 py-1 text-outline text-[11px] font-medium hover:text-primary">7D</button>
-<button class="px-2 py-1 text-outline text-[11px] font-medium hover:text-primary">1M</button></div>
-</div>
-<!-- Voltage Graph Card -->
-<div class="bg-white border rounded-[24px] p-6 mb-gutter hover:shadow-md transition-shadow cursor-default group overflow-hidden border-primary"><div class="flex justify-between items-start mb-6">
-<div>
-<p class="font-label-md text-on-surface-variant text-[12px] uppercase tracking-wider mb-1">Voltage (V)</p>
-<div class="flex items-baseline gap-3">
-<span class="font-display text-headline-lg font-bold">230V</span>
-</div>
-<p class="text-[12px] text-outline font-mono-data mt-2">10:25 AM | <span class="text-on-surface font-semibold">238V</span></p>
-</div>
-<div class="bg-primary/5 p-3 rounded-xl group-hover:bg-primary/10 transition-colors border border-primary/10">
-<span class="material-symbols-outlined text-primary text-[24px]">bolt</span>
-</div>
-</div>
-<div class="flex gap-4">
-<!-- Y-Axis -->
-<div class="flex flex-col justify-between text-[10px] text-outline font-mono-data h-32 py-1 mb-6">
-<span class="">250V</span>
-<span class="">200V</span>
-<span class="">150V</span>
-<span class="">0V</span>
-</div>
-<!-- Chart Area Container -->
-<div class="flex-1 max-w-full">
-<div class="relative h-32 w-full pt-4 border-l border-surface-variant overflow-x-auto custom-scrollbar">
-<!-- Grid Lines -->
-<div class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-1 pt-4">
-<div class="border-t border-surface-variant/30 w-full"></div>
-<div class="border-t border-surface-variant/30 w-full"></div>
-<div class="border-t border-surface-variant/30 w-full"></div>
-<div class="border-t border-surface-variant/30 w-full"></div>
-</div>
-<!-- Bars Container -->
-<div class="flex items-end gap-2 h-full w-full relative z-10 overflow-x-auto custom-scrollbar overflow-x-visible">
-<div class="flex items-end gap-2 h-full min-w-[600px] pb-1 flex-nowrap">
-<div class="chart-bar-primary flex-none w-4 h-[40%] rounded-t-lg opacity-30"></div>
-<div class="chart-bar-primary flex-none w-4 h-[55%] rounded-t-lg opacity-40"></div>
-<div class="chart-bar-primary flex-none w-4 h-[45%] rounded-t-lg opacity-30"></div>
-<div class="chart-bar-primary flex-none w-4 h-[70%] rounded-t-lg opacity-50"></div>
-<div class="chart-bar-primary flex-none w-4 h-[60%] rounded-t-lg opacity-60"></div>
-<div class="chart-bar-primary flex-none w-4 h-[85%] rounded-t-lg opacity-70"></div>
-<div class="chart-bar-primary flex-none w-4 h-[95%] rounded-t-lg opacity-80 shadow-[0_0_12px_rgba(37,99,235,0.3)]"></div>
-<div class="chart-bar-primary flex-none w-4 h-[80%] rounded-t-lg opacity-70"></div>
-<div class="chart-bar-primary flex-none w-4 h-[65%] rounded-t-lg opacity-60"></div>
-<div class="chart-bar-primary flex-none w-4 h-[50%] rounded-t-lg opacity-50"></div>
-<div class="chart-bar-primary flex-none w-4 h-[75%] rounded-t-lg opacity-60"></div>
-<div class="chart-bar-primary flex-none w-4 h-[90%] rounded-t-lg opacity-70"></div>
-<div class="chart-bar-primary flex-none w-4 h-[70%] rounded-t-lg opacity-60"></div>
-<div class="chart-bar-primary flex-none w-4 h-[55%] rounded-t-lg opacity-50"></div>
-<div class="chart-bar-primary flex-none w-4 h-[40%] rounded-t-lg opacity-40"></div>
-<div class="chart-bar-primary flex-none w-4 h-[60%] rounded-t-lg opacity-50"></div>
-<div class="chart-bar-primary flex-none w-4 h-[75%] rounded-t-lg opacity-60"></div>
-<div class="chart-bar-primary flex-none w-4 h-[85%] rounded-t-lg opacity-70"></div>
-<div class="chart-bar-primary flex-none w-4 h-[50%] rounded-t-lg opacity-40"></div>
-<div class="chart-bar-primary flex-none w-4 h-[65%] rounded-t-lg opacity-55"></div>
-<div class="chart-bar-primary flex-none w-4 h-[45%] rounded-t-lg opacity-35"></div>
-<div class="chart-bar-primary flex-none w-4 h-[80%] rounded-t-lg opacity-75"></div>
-<div class="chart-bar-primary flex-none w-4 h-[90%] rounded-t-lg opacity-85"></div>
-<div class="chart-bar-primary flex-none w-4 h-[70%] rounded-t-lg opacity-65"></div>
-</div>
-</div>
-</div>
-<!-- X-Axis -->
-<div class="flex justify-between mt-4 text-[10px] font-mono-data border-t border-surface-variant pt-2 gap-x-1 min-w-\[600px\] whitespace-nowrap overflow-x-auto" style="color: #8b5cf6;"><span class="">00:00</span><span class="">04:00</span><span class="">08:00</span><span class="">12:00</span><span class="">16:00</span><span class="">20:00</span><span class="">23:59</span></div>
-</div>
-</div></div><div class="bg-white border border-border-subtle rounded-[24px] p-6 mb-gutter hover:shadow-md transition-shadow cursor-default group overflow-hidden border-primary">
-<div class="flex justify-between items-start mb-6">
-<div>
-<p class="font-label-md text-on-surface-variant text-[12px] uppercase tracking-wider mb-1">Salinity (ppm)</p>
-<div class="flex items-baseline gap-3">
-<span class="font-display text-headline-lg font-bold">350ppm</span>
-<div class="flex items-center text-danger text-[12px] font-bold">
-</div>
-</div>
-<p class="text-[12px] text-outline font-mono-data mt-2">10:25 AM | <span class="text-on-surface font-semibold">342ppm</span></p>
-</div>
-<div class="bg-primary/5 p-3 rounded-xl group-hover:bg-primary/10 transition-colors border border-primary/10">
-<span class="material-symbols-outlined text-primary text-[24px]">water_drop</span>
-</div>
-</div>
-<div class="flex gap-4">
-<div class="flex flex-col justify-between text-[10px] text-outline font-mono-data h-32 py-1 mb-6">
-<span class="">500ppm</span>
-<span class="">400ppm</span>
-<span class="">300ppm</span>
-<span class="">200ppm</span>
-<span class="">0ppm</span>
-</div>
-<div class="flex-1 max-w-full">
-<div class="relative h-32 w-full pt-4 border-l border-surface-variant overflow-x-auto custom-scrollbar">
-<div class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-1 pt-4">
-<div class="border-t border-surface-variant/30 w-full"></div>
-<div class="border-t border-surface-variant/30 w-full"></div>
-<div class="border-t border-surface-variant/30 w-full"></div>
-<div class="border-t border-surface-variant/30 w-full"></div>
-</div>
-<div class="flex items-end gap-2 h-full w-full relative z-10 overflow-x-auto custom-scrollbar overflow-x-visible">
-<div class="flex items-end gap-2 h-full min-w-[600px] pb-1 flex-nowrap">
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[60%] rounded-t-lg opacity-40"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[65%] rounded-t-lg opacity-50"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[70%] rounded-t-lg opacity-60"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[75%] rounded-t-lg opacity-70"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[70%] rounded-t-lg opacity-80"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[65%] rounded-t-lg opacity-70"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[60%] rounded-t-lg opacity-60"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[55%] rounded-t-lg opacity-50"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[50%] rounded-t-lg opacity-40"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[55%] rounded-t-lg opacity-50"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[60%] rounded-t-lg opacity-60"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[65%] rounded-t-lg opacity-70"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[70%] rounded-t-lg opacity-80"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[75%] rounded-t-lg opacity-70"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[70%] rounded-t-lg opacity-60"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[65%] rounded-t-lg opacity-50"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[60%] rounded-t-lg opacity-40"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[55%] rounded-t-lg opacity-50"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[50%] rounded-t-lg opacity-60"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[45%] rounded-t-lg opacity-70"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[50%] rounded-t-lg opacity-80"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[55%] rounded-t-lg opacity-70"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[60%] rounded-t-lg opacity-60"></div>
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 flex-none w-4 h-[65%] rounded-t-lg opacity-50"></div>
-</div>
-</div>
-</div>
-<div class="flex justify-between mt-4 text-[10px] font-mono-data border-t border-surface-variant pt-2 gap-x-1 min-w-[600px] whitespace-nowrap overflow-x-auto text-outline">
-<span class="">00:00</span>
-<span class="">04:00</span>
-<span class="">08:00</span>
-<span class="">12:00</span>
-<span class="">16:00</span>
-<span class="">20:00</span>
-<span class="">23:59</span>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Components Current Section -->
-<section class="scroll-mt-6 tab-transition" id="section-components" style="opacity: 1; transform: translateX(0px);">
-<div class="flex flex-col gap-1 mb-6">
-<div class="flex justify-between items-center">
-<h3 class="font-headline-md text-body-lg font-semibold text-primary">Hardware Component Usage</h3>
-<div class="flex items-center gap-1.5 px-3 py-1 bg-success/10 rounded-full border border-success/20">
-<div class="w-1.5 h-1.5 rounded-full bg-success animate-dot-pulse"></div>
-<span class="text-[10px] font-bold text-success uppercase tracking-widest">Live Monitoring</span>
-</div>
-</div>
-<p class="text-[13px] text-on-surface-variant">Real-time current consumption of hardware components.</p>
-</div>
-<!-- Circular Dial Gauge -->
-<div class="bg-white border border-border-subtle rounded-[24px] p-8 mb-gutter shadow-sm relative overflow-hidden flex flex-col items-center border-primary border-b-2">
-<div class="relative w-64 h-64 flex items-center justify-center">
-<!-- SVG for Segmented Ticks -->
-<svg class="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-<defs>
-<linearGradient id="tick-gradient" x1="0%" x2="100%" y1="0%" y2="100%">
-<stop offset="0%" stop-color="#2563eb"></stop> <!-- Blue -->
-<stop offset="30%" stop-color="#a855f7"></stop> <!-- Purple -->
-<stop offset="70%" stop-color="#ec4899"></stop> <!-- Pink -->
-<stop offset="100%" stop-color="#ef4444"></stop> <!-- Red -->
-</linearGradient>
-</defs>
-<g id="ticks">
-<!-- Generating ticks via script or manually for visual accuracy -->
-<script>
-                    const group = document.currentScript.parentElement;
-                    for (let i = 0; i &lt; 60; i++) {
-                        const angle = (i * 360 / 60) * (Math.PI / 180);
-                        const x1 = 50 + 42 * Math.cos(angle);
-                        const y1 = 50 + 42 * Math.sin(angle);
-                        const x2 = 50 + 46 * Math.cos(angle);
-                        const y2 = 50 + 46 * Math.sin(angle);
-                        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                        line.setAttribute("x1", x1);
-                        line.setAttribute("y1", y1);
-                        line.setAttribute("x2", x2);
-                        line.setAttribute("y2", y2);
-                        line.setAttribute("stroke", "url(#tick-gradient)");
-                        line.setAttribute("stroke-width", "0.6");
-                        line.setAttribute("stroke-linecap", "round");
-                        // Optional: fade ticks to match Image 12's lighter side if needed, 
-                        // but request says gradient around entire perimeter.
-                        group.appendChild(line);
-                    }
-                </script><line x1="92" y1="50" x2="96" y2="50" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.76991960546748" y1="54.39019545724145" x2="95.74800718694057" y2="54.80830931031206" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.08219923081984" y1="58.73229101434589" x2="94.99478963375506" y2="59.56393777761693" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="89.94437368439645" y1="62.97871376374779" x2="93.74859974957707" y2="64.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="88.36890922098924" y1="67.0829390091836" x2="92.02309105155965" y2="68.70988558148682" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="86.37306695894642" y1="71" x2="89.83716857408419" y2="73" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="83.97871376374779" y1="74.68698059628387" x2="87.21478174124758" y2="77.03812160545377" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="81.21208267005056" y1="78.10348546707205" x2="84.18466197196014" y2="80.78000789250748" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="78.10348546707205" y1="81.21208267005056" x2="80.78000789250748" y2="84.18466197196014" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="74.68698059628387" y1="83.97871376374779" x2="77.03812160545377" y2="87.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="71" y1="86.37306695894642" x2="73" y2="89.83716857408417" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="67.0829390091836" y1="88.36890922098924" x2="68.70988558148682" y2="92.02309105155965" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="62.97871376374779" y1="89.94437368439645" x2="64.21478174124758" y2="93.74859974957707" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="58.7322910143459" y1="91.08219923081984" x2="59.563937777616935" y2="94.99478963375506" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="54.39019545724145" y1="91.76991960546748" x2="54.80830931031206" y2="95.74800718694057" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="50" y1="92" x2="50" y2="96" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="45.60980454275855" y1="91.76991960546748" x2="45.19169068968794" y2="95.74800718694057" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="41.26770898565411" y1="91.08219923081984" x2="40.43606222238307" y2="94.99478963375506" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="37.02128623625221" y1="89.94437368439645" x2="35.78521825875242" y2="93.74859974957707" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="32.91706099081639" y1="88.36890922098924" x2="31.290114418513188" y2="92.02309105155965" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="29.00000000000001" y1="86.37306695894642" x2="27.00000000000001" y2="89.83716857408419" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="25.313019403716133" y1="83.97871376374779" x2="22.96187839454624" y2="87.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="21.896514532927952" y1="81.21208267005056" x2="19.219992107492523" y2="84.18466197196014" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="18.78791732994945" y1="78.10348546707205" x2="15.815338028039875" y2="80.78000789250748" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="16.02128623625221" y1="74.68698059628387" x2="12.785218258752423" y2="77.03812160545377" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="13.626933041053576" y1="71" x2="10.162831425915819" y2="73" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="11.63109077901077" y1="67.08293900918362" x2="7.976908948440368" y2="68.70988558148682" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="10.055626315603554" y1="62.97871376374779" x2="6.25140025042294" y2="64.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.917800769180161" y1="58.73229101434589" x2="5.005210366244938" y2="59.56393777761693" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.230080394532521" y1="54.390195457241454" x2="4.251992813059431" y2="54.80830931031207" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8" y1="50.00000000000001" x2="4" y2="50.00000000000001" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.230080394532521" y1="45.60980454275855" x2="4.251992813059431" y2="45.19169068968794" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.917800769180168" y1="41.2677089856541" x2="5.005210366244945" y2="40.436062222383065" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="10.055626315603547" y1="37.021286236252216" x2="6.2514002504229325" y2="35.78521825875242" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="11.631090779010762" y1="32.917060990816395" x2="7.976908948440361" y2="31.29011441851319" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="13.626933041053576" y1="28.999999999999996" x2="10.162831425915826" y2="26.999999999999996" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="16.0212862362522" y1="25.313019403716133" x2="12.785218258752415" y2="22.96187839454624" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="18.78791732994944" y1="21.896514532927952" x2="15.815338028039868" y2="19.219992107492523" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="21.89651453292796" y1="18.787917329949437" x2="19.219992107492526" y2="15.81533802803986" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="25.313019403716122" y1="16.02128623625221" x2="22.96187839454623" y2="12.785218258752423" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="28.999999999999982" y1="13.62693304105359" x2="26.99999999999998" y2="10.162831425915833" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="32.917060990816395" y1="11.631090779010762" x2="31.290114418513195" y2="7.976908948440354" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="37.0212862362522" y1="10.055626315603554" x2="35.78521825875241" y2="6.25140025042294" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="41.26770898565409" y1="8.917800769180168" x2="40.43606222238305" y2="5.005210366244945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="45.60980454275856" y1="8.230080394532514" x2="45.191690689687945" y2="4.251992813059424" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="49.99999999999999" y1="8" x2="49.99999999999999" y2="4" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="54.390195457241425" y1="8.230080394532514" x2="54.80830931031204" y2="4.251992813059424" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="58.7322910143459" y1="8.917800769180168" x2="59.563937777616935" y2="5.005210366244945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="62.978713763747784" y1="10.055626315603547" x2="64.21478174124758" y2="6.2514002504229325" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="67.08293900918359" y1="11.631090779010755" x2="68.70988558148679" y2="7.976908948440347" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="71" y1="13.626933041053576" x2="73" y2="10.162831425915826" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="74.68698059628386" y1="16.0212862362522" x2="77.03812160545375" y2="12.785218258752415" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="78.10348546707203" y1="18.787917329949426" x2="80.78000789250746" y2="15.815338028039847" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="81.21208267005056" y1="21.89651453292796" x2="84.18466197196014" y2="19.219992107492526" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="83.97871376374779" y1="25.31301940371612" x2="87.21478174124758" y2="22.961878394546225" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="86.37306695894641" y1="28.999999999999982" x2="89.83716857408416" y2="26.99999999999998" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="88.36890922098924" y1="32.917060990816395" x2="92.02309105155965" y2="31.29011441851319" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="89.94437368439645" y1="37.021286236252195" x2="93.74859974957707" y2="35.78521825875241" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.08219923081984" y1="41.26770898565408" x2="94.99478963375506" y2="40.43606222238304" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.76991960546748" y1="45.60980454275855" x2="95.74800718694057" y2="45.191690689687945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="92" y1="50" x2="96" y2="50" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.76991960546748" y1="54.39019545724145" x2="95.74800718694057" y2="54.80830931031206" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.08219923081984" y1="58.73229101434589" x2="94.99478963375506" y2="59.56393777761693" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="89.94437368439645" y1="62.97871376374779" x2="93.74859974957707" y2="64.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="88.36890922098924" y1="67.0829390091836" x2="92.02309105155965" y2="68.70988558148682" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="86.37306695894642" y1="71" x2="89.83716857408419" y2="73" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="83.97871376374779" y1="74.68698059628387" x2="87.21478174124758" y2="77.03812160545377" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="81.21208267005056" y1="78.10348546707205" x2="84.18466197196014" y2="80.78000789250748" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="78.10348546707205" y1="81.21208267005056" x2="80.78000789250748" y2="84.18466197196014" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="74.68698059628387" y1="83.97871376374779" x2="77.03812160545377" y2="87.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="71" y1="86.37306695894642" x2="73" y2="89.83716857408417" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="67.0829390091836" y1="88.36890922098924" x2="68.70988558148682" y2="92.02309105155965" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="62.97871376374779" y1="89.94437368439645" x2="64.21478174124758" y2="93.74859974957707" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="58.7322910143459" y1="91.08219923081984" x2="59.563937777616935" y2="94.99478963375506" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="54.39019545724145" y1="91.76991960546748" x2="54.80830931031206" y2="95.74800718694057" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="50" y1="92" x2="50" y2="96" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="45.60980454275855" y1="91.76991960546748" x2="45.19169068968794" y2="95.74800718694057" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="41.26770898565411" y1="91.08219923081984" x2="40.43606222238307" y2="94.99478963375506" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="37.02128623625221" y1="89.94437368439645" x2="35.78521825875242" y2="93.74859974957707" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="32.91706099081639" y1="88.36890922098924" x2="31.290114418513188" y2="92.02309105155965" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="29.00000000000001" y1="86.37306695894642" x2="27.00000000000001" y2="89.83716857408419" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="25.313019403716133" y1="83.97871376374779" x2="22.96187839454624" y2="87.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="21.896514532927952" y1="81.21208267005056" x2="19.219992107492523" y2="84.18466197196014" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="18.78791732994945" y1="78.10348546707205" x2="15.815338028039875" y2="80.78000789250748" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="16.02128623625221" y1="74.68698059628387" x2="12.785218258752423" y2="77.03812160545377" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="13.626933041053576" y1="71" x2="10.162831425915819" y2="73" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="11.63109077901077" y1="67.08293900918362" x2="7.976908948440368" y2="68.70988558148682" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="10.055626315603554" y1="62.97871376374779" x2="6.25140025042294" y2="64.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.917800769180161" y1="58.73229101434589" x2="5.005210366244938" y2="59.56393777761693" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.230080394532521" y1="54.390195457241454" x2="4.251992813059431" y2="54.80830931031207" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8" y1="50.00000000000001" x2="4" y2="50.00000000000001" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.230080394532521" y1="45.60980454275855" x2="4.251992813059431" y2="45.19169068968794" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.917800769180168" y1="41.2677089856541" x2="5.005210366244945" y2="40.436062222383065" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="10.055626315603547" y1="37.021286236252216" x2="6.2514002504229325" y2="35.78521825875242" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="11.631090779010762" y1="32.917060990816395" x2="7.976908948440361" y2="31.29011441851319" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="13.626933041053576" y1="28.999999999999996" x2="10.162831425915826" y2="26.999999999999996" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="16.0212862362522" y1="25.313019403716133" x2="12.785218258752415" y2="22.96187839454624" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="18.78791732994944" y1="21.896514532927952" x2="15.815338028039868" y2="19.219992107492523" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="21.89651453292796" y1="18.787917329949437" x2="19.219992107492526" y2="15.81533802803986" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="25.313019403716122" y1="16.02128623625221" x2="22.96187839454623" y2="12.785218258752423" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="28.999999999999982" y1="13.62693304105359" x2="26.99999999999998" y2="10.162831425915833" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="32.917060990816395" y1="11.631090779010762" x2="31.290114418513195" y2="7.976908948440354" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="37.0212862362522" y1="10.055626315603554" x2="35.78521825875241" y2="6.25140025042294" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="41.26770898565409" y1="8.917800769180168" x2="40.43606222238305" y2="5.005210366244945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="45.60980454275856" y1="8.230080394532514" x2="45.191690689687945" y2="4.251992813059424" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="49.99999999999999" y1="8" x2="49.99999999999999" y2="4" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="54.390195457241425" y1="8.230080394532514" x2="54.80830931031204" y2="4.251992813059424" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="58.7322910143459" y1="8.917800769180168" x2="59.563937777616935" y2="5.005210366244945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="62.978713763747784" y1="10.055626315603547" x2="64.21478174124758" y2="6.2514002504229325" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="67.08293900918359" y1="11.631090779010755" x2="68.70988558148679" y2="7.976908948440347" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="71" y1="13.626933041053576" x2="73" y2="10.162831425915826" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="74.68698059628386" y1="16.0212862362522" x2="77.03812160545375" y2="12.785218258752415" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="78.10348546707203" y1="18.787917329949426" x2="80.78000789250746" y2="15.815338028039847" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="81.21208267005056" y1="21.89651453292796" x2="84.18466197196014" y2="19.219992107492526" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="83.97871376374779" y1="25.31301940371612" x2="87.21478174124758" y2="22.961878394546225" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="86.37306695894641" y1="28.999999999999982" x2="89.83716857408416" y2="26.99999999999998" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="88.36890922098924" y1="32.917060990816395" x2="92.02309105155965" y2="31.29011441851319" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="89.94437368439645" y1="37.021286236252195" x2="93.74859974957707" y2="35.78521825875241" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.08219923081984" y1="41.26770898565408" x2="94.99478963375506" y2="40.43606222238304" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.76991960546748" y1="45.60980454275855" x2="95.74800718694057" y2="45.191690689687945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="92" y1="50" x2="96" y2="50" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.76991960546748" y1="54.39019545724145" x2="95.74800718694057" y2="54.80830931031206" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.08219923081984" y1="58.73229101434589" x2="94.99478963375506" y2="59.56393777761693" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="89.94437368439645" y1="62.97871376374779" x2="93.74859974957707" y2="64.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="88.36890922098924" y1="67.0829390091836" x2="92.02309105155965" y2="68.70988558148682" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="86.37306695894642" y1="71" x2="89.83716857408419" y2="73" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="83.97871376374779" y1="74.68698059628387" x2="87.21478174124758" y2="77.03812160545377" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="81.21208267005056" y1="78.10348546707205" x2="84.18466197196014" y2="80.78000789250748" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="78.10348546707205" y1="81.21208267005056" x2="80.78000789250748" y2="84.18466197196014" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="74.68698059628387" y1="83.97871376374779" x2="77.03812160545377" y2="87.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="71" y1="86.37306695894642" x2="73" y2="89.83716857408417" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="67.0829390091836" y1="88.36890922098924" x2="68.70988558148682" y2="92.02309105155965" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="62.97871376374779" y1="89.94437368439645" x2="64.21478174124758" y2="93.74859974957707" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="58.7322910143459" y1="91.08219923081984" x2="59.563937777616935" y2="94.99478963375506" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="54.39019545724145" y1="91.76991960546748" x2="54.80830931031206" y2="95.74800718694057" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="50" y1="92" x2="50" y2="96" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="45.60980454275855" y1="91.76991960546748" x2="45.19169068968794" y2="95.74800718694057" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="41.26770898565411" y1="91.08219923081984" x2="40.43606222238307" y2="94.99478963375506" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="37.02128623625221" y1="89.94437368439645" x2="35.78521825875242" y2="93.74859974957707" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="32.91706099081639" y1="88.36890922098924" x2="31.290114418513188" y2="92.02309105155965" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="29.00000000000001" y1="86.37306695894642" x2="27.00000000000001" y2="89.83716857408419" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="25.313019403716133" y1="83.97871376374779" x2="22.96187839454624" y2="87.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="21.896514532927952" y1="81.21208267005056" x2="19.219992107492523" y2="84.18466197196014" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="18.78791732994945" y1="78.10348546707205" x2="15.815338028039875" y2="80.78000789250748" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="16.02128623625221" y1="74.68698059628387" x2="12.785218258752423" y2="77.03812160545377" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="13.626933041053576" y1="71" x2="10.162831425915819" y2="73" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="11.63109077901077" y1="67.08293900918362" x2="7.976908948440368" y2="68.70988558148682" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="10.055626315603554" y1="62.97871376374779" x2="6.25140025042294" y2="64.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.917800769180161" y1="58.73229101434589" x2="5.005210366244938" y2="59.56393777761693" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.230080394532521" y1="54.390195457241454" x2="4.251992813059431" y2="54.80830931031207" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8" y1="50.00000000000001" x2="4" y2="50.00000000000001" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.230080394532521" y1="45.60980454275855" x2="4.251992813059431" y2="45.19169068968794" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.917800769180168" y1="41.2677089856541" x2="5.005210366244945" y2="40.436062222383065" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="10.055626315603547" y1="37.021286236252216" x2="6.2514002504229325" y2="35.78521825875242" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="11.631090779010762" y1="32.917060990816395" x2="7.976908948440361" y2="31.29011441851319" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="13.626933041053576" y1="28.999999999999996" x2="10.162831425915826" y2="26.999999999999996" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="16.0212862362522" y1="25.313019403716133" x2="12.785218258752415" y2="22.96187839454624" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="18.78791732994944" y1="21.896514532927952" x2="15.815338028039868" y2="19.219992107492523" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="21.89651453292796" y1="18.787917329949437" x2="19.219992107492526" y2="15.81533802803986" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="25.313019403716122" y1="16.02128623625221" x2="22.96187839454623" y2="12.785218258752423" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="28.999999999999982" y1="13.62693304105359" x2="26.99999999999998" y2="10.162831425915833" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="32.917060990816395" y1="11.631090779010762" x2="31.290114418513195" y2="7.976908948440354" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="37.0212862362522" y1="10.055626315603554" x2="35.78521825875241" y2="6.25140025042294" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="41.26770898565409" y1="8.917800769180168" x2="40.43606222238305" y2="5.005210366244945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="45.60980454275856" y1="8.230080394532514" x2="45.191690689687945" y2="4.251992813059424" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="49.99999999999999" y1="8" x2="49.99999999999999" y2="4" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="54.390195457241425" y1="8.230080394532514" x2="54.80830931031204" y2="4.251992813059424" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="58.7322910143459" y1="8.917800769180168" x2="59.563937777616935" y2="5.005210366244945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="62.978713763747784" y1="10.055626315603547" x2="64.21478174124758" y2="6.2514002504229325" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="67.08293900918359" y1="11.631090779010755" x2="68.70988558148679" y2="7.976908948440347" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="71" y1="13.626933041053576" x2="73" y2="10.162831425915826" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="74.68698059628386" y1="16.0212862362522" x2="77.03812160545375" y2="12.785218258752415" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="78.10348546707203" y1="18.787917329949426" x2="80.78000789250746" y2="15.815338028039847" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="81.21208267005056" y1="21.89651453292796" x2="84.18466197196014" y2="19.219992107492526" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="83.97871376374779" y1="25.31301940371612" x2="87.21478174124758" y2="22.961878394546225" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="86.37306695894641" y1="28.999999999999982" x2="89.83716857408416" y2="26.99999999999998" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="88.36890922098924" y1="32.917060990816395" x2="92.02309105155965" y2="31.29011441851319" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="89.94437368439645" y1="37.021286236252195" x2="93.74859974957707" y2="35.78521825875241" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.08219923081984" y1="41.26770898565408" x2="94.99478963375506" y2="40.43606222238304" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.76991960546748" y1="45.60980454275855" x2="95.74800718694057" y2="45.191690689687945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="92" y1="50" x2="96" y2="50" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.76991960546748" y1="54.39019545724145" x2="95.74800718694057" y2="54.80830931031206" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.08219923081984" y1="58.73229101434589" x2="94.99478963375506" y2="59.56393777761693" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="89.94437368439645" y1="62.97871376374779" x2="93.74859974957707" y2="64.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="88.36890922098924" y1="67.0829390091836" x2="92.02309105155965" y2="68.70988558148682" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="86.37306695894642" y1="71" x2="89.83716857408419" y2="73" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="83.97871376374779" y1="74.68698059628387" x2="87.21478174124758" y2="77.03812160545377" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="81.21208267005056" y1="78.10348546707205" x2="84.18466197196014" y2="80.78000789250748" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="78.10348546707205" y1="81.21208267005056" x2="80.78000789250748" y2="84.18466197196014" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="74.68698059628387" y1="83.97871376374779" x2="77.03812160545377" y2="87.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="71" y1="86.37306695894642" x2="73" y2="89.83716857408417" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="67.0829390091836" y1="88.36890922098924" x2="68.70988558148682" y2="92.02309105155965" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="62.97871376374779" y1="89.94437368439645" x2="64.21478174124758" y2="93.74859974957707" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="58.7322910143459" y1="91.08219923081984" x2="59.563937777616935" y2="94.99478963375506" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="54.39019545724145" y1="91.76991960546748" x2="54.80830931031206" y2="95.74800718694057" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="50" y1="92" x2="50" y2="96" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="45.60980454275855" y1="91.76991960546748" x2="45.19169068968794" y2="95.74800718694057" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="41.26770898565411" y1="91.08219923081984" x2="40.43606222238307" y2="94.99478963375506" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="37.02128623625221" y1="89.94437368439645" x2="35.78521825875242" y2="93.74859974957707" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="32.91706099081639" y1="88.36890922098924" x2="31.290114418513188" y2="92.02309105155965" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="29.00000000000001" y1="86.37306695894642" x2="27.00000000000001" y2="89.83716857408419" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="25.313019403716133" y1="83.97871376374779" x2="22.96187839454624" y2="87.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="21.896514532927952" y1="81.21208267005056" x2="19.219992107492523" y2="84.18466197196014" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="18.78791732994945" y1="78.10348546707205" x2="15.815338028039875" y2="80.78000789250748" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="16.02128623625221" y1="74.68698059628387" x2="12.785218258752423" y2="77.03812160545377" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="13.626933041053576" y1="71" x2="10.162831425915819" y2="73" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="11.63109077901077" y1="67.08293900918362" x2="7.976908948440368" y2="68.70988558148682" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="10.055626315603554" y1="62.97871376374779" x2="6.25140025042294" y2="64.21478174124758" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.917800769180161" y1="58.73229101434589" x2="5.005210366244938" y2="59.56393777761693" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.230080394532521" y1="54.390195457241454" x2="4.251992813059431" y2="54.80830931031207" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8" y1="50.00000000000001" x2="4" y2="50.00000000000001" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.230080394532521" y1="45.60980454275855" x2="4.251992813059431" y2="45.19169068968794" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="8.917800769180168" y1="41.2677089856541" x2="5.005210366244945" y2="40.436062222383065" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="10.055626315603547" y1="37.021286236252216" x2="6.2514002504229325" y2="35.78521825875242" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="11.631090779010762" y1="32.917060990816395" x2="7.976908948440361" y2="31.29011441851319" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="13.626933041053576" y1="28.999999999999996" x2="10.162831425915826" y2="26.999999999999996" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="16.0212862362522" y1="25.313019403716133" x2="12.785218258752415" y2="22.96187839454624" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="18.78791732994944" y1="21.896514532927952" x2="15.815338028039868" y2="19.219992107492523" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="21.89651453292796" y1="18.787917329949437" x2="19.219992107492526" y2="15.81533802803986" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="25.313019403716122" y1="16.02128623625221" x2="22.96187839454623" y2="12.785218258752423" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="28.999999999999982" y1="13.62693304105359" x2="26.99999999999998" y2="10.162831425915833" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="32.917060990816395" y1="11.631090779010762" x2="31.290114418513195" y2="7.976908948440354" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="37.0212862362522" y1="10.055626315603554" x2="35.78521825875241" y2="6.25140025042294" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="41.26770898565409" y1="8.917800769180168" x2="40.43606222238305" y2="5.005210366244945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="45.60980454275856" y1="8.230080394532514" x2="45.191690689687945" y2="4.251992813059424" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="49.99999999999999" y1="8" x2="49.99999999999999" y2="4" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="54.390195457241425" y1="8.230080394532514" x2="54.80830931031204" y2="4.251992813059424" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="58.7322910143459" y1="8.917800769180168" x2="59.563937777616935" y2="5.005210366244945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="62.978713763747784" y1="10.055626315603547" x2="64.21478174124758" y2="6.2514002504229325" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="67.08293900918359" y1="11.631090779010755" x2="68.70988558148679" y2="7.976908948440347" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="71" y1="13.626933041053576" x2="73" y2="10.162831425915826" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="74.68698059628386" y1="16.0212862362522" x2="77.03812160545375" y2="12.785218258752415" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="78.10348546707203" y1="18.787917329949426" x2="80.78000789250746" y2="15.815338028039847" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="81.21208267005056" y1="21.89651453292796" x2="84.18466197196014" y2="19.219992107492526" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="83.97871376374779" y1="25.31301940371612" x2="87.21478174124758" y2="22.961878394546225" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="86.37306695894641" y1="28.999999999999982" x2="89.83716857408416" y2="26.99999999999998" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="88.36890922098924" y1="32.917060990816395" x2="92.02309105155965" y2="31.29011441851319" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="89.94437368439645" y1="37.021286236252195" x2="93.74859974957707" y2="35.78521825875241" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.08219923081984" y1="41.26770898565408" x2="94.99478963375506" y2="40.43606222238304" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line><line x1="91.76991960546748" y1="45.60980454275855" x2="95.74800718694057" y2="45.191690689687945" stroke="url(#tick-gradient)" stroke-width="0.6" stroke-linecap="round"></line>
-</g>
-</svg>
-<!-- Center Content -->
-<div class="text-center z-10 flex flex-col items-center">
-<span class="text-[56px] font-bold font-sora leading-none text-on-surface">218</span>
-<span class="text-[18px] font-semibold font-sora text-on-surface-variant mt-1">mA</span>
-<span class="text-[10px] font-bold font-sora text-outline uppercase tracking-[0.2em] mt-4">Total Current Draw</span>
-</div>
-</div>
-<!-- Status & Timestamp -->
-<div class="flex flex-col items-center mt-6 gap-2">
-<div class="flex items-center gap-1.5 opacity-70">
-<span class="material-symbols-outlined text-[16px] text-outline">schedule</span>
-<span class="font-mono-data font-bold text-[12px] text-on-surface-variant">10:25:34 PM</span>
-</div>
-<div class="px-4 py-1.5 bg-success/5 border border-success/10 rounded-full">
-<span class="text-[11px] font-bold text-success uppercase tracking-widest">Excellent Status</span>
-</div>
-</div>
-</div>
-<!-- Hardware Component Cards Vertical Stack -->
-<div class="space-y-3 mb-8">
-<!-- ESP32 -->
-<div class="bg-white border border-border-subtle rounded-xl p-4 flex items-center gap-4 hover:shadow-sm transition-shadow border-surface-variant/30 border-purple-500">
-<div class="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined">memory</span>
-</div>
-<div class="flex-1">
-<div class="flex items-center gap-2 mb-0.5">
-<h4 class="font-semibold text-[14px]">ESP32 Controller</h4>
-<span class="text-[9px] font-bold text-success uppercase">Online</span>
-</div>
-<div class="w-full bg-surface-container h-1 rounded-full overflow-hidden">
-<div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 w-[60%]"></div>
-</div>
-</div>
-<div class="text-right">
-<p class="font-mono-data font-bold text-primary">120 mA</p>
-</div>
-</div>
-<!-- Voltage Sensor -->
-<div class="bg-white border border-border-subtle rounded-xl p-4 flex items-center gap-4 hover:shadow-sm transition-shadow border-surface-variant/30 border-primary border-purple-500">
-<div class="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined">bolt</span>
-</div>
-<div class="flex-1">
-<div class="flex items-center gap-2 mb-0.5">
-<h4 class="font-semibold text-[14px]">Voltage Sensor</h4>
-<span class="text-[9px] font-bold text-success uppercase">Online</span>
-</div>
-<div class="w-full bg-surface-container h-1 rounded-full overflow-hidden">
-<div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 w-[15%]"></div>
-</div>
-</div>
-<div class="text-right">
-<p class="font-mono-data font-bold text-primary">8 mA</p>
-</div>
-</div>
-<!-- Salinity Sensor -->
-<div class="bg-white border border-border-subtle rounded-xl p-4 flex items-center gap-4 hover:shadow-sm transition-shadow border-surface-variant/30 border-purple-500">
-<div class="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined">water_drop</span>
-</div>
-<div class="flex-1">
-<div class="flex items-center gap-2 mb-0.5">
-<h4 class="font-semibold text-[14px]">Salinity Sensor</h4>
-<span class="text-[9px] font-bold text-success uppercase">Online</span>
-</div>
-<div class="w-full bg-surface-container h-1 rounded-full overflow-hidden">
-<div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 w-[25%]"></div>
-</div>
-</div>
-<div class="text-right">
-<p class="font-mono-data font-bold text-primary">20 mA</p>
-</div>
-</div>
-<!-- Relay Driver -->
-<div class="bg-white border border-border-subtle rounded-xl p-4 flex items-center gap-4 hover:shadow-sm transition-shadow border-surface-variant/30 border-purple-500">
-<div class="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined">settings_input_component</span>
-</div>
-<div class="flex-1">
-<div class="flex items-center gap-2 mb-0.5">
-<h4 class="font-semibold text-[14px]">Relay Driver Module</h4>
-<span class="text-[9px] font-bold text-success uppercase">Online</span>
-</div>
-<div class="w-full bg-surface-container h-1 rounded-full overflow-hidden">
-<div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 w-[10%]"></div>
-</div>
-</div>
-<div class="text-right">
-<p class="font-mono-data font-bold text-primary">5 mA</p>
-</div>
-</div><div class="bg-white border border-border-subtle rounded-xl p-4 flex items-center gap-4 hover:shadow-sm transition-shadow border-surface-variant/30 border-purple-500">
-<div class="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined">lightbulb</span>
-</div>
-<div class="flex-1">
-<div class="flex items-center gap-2 mb-0.5">
-<h4 class="font-semibold text-[14px]">Smart Bulb</h4>
-<span class="text-[9px] font-bold text-success uppercase">Online</span>
-</div>
-<div class="w-full bg-surface-container h-1 rounded-full overflow-hidden">
-<div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 w-[18%]"></div>
-</div>
-</div>
-<div class="text-right">
-<p class="font-mono-data font-bold text-primary">12 mA</p>
-</div>
-</div>
-<!-- WiFi -->
+<p class="text-label-xs text-secondary uppercase tracking-wider mb-1">Total Current Readings</p>
+<h3 class="text-headline-md font-extrabold">95,210</h3>
+<p class="text-label-xs text-outline">Readings</p>
+</div>
+<div class="mt-4 h-12 flex items-end gap-[2px]">
+<div class="flex-1 bg-severity-medium/30 h-1/2 rounded-sm group-hover:bg-severity-medium transition-all"></div>
+<div class="flex-1 bg-severity-medium/30 h-full rounded-sm group-hover:bg-severity-medium transition-all"></div>
+<div class="flex-1 bg-severity-medium/30 h-1/3 rounded-sm group-hover:bg-severity-medium transition-all"></div>
+<div class="flex-1 bg-severity-medium/30 h-1/2 rounded-sm group-hover:bg-severity-medium transition-all"></div>
+<div class="flex-1 bg-severity-medium/30 h-2/3 rounded-sm group-hover:bg-severity-medium transition-all"></div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-white p-lg rounded-xl shadow-sm border border-outline-variant flex flex-col justify-between group hover:border-primary transition-all">
+<div class="flex justify-between items-start mb-2">
+<div class="p-2 bg-surface-container-low rounded-lg text-success-badge">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+</div>
+<div class="flex items-center gap-1 text-success-badge bg-green-50 px-2 py-0.5 rounded-full">
 
 </div>
-<!-- Component Status Icons (Bottom) -->
+</div>
+<div>
+<p class="text-label-xs text-secondary uppercase tracking-wider mb-1">Total Household Users</p>
+<h3 class="text-headline-md font-extrabold">84</h3>
+<p class="text-label-xs text-outline">Households</p>
+</div>
+<div class="mt-4 h-12 flex items-end gap-[2px]">
+<div class="flex-1 bg-success-badge/30 h-1/3 rounded-sm group-hover:bg-success-badge transition-all"></div>
+<div class="flex-1 bg-success-badge/30 h-2/3 rounded-sm group-hover:bg-success-badge transition-all"></div>
+<div class="flex-1 bg-success-badge/30 h-1/2 rounded-sm group-hover:bg-success-badge transition-all"></div>
+<div class="flex-1 bg-success-badge/30 h-3/4 rounded-sm group-hover:bg-success-badge transition-all"></div>
+<div class="flex-1 bg-success-badge/30 h-full rounded-sm group-hover:bg-success-badge transition-all"></div>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="bg-white p-lg rounded-xl shadow-sm border border-outline-variant flex flex-col justify-between group hover:border-primary transition-all">
+<div class="flex justify-between items-start mb-2">
+<div class="p-2 bg-surface-container-low rounded-lg text-severity-info">
+<span class="material-symbols-outlined" data-icon="devices">devices</span>
+</div>
 
-</section>
-<!-- Alerts Section -->
-<section class="scroll-mt-6 pb-4 tab-transition" id="section-alerts" style="opacity: 1; transform: translateX(0px);">
-<div class="flex justify-between items-center mb-4">
-<h3 class="font-headline-md text-body-lg font-semibold text-primary">Alert History</h3>
 </div>
-<div class="space-y-3">
-<div class="flex items-center gap-4 p-4 rounded-xl hover:bg-surface-container transition-colors">
-<div class="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center text-success">
-<span class="material-symbols-outlined text-[20px]">check_circle</span>
+<div>
+<p class="text-label-xs text-secondary uppercase tracking-wider mb-1">Total Connected Devices</p>
+<h3 class="text-headline-md font-extrabold">128</h3>
+<p class="text-label-xs text-outline">Devices</p>
 </div>
-<div class="flex-1">
-<p class="font-body-md font-semibold text-[14px]">Voltage Stable</p>
-<p class="text-[12px] text-on-surface-variant">Voltage reading is within normal range.</p>
+<div class="mt-4 h-12 flex items-end gap-[2px]">
+<div class="flex-1 bg-severity-info/30 h-1/3 rounded-sm group-hover:bg-severity-info transition-all"></div>
+<div class="flex-1 bg-severity-info/30 h-2/3 rounded-sm group-hover:bg-severity-info transition-all"></div>
+<div class="flex-1 bg-severity-info/30 h-1/2 rounded-sm group-hover:bg-severity-info transition-all"></div>
+<div class="flex-1 bg-severity-info/30 h-3/4 rounded-sm group-hover:bg-severity-info transition-all"></div>
+<div class="flex-1 bg-severity-info/30 h-full rounded-sm group-hover:bg-severity-info transition-all"></div>
 </div>
-<div class="text-right">
-<p class="text-[10px] text-outline font-medium">Just now</p>
-<div class="w-2 h-2 rounded-full bg-success ml-auto mt-1"></div>
+</div></section>
+<!-- Filter Bar -->
+<section class="px-xl mt-lg">
+<div class="bg-white p-md rounded-xl border border-outline-variant flex items-center gap-md flex-wrap">
+<div class="flex-1 min-w-[200px] relative border-primary">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-primary-container" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-body-sm focus:ring-2 focus:ring-primary" placeholder="Search by household, device or location" type="text">
 </div>
-</div>
-<div class="flex items-center gap-4 p-4 rounded-xl hover:bg-surface-container transition-colors">
-<div class="w-10 h-10 rounded-full bg-warning/10 flex items-center justify-center text-warning">
-<span class="material-symbols-outlined text-[20px]">warning</span>
-</div>
-<div class="flex-1 max-w-full">
-<p class="font-body-md font-semibold text-[14px]">Salinity High</p>
-<p class="text-[12px] text-on-surface-variant">Salinity level is above normal threshold.</p>
-</div>
-<div class="text-right">
-<p class="text-[10px] text-outline font-medium">10 mins ago</p>
-<div class="w-2 h-2 rounded-full bg-warning ml-auto mt-1"></div>
-</div>
-</div>
-<div class="flex items-center gap-4 p-4 rounded-xl hover:bg-surface-container transition-colors">
-<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center text-outline">
-<span class="material-symbols-outlined text-[20px]">cloud_off</span>
-</div>
-<div class="flex-1">
-<p class="font-body-md font-semibold text-[14px]">Device Offline</p>
-<p class="text-[12px] text-on-surface-variant">Device was offline for 5 minutes.</p>
-</div>
-<div class="text-right">
-<p class="text-[10px] text-outline font-medium">25 mins ago</p>
-<div class="w-2 h-2 rounded-full bg-outline ml-auto mt-1"></div>
-</div>
-</div>
-<div class="flex items-center gap-4 p-4 rounded-xl hover:bg-surface-container transition-colors">
-<div class="w-10 h-10 rounded-full bg-danger/10 flex items-center justify-center text-danger">
-<span class="material-symbols-outlined text-[20px]">error</span>
-</div>
-<div class="flex-1">
-<p class="font-body-md font-semibold text-[14px]">Voltage Spike Detected</p>
-<p class="text-[12px] text-on-surface-variant">Voltage reached 240V at 09:45 AM.</p>
-</div>
-<div class="text-right">
-<p class="text-[10px] text-outline font-medium">1 hour ago</p>
-<div class="w-2 h-2 rounded-full bg-danger ml-auto mt-1"></div>
-</div>
-</div>
-</div>
-</section>
-</div>
-<!-- Sticky Footer CTA -->
-<footer class="p-gutter bg-white border-t border-border-subtle flex-none">
-<button class="w-full py-4 bg-primary text-on-primary font-bold rounded-xl hover:bg-primary-container transition-all active:scale-[0.98] flex items-center justify-center gap-2">
-<span class="material-symbols-outlined text-[20px]">ios_share</span>
-                Back to Dashboard</button>
-</footer>
-</aside>
-<script>
-        // Close panel logic
-        function closePanel() {
-            document.querySelector('aside').style.transform = 'translateX(100%)';
-            document.querySelector('main').classList.remove('opacity-30');
+<div class="relative group">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg text-body-sm hover:bg-surface-container-low transition-colors border-primary">
+<span class="material-symbols-outlined text-primary-container" data-icon="devices">devices</span>
+                        All Device Readings
+                        <span class="material-symbols-outlined text-outline text-primary-container" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</button>
+<div class="hidden absolute top-full left-0 mt-2 w-48 bg-white border border-outline-variant rounded-lg shadow-lg z-50 overflow-hidden" id="device-dropdown-menu"><div class="py-1"><button class="w-full text-left px-4 py-2 text-body-sm hover:bg-surface-container-low transition-colors" data-value="All Device Readings">All Devices</button><button class="w-full text-left px-4 py-2 text-body-sm hover:bg-surface-container-low transition-colors" data-value="Device-001">Device-001</button><button class="w-full text-left px-4 py-2 text-body-sm hover:bg-surface-container-low transition-colors" data-value="Device-002">Device-002</button><button class="w-full text-left px-4 py-2 text-body-sm hover:bg-surface-container-low transition-colors" data-value="Device-003">Device-003</button><button class="w-full text-left px-4 py-2 text-body-sm hover:bg-surface-container-low transition-colors" data-value="Device-004">Device-004</button></div></div><script class="">const deviceBtn = document.querySelector('section.px-xl.mt-lg > div.bg-white > div.relative.group:nth-child(2) > button'); const deviceMenu = document.getElementById('device-dropdown-menu'); deviceBtn.addEventListener('click', (e) => { e.stopPropagation(); deviceMenu.classList.toggle('hidden'); }); deviceMenu.querySelectorAll('button').forEach(opt => { opt.addEventListener('click', () => { const textSpan = deviceBtn.childNodes[2]; textSpan.textContent = ' ' + opt.getAttribute('data-value') + ' '; deviceMenu.classList.add('hidden'); }); }); document.addEventListener('click', () => deviceMenu.classList.add('hidden'));</script></div>
+<div class="relative">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg text-body-sm hover:bg-surface-container-low transition-colors border-primary" id="date-range-picker-btn">
+<span class="material-symbols-outlined text-primary-container" data-icon="calendar_today">calendar_today</span>
+                        May 12, 2025 - May 18, 2025
+                        <span class="material-symbols-outlined text-outline text-primary-container" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</button>
+<div class="hidden absolute top-full right-0 mt-2 bg-white border border-outline-variant rounded-xl shadow-lg z-50 flex overflow-hidden min-w-[600px]" id="date-range-dropdown"><div class="w-40 bg-surface-container-low border-r border-outline-variant p-2 flex flex-col gap-1"><button class="text-left px-3 py-2 text-body-sm hover:bg-primary/10 hover:text-primary rounded-lg transition-colors" data-range="Today">Today</button><button class="text-left px-3 py-2 text-body-sm hover:bg-primary/10 hover:text-primary rounded-lg transition-colors" data-range="Yesterday">Yesterday</button><button class="text-left px-3 py-2 text-body-sm bg-primary/10 text-primary font-bold rounded-lg transition-colors" data-range="Last 7 Days">Last 7 Days</button><button class="text-left px-3 py-2 text-body-sm hover:bg-primary/10 hover:text-primary rounded-lg transition-colors" data-range="Last 30 Days">Last 30 Days</button><button class="text-left px-3 py-2 text-body-sm hover:bg-primary/10 hover:text-primary rounded-lg transition-colors" data-range="This Month">This Month</button><div class="mt-auto pt-2 border-t border-outline-variant"><button class="text-left px-3 py-2 text-body-sm hover:bg-primary/10 hover:text-primary rounded-lg transition-colors" data-range="Custom Range">Custom Range</button></div></div><div class="flex-1 p-4"><div class="flex gap-4 mb-4"><div class="flex-1"><div class="flex justify-between items-center mb-2"><span class="font-bold text-body-sm">May 2025</span><span class="material-symbols-outlined text-outline cursor-pointer">chevron_left</span></div><div class="grid grid-cols-7 gap-1 text-center text-[10px] text-outline mb-1"><span class="">Su</span><span class="">Mo</span><span class="">Tu</span><span class="">We</span><span class="">Th</span><span class="">Fr</span><span class="">Sa</span></div><div class="grid grid-cols-7 gap-1"><div class="h-8 flex items-center justify-center text-body-sm text-outline opacity-30">27</div><div class="h-8 flex items-center justify-center text-body-sm text-outline opacity-30">28</div><div class="h-8 flex items-center justify-center text-body-sm text-outline opacity-30">29</div><div class="h-8 flex items-center justify-center text-body-sm text-outline opacity-30">30</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">1</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">2</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">3</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">4</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">5</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">6</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">7</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">8</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">9</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">10</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">11</div><div class="h-8 flex items-center justify-center text-body-sm bg-primary text-white rounded-lg font-bold">12</div><div class="h-8 flex items-center justify-center text-body-sm bg-primary/10">13</div><div class="h-8 flex items-center justify-center text-body-sm bg-primary/10">14</div><div class="h-8 flex items-center justify-center text-body-sm bg-primary/10">15</div><div class="h-8 flex items-center justify-center text-body-sm bg-primary/10">16</div><div class="h-8 flex items-center justify-center text-body-sm bg-primary/10">17</div><div class="h-8 flex items-center justify-center text-body-sm bg-primary text-white rounded-lg font-bold">18</div></div></div><div class="flex-1"><div class="flex justify-between items-center mb-2"><span class="font-bold text-body-sm">June 2025</span><span class="material-symbols-outlined text-outline cursor-pointer">chevron_right</span></div><div class="grid grid-cols-7 gap-1 text-center text-[10px] text-outline mb-1"><span class="">Su</span><span class="">Mo</span><span class="">Tu</span><span class="">We</span><span class="">Th</span><span class="">Fr</span><span class="">Sa</span></div><div class="grid grid-cols-7 gap-1"><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">1</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">2</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">3</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">4</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">5</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">6</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">7</div></div></div></div><div class="flex justify-end gap-2 pt-4 border-t border-outline-variant"><button class="px-4 py-2 text-body-sm text-secondary hover:bg-surface-container-low rounded-lg transition-colors" id="cancel-date-picker">Cancel</button><button class="px-4 py-2 text-body-sm bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-colors" id="apply-date-picker">Apply Selection</button></div></div></div></div>
+<button class="ml-auto text-primary font-bold text-body-sm px-4 py-2 hover:bg-surface-container-low rounded-lg transition-colors flex items-center gap-2 border border-primary">
+<span class="material-symbols-outlined text-[20px] text-primary-container" data-icon="filter_list_off">filter_list_off</span>
+                    Clear Filters
+                </button><script>
+(function() {
+    const clearBtn = document.querySelector('button.ml-auto.text-primary.font-bold.text-body-sm');
+    if (!clearBtn) return;
+
+    clearBtn.addEventListener('click', () => {
+        // 1. Clear Search Inputs
+        const searchInputs = document.querySelectorAll('input[placeholder*="Search"]');
+        searchInputs.forEach(input => input.value = '');
+
+        // 2. Reset Device Dropdown
+        const deviceBtn = document.querySelector('section.px-xl.mt-lg > div.bg-white > div.relative.group:nth-child(2) > button');
+        if (deviceBtn) {
+            const textSpan = deviceBtn.childNodes[2];
+            if (textSpan) textSpan.textContent = ' All Device Readings ';
         }
 
-        // Toggle power logic
-        function togglePowerStatus() {
-            const toggle = document.getElementById('bulb-toggle');
-            const dot = document.getElementById('power-status-dot');
-            const statusText = document.getElementById('power-status-text');
-            const iconContainer = document.getElementById('bulb-icon-container');
-            const icon = document.getElementById('bulb-icon');
+        // 3. Reset Date Range Picker
+        const dateBtn = document.getElementById('date-range-picker-btn');
+        if (dateBtn) {
+            const dateText = dateBtn.childNodes[2];
+            if (dateText) dateText.textContent = ' May 12, 2025 - May 18, 2025 ';
+        }
 
-            if (toggle.checked) {
-                // UI status update
-                dot.classList.replace('bg-outline', 'bg-success');
-                statusText.innerText = 'Online';
-                statusText.classList.replace('text-outline', 'text-success');
-
-                // Apply ON styles (Light Orange BG, Vibrant Orange Icon)
-                iconContainer.classList.remove('bg-primary/10', 'shadow-none');
-                iconContainer.classList.add('bg-orange-100', 'shadow-[0_0_15px_rgba(249,115,22,0.2)]');
-                icon.classList.remove('text-primary');
-                icon.classList.add('text-orange-500');
-                
-                // Add pulse animation
-                iconContainer.classList.add('animate-subtle-pulse');
-                
-                // Remove animation after its duration
-                setTimeout(() => {
-                    iconContainer.classList.remove('animate-subtle-pulse');
-                }, 3000);
-            } else {
-                // UI status update
-                dot.classList.replace('bg-success', 'bg-outline');
-                statusText.innerText = 'Offline';
-                statusText.classList.replace('text-success', 'text-outline');
-
-                // Apply OFF styles (Light Blue BG, Primary Blue Icon)
-                iconContainer.classList.remove('bg-orange-100', 'shadow-[0_0_15px_rgba(249,115,22,0.2)]', 'animate-subtle-pulse');
-                iconContainer.classList.add('bg-primary/10', 'shadow-none');
-                icon.classList.remove('text-orange-500');
-                icon.classList.add('text-primary');
+        // 4. Reset active states in date dropdown presets
+        const datePresets = document.querySelectorAll('#date-range-dropdown [data-range]');
+        datePresets.forEach(p => {
+            p.classList.remove('bg-primary/10', 'text-primary', 'font-bold');
+            if (p.getAttribute('data-range') === 'Last 7 Days') {
+                p.classList.add('bg-primary/10', 'text-primary', 'font-bold');
             }
-        }
+        });
 
-        // Active state for navigation links on scroll and tab animations
-        const scrollContainer = document.querySelector('.custom-scrollbar');
-        const sections = document.querySelectorAll('section');
-        const navLinks = document.querySelectorAll('nav a');
-
-        scrollContainer.addEventListener('scroll', () => {
-            let current = "";
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (scrollContainer.scrollTop >= (sectionTop - 150)) {
-                    current = section.getAttribute('id');
-                }
+        // 5. Visual Feedback: Brief flash or log to simulate data refresh
+        console.log('Filters cleared. Refreshing data...');
+        const mainContent = document.querySelector('main');
+        mainContent.style.opacity = '0.5';
+        setTimeout(() => {
+            mainContent.style.opacity = '1';
+        }, 300);
+    });
+})();
+</script>
+</div>
+</section>
+<!-- Charts Grid -->
+<section class="px-xl mt-lg grid grid-cols-12 gap-lg">
+<!-- Electricity Generation Trends -->
+<div class="col-span-8 bg-white p-lg rounded-xl border border-outline-variant shadow-sm flex flex-col">
+<div class="flex justify-between items-center mb-lg border-primary">
+<div>
+<h4 class="font-headline-md text-headline-md"><span class="text-on-surface">Historical</span> <span class="text-primary">Data Records</span></h4>
+<p class="text-body-sm text-secondary">Voltage, salinity, and current readings over time.</p>
+</div>
+<select class="bg-surface-container-low border-none rounded-lg text-label-caps py-1.5 pl-3 pr-8 focus:ring-primary cursor-pointer">
+<option>DAILY</option>
+<option>WEEKLY</option>
+<option>MONTHLY</option>
+</select>
+</div>
+<div class="flex items-center gap-lg mb-md"><label class="flex items-center gap-2 cursor-pointer group"><input checked="" class="rounded text-primary focus:ring-primary w-4 h-4" type="checkbox"><span class="text-body-sm text-secondary group-hover:text-primary transition-colors">Current (A)</span></label><label class="flex items-center gap-2 cursor-pointer group"><input checked="" class="rounded text-primary-fixed-dim focus:ring-primary-fixed-dim w-4 h-4" type="checkbox"><span class="text-body-sm text-secondary group-hover:text-primary-fixed-dim transition-colors">Voltage (V)</span></label><label class="flex items-center gap-2 cursor-pointer group"><input checked="" class="rounded text-severity-info focus:ring-severity-info w-4 h-4" type="checkbox"><span class="text-body-sm text-secondary group-hover:text-severity-info transition-colors">Salinity (ppm)</span></label></div>
+<!-- Fake Chart Area -->
+<div class="relative flex-1 h-[300px] mt-md border-b border-l border-outline-variant"><!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between">
+<div class="border-t border-outline-variant/30 w-full h-0"></div>
+<div class="border-t border-outline-variant/30 w-full h-0"></div>
+<div class="border-t border-outline-variant/30 w-full h-0"></div>
+<div class="border-t border-outline-variant/30 w-full h-0"></div>
+<div class="border-t border-outline-variant/30 w-full h-0"></div>
+</div>
+<!-- Bars (Background) -->
+<div class="absolute inset-0 flex items-end justify-around px-md pb-8"><div class="flex items-end gap-[2px] h-full"><div class="w-2 bg-primary/30 rounded-t-sm" style="height: 35%;"></div><div class="w-2 bg-primary rounded-t-sm" style="height: 55%;"></div></div><div class="flex items-end gap-[2px] h-full"><div class="w-2 bg-primary/30 rounded-t-sm" style="height: 40%;"></div><div class="w-2 bg-primary rounded-t-sm" style="height: 60%;"></div></div><div class="flex items-end gap-[2px] h-full"><div class="w-2 bg-primary/30 rounded-t-sm" style="height: 45%;"></div><div class="w-2 bg-primary rounded-t-sm" style="height: 65%;"></div></div><div class="flex items-end gap-[2px] h-full"><div class="w-2 bg-primary/30 rounded-t-sm" style="height: 38%;"></div><div class="w-2 bg-primary rounded-t-sm" style="height: 58%;"></div></div><div class="flex items-end gap-[2px] h-full"><div class="w-2 bg-primary/30 rounded-t-sm" style="height: 30%;"></div><div class="w-2 bg-primary rounded-t-sm" style="height: 50%;"></div></div><div class="flex items-end gap-[2px] h-full"><div class="w-2 bg-primary/30 rounded-t-sm" style="height: 42%;"></div><div class="w-2 bg-primary rounded-t-sm" style="height: 62%;"></div></div><div class="flex items-end gap-[2px] h-full"><div class="w-2 bg-primary/30 rounded-t-sm" style="height: 40%;"></div><div class="w-2 bg-primary rounded-t-sm" style="height: 60%;"></div></div><div class="flex items-end gap-[2px] h-full"><div class="w-2 bg-primary/30 rounded-t-sm" style="height: 55%;"></div><div class="w-2 bg-primary rounded-t-sm" style="height: 85%;"></div></div><div class="flex items-end gap-[2px] h-full"><div class="w-2 bg-primary/30 rounded-t-sm" style="height: 48%;"></div><div class="w-2 bg-primary rounded-t-sm" style="height: 78%;"></div></div><div class="flex items-end gap-[2px] h-full"><div class="w-2 bg-primary/30 rounded-t-sm" style="height: 40%;"></div><div class="w-2 bg-primary rounded-t-sm" style="height: 70%;"></div></div><div class="flex items-end gap-[2px] h-full"><div class="w-2 bg-primary/30 rounded-t-sm" style="height: 38%;"></div><div class="w-2 bg-primary rounded-t-sm" style="height: 62%;"></div></div><div class="flex items-end gap-[2px] h-full"><div class="w-2 bg-primary/30 rounded-t-sm" style="height: 45%;"></div><div class="w-2 bg-primary rounded-t-sm" style="height: 65%;"></div></div></div>
+<!-- Overlay SVG Lines -->
+<svg class="absolute inset-0 pointer-events-none pb-8" preserveAspectRatio="none" viewBox="0 0 800 300"><!-- Salinity Line (Teal) --><path d="M 57 220 L 171 180 L 285 210 L 399 195 L 513 140 L 627 190 L 741 215" fill="none" stroke="#0891b2" stroke-width="2"></path><circle cx="57" cy="220" fill="white" r="4" stroke="#0891b2" stroke-width="2"></circle><circle cx="171" cy="180" fill="white" r="4" stroke="#0891b2" stroke-width="2"></circle><circle cx="285" cy="210" fill="white" r="4" stroke="#0891b2" stroke-width="2"></circle><circle cx="399" cy="195" fill="white" r="4" stroke="#0891b2" stroke-width="2"></circle><circle cx="513" cy="140" fill="white" r="4" stroke="#0891b2" stroke-width="2"></circle><circle cx="627" cy="190" fill="white" r="4" stroke="#0891b2" stroke-width="2"></circle><circle cx="741" cy="215" fill="white" r="4" stroke="#0891b2" stroke-width="2"></circle></svg>
+<!-- X-Axis Labels -->
+<div class="absolute bottom-0 left-0 right-0 flex justify-around px-md">
+<span class="text-label-xs text-secondary">May 12</span>
+<span class="text-label-xs text-secondary">May 13</span>
+<span class="text-label-xs text-secondary">May 14</span>
+<span class="text-label-xs text-secondary">May 15</span>
+<span class="text-label-xs text-secondary">May 16</span>
+<span class="text-label-xs text-secondary">May 17</span>
+<span class="text-label-xs text-secondary">May 18</span>
+</div><div class="hidden absolute top-full right-0 mt-2 bg-white border border-outline-variant rounded-xl shadow-lg z-50 flex overflow-hidden min-w-[600px]" id="date-range-dropdown"><div class="w-40 bg-surface-container-low border-r border-outline-variant p-2 flex flex-col gap-1"><button class="text-left px-3 py-2 text-body-sm hover:bg-primary/10 hover:text-primary rounded-lg transition-colors" data-range="Today">Today</button><button class="text-left px-3 py-2 text-body-sm hover:bg-primary/10 hover:text-primary rounded-lg transition-colors" data-range="Yesterday">Yesterday</button><button class="text-left px-3 py-2 text-body-sm bg-primary/10 text-primary font-bold rounded-lg transition-colors" data-range="Last 7 Days">Last 7 Days</button><button class="text-left px-3 py-2 text-body-sm hover:bg-primary/10 hover:text-primary rounded-lg transition-colors" data-range="Last 30 Days">Last 30 Days</button><button class="text-left px-3 py-2 text-body-sm hover:bg-primary/10 hover:text-primary rounded-lg transition-colors" data-range="This Month">This Month</button><div class="mt-auto pt-2 border-t border-outline-variant"><button class="text-left px-3 py-2 text-body-sm hover:bg-primary/10 hover:text-primary rounded-lg transition-colors" data-range="Custom Range">Custom Range</button></div></div><div class="flex-1 p-4"><div class="flex gap-4 mb-4"><div class="flex-1"><div class="flex justify-between items-center mb-2"><span class="font-bold text-body-sm">May 2025</span><span class="material-symbols-outlined text-outline cursor-pointer">chevron_left</span></div><div class="grid grid-cols-7 gap-1 text-center text-[10px] text-outline mb-1"><span class="">Su</span><span class="">Mo</span><span class="">Tu</span><span class="">We</span><span class="">Th</span><span class="">Fr</span><span class="">Sa</span></div><div class="grid grid-cols-7 gap-1"><div class="h-8 flex items-center justify-center text-body-sm text-outline opacity-30">27</div><div class="h-8 flex items-center justify-center text-body-sm text-outline opacity-30">28</div><div class="h-8 flex items-center justify-center text-body-sm text-outline opacity-30">29</div><div class="h-8 flex items-center justify-center text-body-sm text-outline opacity-30">30</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">1</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">2</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">3</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">4</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">5</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">6</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">7</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">8</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">9</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">10</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">11</div><div class="h-8 flex items-center justify-center text-body-sm bg-primary text-white rounded-lg font-bold">12</div><div class="h-8 flex items-center justify-center text-body-sm bg-primary/10">13</div><div class="h-8 flex items-center justify-center text-body-sm bg-primary/10">14</div><div class="h-8 flex items-center justify-center text-body-sm bg-primary/10">15</div><div class="h-8 flex items-center justify-center text-body-sm bg-primary/10">16</div><div class="h-8 flex items-center justify-center text-body-sm bg-primary/10">17</div><div class="h-8 flex items-center justify-center text-body-sm bg-primary text-white rounded-lg font-bold">18</div></div></div><div class="flex-1"><div class="flex justify-between items-center mb-2"><span class="font-bold text-body-sm">June 2025</span><span class="material-symbols-outlined text-outline cursor-pointer">chevron_right</span></div><div class="grid grid-cols-7 gap-1 text-center text-[10px] text-outline mb-1"><span class="">Su</span><span class="">Mo</span><span class="">Tu</span><span class="">We</span><span class="">Th</span><span class="">Fr</span><span class="">Sa</span></div><div class="grid grid-cols-7 gap-1"><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">1</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">2</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">3</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">4</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">5</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">6</div><div class="h-8 flex items-center justify-center text-body-sm cursor-pointer hover:bg-primary/10 rounded-lg">7</div></div></div></div><div class="flex justify-end gap-2 pt-4 border-t border-outline-variant"><button class="px-4 py-2 text-body-sm text-secondary hover:bg-surface-container-low rounded-lg transition-colors" id="cancel-date-picker">Cancel</button><button class="px-4 py-2 text-body-sm bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-colors" id="apply-date-picker">Apply Selection</button></div></div></div></div>
+</div>
+<!-- Summary & Usage -->
+<div class="col-span-4 space-y-lg">
+<!-- Saltwater Electricity Summary -->
+<div class="bg-white rounded-xl border border-outline-variant shadow-sm p-md border-primary">
+<h4 class="font-headline-md text-headline-md mb-md"><span class="text-on-surface">Historical</span> <span class="text-primary">Data Records</span></h4>
+<div class="flex items-center gap-md">
+<div class="relative w-32 h-32 flex items-center justify-center"><svg class="w-full h-full -rotate-90" viewBox="0 0 128 128">
+<defs>
+<linearGradient id="grad-voltage" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#003594"></stop>
+<stop offset="100%" stop-color="#1b55d0"></stop>
+</linearGradient>
+<linearGradient id="grad-salinity" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#0891b2"></stop>
+<stop offset="100%" stop-color="#0ea5e9"></stop>
+</linearGradient>
+<linearGradient id="grad-current" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#ea580c"></stop>
+<stop offset="100%" stop-color="#f97316"></stop>
+</linearGradient>
+<filter id="inner-shadow">
+<feOffset dx="0" dy="1"></feOffset>
+<feGaussianBlur result="offset-blur" stdDeviation="1"></feGaussianBlur>
+<feComposite in="SourceGraphic" in2="offset-blur" operator="out" result="inverse"></feComposite>
+<feFlood flood-color="black" flood-opacity="0.1" result="color"></feFlood>
+<feComposite in="color" in2="inverse" operator="in" result="shadow"></feComposite>
+<feComposite in="shadow" in2="SourceGraphic" operator="over"></feComposite>
+</filter>
+</defs>
+<circle cx="64" cy="64" fill="none" filter="url(#inner-shadow)" r="54" stroke="#eff4ff" stroke-width="12"></circle>
+<circle cx="64" cy="64" fill="none" r="54" stroke="url(#grad-voltage)" stroke-dasharray="339.29" stroke-dashoffset="182.5" stroke-linecap="round" stroke-width="12"></circle>
+<circle cx="64" cy="64" fill="none" r="54" stroke="url(#grad-salinity)" stroke-dasharray="339.29" stroke-dashoffset="218.5" stroke-linecap="round" stroke-width="12"></circle>
+<circle cx="64" cy="64" fill="none" r="54" stroke="url(#grad-current)" stroke-dasharray="339.29" stroke-dashoffset="277.5" stroke-linecap="round" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<p class="text-label-xs text-outline uppercase tracking-tighter">Total Readings</p>
+<p class="text-[14px] font-extrabold text-primary leading-none">521,220</p>
+</div></div>
+<div class="flex-1 space-y-sm">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<div class="flex-1 space-y-sm">
+<div class="flex justify-between text-label-xs font-bold mb-1">
+<span class="">Voltage Readings</span>
+<span class="">46.2%</span>
+</div>
+<p class="text-[10px] text-outline">350v</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-severity-info"></span>
+<div class="flex-1 space-y-sm">
+<div class="flex justify-between text-label-xs font-bold mb-1">
+<span class="">Salinity Readings</span>
+<span class="">35.6%</span>
+</div>
+<p class="text-[10px] text-outline">550ppm</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-severity-medium"></span>
+<div class="flex-1 space-y-sm">
+<div class="flex justify-between text-label-xs font-bold mb-1">
+<span class="">Current Readings</span>
+<span class="">18.2%</span>
+</div>
+<p class="text-[10px] text-outline">95.20&nbsp;</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-lg pt-lg border-t border-outline-variant/30"><h5 class="text-label-caps text-secondary uppercase tracking-wider mb-md">Component Power Draw</h5><div class="space-y-md"><div class="flex flex-col gap-2"><div class="flex items-center justify-between"><div class="flex items-center gap-2 text-primary"><span class="material-symbols-outlined text-[20px]">developer_board</span><span class="text-body-sm font-bold text-on-surface">ESP32 Controller</span></div><span class="font-bold text-secondary text-label-xs">24 W</span></div><div class="relative w-full bg-surface-container-low rounded-sm overflow-hidden flex items-center h-4"><div class="h-full bg-[#9333ea] flex items-center justify-end pr-8 relative" style="width: 76%; clip-path: polygon(0% 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 0% 100%);"><span class="text-white font-bold absolute right-4 text-label-xs">76%</span></div></div></div><div class="flex flex-col gap-2"><div class="flex items-center justify-between"><div class="flex items-center gap-2 text-severity-medium"><span class="material-symbols-outlined text-[20px]">bolt</span><span class="text-body-sm font-bold text-on-surface">Voltage Sensor</span></div><span class="font-bold text-secondary text-label-xs">8 W</span></div><div class="relative w-full bg-surface-container-low rounded-sm overflow-hidden flex items-center h-4"><div class="h-full bg-[#ec4899] flex items-center justify-end pr-8 relative" style="width: 26%; clip-path: polygon(0% 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 0% 100%);"><span class="text-white font-bold absolute right-4 text-label-xs">26%</span></div></div></div><div class="flex flex-col gap-2"><div class="flex items-center justify-between"><div class="flex items-center gap-2 text-severity-info"><span class="material-symbols-outlined text-[20px]">water_drop</span><span class="text-body-sm font-bold text-on-surface">Salinity Sensor</span></div><span class="font-bold text-secondary text-label-xs">15 W</span></div><div class="relative w-full bg-surface-container-low rounded-sm overflow-hidden flex items-center h-4"><div class="h-full bg-[#0ea5e9] flex items-center justify-end pr-8 relative" style="width: 43%; clip-path: polygon(0% 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 0% 100%);"><span class="text-white font-bold absolute right-4 text-label-xs">43%</span></div></div></div><div class="flex flex-col gap-2"><div class="flex items-center justify-between"><div class="flex items-center gap-2 text-primary"><span class="material-symbols-outlined text-[20px]">lightbulb</span><span class="text-body-sm font-bold text-on-surface">Bulb Outlet</span></div><span class="font-bold text-secondary text-label-xs">65 W</span></div><div class="relative w-full bg-surface-container-low rounded-sm overflow-hidden flex items-center h-4"><div class="h-full bg-primary flex items-center justify-end pr-8 relative" style="width: 100%; clip-path: polygon(0% 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 0% 100%);"><span class="text-white font-bold absolute right-4 text-label-xs">100%</span></div></div></div></div></div></div>
+<!-- Component Electricity Usage -->
+</div>
+</section>
+<!-- Historical Data Records Table -->
+<section class="px-xl py-lg">
+<div class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="p-lg flex justify-between items-center bg-surface-container-lowest">
+<div>
+<h4 class="font-headline-md text-headline-md"><span class="text-on-surface">Historical</span> <span class="text-primary">Data Records</span></h4>
+<p class="text-body-sm text-secondary">Detailed historical electricity generation records from all monitored devices.</p>
+</div>
+<div class="flex items-center gap-sm">
+<button class="flex items-center gap-2 px-3 py-1.5 border border-primary rounded-lg text-label-xs font-bold hover:bg-surface-container-low transition-colors"><span class="material-symbols-outlined text-[18px] text-primary-fixed-dim" data-icon="picture_as_pdf">picture_as_pdf</span>Refresh Page</button>
+</div>
+</div>
+<div class="overflow-x-auto scrollbar-hide">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low border-y border-outline-variant">
+<tr>
+<th class="p-md text-label-caps text-secondary whitespace-nowrap">DATE &amp; TIME</th>
+<th class="p-md text-label-caps text-secondary whitespace-nowrap">HOUSEHOLD USER</th>
+<th class="p-md text-label-caps text-secondary whitespace-nowrap">DEVICE NAME</th>
+<th class="p-md text-label-caps text-secondary whitespace-nowrap">LOCATION</th>
+<th class="p-md text-label-caps text-secondary whitespace-nowrap text-center">VOLTAGE</th>
+<th class="p-md text-label-caps text-secondary whitespace-nowrap text-center">SALINITY</th>
+<th class="p-md text-label-caps text-secondary whitespace-nowrap text-center">CURRENT</th>
+<th class="p-md text-label-caps text-secondary whitespace-nowrap text-center">STATUS</th>
+<th class="p-md text-label-caps text-secondary whitespace-nowrap text-right">ACTION</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="p-md">
+<p class="text-body-sm font-bold">May 18, 2025</p>
+<p class="text-label-xs text-outline">09:32 AM</p>
+</td>
+<td class="p-md">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full border border-outline-variant" data-alt="A small round profile photograph of a diverse middle-aged male with a kind expression. The portrait is high-quality with soft, professional studio lighting and a neutral grey background, suitable for a corporate application user interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuArs1bXZWm64PF6MXaCOofpcgWFtwcoqe-5AyRKcQoCvnpiwPPsHvHsRQplWpFMRwqnpTj2tspK9hcETzROE9XrFlpwwK7zUcWu96e4mRR5Cz4ErzP85-dTxMY4PQOHBnobw_MqxOn3Jryhs47M8Od123TFhzutn9nB8i4CxKAwhmDguVUj3AMFavXCQ1lxmkWlKe4YlOUtdsnTX223x3KTDF15vCR-EJR6jmlhiO1kEdu3ijW23q3F1Cyvwl4OdMsdctLyArJiLhA">
+<div>
+<p class="text-body-sm font-bold">Michael Santos</p>
+<p class="text-label-xs text-outline">michael@email.com</p>
+</div>
+</div>
+</td>
+<td class="p-md"><span class="px-2 py-1 bg-surface-container-high rounded text-label-xs font-bold">Device-001</span></td>
+<td class="p-md text-body-sm">Purok 1, San Andres</td>
+<td class="p-md text-body-sm text-center font-bold">240 V</td>
+<td class="p-md text-body-sm text-center">365 ppm</td>
+<td class="p-md text-body-sm text-center">72 A</td>
+<td class="p-md text-center">
+<span class="px-2 py-1 bg-green-100 text-success-badge rounded-full text-label-xs font-bold inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-success-badge rounded-full"></span> Normal
+                                    </span>
+</td>
+<td class="p-md text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 hover:bg-surface-container-high rounded-lg text-outline"><span class="material-symbols-outlined text-[18px]" data-icon="visibility">visibility</span></button>
+<button class="p-1.5 hover:bg-surface-container-high rounded-lg text-outline" id="row-1-analytics-btn"><span class="material-symbols-outlined text-[18px]" data-icon="analytics">analytics</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="p-md">
+<p class="text-body-sm font-bold">May 18, 2025</p>
+<p class="text-label-xs text-outline">08:42 AM</p>
+</td>
+<td class="p-md">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full border border-outline-variant" data-alt="A small round profile photograph of a smiling young woman with dark hair. The portrait is high-quality with soft, professional studio lighting and a neutral grey background, suitable for a corporate application user interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEr52c66YxqLvyi0XHO-k2mTRC-u8srBgm-pMhoi4l5sE7Hn9VNWzVKS50gs4suJNeWS5303bT6ddb-hcQw33wWANCd4rdZfJyVKlzI3HSnZPx_3wesS9cKPc5KARo0nPgCveAcDBGMmTS2PSm_ky-TweZFvwwYLN2e4bH9klhUJ5RezkEDHtGERyhncGLi9k7L_81IkgUgEdJIw-aV92PXOG7IXXs-LZHsy6hKBxtaXv4ouweg8Gf2BVU41lF9w4T_fHTpGfAMlg">
+<div>
+<p class="text-body-sm font-bold">Maria Reyes</p>
+<p class="text-label-xs text-outline">maria.reyes@email.com</p>
+</div>
+</div>
+</td>
+<td class="p-md"><span class="px-2 py-1 bg-surface-container-high rounded text-label-xs font-bold">Device-002</span></td>
+<td class="p-md text-body-sm">Purok 2, San Andres</td>
+<td class="p-md text-body-sm text-center font-bold">239 V</td>
+<td class="p-md text-body-sm text-center">355 ppm</td>
+<td class="p-md text-body-sm text-center">65 A</td>
+<td class="p-md text-center">
+<span class="px-2 py-1 bg-green-100 text-success-badge rounded-full text-label-xs font-bold inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-success-badge rounded-full"></span> Normal
+                                    </span>
+</td>
+<td class="p-md text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 hover:bg-surface-container-high rounded-lg text-outline"><span class="material-symbols-outlined text-[18px]" data-icon="visibility">visibility</span></button>
+<button class="p-1.5 hover:bg-surface-container-high rounded-lg text-outline"><span class="material-symbols-outlined text-[18px]" data-icon="analytics">analytics</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3 (Warning) -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="p-md">
+<p class="text-body-sm font-bold">May 18, 2025</p>
+<p class="text-label-xs text-outline">07:25 AM</p>
+</td>
+<td class="p-md">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full border border-outline-variant" data-alt="A small round profile photograph of a bearded professional man. The portrait is high-quality with soft, professional studio lighting and a neutral grey background, suitable for a corporate application user interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSVMsDwrjsr-KgZNKzq9IeDfshrn5iYzfnpKVPGGPCBlqAYES1FrIqusyJWUDbIi2HCGySJshO0XxVrAgbkMjnXtPo1DOmq5v4Q-eEkrOMKzxcMZhBVRsY3geoJppxX3RN2xRQj2sN60fYhTV1BwDrqfSEvbe818S5I-ySjRhyIdrxgXfrCYx6Num3xNVSuNKtK1vnBcntV1JWzptkg3kN3AuPFD_fHwct4UOw-JRhOkBdIT7kfiH1JOKza0YLzBuvLM99AB97VuI">
+<div>
+<p class="text-body-sm font-bold">James Villanueva</p>
+<p class="text-label-xs text-outline">james.v@email.com</p>
+</div>
+</div>
+</td>
+<td class="p-md"><span class="px-2 py-1 bg-surface-container-high rounded text-label-xs font-bold">Device-005</span></td>
+<td class="p-md text-body-sm">Purok 3, San Andres</td>
+<td class="p-md text-body-sm text-center font-bold">236 V</td>
+<td class="p-md text-body-sm text-center">348 ppm</td>
+<td class="p-md text-body-sm text-center">61 A</td>
+<td class="p-md text-center">
+<span class="px-2 py-1 bg-orange-100 text-warning-badge rounded-full text-label-xs font-bold inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-warning-badge rounded-full"></span> Warning
+                                    </span>
+</td>
+<td class="p-md text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 hover:bg-surface-container-high rounded-lg text-outline"><span class="material-symbols-outlined text-[18px]" data-icon="visibility">visibility</span></button>
+<button class="p-1.5 hover:bg-surface-container-high rounded-lg text-outline"><span class="material-symbols-outlined text-[18px]" data-icon="analytics">analytics</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="p-md">
+<p class="text-body-sm font-bold">May 18, 2025</p>
+<p class="text-label-xs text-outline">07:12 AM</p>
+</td>
+<td class="p-md">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full border border-outline-variant" data-alt="A small round profile photograph of a confident professional woman with glasses. The portrait is high-quality with soft, professional studio lighting and a neutral grey background, suitable for a corporate application user interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOGyqTlV94nw7KcXuXOHrxp5WMSRGoIRGfmrlhHFGUCTYKPcFQ3Ws1hWHMvzEQUd-brweOyqB56zA7OrFnaCf-J5xRp4gErntVd7VOutJ1hMg0b3p7wJcu-CzP1ijDg01AuLyLsVrDi9o367HcFa-PjJ6LWS2eGLwlTIqqV1CPfGv2Uls4skD3e6ZqnNHOp12VUb7TuK5M0MkxpIAEXCfwmD02QY6Dlz3NwSkd3ZB0PVGzVu946rNSaGAXoYkM63fOj0M7z7jW0Z0">
+<div>
+<p class="text-body-sm font-bold">Ana Rodriguez</p>
+<p class="text-label-xs text-outline">ana.r@email.com</p>
+</div>
+</div>
+</td>
+<td class="p-md"><span class="px-2 py-1 bg-surface-container-high rounded text-label-xs font-bold">Device-004</span></td>
+<td class="p-md text-body-sm">Purok 4, San Andres</td>
+<td class="p-md text-body-sm text-center font-bold">236 V</td>
+<td class="p-md text-body-sm text-center">340 ppm</td>
+<td class="p-md text-body-sm text-center">58 A</td>
+<td class="p-md text-center">
+<span class="px-2 py-1 bg-green-100 text-success-badge rounded-full text-label-xs font-bold inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-success-badge rounded-full"></span> Normal
+                                    </span>
+</td>
+<td class="p-md text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 hover:bg-surface-container-high rounded-lg text-outline"><span class="material-symbols-outlined text-[18px]" data-icon="visibility">visibility</span></button>
+<button class="p-1.5 hover:bg-surface-container-high rounded-lg text-outline"><span class="material-symbols-outlined text-[18px]" data-icon="analytics">analytics</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 5 (Critical) -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="p-md">
+<p class="text-body-sm font-bold">May 16, 2025</p>
+<p class="text-label-xs text-outline">06:10 AM</p>
+</td>
+<td class="p-md">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full border border-outline-variant" data-alt="A small round profile photograph of a young professional male. The portrait is high-quality with soft, professional studio lighting and a neutral grey background, suitable for a corporate application user interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgL5EAeodW3hjmHoOUBnpHebOCTNHo8TeyVdYAKGwyfcrHLEO562OICYgEjOi2542xe5I9KVOMxLjVFTU1DzRA0bMlQsuauc5j_fnJoPz-POkQvn0hvLFGil6QKz_VcaYeHtkqHW3D5XNv6H8RMrTdbrxLNzWAbt5UNQX5lveIky53rruwoAa7XDbHuFib77xcThiWApE5_KeRKG9KjPkbFPNNPI1TKk4CZjoTf6Y8VG000vDg2GRv2vl9iJZDpxvyR4Md85xJ_Z8">
+<div>
+<p class="text-body-sm font-bold">Ricardo Dela Cruz</p>
+<p class="text-label-xs text-outline">ricardo.dc@email.com</p>
+</div>
+</div>
+</td>
+<td class="p-md"><span class="px-2 py-1 bg-surface-container-high rounded text-label-xs font-bold">Device-008</span></td>
+<td class="p-md text-body-sm">Purok 5, San Andres</td>
+<td class="p-md text-body-sm text-center font-bold">235 V</td>
+<td class="p-md text-body-sm text-center">338 ppm</td>
+<td class="p-md text-body-sm text-center">55 A</td>
+<td class="p-md text-center">
+<span class="px-2 py-1 bg-red-100 text-error-badge rounded-full text-label-xs font-bold inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-error-badge rounded-full"></span> Critical
+                                    </span>
+</td>
+<td class="p-md text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 hover:bg-surface-container-high rounded-lg text-outline"><span class="material-symbols-outlined text-[18px]" data-icon="visibility">visibility</span></button>
+<button class="p-1.5 hover:bg-surface-container-high rounded-lg text-outline"><span class="material-symbols-outlined text-[18px]" data-icon="analytics">analytics</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-md bg-surface-container-lowest border-t border-outline-variant flex justify-between items-center">
+<p class="text-body-sm text-secondary">Showing 1 to 5 of 125 records</p>
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-2">
+<span class="text-body-sm text-secondary">Show</span>
+<select class="bg-surface-container-low border-none rounded-lg text-body-sm px-3 py-1 focus:ring-primary cursor-pointer">
+<option>5 per page</option>
+<option>10 per page</option>
+<option>20 per page</option>
+</select>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-1 text-outline hover:text-primary transition-colors disabled:opacity-30" disabled=""><span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span></button>
+<button class="w-8 h-8 rounded-lg bg-primary text-on-primary font-bold text-body-sm">1</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-low font-bold text-body-sm transition-colors">2</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-low font-bold text-body-sm transition-colors">3</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-low font-bold text-body-sm transition-colors">4</button>
+<span class="px-2">...</span>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-low font-bold text-body-sm transition-colors">25</button>
+<button class="p-1 text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span></button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button (suppressed for details page) -->
+<script>
+        // Micro-interactions and data effects
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animate sparklines on load
+            const bars = document.querySelectorAll('.flex-1.bg-primary-fixed-dim\\/30');
+            bars.forEach((bar, index) => {
+                const originalHeight = bar.style.height;
+                bar.style.height = '0';
+                setTimeout(() => {
+                    bar.style.height = originalHeight;
+                }, 100 + (index * 50));
             });
 
-            navLinks.forEach(link => {
-                const targetId = link.getAttribute('href').replace('#', '');
-                const targetSection = document.getElementById(targetId);
-
-                link.classList.remove('text-primary', 'border-primary', 'border-b-2');
-                link.classList.add('text-outline', 'border-transparent');
-                
-                if (link.getAttribute('href').includes(current)) {
-                    link.classList.add('text-primary', 'border-primary', 'border-b-2');
-                    link.classList.remove('text-outline', 'border-transparent');
+            // Handle Tab Selection Logic (from system)
+            const navItems = document.querySelectorAll('nav a');
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    navItems.forEach(i => i.classList.remove('bg-active-indicator', 'text-primary', 'font-bold', 'border-r-4', 'border-primary'));
+                    navItems.forEach(i => i.classList.add('text-secondary'));
                     
-                    // Interaction: Fade & Slide-in effect simulation for section
-                    if (targetSection) {
-                        targetSection.style.opacity = '1';
-                        targetSection.style.transform = 'translateX(0)';
-                    }
-                } else {
-                    if (targetSection) {
-                        targetSection.style.opacity = '0.95';
-                    }
-                }
+                    item.classList.add('bg-active-indicator', 'text-primary', 'font-bold', 'border-r-4', 'border-primary');
+                    item.classList.remove('text-secondary');
+                });
             });
         });
     </script>
-
-
-
+<script class="">(function() { const btn = document.getElementById('date-range-picker-btn'); const menu = document.getElementById('date-range-dropdown'); const applyBtn = document.getElementById('apply-date-picker'); const cancelBtn = document.getElementById('cancel-date-picker'); const textNode = btn.childNodes[2]; btn.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.toggle('hidden'); }); applyBtn.addEventListener('click', () => { textNode.textContent = ' May 12, 2025 - May 18, 2025 '; menu.classList.add('hidden'); }); cancelBtn.addEventListener('click', () => { menu.classList.add('hidden'); }); document.addEventListener('click', (e) => { if (!menu.contains(e.target) && e.target !== btn) { menu.classList.add('hidden'); } }); menu.querySelectorAll('[data-range]').forEach(preset => { preset.addEventListener('click', () => { menu.querySelectorAll('[data-range]').forEach(p => p.classList.remove('bg-primary/10', 'text-primary', 'font-bold')); preset.classList.add('bg-primary/10', 'text-primary', 'font-bold'); }); }); })();</script>
+<script>(function(){ const btn = document.getElementById('row-1-analytics-btn'); const breakdown = document.getElementById('row-1-breakdown'); if(btn && breakdown){ btn.addEventListener('click', (e) => { e.preventDefault(); breakdown.classList.toggle('hidden'); }); } })();</script><div class="fixed inset-0 z-[100] flex items-center justify-center p-4 backdrop-blur-sm bg-black/20 hidden" id="hardware-modal"><div class="bg-white w-full max-w-md rounded-xl shadow-lg overflow-hidden flex flex-col"><div class="p-4 border-b border-outline-variant flex justify-between items-center"><h3 class="font-headline-md text-primary">Hardware Usage Breakdown</h3><button class="p-1 hover:bg-surface-container-low rounded-full transition-colors" id="close-modal-x"><span class="material-symbols-outlined text-outline">close</span></button></div><div class="p-lg space-y-lg"><div class="space-y-2"><div class="flex justify-between items-center"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary" style="color: #9333ea">developer_board</span><span class="text-body-sm font-bold">ESP32 Controller</span></div><span class="text-label-xs text-outline">1 w</span></div><div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-[#9333ea]" style="width: 15%"></div></div></div><div class="space-y-2"><div class="flex justify-between items-center"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary" style="color: #ec4899">bolt</span><span class="text-body-sm font-bold">Voltage Sensor</span></div><span class="text-label-xs text-outline">1 w</span></div><div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-[#ec4899]" style="width: 8%"></div></div></div><div class="space-y-2"><div class="flex justify-between items-center"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary" style="color: #0ea5e9">water_drop</span><span class="text-body-sm font-bold">Salinity Sensor</span></div><span class="text-label-xs text-outline">4 w</span></div><div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-[#0ea5e9]" style="width: 12%"></div></div></div><div class="space-y-2"><div class="flex justify-between items-center"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary">lightbulb</span><span class="text-body-sm font-bold">Bulb Outlet</span></div><span class="text-label-xs text-outline">65 w</span></div><div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-primary" style="width: 85%"></div></div></div></div><div class="p-4 bg-surface-container-low flex justify-end"><button class="px-6 py-2 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-colors" id="close-modal-btn">Close</button></div></div></div><script>(function() { const modal = document.getElementById('hardware-modal'); const closeX = document.getElementById('close-modal-x'); const closeBtn = document.getElementById('close-modal-btn'); const openButtons = document.querySelectorAll('table button span[data-icon="analytics"]'); const closeModal = () => modal.classList.add('hidden'); openButtons.forEach(span => { const btn = span.closest('button'); btn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); modal.classList.remove('hidden'); }); }); [closeX, closeBtn].forEach(el => el.addEventListener('click', closeModal)); modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); }); })();</script>
 
 
 

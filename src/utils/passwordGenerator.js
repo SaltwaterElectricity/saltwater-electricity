@@ -2,13 +2,13 @@ export const generateDefaultPassword = () => {
   const prefix = "Aqua@";
   const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   const specialChars = "!#$%&*";
-  
+
   // 1. Create a buffer for 6 random 32-bit unsigned integers
   const array = new Uint32Array(6);
-  
+
   // 2. Fill the array with cryptographically secure random numbers
   window.crypto.getRandomValues(array);
-  
+
   let randomString = "";
   for (let i = 0; i < 6; i++) {
     // Map the large random number to our charset length using modulo

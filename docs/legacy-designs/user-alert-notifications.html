@@ -1,273 +1,670 @@
-<!DOCTYPE html><html class="light" lang="en" style=""><head>
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>Saltwater - Alerts &amp; Notifications</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-<script id="tailwind-config">
+<!doctype html>
+<html class="light" lang="en" style="">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Saltwater - Alerts &amp; Notifications</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@400;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
         theme: {
           extend: {
-            "colors": {
-                    "secondary-fixed": "#b3ebff",
-                    "primary-fixed": "#dfe0ff",
-                    "surface-container-lowest": "#ffffff",
-                    "surface-container": "#eceef3",
-                    "on-tertiary-container": "#38e2cd",
-                    "on-surface": "#181c20",
-                    "on-primary-fixed": "#000a63",
-                    "surface": "#f7f9fe",
-                    "on-tertiary-fixed-variant": "#005047",
-                    "on-primary-container": "#c2c7ff",
-                    "secondary-container": "#23d5fe",
-                    "tertiary": "#00473f",
-                    "surface-bright": "#f7f9fe",
-                    "tertiary-container": "#006157",
-                    "surface-container-high": "#e6e8ed",
-                    "inverse-primary": "#bcc2ff",
-                    "on-surface-variant": "#444557",
-                    "inverse-surface": "#2d3135",
-                    "outline-variant": "#c5c5da",
-                    "surface-container-low": "#f1f4f9",
-                    "tertiary-fixed": "#5afae4",
-                    "inverse-on-surface": "#eff1f6",
-                    "on-error-container": "#93000a",
-                    "on-secondary": "#ffffff",
-                    "on-primary": "#ffffff",
-                    "on-secondary-fixed": "#001f27",
-                    "on-secondary-container": "#00586b",
-                    "primary": "#001ec4",
-                    "on-secondary-fixed-variant": "#004e5f",
-                    "secondary": "#00677d",
-                    "primary-container": "#0a2eff",
-                    "on-tertiary-fixed": "#00201c",
-                    "tertiary-fixed-dim": "#2fddc8",
-                    "on-primary-fixed-variant": "#0022da",
-                    "secondary-fixed-dim": "#37d7ff",
-                    "primary-fixed-dim": "#bcc2ff",
-                    "on-tertiary": "#ffffff",
-                    "error-container": "#ffdad6",
-                    "surface-container-highest": "#e0e2e7",
-                    "surface-dim": "#d8dadf",
-                    "surface-variant": "#e0e2e7",
-                    "on-error": "#ffffff",
-                    "surface-tint": "#2640ff",
-                    "outline": "#757689",
-                    "background": "#f7f9fe",
-                    "on-background": "#181c20",
-                    "error": "#ba1a1a"
+            colors: {
+              "secondary-fixed": "#b3ebff",
+              "primary-fixed": "#dfe0ff",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#eceef3",
+              "on-tertiary-container": "#38e2cd",
+              "on-surface": "#181c20",
+              "on-primary-fixed": "#000a63",
+              surface: "#f7f9fe",
+              "on-tertiary-fixed-variant": "#005047",
+              "on-primary-container": "#c2c7ff",
+              "secondary-container": "#23d5fe",
+              tertiary: "#00473f",
+              "surface-bright": "#f7f9fe",
+              "tertiary-container": "#006157",
+              "surface-container-high": "#e6e8ed",
+              "inverse-primary": "#bcc2ff",
+              "on-surface-variant": "#444557",
+              "inverse-surface": "#2d3135",
+              "outline-variant": "#c5c5da",
+              "surface-container-low": "#f1f4f9",
+              "tertiary-fixed": "#5afae4",
+              "inverse-on-surface": "#eff1f6",
+              "on-error-container": "#93000a",
+              "on-secondary": "#ffffff",
+              "on-primary": "#ffffff",
+              "on-secondary-fixed": "#001f27",
+              "on-secondary-container": "#00586b",
+              primary: "#001ec4",
+              "on-secondary-fixed-variant": "#004e5f",
+              secondary: "#00677d",
+              "primary-container": "#0a2eff",
+              "on-tertiary-fixed": "#00201c",
+              "tertiary-fixed-dim": "#2fddc8",
+              "on-primary-fixed-variant": "#0022da",
+              "secondary-fixed-dim": "#37d7ff",
+              "primary-fixed-dim": "#bcc2ff",
+              "on-tertiary": "#ffffff",
+              "error-container": "#ffdad6",
+              "surface-container-highest": "#e0e2e7",
+              "surface-dim": "#d8dadf",
+              "surface-variant": "#e0e2e7",
+              "on-error": "#ffffff",
+              "surface-tint": "#2640ff",
+              outline: "#757689",
+              background: "#f7f9fe",
+              "on-background": "#181c20",
+              error: "#ba1a1a",
             },
-            "borderRadius": {
-                    "DEFAULT": "0.25rem",
-                    "lg": "0.5rem",
-                    "xl": "0.75rem",
-                    "full": "9999px"
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
             },
-            "spacing": {
-                    "gutter": "24px",
-                    "container-max": "1440px",
-                    "stack-md": "16px",
-                    "stack-sm": "8px",
-                    "margin-mobile": "16px",
-                    "stack-lg": "24px",
-                    "margin-desktop": "32px",
-                    "base": "8px"
+            spacing: {
+              gutter: "24px",
+              "container-max": "1440px",
+              "stack-md": "16px",
+              "stack-sm": "8px",
+              "margin-mobile": "16px",
+              "stack-lg": "24px",
+              "margin-desktop": "32px",
+              base: "8px",
             },
-            "fontFamily": {
-                    "headline-lg-mobile": ["Manrope"],
-                    "label-sm": ["Inter"],
-                    "body-md": ["Inter"],
-                    "headline-md": ["Manrope"],
-                    "body-lg": ["Inter"],
-                    "label-md": ["Inter"],
-                    "headline-lg": ["Manrope"],
-                    "display-lg": ["Manrope"]
+            fontFamily: {
+              "headline-lg-mobile": ["Manrope"],
+              "label-sm": ["Inter"],
+              "body-md": ["Inter"],
+              "headline-md": ["Manrope"],
+              "body-lg": ["Inter"],
+              "label-md": ["Inter"],
+              "headline-lg": ["Manrope"],
+              "display-lg": ["Manrope"],
             },
-            "fontSize": {
-                    "headline-lg-mobile": ["28px", {"lineHeight": "1.3", "fontWeight": "700"}],
-                    "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "500"}],
-                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
-                    "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
-                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
-                    "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "600"}],
-                    "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "700"}],
-                    "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800"}]
-            }
+            fontSize: {
+              "headline-lg-mobile": ["28px", { lineHeight: "1.3", fontWeight: "700" }],
+              "label-sm": ["12px", { lineHeight: "1.2", fontWeight: "500" }],
+              "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+              "headline-md": ["24px", { lineHeight: "1.4", fontWeight: "600" }],
+              "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+              "label-md": [
+                "14px",
+                { lineHeight: "1.2", letterSpacing: "0.01em", fontWeight: "600" },
+              ],
+              "headline-lg": ["32px", { lineHeight: "1.3", fontWeight: "700" }],
+              "display-lg": [
+                "48px",
+                { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "800" },
+              ],
+            },
           },
         },
-      }
+      };
     </script>
-<style class="">
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .glass-sidebar {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-        }
-        .primary-gradient {
-            background: linear-gradient(to right, #0A2EFF, #3D73FF);
-        }
-        .card-shadow {
-            box-shadow: 0px 12px 32px -4px rgba(10, 46, 255, 0.04);
-        }
-        /* Global interaction transitions */
-        button, .notification-card, .pagination-btn {
-            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        /* Button interactions */
-        .btn-interactive:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(10, 46, 255, 0.15);
-        }
-        .btn-interactive:active {
-            transform: scale(0.95);
-        }
-        /* Notification card interactions */
-        .notification-card:hover {
-            background-color: rgba(10, 46, 255, 0.05);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
+    <style class="">
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      .glass-sidebar {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+      }
+      .primary-gradient {
+        background: linear-gradient(to right, #0a2eff, #3d73ff);
+      }
+      .card-shadow {
+        box-shadow: 0px 12px 32px -4px rgba(10, 46, 255, 0.04);
+      }
+      /* Global interaction transitions */
+      button,
+      .notification-card,
+      .pagination-btn {
+        transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      /* Button interactions */
+      .btn-interactive:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(10, 46, 255, 0.15);
+      }
+      .btn-interactive:active {
+        transform: scale(0.95);
+      }
+      /* Notification card interactions */
+      .notification-card:hover {
+        background-color: rgba(10, 46, 255, 0.05);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
     </style>
-<style class="">
-    .notification-card button.btn-interactive:hover {
+    <style class="">
+      .notification-card button.btn-interactive:hover {
         background-color: #001ec4 !important;
         color: #ffffff !important;
         border-color: #001ec4 !important;
-    }
-</style><style class="">
-    body > main.ml-64.p-8.max-w-\[1440px\] > div.flex.justify-between.items-end:nth-of-type(1) > div.relative.group:nth-of-type(2) > button.flex.items-center.gap-2:active {
+      }
+    </style>
+    <style class="">
+      body
+        > main.ml-64.p-8.max-w-\[1440px\]
+        > div.flex.justify-between.items-end:nth-of-type(1)
+        > div.relative.group:nth-of-type(2)
+        > button.flex.items-center.gap-2:active {
         background-color: #001ec4 !important;
         color: #ffffff !important;
-    }
-    body > main.ml-64.p-8.max-w-\[1440px\] > div.flex.justify-between.items-end:nth-of-type(1) > div.relative.group:nth-of-type(2) > button.flex.items-center.gap-2:active .material-symbols-outlined {
+      }
+      body
+        > main.ml-64.p-8.max-w-\[1440px\]
+        > div.flex.justify-between.items-end:nth-of-type(1)
+        > div.relative.group:nth-of-type(2)
+        > button.flex.items-center.gap-2:active
+        .material-symbols-outlined {
         color: #ffffff !important;
-    }
-</style></head>
-<body class="bg-surface text-on-surface font-body-md min-h-screen">
-<!-- SideNavBar (Shared Component) -->
-<aside class="fixed left-0 top-0 h-screen w-64 bg-primary text-white z-50 flex flex-col p-6 shadow-xl">
-<div class="mb-10"><div class="flex items-center gap-3">
-<div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary">
-<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">bolt</span>
-</div>
-<div>
-<h1 class="font-display-lg text-[20px] font-bold leading-none">Saltwater</h1>
-<p class="text-white/70 text-[12px] mt-1">Electricity Monitoring</p>
-</div>
-</div></div>
-<nav class="flex-1 space-y-2"><a class="flex items-center gap-3 px-4 py-3 text-white/80 hover:text-white transition-colors rounded-xl" href="#">
-<span class="material-symbols-outlined">home</span>
-<span class="font-medium">Dashboard</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-white/80 hover:text-white transition-colors rounded-xl" href="#">
-<span class="material-symbols-outlined">analytics</span>
-<span class="font-medium">Real-Time Monitor</span>
-</a>
-<a class="flex items-center justify-between px-4 py-3 rounded-xl bg-white/10 text-white font-bold border border-white/20" href="#">
-<div class="flex items-center gap-3">
-<span class="material-symbols-outlined">notifications</span>
-<span class="">Device Alerts</span>
-</div>
-<span class="bg-white/20 px-2 py-0.5 rounded-full text-[10px]">4</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-white/80 hover:text-white transition-colors rounded-xl" href="#">
-<span class="material-symbols-outlined">description</span>
-<span class="font-medium">Device Request</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-white/80 hover:text-white transition-colors rounded-xl" href="#">
-<span class="material-symbols-outlined">bar_chart</span>
-<span class="font-medium">Historical Data</span>
-</a></nav>
-<div class="mt-auto pt-6 border-t border-outline-variant/30 space-y-2"><div class="mt-auto">
+      }
+    </style>
+  </head>
+  <body class="bg-surface text-on-surface font-body-md min-h-screen">
+    <!-- SideNavBar (Shared Component) -->
+    <aside
+      class="fixed left-0 top-0 h-screen w-64 bg-primary text-white z-50 flex flex-col p-6 shadow-xl"
+    >
+      <div class="mb-10">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary"
+          >
+            <span
+              class="material-symbols-outlined"
+              style="font-variation-settings: &quot;FILL&quot; 1"
+              >bolt</span
+            >
+          </div>
+          <div>
+            <h1 class="font-display-lg text-[20px] font-bold leading-none">Saltwater</h1>
+            <p class="text-white/70 text-[12px] mt-1">Electricity Monitoring</p>
+          </div>
+        </div>
+      </div>
+      <nav class="flex-1 space-y-2">
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-white/80 hover:text-white transition-colors rounded-xl"
+          href="#"
+        >
+          <span class="material-symbols-outlined">home</span>
+          <span class="font-medium">Dashboard</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-white/80 hover:text-white transition-colors rounded-xl"
+          href="#"
+        >
+          <span class="material-symbols-outlined">analytics</span>
+          <span class="font-medium">Real-Time Monitor</span>
+        </a>
+        <a
+          class="flex items-center justify-between px-4 py-3 rounded-xl bg-white/10 text-white font-bold border border-white/20"
+          href="#"
+        >
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined">notifications</span>
+            <span class="">Device Alerts</span>
+          </div>
+          <span class="bg-white/20 px-2 py-0.5 rounded-full text-[10px]">4</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-white/80 hover:text-white transition-colors rounded-xl"
+          href="#"
+        >
+          <span class="material-symbols-outlined">description</span>
+          <span class="font-medium">Device Request</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-white/80 hover:text-white transition-colors rounded-xl"
+          href="#"
+        >
+          <span class="material-symbols-outlined">bar_chart</span>
+          <span class="font-medium">Historical Data</span>
+        </a>
+      </nav>
+      <div class="mt-auto pt-6 border-t border-outline-variant/30 space-y-2">
+        <div class="mt-auto"></div>
+      </div>
+    </aside>
+    <!-- TopNavBar (Shared Component) -->
+    <header
+      class="flex justify-between items-center h-20 px-8 w-full ml-64 bg-surface/80 backdrop-blur-md sticky top-0 z-40 border-b border-outline-variant/30"
+    >
+      <div class="flex items-center gap-4">
+        <span
+          class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed"
+          >Alerts</span
+        >
+      </div>
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-4 text-on-surface-variant">
+          <button
+            class="material-symbols-outlined hover:text-primary transition-colors"
+            data-icon="notifications"
+          >
+            notifications
+          </button>
+          <button
+            class="material-symbols-outlined hover:text-primary transition-colors"
+            data-icon="calendar_today"
+          >
+            calendar_today
+          </button>
+        </div>
+        <div class="h-8 w-[1px] bg-outline-variant/30"></div>
+        <div class="flex items-center gap-3 cursor-pointer group">
+          <div class="text-right">
+            <p
+              class="font-label-md text-label-md text-on-surface font-bold group-hover:text-primary transition-colors"
+            >
+              Alex Johnson
+            </p>
+            <p class="text-[11px] text-on-surface-variant">Household User</p>
+          </div>
+          <img
+            alt="Alex Johnson Household User"
+            class="w-10 h-10 rounded-full border-2 border-primary/10"
+            data-alt="A professional, clean portrait of a friendly man in his late 30s with short hair, wearing a high-quality navy blue button-up shirt. The lighting is bright and airy, set against a blurred modern office background that suggests a clean, tech-focused environment. The overall aesthetic is minimalist and high-end professional."
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCe_ra4-21e2JkqGQRG-pdU6whH2IvGPWHZQkezCuSynYoa324aGqYfqL09-NATZI89LJ2pVKDPLpDRhb7Ar3spR9U9Ew8cxCBKphXNhlAVpgjTLGG5OYmzKP5ZzWN5DYvtqOAgCoerY_oMxAOeDBARt6QzN3oLS3X25B91e7J-RpDKeNfSl6lppDZnP4ble1V6Kh0LUaxZzlGhcypMG4GOcRy6-s7ucLGAgzPbefypl5Q_PyijFN2FFtb2r2-Vzm05j-WMuE__iA3C"
+          />
+        </div>
+      </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="ml-64 p-8 max-w-[1440px] mx-auto">
+      <div class="flex justify-between items-end mb-8">
+        <div>
+          <h2 class="font-headline-lg text-headline-lg text-on-surface uppercase tracking-tight">
+            ALERTS AND NOTIFICATIONS
+          </h2>
+          <p class="text-on-surface-variant font-body-md mt-1">
+            Track important device alerts, warnings, and system notifications in real-time.
+          </p>
+        </div>
+        <!-- Filter Dropdown -->
+        <div class="relative group" id="notification-filter-container">
+          <button
+            class="flex items-center gap-2 px-5 py-2.5 bg-white border border-outline-variant/50 rounded-xl font-label-md text-label-md text-on-surface-variant hover:border-primary transition-all card-shadow btn-interactive"
+          >
+            <span class="">All Notifications</span>
+            <span class="material-symbols-outlined text-[20px]" data-icon="expand_more"
+              >expand_more</span
+            >
+          </button>
+          <!-- Pseudo-dropdown for UI display -->
+          <div
+            class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-outline-variant/20 hidden group-hover:block z-10 overflow-hidden"
+          >
+            <button
+              data-filter="all"
+              class="w-full text-left px-4 py-3 hover:bg-primary/5 text-primary font-bold border-l-4 border-primary transition-colors"
+            >
+              All</button
+            ><button
+              data-filter="unread"
+              class="w-full text-left px-4 py-3 hover:bg-primary/5 text-on-surface-variant transition-colors"
+            >
+              Unread</button
+            ><button
+              data-filter="read"
+              class="w-full text-left px-4 py-3 hover:bg-primary/5 text-on-surface-variant transition-colors"
+            >
+              Read
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Main Notification Container -->
+      <div
+        class="bg-white rounded-[24px] card-shadow border border-outline-variant/30 overflow-hidden p-8"
+      >
+        <div class="mb-8">
+          <div class="flex items-center gap-4 mb-6">
+            <span class="text-[12px] font-bold text-outline tracking-widest uppercase">TODAY</span>
+          </div>
+          <div class="space-y-3">
+            <div
+              class="flex items-center gap-4 p-4 bg-white border border-outline-variant/20 rounded-xl hover:shadow-md transition-shadow notification-card"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-error/10 flex items-center justify-center text-error"
+              >
+                <span class="material-symbols-outlined">warning</span>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-on-surface uppercase">LOW Salinity</h4>
+                <p class="text-on-surface-variant text-sm">
+                  Salinity level is below the recommended threshold.
+                </p>
+              </div>
+              <div class="flex items-center gap-1 text-on-surface-variant text-xs">
+                <span class="material-symbols-outlined text-sm">schedule</span>9 hours ago
+              </div>
+              <div class="ml-4">
+                <span class="px-3 py-1 rounded-lg bg-primary-fixed text-primary text-xs font-bold"
+                  >Unread</span
+                >
+              </div>
+              <button
+                class="ml-4 flex items-center gap-1 px-4 py-2 border border-outline-variant/50 rounded-lg text-on-surface text-sm font-medium hover:bg-surface-container btn-interactive"
+              >
+                Details <span class="material-symbols-outlined text-sm">chevron_right</span>
+              </button>
+            </div>
+            <div
+              class="flex items-center gap-4 p-4 bg-white border border-outline-variant/20 rounded-xl hover:shadow-md transition-shadow notification-card"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary"
+              >
+                <span class="material-symbols-outlined">warning</span>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-on-surface uppercase">HIGH Salinity Detected</h4>
+                <p class="text-on-surface-variant text-sm">
+                  Salinity level is above the recommended threshold.
+                </p>
+              </div>
+              <div class="flex items-center gap-1 text-on-surface-variant text-xs">
+                <span class="material-symbols-outlined text-sm">schedule</span>9 hours ago
+              </div>
+              <div class="ml-4">
+                <span class="px-3 py-1 rounded-lg bg-primary-fixed text-primary text-xs font-bold"
+                  >Unread</span
+                >
+              </div>
+              <button
+                class="ml-4 flex items-center gap-1 px-4 py-2 border border-outline-variant/50 rounded-lg text-on-surface text-sm font-medium hover:bg-surface-container btn-interactive"
+              >
+                Details <span class="material-symbols-outlined text-sm">chevron_right</span>
+              </button>
+            </div>
+            <div
+              class="flex items-center gap-4 p-4 bg-white border border-outline-variant/20 rounded-xl hover:shadow-md transition-shadow notification-card"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-error/10 flex items-center justify-center text-error"
+              >
+                <span class="material-symbols-outlined">bolt</span>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-on-surface uppercase">DEVICE Voltage Drop Off</h4>
+                <p class="text-on-surface-variant text-sm">
+                  Voltage has dropped below the safe operating range.
+                </p>
+              </div>
+              <div class="flex items-center gap-1 text-on-surface-variant text-xs">
+                <span class="material-symbols-outlined text-sm">schedule</span>10 hours ago
+              </div>
+              <div class="ml-4">
+                <span class="px-3 py-1 rounded-lg bg-primary-fixed text-primary text-xs font-bold"
+                  >Unread</span
+                >
+              </div>
+              <button
+                class="ml-4 flex items-center gap-1 px-4 py-2 border border-outline-variant/50 rounded-lg text-on-surface text-sm font-medium hover:bg-surface-container btn-interactive"
+              >
+                Details <span class="material-symbols-outlined text-sm">chevron_right</span>
+              </button>
+            </div>
+            <div
+              class="flex items-center gap-4 p-4 bg-white border border-outline-variant/20 rounded-xl hover:shadow-md transition-shadow notification-card"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-tertiary-fixed-dim/10 flex items-center justify-center text-tertiary-fixed-dim"
+              >
+                <span class="material-symbols-outlined">check_circle</span>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-on-surface uppercase">Connection Restored</h4>
+                <p class="text-on-surface-variant text-sm">
+                  Device connection has been successfully restored.
+                </p>
+              </div>
+              <div class="flex items-center gap-1 text-on-surface-variant text-xs">
+                <span class="material-symbols-outlined text-sm">schedule</span>10 hours ago
+              </div>
+              <div class="ml-4">
+                <span
+                  class="px-3 py-1 rounded-lg bg-tertiary-container/10 text-tertiary-container text-xs font-bold"
+                  >Read</span
+                >
+              </div>
+              <button
+                class="ml-4 flex items-center gap-1 px-4 py-2 border border-outline-variant/50 rounded-lg text-on-surface text-sm font-medium hover:bg-surface-container btn-interactive"
+              >
+                Details <span class="material-symbols-outlined text-sm">chevron_right</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="mb-8">
+          <div class="flex items-center gap-4 mb-6">
+            <span class="text-[12px] font-bold text-outline tracking-widest uppercase"
+              >YESTERDAY</span
+            >
+          </div>
+          <div class="space-y-3">
+            <div
+              class="flex items-center gap-4 p-4 bg-white border border-outline-variant/20 rounded-xl hover:shadow-md transition-shadow notification-card"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-tertiary-fixed-dim/10 flex items-center justify-center text-tertiary-fixed-dim"
+              >
+                <span class="material-symbols-outlined">check_circle</span>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-on-surface uppercase">GOOD Voltage Generation</h4>
+                <p class="text-on-surface-variant text-sm">
+                  Device is generating voltage within the normal range.
+                </p>
+              </div>
+              <div class="flex items-center gap-1 text-on-surface-variant text-xs">
+                <span class="material-symbols-outlined text-sm">schedule</span>1 day ago
+              </div>
+              <div class="ml-4">
+                <span
+                  class="px-3 py-1 rounded-lg bg-tertiary-container/10 text-tertiary-container text-xs font-bold"
+                  >Read</span
+                >
+              </div>
+              <button
+                class="ml-4 flex items-center gap-1 px-4 py-2 border border-outline-variant/50 rounded-lg text-on-surface text-sm font-medium hover:bg-surface-container btn-interactive"
+              >
+                Details <span class="material-symbols-outlined text-sm">chevron_right</span>
+              </button>
+            </div>
+            <div
+              class="flex items-center gap-4 p-4 bg-white border border-outline-variant/20 rounded-xl hover:shadow-md transition-shadow notification-card"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-tertiary-fixed-dim/10 flex items-center justify-center text-tertiary-fixed-dim"
+              >
+                <span class="material-symbols-outlined">check_circle</span>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-on-surface uppercase">GOOD Current Production</h4>
+                <p class="text-on-surface-variant text-sm">
+                  Device current output is operating normally.
+                </p>
+              </div>
+              <div class="flex items-center gap-1 text-on-surface-variant text-xs">
+                <span class="material-symbols-outlined text-sm">schedule</span>1 day ago
+              </div>
+              <div class="ml-4">
+                <span
+                  class="px-3 py-1 rounded-lg bg-tertiary-container/10 text-tertiary-container text-xs font-bold"
+                  >Read</span
+                >
+              </div>
+              <button
+                class="ml-4 flex items-center gap-1 px-4 py-2 border border-outline-variant/50 rounded-lg text-on-surface text-sm font-medium hover:bg-surface-container btn-interactive"
+              >
+                Details <span class="material-symbols-outlined text-sm">chevron_right</span>
+              </button>
+            </div>
+            <div
+              class="flex items-center gap-4 p-4 bg-white border border-outline-variant/20 rounded-xl hover:shadow-md transition-shadow notification-card"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary"
+              >
+                <span class="material-symbols-outlined">info</span>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-on-surface uppercase">Maintenance Reminder</h4>
+                <p class="text-on-surface-variant text-sm">
+                  Scheduled maintenance is due in 2 days.
+                </p>
+              </div>
+              <div class="flex items-center gap-1 text-on-surface-variant text-xs">
+                <span class="material-symbols-outlined text-sm">schedule</span>1 day ago
+              </div>
+              <div class="ml-4">
+                <span
+                  class="px-3 py-1 rounded-lg bg-tertiary-container/10 text-tertiary-container text-xs font-bold"
+                  >Read</span
+                >
+              </div>
+              <button
+                class="ml-4 flex items-center gap-1 px-4 py-2 border border-outline-variant/50 rounded-lg text-on-surface text-sm font-medium hover:bg-surface-container btn-interactive"
+              >
+                Details <span class="material-symbols-outlined text-sm">chevron_right</span>
+              </button>
+            </div>
+            <div
+              class="flex items-center gap-4 p-4 bg-white border border-outline-variant/20 rounded-xl hover:shadow-md transition-shadow notification-card"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary"
+              >
+                <span class="material-symbols-outlined">battery_low</span>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-on-surface uppercase">Low Battery</h4>
+                <p class="text-on-surface-variant text-sm">
+                  Battery level is below 20%. Please check the device.
+                </p>
+              </div>
+              <div class="flex items-center gap-1 text-on-surface-variant text-xs">
+                <span class="material-symbols-outlined text-sm">schedule</span>1 day ago
+              </div>
+              <div class="ml-4">
+                <span
+                  class="px-3 py-1 rounded-lg bg-tertiary-container/10 text-tertiary-container text-xs font-bold"
+                  >Read</span
+                >
+              </div>
+              <button
+                class="ml-4 flex items-center gap-1 px-4 py-2 border border-outline-variant/50 rounded-lg text-on-surface text-sm font-medium hover:bg-surface-container btn-interactive"
+              >
+                Details <span class="material-symbols-outlined text-sm">chevron_right</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="mt-8 flex items-center justify-between border-t border-outline-variant/20 pt-6">
+          <div class="text-on-surface-variant text-sm">Showing 1 to 8 of 24 notifications</div>
+          <div class="flex items-center gap-2">
+            <button
+              class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/50 hover:bg-surface-container btn-interactive"
+            >
+              <span class="material-symbols-outlined text-sm">chevron_left</span></button
+            ><button
+              class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-sm font-bold btn-interactive"
+            >
+              1</button
+            ><button
+              class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/50 hover:bg-surface-container text-sm btn-interactive"
+            >
+              2</button
+            ><button
+              class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/50 hover:bg-surface-container text-sm btn-interactive"
+            >
+              3</button
+            ><button
+              class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/50 hover:bg-surface-container btn-interactive"
+            >
+              <span class="material-symbols-outlined text-sm">chevron_right</span>
+            </button>
+          </div>
+          <div class="flex items-center gap-2 text-sm text-on-surface-variant">
+            <span class="">Show</span>
+            <div
+              class="flex items-center gap-1 px-2 py-1 border border-outline-variant/50 rounded-lg"
+            >
+              <span class="">10</span
+              ><span class="material-symbols-outlined text-sm">expand_more</span>
+            </div>
+            <span class="">per page</span>
+          </div>
+        </div>
+      </div>
+    </main>
 
-</div></div>
-</aside>
-<!-- TopNavBar (Shared Component) -->
-<header class="flex justify-between items-center h-20 px-8 w-full ml-64 bg-surface/80 backdrop-blur-md sticky top-0 z-40 border-b border-outline-variant/30">
-<div class="flex items-center gap-4">
-<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Alerts</span>
-</div>
-<div class="flex items-center gap-6">
-<div class="flex items-center gap-4 text-on-surface-variant">
-<button class="material-symbols-outlined hover:text-primary transition-colors" data-icon="notifications">notifications</button>
-<button class="material-symbols-outlined hover:text-primary transition-colors" data-icon="calendar_today">calendar_today</button>
-</div>
-<div class="h-8 w-[1px] bg-outline-variant/30"></div>
-<div class="flex items-center gap-3 cursor-pointer group">
-<div class="text-right">
-<p class="font-label-md text-label-md text-on-surface font-bold group-hover:text-primary transition-colors">Alex Johnson</p>
-<p class="text-[11px] text-on-surface-variant">Household User</p>
-</div>
-<img alt="Alex Johnson Household User" class="w-10 h-10 rounded-full border-2 border-primary/10" data-alt="A professional, clean portrait of a friendly man in his late 30s with short hair, wearing a high-quality navy blue button-up shirt. The lighting is bright and airy, set against a blurred modern office background that suggests a clean, tech-focused environment. The overall aesthetic is minimalist and high-end professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCe_ra4-21e2JkqGQRG-pdU6whH2IvGPWHZQkezCuSynYoa324aGqYfqL09-NATZI89LJ2pVKDPLpDRhb7Ar3spR9U9Ew8cxCBKphXNhlAVpgjTLGG5OYmzKP5ZzWN5DYvtqOAgCoerY_oMxAOeDBARt6QzN3oLS3X25B91e7J-RpDKeNfSl6lppDZnP4ble1V6Kh0LUaxZzlGhcypMG4GOcRy6-s7ucLGAgzPbefypl5Q_PyijFN2FFtb2r2-Vzm05j-WMuE__iA3C">
-</div>
-</div>
-</header>
-<!-- Main Content Area -->
-<main class="ml-64 p-8 max-w-[1440px] mx-auto">
-<div class="flex justify-between items-end mb-8">
-<div>
-<h2 class="font-headline-lg text-headline-lg text-on-surface uppercase tracking-tight">ALERTS AND NOTIFICATIONS</h2>
-<p class="text-on-surface-variant font-body-md mt-1">Track important device alerts, warnings, and system notifications in real-time.</p>
-</div>
-<!-- Filter Dropdown -->
-<div class="relative group" id="notification-filter-container">
-<button class="flex items-center gap-2 px-5 py-2.5 bg-white border border-outline-variant/50 rounded-xl font-label-md text-label-md text-on-surface-variant hover:border-primary transition-all card-shadow btn-interactive">
-<span class="">All Notifications</span>
-<span class="material-symbols-outlined text-[20px]" data-icon="expand_more">expand_more</span>
-</button>
-<!-- Pseudo-dropdown for UI display -->
-<div class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-outline-variant/20 hidden group-hover:block z-10 overflow-hidden"><button data-filter="all" class="w-full text-left px-4 py-3 hover:bg-primary/5 text-primary font-bold border-l-4 border-primary transition-colors">All</button><button data-filter="unread" class="w-full text-left px-4 py-3 hover:bg-primary/5 text-on-surface-variant transition-colors">Unread</button><button data-filter="read" class="w-full text-left px-4 py-3 hover:bg-primary/5 text-on-surface-variant transition-colors">Read</button></div>
-</div>
-</div>
-<!-- Main Notification Container -->
-<div class="bg-white rounded-[24px] card-shadow border border-outline-variant/30 overflow-hidden p-8"><div class="mb-8"><div class="flex items-center gap-4 mb-6"><span class="text-[12px] font-bold text-outline tracking-widest uppercase">TODAY</span></div><div class="space-y-3"><div class="flex items-center gap-4 p-4 bg-white border border-outline-variant/20 rounded-xl hover:shadow-md transition-shadow notification-card"><div class="w-12 h-12 rounded-xl bg-error/10 flex items-center justify-center text-error"><span class="material-symbols-outlined">warning</span></div><div class="flex-1"><h4 class="font-bold text-on-surface uppercase">LOW Salinity</h4><p class="text-on-surface-variant text-sm">Salinity level is below the recommended threshold.</p></div><div class="flex items-center gap-1 text-on-surface-variant text-xs"><span class="material-symbols-outlined text-sm">schedule</span>9 hours ago</div><div class="ml-4"><span class="px-3 py-1 rounded-lg bg-primary-fixed text-primary text-xs font-bold">Unread</span></div><button class="ml-4 flex items-center gap-1 px-4 py-2 border border-outline-variant/50 rounded-lg text-on-surface text-sm font-medium hover:bg-surface-container btn-interactive">Details <span class="material-symbols-outlined text-sm">chevron_right</span></button></div><div class="flex items-center gap-4 p-4 bg-white border border-outline-variant/20 rounded-xl hover:shadow-md transition-shadow notification-card"><div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary"><span class="material-symbols-outlined">warning</span></div><div class="flex-1"><h4 class="font-bold text-on-surface uppercase">HIGH Salinity Detected</h4><p class="text-on-surface-variant text-sm">Salinity level is above the recommended threshold.</p></div><div class="flex items-center gap-1 text-on-surface-variant text-xs"><span class="material-symbols-outlined text-sm">schedule</span>9 hours ago</div><div class="ml-4"><span class="px-3 py-1 rounded-lg bg-primary-fixed text-primary text-xs font-bold">Unread</span></div><button class="ml-4 flex items-center gap-1 px-4 py-2 border border-outline-variant/50 rounded-lg text-on-surface text-sm font-medium hover:bg-surface-container btn-interactive">Details <span class="material-symbols-outlined text-sm">chevron_right</span></button></div><div class="flex items-center gap-4 p-4 bg-white border border-outline-variant/20 rounded-xl hover:shadow-md transition-shadow notification-card"><div class="w-12 h-12 rounded-xl bg-error/10 flex items-center justify-center text-error"><span class="material-symbols-outlined">bolt</span></div><div class="flex-1"><h4 class="font-bold text-on-surface uppercase">DEVICE Voltage Drop Off</h4><p class="text-on-surface-variant text-sm">Voltage has dropped below the safe operating range.</p></div><div class="flex items-center gap-1 text-on-surface-variant text-xs"><span class="material-symbols-outlined text-sm">schedule</span>10 hours ago</div><div class="ml-4"><span class="px-3 py-1 rounded-lg bg-primary-fixed text-primary text-xs font-bold">Unread</span></div><button class="ml-4 flex items-center gap-1 px-4 py-2 border border-outline-variant/50 rounded-lg text-on-surface text-sm font-medium hover:bg-surface-container btn-interactive">Details <span class="material-symbols-outlined text-sm">chevron_right</span></button></div><div class="flex items-center gap-4 p-4 bg-white border border-outline-variant/20 rounded-xl hover:shadow-md transition-shadow notification-card"><div class="w-12 h-12 rounded-xl bg-tertiary-fixed-dim/10 flex items-center justify-center text-tertiary-fixed-dim"><span class="material-symbols-outlined">check_circle</span></div><div class="flex-1"><h4 class="font-bold text-on-surface uppercase">Connection Restored</h4><p class="text-on-surface-variant text-sm">Device connection has been successfully restored.</p></div><div class="flex items-center gap-1 text-on-surface-variant text-xs"><span class="material-symbols-outlined text-sm">schedule</span>10 hours ago</div><div class="ml-4"><span class="px-3 py-1 rounded-lg bg-tertiary-container/10 text-tertiary-container text-xs font-bold">Read</span></div><button class="ml-4 flex items-center gap-1 px-4 py-2 border border-outline-variant/50 rounded-lg text-on-surface text-sm font-medium hover:bg-surface-container btn-interactive">Details <span class="material-symbols-outlined text-sm">chevron_right</span></button></div></div></div><div class="mb-8"><div class="flex items-center gap-4 mb-6"><span class="text-[12px] font-bold text-outline tracking-widest uppercase">YESTERDAY</span></div><div class="space-y-3"><div class="flex items-center gap-4 p-4 bg-white border border-outline-variant/20 rounded-xl hover:shadow-md transition-shadow notification-card"><div class="w-12 h-12 rounded-xl bg-tertiary-fixed-dim/10 flex items-center justify-center text-tertiary-fixed-dim"><span class="material-symbols-outlined">check_circle</span></div><div class="flex-1"><h4 class="font-bold text-on-surface uppercase">GOOD Voltage Generation</h4><p class="text-on-surface-variant text-sm">Device is generating voltage within the normal range.</p></div><div class="flex items-center gap-1 text-on-surface-variant text-xs"><span class="material-symbols-outlined text-sm">schedule</span>1 day ago</div><div class="ml-4"><span class="px-3 py-1 rounded-lg bg-tertiary-container/10 text-tertiary-container text-xs font-bold">Read</span></div><button class="ml-4 flex items-center gap-1 px-4 py-2 border border-outline-variant/50 rounded-lg text-on-surface text-sm font-medium hover:bg-surface-container btn-interactive">Details <span class="material-symbols-outlined text-sm">chevron_right</span></button></div><div class="flex items-center gap-4 p-4 bg-white border border-outline-variant/20 rounded-xl hover:shadow-md transition-shadow notification-card"><div class="w-12 h-12 rounded-xl bg-tertiary-fixed-dim/10 flex items-center justify-center text-tertiary-fixed-dim"><span class="material-symbols-outlined">check_circle</span></div><div class="flex-1"><h4 class="font-bold text-on-surface uppercase">GOOD Current Production</h4><p class="text-on-surface-variant text-sm">Device current output is operating normally.</p></div><div class="flex items-center gap-1 text-on-surface-variant text-xs"><span class="material-symbols-outlined text-sm">schedule</span>1 day ago</div><div class="ml-4"><span class="px-3 py-1 rounded-lg bg-tertiary-container/10 text-tertiary-container text-xs font-bold">Read</span></div><button class="ml-4 flex items-center gap-1 px-4 py-2 border border-outline-variant/50 rounded-lg text-on-surface text-sm font-medium hover:bg-surface-container btn-interactive">Details <span class="material-symbols-outlined text-sm">chevron_right</span></button></div><div class="flex items-center gap-4 p-4 bg-white border border-outline-variant/20 rounded-xl hover:shadow-md transition-shadow notification-card"><div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary"><span class="material-symbols-outlined">info</span></div><div class="flex-1"><h4 class="font-bold text-on-surface uppercase">Maintenance Reminder</h4><p class="text-on-surface-variant text-sm">Scheduled maintenance is due in 2 days.</p></div><div class="flex items-center gap-1 text-on-surface-variant text-xs"><span class="material-symbols-outlined text-sm">schedule</span>1 day ago</div><div class="ml-4"><span class="px-3 py-1 rounded-lg bg-tertiary-container/10 text-tertiary-container text-xs font-bold">Read</span></div><button class="ml-4 flex items-center gap-1 px-4 py-2 border border-outline-variant/50 rounded-lg text-on-surface text-sm font-medium hover:bg-surface-container btn-interactive">Details <span class="material-symbols-outlined text-sm">chevron_right</span></button></div><div class="flex items-center gap-4 p-4 bg-white border border-outline-variant/20 rounded-xl hover:shadow-md transition-shadow notification-card"><div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary"><span class="material-symbols-outlined">battery_low</span></div><div class="flex-1"><h4 class="font-bold text-on-surface uppercase">Low Battery</h4><p class="text-on-surface-variant text-sm">Battery level is below 20%. Please check the device.</p></div><div class="flex items-center gap-1 text-on-surface-variant text-xs"><span class="material-symbols-outlined text-sm">schedule</span>1 day ago</div><div class="ml-4"><span class="px-3 py-1 rounded-lg bg-tertiary-container/10 text-tertiary-container text-xs font-bold">Read</span></div><button class="ml-4 flex items-center gap-1 px-4 py-2 border border-outline-variant/50 rounded-lg text-on-surface text-sm font-medium hover:bg-surface-container btn-interactive">Details <span class="material-symbols-outlined text-sm">chevron_right</span></button></div></div></div><div class="mt-8 flex items-center justify-between border-t border-outline-variant/20 pt-6"><div class="text-on-surface-variant text-sm">Showing 1 to 8 of 24 notifications</div><div class="flex items-center gap-2"><button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/50 hover:bg-surface-container btn-interactive"><span class="material-symbols-outlined text-sm">chevron_left</span></button><button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-sm font-bold btn-interactive">1</button><button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/50 hover:bg-surface-container text-sm btn-interactive">2</button><button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/50 hover:bg-surface-container text-sm btn-interactive">3</button><button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/50 hover:bg-surface-container btn-interactive"><span class="material-symbols-outlined text-sm">chevron_right</span></button></div><div class="flex items-center gap-2 text-sm text-on-surface-variant"><span class="">Show</span><div class="flex items-center gap-1 px-2 py-1 border border-outline-variant/50 rounded-lg"><span class="">10</span><span class="material-symbols-outlined text-sm">expand_more</span></div><span class="">per page</span></div></div></div>
-</main>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const filterContainer = document.getElementById("notification-filter-container");
+        const filterButton = filterContainer.querySelector(
+          "button.btn-interactive span:first-child"
+        );
+        const filterOptions = filterContainer.querySelectorAll("[data-filter]");
+        const notificationCards = document.querySelectorAll(".notification-card");
 
+        filterOptions.forEach((option) => {
+          option.addEventListener("click", () => {
+            const filterValue = option.getAttribute("data-filter");
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const filterContainer = document.getElementById('notification-filter-container');
-    const filterButton = filterContainer.querySelector('button.btn-interactive span:first-child');
-    const filterOptions = filterContainer.querySelectorAll('[data-filter]');
-    const notificationCards = document.querySelectorAll('.notification-card');
+            // Update UI state of dropdown items
+            filterOptions.forEach((opt) => {
+              opt.classList.remove("text-primary", "font-bold", "border-l-4", "border-primary");
+              opt.classList.add("text-on-surface-variant");
+            });
+            option.classList.add("text-primary", "font-bold", "border-l-4", "border-primary");
+            option.classList.remove("text-on-surface-variant");
 
-    filterOptions.forEach(option => {
-      option.addEventListener('click', () => {
-        const filterValue = option.getAttribute('data-filter');
-        
-        // Update UI state of dropdown items
-        filterOptions.forEach(opt => {
-          opt.classList.remove('text-primary', 'font-bold', 'border-l-4', 'border-primary');
-          opt.classList.add('text-on-surface-variant');
+            // Update button label
+            filterButton.textContent =
+              option.textContent === "All" ? "All Notifications" : option.textContent;
+
+            // Filter cards
+            notificationCards.forEach((card) => {
+              const statusBadge = card.querySelector(".ml-4 span").textContent.trim().toLowerCase();
+
+              if (filterValue === "all") {
+                card.style.display = "flex";
+              } else if (filterValue === statusBadge) {
+                card.style.display = "flex";
+              } else {
+                card.style.display = "none";
+              }
+            });
+
+            // Hide the dropdown after selection (manual trigger since it's a hover group typically)
+            const dropdown = filterContainer.querySelector(".group-hover\\:block");
+            dropdown.style.display = "none";
+            setTimeout(() => (dropdown.style.display = ""), 100);
+          });
         });
-        option.classList.add('text-primary', 'font-bold', 'border-l-4', 'border-primary');
-        option.classList.remove('text-on-surface-variant');
-
-        // Update button label
-        filterButton.textContent = option.textContent === 'All' ? 'All Notifications' : option.textContent;
-
-        // Filter cards
-        notificationCards.forEach(card => {
-          const statusBadge = card.querySelector('.ml-4 span').textContent.trim().toLowerCase();
-          
-          if (filterValue === 'all') {
-            card.style.display = 'flex';
-          } else if (filterValue === statusBadge) {
-            card.style.display = 'flex';
-          } else {
-            card.style.display = 'none';
-          }
-        });
-        
-        // Hide the dropdown after selection (manual trigger since it's a hover group typically)
-        const dropdown = filterContainer.querySelector('.group-hover\\:block');
-        dropdown.style.display = 'none';
-        setTimeout(() => dropdown.style.display = '', 100); 
       });
-    });
-  });
-</script></body></html>
+    </script>
+  </body>
+</html>

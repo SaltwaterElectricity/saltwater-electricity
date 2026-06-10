@@ -3,10 +3,10 @@ import { subscribeToLatestReading } from "../services/reading.service";
 
 /**
  * Hook: useReadings
- * 
+ *
  * Provides real-time telemetry updates for a specific device.
  * Abstracts the service subscription and manages loading/error states.
- * 
+ *
  * @param {string} deviceId - ID of the device to monitor
  * @returns {Object} - { reading, error, loading }
  */
@@ -35,7 +35,7 @@ export const useReadings = (deviceId) => {
 
       return () => unsubscribe();
     } catch (err) {
-      // Use a function to update state asynchronously if needed, 
+      // Use a function to update state asynchronously if needed,
       // but here we can just set it since it's an error state.
       // To satisfy the linter, we'll ensure it's not synchronous on mount if it fails immediately.
       setTimeout(() => {

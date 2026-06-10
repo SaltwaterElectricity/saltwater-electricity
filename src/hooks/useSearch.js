@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from "react";
 
 export const useSearch = (data = [], searchKeys = [], delay = 300) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -30,6 +30,6 @@ export const useSearch = (data = [], searchKeys = [], delay = 300) => {
     searchTerm,
     setSearchTerm,
     filteredData,
-    isSearching: searchTerm !== debouncedTerm // Loading state indicator
+    isSearching: searchTerm !== debouncedTerm, // Loading state indicator
   };
 };

@@ -1,591 +1,898 @@
-<!DOCTYPE html><html class="light" lang="en" style=""><head></head><body class="font-body-md text-on-surface bg-background min-h-screen"><svg aria-hidden="true" class="inline-defs-container" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>Saltwater - Electricity Monitoring Dashboard</title>
-<link href="https://fonts.googleapis.com" rel="preconnect">
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">
+<!doctype html>
+<html class="light" lang="en" style="">
+  <head></head>
+  <body class="font-body-md text-on-surface bg-background min-h-screen">
+    <svg
+      aria-hidden="true"
+      class="inline-defs-container"
+      style="position: absolute; width: 0; height: 0; overflow: hidden"
+    ></svg>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Saltwater - Electricity Monitoring Dashboard</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
         theme: {
           extend: {
-            "colors": {
-                    "on-tertiary-fixed-variant": "#005047",
-                    "surface-container-lowest": "#ffffff",
-                    "tertiary-container": "#006157",
-                    "on-secondary-fixed-variant": "#004e5f",
-                    "on-primary-fixed": "#000a63",
-                    "on-primary": "#ffffff",
-                    "on-surface": "#181c20",
-                    "error": "#ba1a1a",
-                    "on-secondary": "#ffffff",
-                    "tertiary-fixed-dim": "#2fddc8",
-                    "inverse-on-surface": "#eff1f6",
-                    "on-secondary-container": "#00586b",
-                    "surface-bright": "#f7f9fe",
-                    "on-background": "#181c20",
-                    "primary-fixed": "#dfe0ff",
-                    "on-tertiary-container": "#38e2cd",
-                    "on-surface-variant": "#444557",
-                    "inverse-primary": "#bcc2ff",
-                    "surface-container-highest": "#e0e2e7",
-                    "on-error-container": "#93000a",
-                    "surface": "#f7f9fe",
-                    "on-tertiary-fixed": "#00201c",
-                    "outline": "#757689",
-                    "on-tertiary": "#ffffff",
-                    "tertiary-fixed": "#5afae4",
-                    "secondary": "#00677d",
-                    "surface-container": "#eceef3",
-                    "on-primary-container": "#c2c7ff",
-                    "error-container": "#ffdad6",
-                    "surface-dim": "#d8dadf",
-                    "surface-container-high": "#e6e8ed",
-                    "inverse-surface": "#2d3135",
-                    "background": "#f7f9fe",
-                    "primary": "#001ec4",
-                    "on-secondary-fixed": "#001f27",
-                    "on-primary-fixed-variant": "#0022da",
-                    "secondary-fixed": "#b3ebff",
-                    "secondary-fixed-dim": "#37d7ff",
-                    "primary-container": "#0a2eff",
-                    "secondary-container": "#23d5fe",
-                    "primary-fixed-dim": "#bcc2ff",
-                    "surface-tint": "#2640ff",
-                    "outline-variant": "#c5c5da",
-                    "tertiary": "#00473f",
-                    "on-error": "#ffffff",
-                    "surface-variant": "#e0e2e7",
-                    "surface-container-low": "#f1f4f9"
+            colors: {
+              "on-tertiary-fixed-variant": "#005047",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-container": "#006157",
+              "on-secondary-fixed-variant": "#004e5f",
+              "on-primary-fixed": "#000a63",
+              "on-primary": "#ffffff",
+              "on-surface": "#181c20",
+              error: "#ba1a1a",
+              "on-secondary": "#ffffff",
+              "tertiary-fixed-dim": "#2fddc8",
+              "inverse-on-surface": "#eff1f6",
+              "on-secondary-container": "#00586b",
+              "surface-bright": "#f7f9fe",
+              "on-background": "#181c20",
+              "primary-fixed": "#dfe0ff",
+              "on-tertiary-container": "#38e2cd",
+              "on-surface-variant": "#444557",
+              "inverse-primary": "#bcc2ff",
+              "surface-container-highest": "#e0e2e7",
+              "on-error-container": "#93000a",
+              surface: "#f7f9fe",
+              "on-tertiary-fixed": "#00201c",
+              outline: "#757689",
+              "on-tertiary": "#ffffff",
+              "tertiary-fixed": "#5afae4",
+              secondary: "#00677d",
+              "surface-container": "#eceef3",
+              "on-primary-container": "#c2c7ff",
+              "error-container": "#ffdad6",
+              "surface-dim": "#d8dadf",
+              "surface-container-high": "#e6e8ed",
+              "inverse-surface": "#2d3135",
+              background: "#f7f9fe",
+              primary: "#001ec4",
+              "on-secondary-fixed": "#001f27",
+              "on-primary-fixed-variant": "#0022da",
+              "secondary-fixed": "#b3ebff",
+              "secondary-fixed-dim": "#37d7ff",
+              "primary-container": "#0a2eff",
+              "secondary-container": "#23d5fe",
+              "primary-fixed-dim": "#bcc2ff",
+              "surface-tint": "#2640ff",
+              "outline-variant": "#c5c5da",
+              tertiary: "#00473f",
+              "on-error": "#ffffff",
+              "surface-variant": "#e0e2e7",
+              "surface-container-low": "#f1f4f9",
             },
-            "borderRadius": {
-                    "DEFAULT": "0.25rem",
-                    "lg": "0.5rem",
-                    "xl": "0.75rem",
-                    "2xl": "1.5rem",
-                    "full": "9999px"
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              "2xl": "1.5rem",
+              full: "9999px",
             },
-            "spacing": {
-                    "gutter": "24px",
-                    "margin-desktop": "32px",
-                    "stack-sm": "8px",
-                    "stack-lg": "24px",
-                    "stack-md": "16px",
-                    "margin-mobile": "16px",
-                    "base": "8px",
-                    "container-max": "1440px"
+            spacing: {
+              gutter: "24px",
+              "margin-desktop": "32px",
+              "stack-sm": "8px",
+              "stack-lg": "24px",
+              "stack-md": "16px",
+              "margin-mobile": "16px",
+              base: "8px",
+              "container-max": "1440px",
             },
-            "fontFamily": {
-                    "body-md": ["Inter"],
-                    "headline-lg": ["Manrope"],
-                    "display-lg": ["Manrope"],
-                    "body-lg": ["Inter"],
-                    "label-md": ["Inter"],
-                    "label-sm": ["Inter"],
-                    "headline-md": ["Manrope"]
+            fontFamily: {
+              "body-md": ["Inter"],
+              "headline-lg": ["Manrope"],
+              "display-lg": ["Manrope"],
+              "body-lg": ["Inter"],
+              "label-md": ["Inter"],
+              "label-sm": ["Inter"],
+              "headline-md": ["Manrope"],
             },
-            "fontSize": {
-                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
-                    "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "700"}],
-                    "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800"}],
-                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
-                    "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "600"}],
-                    "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "500"}],
-                    "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}]
-            }
+            fontSize: {
+              "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+              "headline-lg": ["32px", { lineHeight: "1.3", fontWeight: "700" }],
+              "display-lg": [
+                "48px",
+                { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "800" },
+              ],
+              "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+              "label-md": [
+                "14px",
+                { lineHeight: "1.2", letterSpacing: "0.01em", fontWeight: "600" },
+              ],
+              "label-sm": ["12px", { lineHeight: "1.2", fontWeight: "500" }],
+              "headline-md": ["24px", { lineHeight: "1.4", fontWeight: "600" }],
+            },
           },
         },
-      }
+      };
     </script>
-<style>
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(228, 231, 236, 0.5);
-            box-shadow: 0px 12px 32px -4px rgba(10, 46, 255, 0.04);
-        }
-        .primary-gradient {
-            background: linear-gradient(135deg, #0A2EFF 0%, #3D73FF 100%);
-            box-shadow: 0 4px 14px 0 rgba(10, 46, 255, 0.3);
-        }
-        .teal-gradient {
-            background: linear-gradient(135deg, #1FD6C1 0%, #34C759 100%);
-        }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        body { background-color: #F5F7FC; }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #E0E2E7;
-            border-radius: 10px;
-        }
+    <style>
+      .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(228, 231, 236, 0.5);
+        box-shadow: 0px 12px 32px -4px rgba(10, 46, 255, 0.04);
+      }
+      .primary-gradient {
+        background: linear-gradient(135deg, #0a2eff 0%, #3d73ff 100%);
+        box-shadow: 0 4px 14px 0 rgba(10, 46, 255, 0.3);
+      }
+      .teal-gradient {
+        background: linear-gradient(135deg, #1fd6c1 0%, #34c759 100%);
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      body {
+        background-color: #f5f7fc;
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #e0e2e7;
+        border-radius: 10px;
+      }
     </style>
 
-<!-- SideNavBar Shell -->
-<aside class="fixed left-0 top-0 h-screen w-64 bg-gradient-to-b from-[#0034b5] to-[#0047ff] z-50 flex flex-col p-gutter shadow-xl text-white">
-<div class="mb-10">
-<div class="flex items-center gap-3">
-<div class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary">
-<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">water_drop</span>
-<span class="material-symbols-outlined absolute text-[12px] text-white" style="font-variation-settings: &quot;FILL&quot; 1;">bolt</span>
-</div>
-<div>
-<h1 class="font-display-lg font-extrabold text-white !text-[20px] leading-tight">Saltwater</h1>
-<p class="text-[11px] text-white/70 font-medium">Electricity Monitoring</p>
-</div>
-</div>
-</div>
-<nav class="flex-1 space-y-2">
-<!-- Dashboard (Active) -->
-<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/15 text-white font-semibold transition-all" href="#">
-<span class="material-symbols-outlined">home</span>
-<span class="font-body-md text-[14px]">Dashboard</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 rounded-xl transition-all" href="#">
-<span class="material-symbols-outlined">monitor_heart</span>
-<span class="font-body-md text-[14px]">Real-Time Monitor</span>
-</a>
-<a class="flex items-center justify-between px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 rounded-xl transition-all" href="#">
-<div class="flex items-center gap-3">
-<span class="material-symbols-outlined">notifications</span>
-<span class="font-body-md text-[14px]">Device Alerts</span>
-</div>
-<span class="bg-primary/50 text-white text-[10px] px-1.5 py-0.5 rounded-full min-w-[20px] text-center">4</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 rounded-xl transition-all" href="#">
-<span class="material-symbols-outlined">description</span>
-<span class="font-body-md text-[14px]">Device Request</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 rounded-xl transition-all" href="#">
-<span class="material-symbols-outlined">bar_chart</span>
-<span class="font-body-md text-[14px]">Historical Data</span>
-</a>
-</nav>
-<div class="mt-auto">
-
-</div>
-</aside>
-<!-- Main Content Area -->
-<main class="ml-64 min-h-screen overflow-y-auto h-screen">
-<!-- TopNavBar Shell -->
-<header class="sticky top-0 z-40 h-20 bg-white border-b border-outline-variant/20 flex items-center w-full shadow-sm">
-<div class="flex items-center justify-between w-full max-w-[1440px] mx-auto px-margin-desktop">
-<div class="flex items-center gap-6">
-<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">menu</span>
-<h2 class="text-headline-md font-bold text-on-surface">Dashboard</h2>
-</div>
-<div class="flex items-center gap-8">
-<div class="flex items-center gap-6">
-<button class="relative p-2 text-on-surface-variant hover:text-primary transition-colors">
-<span class="material-symbols-outlined">notifications</span>
-<span class="absolute top-1 right-1 bg-primary text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-surface-bright">3</span>
-</button>
-<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
-<span class="material-symbols-outlined">calendar_today</span>
-</button>
-</div>
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white shadow-sm">
-<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">person</span>
-</div>
-<div class="text-left hidden md:block">
-<p class="text-label-md font-bold text-on-surface leading-tight">Alex Johnson</p>
-<p class="text-[11px] text-on-surface-variant font-medium">Household User</p>
-</div>
-</div>
-</div>
-</div>
-</header>
-<!-- Scrollable Canvas -->
-<div class="p-margin-desktop max-w-[1440px] mx-auto space-y-stack-lg">
-<!-- Welcome Section -->
-<section class="mb-stack-lg">
-<h3 class="font-headline-lg text-headline-lg text-on-surface">Good Morning, Alex!</h3>
-<p class="text-body-lg text-on-surface-variant mt-1">Here’s what’s happening with your saltwater electricity system today.</p>
-</section>
-<!-- KPI Section -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-<!-- Total Devices -->
-<div class="bg-white rounded-2xl p-6 flex items-center shadow-[0_12_32_4_rgba(10,46,255,0.04)] border border-[#e4e7ec80]">
-<div class="flex-shrink-0 w-16 h-16 rounded-full primary-gradient flex items-center justify-center text-white mr-6 shadow-lg">
-<span class="material-symbols-outlined text-[32px]">router</span>
-</div>
-<div class="flex-1">
-<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Total Devices</p>
-<p class="flex items-center gap-1.5 text-green-600 text-[12px] font-semibold mb-2">
-<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                            Active
-                        </p>
-<h4 class="text-4xl font-extrabold text-on-surface leading-none">1</h4>
-</div>
-<div class="flex items-end gap-1 h-12 ml-4 opacity-60">
-<div class="w-1.5 bg-primary/30 h-1/4 rounded-full"></div>
-<div class="w-1.5 bg-primary/40 h-1/2 rounded-full"></div>
-<div class="w-1.5 bg-primary/50 h-3/4 rounded-full"></div>
-<div class="w-1.5 bg-primary/40 h-2/3 rounded-full"></div>
-<div class="w-1.5 bg-primary h-full rounded-full"></div>
-</div>
-</div>
-<!-- Request Device -->
-<div class="bg-white rounded-2xl p-6 flex items-center shadow-[0_12_32_4_rgba(10,46,255,0.04)] border border-[#e4e7ec80]">
-<div class="flex-shrink-0 w-16 h-16 rounded-full primary-gradient flex items-center justify-center text-white mr-6 shadow-lg">
-<span class="material-symbols-outlined text-[32px]">event_note</span>
-</div>
-<div class="flex-1">
-<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Request Device</p>
-<p class="flex items-center gap-1.5 text-orange-500 text-[12px] font-semibold mb-2">
-<span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
-                            Pending
-                        </p>
-<h4 class="text-4xl font-extrabold text-on-surface leading-none">0</h4>
-</div>
-<div class="flex items-end gap-1 h-12 ml-4 opacity-60">
-<div class="w-1.5 bg-primary/30 h-1/3 rounded-full"></div>
-<div class="w-1.5 bg-primary/40 h-2/3 rounded-full"></div>
-<div class="w-1.5 bg-primary/50 h-1/2 rounded-full"></div>
-<div class="w-1.5 bg-primary/40 h-3/4 rounded-full"></div>
-<div class="w-1.5 bg-primary h-full rounded-full"></div>
-</div>
-</div>
-<!-- Device Health -->
-<div class="bg-white rounded-2xl p-6 flex items-center shadow-[0_12_32_4_rgba(10,46,255,0.04)] border border-[#e4e7ec80]">
-<div class="flex-shrink-0 w-16 h-16 rounded-full primary-gradient flex items-center justify-center text-white mr-6 shadow-lg">
-<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: &quot;FILL&quot; 1;">security</span>
-</div>
-<div class="flex-1">
-<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Device Health</p>
-<h4 class="text-4xl font-extrabold text-on-surface leading-none mb-1">92%</h4>
-<p class="flex items-center gap-1 text-green-600 text-[12px] font-semibold">
-<span class="material-symbols-outlined text-sm">trending_up</span>
-                            + 8%
-                        </p>
-</div>
-<div class="flex items-end gap-1 h-12 ml-4 opacity-60">
-<div class="w-1.5 bg-primary/30 h-1/2 rounded-full"></div>
-<div class="w-1.5 bg-primary/40 h-1/3 rounded-full"></div>
-<div class="w-1.5 bg-primary/50 h-full rounded-full"></div>
-<div class="w-1.5 bg-primary/40 h-3/4 rounded-full"></div>
-<div class="w-1.5 bg-primary h-[90%] rounded-full"></div>
-</div>
-</div>
-</div>
-<!-- Analytics Grid -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
-<!-- Device Performance Chart -->
-<div class="glass-card rounded-2xl p-6 flex flex-col h-[400px]">
-<div class="flex justify-between items-center mb-6">
-<h5 class="text-[12px] font-bold text-on-surface tracking-tight">DEVICE PERFORMANCE</h5>
-<button class="relative flex items-center gap-2 px-3 py-2 border border-outline-variant/30 rounded-lg bg-white shadow-sm cursor-pointer hover:bg-surface-container-low transition-colors">
-  <span class="material-symbols-outlined text-[18px] text-on-surface-variant">calendar_today</span>
-  <span class="text-label-md text-on-surface font-semibold">May 6, 2026</span>
-  <span class="material-symbols-outlined text-[18px] text-on-surface-variant">expand_more</span>
-  <input type="date" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" onchange="this.previousElementSibling.previousElementSibling.textContent = new Date(this.value).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })" placeholder="2026-05-15">
-</button>
-</div>
-<div class="flex-1 relative flex flex-col pt-2">
-<!-- Y-Axis Labels -->
-<div class="absolute left-0 top-0 bottom-12 flex flex-col justify-between text-[11px] text-on-surface-variant/70 font-semibold pr-4 w-8 text-right">
-<span class="">100</span>
-<span class="">75</span>
-<span class="">50</span>
-<span class="">25</span>
-<span class="">0</span>
-</div>
-<!-- Chart Content Container -->
-<div class="ml-10 flex-1 relative flex flex-col">
-<!-- Grid Lines -->
-<div class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-12">
-<div class="border-t border-dotted border-outline-variant/30 w-full"></div>
-<div class="border-t border-dotted border-outline-variant/30 w-full"></div>
-<div class="border-t border-dotted border-outline-variant/30 w-full"></div>
-<div class="border-t border-dotted border-outline-variant/30 w-full"></div>
-<div class="border-t border-solid border-outline-variant/40 w-full"></div>
-</div>
-<!-- The Chart -->
-<div class="absolute inset-0 flex items-end pb-12 px-4 gap-2 justify-between">
-<div class="relative flex-1 flex flex-col items-center h-full group">
-<div class="w-2.5 h-[65%] primary-gradient rounded-t-full mt-auto relative z-10"></div>
-<div class="w-2.5 h-[45%] bg-primary/40 rounded-t-full absolute bottom-0 left-1/2 ml-1 z-0"></div>
-</div>
-<div class="relative flex-1 flex flex-col items-center h-full">
-<div class="w-2.5 h-[20%] primary-gradient rounded-t-full mt-auto"></div>
-</div>
-<div class="relative flex-1 flex flex-col items-center h-full">
-<div class="w-2.5 h-[85%] primary-gradient rounded-t-full mt-auto relative z-10"></div>
-<div class="w-2.5 h-[30%] bg-primary/40 rounded-t-full absolute bottom-0 left-1/2 ml-1 z-0"></div>
-</div>
-<div class="relative flex-1 flex flex-col items-center h-full">
-<div class="w-2.5 h-[55%] primary-gradient rounded-t-full mt-auto"></div>
-</div>
-<div class="relative flex-1 flex flex-col items-center h-full">
-<div class="w-2.5 h-[70%] primary-gradient rounded-t-full mt-auto relative z-10"></div>
-<div class="w-2.5 h-[15%] bg-primary/40 rounded-t-full absolute bottom-0 left-1/2 ml-1 z-0"></div>
-</div>
-<div class="relative flex-1 flex flex-col items-center h-full">
-<div class="w-2.5 h-[80%] primary-gradient rounded-t-full mt-auto relative z-10"></div>
-<div class="w-2.5 h-[35%] bg-primary/40 rounded-t-full absolute bottom-0 left-1/2 ml-1 z-0"></div>
-</div>
-<div class="relative flex-1 flex flex-col items-center h-full">
-<div class="w-2.5 h-[30%] primary-gradient rounded-t-full mt-auto"></div>
-</div>
-<div class="relative flex-1 flex flex-col items-center h-full">
-<div class="w-2.5 h-[80%] primary-gradient rounded-t-full mt-auto relative z-10"></div>
-<div class="w-2.5 h-[15%] bg-primary/40 rounded-t-full absolute bottom-0 left-1/2 ml-1 z-0"></div>
-</div>
-<div class="relative flex-1 flex flex-col items-center h-full">
-<div class="w-2.5 h-[75%] primary-gradient rounded-t-full mt-auto"></div>
-</div>
-<div class="relative flex-1 flex flex-col items-center h-full">
-<div class="w-2.5 h-[75%] primary-gradient rounded-t-full mt-auto relative z-10"></div>
-<div class="w-2.5 h-[40%] bg-primary/40 rounded-t-full absolute bottom-0 left-1/2 ml-1 z-0"></div>
-</div>
-<div class="relative flex-1 flex flex-col items-center h-full">
-<div class="w-2.5 h-[15%] primary-gradient rounded-t-full mt-auto"></div>
-</div>
-<div class="relative flex-1 flex flex-col items-center h-full">
-<div class="w-2.5 h-[65%] primary-gradient rounded-t-full mt-auto relative z-10"></div>
-<div class="w-2.5 h-[55%] bg-primary/40 rounded-t-full absolute bottom-0 left-1/2 ml-1 z-0"></div>
-</div>
-<svg class="absolute inset-0 h-full w-full pointer-events-none pb-12" preserveAspectRatio="none" viewBox="0 0 100 100">
-<path d="M0,45 C10,40 20,20 30,30 C40,40 50,60 60,35 C70,25 85,25 100,55" fill="none" stroke="#2640ff" stroke-width="1.5"></path>
-<path d="M0,75 C15,70 25,60 35,65 C45,75 55,85 65,70 C75,65 85,75 100,85" dasharray="2,2" fill="none" stroke="#1fd6c1" stroke-dasharray="2 2" stroke-width="1.5"></path>
-</svg>
-</div>
-<!-- X-Axis Labels -->
-<div class="absolute bottom-0 left-0 right-0 h-10 flex justify-between items-center text-[10px] text-on-surface-variant font-semibold px-2">
-<span class="">12 AM</span>
-<span class="">3 AM</span>
-<span class="">6 AM</span>
-<span class="">9 AM</span>
-<span class="">12 PM</span>
-<span class="">3 PM</span>
-<span class="">6 PM</span>
-<span class="">9 PM</span>
-<span class="">12 AM</span>
-</div>
-</div>
-</div>
-<!-- Stylized Legend -->
-<div class="flex items-center justify-center gap-6 pt-4 mt-auto">
-<div class="flex items-center gap-2">
-<div class="w-4 h-4 rounded bg-primary flex items-center justify-center text-white text-[10px]">
-<span class="material-symbols-outlined text-[14px]">check</span>
-</div>
-<span class="text-label-sm text-on-surface-variant font-semibold">Voltage (V)</span>
-</div>
-<div class="flex items-center gap-2">
-<div class="w-5 h-0.5 bg-primary"></div>
-<span class="text-label-sm text-on-surface-variant font-semibold">Current (A)</span>
-</div>
-<div class="flex items-center gap-2">
-<div class="flex gap-0.5">
-<div class="w-1 h-0.5 bg-[#1fd6c1]"></div>
-<div class="w-1 h-0.5 bg-[#1fd6c1]"></div>
-<div class="w-1 h-0.5 bg-[#1fd6c1]"></div>
-</div>
-<span class="text-label-sm text-on-surface-variant font-semibold">Salinity (ppt)</span>
-</div>
-</div>
-</div>
-<!-- System Overview Donut Chart -->
-<div class="glass-card rounded-2xl p-6 flex flex-col h-[400px]">
-<h5 class="font-headline-md !text-[18px] font-bold text-on-surface uppercase tracking-tight mb-6">System Overview</h5>
-<div class="flex-1 flex items-center justify-center relative">
-<svg class="w-64 h-64 -rotate-90">
-<circle cx="128" cy="128" fill="transparent" r="100" stroke="#E4E7EC" stroke-width="16"></circle>
-<circle cx="128" cy="128" fill="transparent" r="100" stroke="url(#blueGrad)" stroke-dasharray="628" stroke-dashoffset="150" stroke-linecap="round" stroke-width="20"></circle>
-<defs>
-<linearGradient id="blueGrad" x1="0%" x2="100%" y1="0%" y2="0%">
-<stop offset="0%" style="stop-color:#0A2EFF;stop-opacity:1"></stop>
-<stop offset="100%" style="stop-color:#3D73FF;stop-opacity:1"></stop>
-</linearGradient>
-</defs>
-</svg>
-<div class="absolute flex flex-col items-center">
-<div class="w-12 h-12 rounded-full primary-gradient flex items-center justify-center text-white mb-2 shadow-lg">
-<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">bolt</span>
-</div>
-<span class="text-headline-md font-extrabold text-on-surface">76%</span>
-<span class="text-label-sm text-on-surface-variant">Usage</span>
-</div>
-</div>
-<div class="grid grid-cols-3 gap-4 pt-6 border-t border-outline-variant/20">
-<div class="text-center">
-<p class="text-[10px] text-on-surface-variant uppercase font-bold mb-1">Efficiency</p>
-<p class="text-body-md font-bold text-green-600">54%</p>
-</div>
-<div class="text-center border-x border-outline-variant/20">
-<p class="text-[10px] text-on-surface-variant uppercase font-bold mb-1">System Load</p>
-<p class="text-body-md font-bold text-primary">24%</p>
-</div>
-<div class="text-center">
-<p class="text-[10px] text-on-surface-variant uppercase font-bold mb-1">Active</p>
-<p class="text-body-md font-bold text-on-surface">1/1</p>
-</div>
-</div>
-</div>
-</div>
-<!-- Bottom Widgets -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-<!-- Widget 1: Device Status Card -->
-<div class="glass-card rounded-2xl p-6 flex flex-col hover:border-primary/30 transition-colors cursor-pointer group">
-<div class="flex justify-between items-center mb-6">
-<span class="text-[14px] font-bold text-on-surface tracking-tight uppercase">DEVICE - 0001</span>
-<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-600 text-[12px] font-bold">
-<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-        Active
-    </div>
-</div>
-<div class="space-y-3 mb-6">
-<div class="flex items-center justify-between p-3 rounded-2xl border border-outline-variant/10 bg-surface-bright/50">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined text-[20px]">bolt</span>
-</div>
-<span class="text-label-md text-on-surface-variant">Voltage</span>
-</div>
-<div class="flex items-center gap-4">
-<span class="font-bold text-on-surface">230 V</span>
-<span class="text-[12px] font-bold text-green-600">+ Normal</span>
-</div>
-</div>
-<div class="flex items-center justify-between p-3 rounded-2xl border border-outline-variant/10 bg-surface-bright/50">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">stars</span>
-</div>
-<span class="text-label-md text-on-surface-variant">Current</span>
-</div>
-<div class="flex items-center gap-4">
-<span class="font-bold text-on-surface">2.15 A</span>
-<span class="text-[12px] font-bold text-green-600">+ Normal</span>
-</div>
-</div>
-<div class="flex items-center justify-between p-3 rounded-2xl border border-outline-variant/10 bg-surface-bright/50">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined text-[20px]">water_drop</span>
-</div>
-<span class="text-label-md text-on-surface-variant">Salinity</span>
-</div>
-<div class="flex items-center gap-4">
-<span class="font-bold text-on-surface">35 ppt</span>
-<span class="text-[12px] font-bold text-green-600">+ Normal</span>
-</div>
-</div>
-</div>
-<button class="w-full py-3.5 primary-gradient rounded-xl text-label-md font-bold text-white shadow-lg mt-auto transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:brightness-110">View Details</button>
-</div>
-<!-- Widget 2: System Logs -->
-<div class="glass-card rounded-2xl p-6 flex flex-col h-[400px]">
-<div class="flex justify-between items-center mb-6">
-<h5 class="text-[12px] font-bold text-[#3C476F] uppercase tracking-tight">SYSTEM LOGS</h5>
-<button class="text-primary text-label-sm font-bold px-3 py-1 border border-outline-variant/30 rounded-lg bg-white shadow-sm hover:bg-surface-container-low transition-colors">View All</button>
-</div>
-<div class="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-<div class="space-y-0">
-<!-- Item 1 -->
-<div class="flex items-center gap-4 py-4 border-b border-dotted border-outline-variant/30">
-<div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
-<span class="material-symbols-outlined text-green-500 text-[20px]">power_settings_new</span>
-</div>
-<div>
-<p class="text-label-md font-bold text-[#3C476F]">Device-0001 is turned ON</p>
-<p class="text-[12px] text-on-surface-variant font-medium">May 25, 2025 • 11:19 AM</p>
-</div>
-</div>
-<!-- Item 2 -->
-<div class="flex items-center gap-4 py-4 border-b border-dotted border-outline-variant/30">
-<div class="w-10 h-10 rounded-full bg-error/5 flex items-center justify-center flex-shrink-0">
-<span class="material-symbols-outlined text-error text-[20px]">power_settings_new</span>
-</div>
-<div>
-<p class="text-label-md font-bold text-[#3C476F]">Device-0001 is turned OFF</p>
-<p class="text-[12px] text-on-surface-variant font-medium">May 25, 2025 • 12:17 PM</p>
-</div>
-</div>
-<!-- Item 3 -->
-<div class="flex items-center gap-4 py-4 border-b border-dotted border-outline-variant/30">
-<div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
-<span class="material-symbols-outlined text-green-500 text-[20px]">power_settings_new</span>
-</div>
-<div>
-<p class="text-label-md font-bold text-[#3C476F]">Device-0001 is turned ON</p>
-<p class="text-[12px] text-on-surface-variant font-medium">May 25, 2025 • 11:19 AM</p>
-</div>
-</div>
-<!-- Item 4 -->
-<div class="flex items-center gap-4 py-4">
-<div class="w-10 h-10 rounded-full bg-error/5 flex items-center justify-center flex-shrink-0">
-<span class="material-symbols-outlined text-error text-[20px]">power_settings_new</span>
-</div>
-<div>
-<p class="text-label-md font-bold text-[#3C476F]">Device-0001 is turned OFF</p>
-<p class="text-[12px] text-on-surface-variant font-medium">May 25, 2025 • 12:17 PM</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Widget 3: Recent Alerts -->
-<div class="glass-card rounded-2xl p-6 flex flex-col h-[400px]"><div class="flex justify-between items-center mb-6">
-  <h5 class="text-[12px] font-bold text-on-surface tracking-tight uppercase">RECENT ALERTS</h5>
-  
-</div>
-<div class="flex-1 space-y-0">
-  <!-- Item 1: High Salinity -->
-  <div class="flex items-center gap-4 py-4 border-b border-dashed border-outline-variant/20">
-    <div class="w-12 h-12 rounded-full bg-[#FFF9E7] flex items-center justify-center flex-shrink-0">
-      <span class="material-symbols-outlined text-[#FDB022] text-[24px]" style="font-variation-settings: &quot;FILL&quot; 1;">warning</span>
-    </div>
-    <div class="flex-1 min-w-0">
-      <p class="text-[14px] font-semibold text-on-surface leading-tight mb-1">High Salinity Detected</p>
-      <p class="text-[11px] text-on-surface-variant font-medium truncate">Device-0001 • May 25, 2025 • 10:45 AM</p>
-    </div>
-  </div>
-  <!-- Item 2: System Maintenance -->
-  <div class="flex items-center gap-4 py-4 border-b border-dashed border-outline-variant/20">
-    <div class="w-12 h-12 rounded-full bg-[#EBF1FF] flex items-center justify-center flex-shrink-0">
-      <span class="material-symbols-outlined text-[#0A2EFF] text-[24px]" style="font-variation-settings: &quot;FILL&quot; 0;">info</span>
-    </div>
-    <div class="flex-1 min-w-0">
-      <p class="text-[14px] font-semibold text-on-surface leading-tight mb-1">System Maintenance Reminder</p>
-      <p class="text-[11px] text-on-surface-variant font-medium truncate">Device-0001 • May 24, 2025 • 09:15 AM</p>
-    </div>
-  </div>
-  <!-- Item 3: System Back to Normal -->
-  <div class="flex items-center gap-4 py-4">
-    <div class="w-12 h-12 rounded-full bg-[#EBFDF1] flex items-center justify-center flex-shrink-0">
-      <span class="material-symbols-outlined text-[#12B76A] text-[24px]" style="font-variation-settings: &quot;FILL&quot; 0;">check_circle</span>
-    </div>
-    <div class="flex-1 min-w-0">
-      <p class="text-[14px] font-semibold text-on-surface leading-tight mb-1">System Back to Normal</p>
-      <p class="text-[11px] text-on-surface-variant font-medium truncate">Device-0001 • May 23, 2025 • 04:30 PM</p>
-    </div>
-  </div>
-</div>
-<div class="mt-auto pt-4">
-  <a class="flex items-center gap-2 text-primary font-bold text-[14px] hover:underline" href="#">
-    See All Alerts
-    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-  </a>
-</div></div>
-</div>
-</div>
-</main>
-<!-- Contextual FAB (Only on Dashboard) -->
-
-
-
-
-
-</body></html>
+    <!-- SideNavBar Shell -->
+    <aside
+      class="fixed left-0 top-0 h-screen w-64 bg-gradient-to-b from-[#0034b5] to-[#0047ff] z-50 flex flex-col p-gutter shadow-xl text-white"
+    >
+      <div class="mb-10">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary"
+          >
+            <span
+              class="material-symbols-outlined"
+              style="font-variation-settings: &quot;FILL&quot; 1"
+              >water_drop</span
+            >
+            <span
+              class="material-symbols-outlined absolute text-[12px] text-white"
+              style="font-variation-settings: &quot;FILL&quot; 1"
+              >bolt</span
+            >
+          </div>
+          <div>
+            <h1 class="font-display-lg font-extrabold text-white !text-[20px] leading-tight">
+              Saltwater
+            </h1>
+            <p class="text-[11px] text-white/70 font-medium">Electricity Monitoring</p>
+          </div>
+        </div>
+      </div>
+      <nav class="flex-1 space-y-2">
+        <!-- Dashboard (Active) -->
+        <a
+          class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/15 text-white font-semibold transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined">home</span>
+          <span class="font-body-md text-[14px]">Dashboard</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 rounded-xl transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined">monitor_heart</span>
+          <span class="font-body-md text-[14px]">Real-Time Monitor</span>
+        </a>
+        <a
+          class="flex items-center justify-between px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 rounded-xl transition-all"
+          href="#"
+        >
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined">notifications</span>
+            <span class="font-body-md text-[14px]">Device Alerts</span>
+          </div>
+          <span
+            class="bg-primary/50 text-white text-[10px] px-1.5 py-0.5 rounded-full min-w-[20px] text-center"
+            >4</span
+          >
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 rounded-xl transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined">description</span>
+          <span class="font-body-md text-[14px]">Device Request</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 rounded-xl transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined">bar_chart</span>
+          <span class="font-body-md text-[14px]">Historical Data</span>
+        </a>
+      </nav>
+      <div class="mt-auto"></div>
+    </aside>
+    <!-- Main Content Area -->
+    <main class="ml-64 min-h-screen overflow-y-auto h-screen">
+      <!-- TopNavBar Shell -->
+      <header
+        class="sticky top-0 z-40 h-20 bg-white border-b border-outline-variant/20 flex items-center w-full shadow-sm"
+      >
+        <div
+          class="flex items-center justify-between w-full max-w-[1440px] mx-auto px-margin-desktop"
+        >
+          <div class="flex items-center gap-6">
+            <span class="material-symbols-outlined text-on-surface-variant cursor-pointer"
+              >menu</span
+            >
+            <h2 class="text-headline-md font-bold text-on-surface">Dashboard</h2>
+          </div>
+          <div class="flex items-center gap-8">
+            <div class="flex items-center gap-6">
+              <button
+                class="relative p-2 text-on-surface-variant hover:text-primary transition-colors"
+              >
+                <span class="material-symbols-outlined">notifications</span>
+                <span
+                  class="absolute top-1 right-1 bg-primary text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-surface-bright"
+                  >3</span
+                >
+              </button>
+              <button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+                <span class="material-symbols-outlined">calendar_today</span>
+              </button>
+            </div>
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white shadow-sm"
+              >
+                <span
+                  class="material-symbols-outlined"
+                  style="font-variation-settings: &quot;FILL&quot; 1"
+                  >person</span
+                >
+              </div>
+              <div class="text-left hidden md:block">
+                <p class="text-label-md font-bold text-on-surface leading-tight">Alex Johnson</p>
+                <p class="text-[11px] text-on-surface-variant font-medium">Household User</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- Scrollable Canvas -->
+      <div class="p-margin-desktop max-w-[1440px] mx-auto space-y-stack-lg">
+        <!-- Welcome Section -->
+        <section class="mb-stack-lg">
+          <h3 class="font-headline-lg text-headline-lg text-on-surface">Good Morning, Alex!</h3>
+          <p class="text-body-lg text-on-surface-variant mt-1">
+            Here’s what’s happening with your saltwater electricity system today.
+          </p>
+        </section>
+        <!-- KPI Section -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+          <!-- Total Devices -->
+          <div
+            class="bg-white rounded-2xl p-6 flex items-center shadow-[0_12_32_4_rgba(10,46,255,0.04)] border border-[#e4e7ec80]"
+          >
+            <div
+              class="flex-shrink-0 w-16 h-16 rounded-full primary-gradient flex items-center justify-center text-white mr-6 shadow-lg"
+            >
+              <span class="material-symbols-outlined text-[32px]">router</span>
+            </div>
+            <div class="flex-1">
+              <p
+                class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1"
+              >
+                Total Devices
+              </p>
+              <p class="flex items-center gap-1.5 text-green-600 text-[12px] font-semibold mb-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                Active
+              </p>
+              <h4 class="text-4xl font-extrabold text-on-surface leading-none">1</h4>
+            </div>
+            <div class="flex items-end gap-1 h-12 ml-4 opacity-60">
+              <div class="w-1.5 bg-primary/30 h-1/4 rounded-full"></div>
+              <div class="w-1.5 bg-primary/40 h-1/2 rounded-full"></div>
+              <div class="w-1.5 bg-primary/50 h-3/4 rounded-full"></div>
+              <div class="w-1.5 bg-primary/40 h-2/3 rounded-full"></div>
+              <div class="w-1.5 bg-primary h-full rounded-full"></div>
+            </div>
+          </div>
+          <!-- Request Device -->
+          <div
+            class="bg-white rounded-2xl p-6 flex items-center shadow-[0_12_32_4_rgba(10,46,255,0.04)] border border-[#e4e7ec80]"
+          >
+            <div
+              class="flex-shrink-0 w-16 h-16 rounded-full primary-gradient flex items-center justify-center text-white mr-6 shadow-lg"
+            >
+              <span class="material-symbols-outlined text-[32px]">event_note</span>
+            </div>
+            <div class="flex-1">
+              <p
+                class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1"
+              >
+                Request Device
+              </p>
+              <p class="flex items-center gap-1.5 text-orange-500 text-[12px] font-semibold mb-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
+                Pending
+              </p>
+              <h4 class="text-4xl font-extrabold text-on-surface leading-none">0</h4>
+            </div>
+            <div class="flex items-end gap-1 h-12 ml-4 opacity-60">
+              <div class="w-1.5 bg-primary/30 h-1/3 rounded-full"></div>
+              <div class="w-1.5 bg-primary/40 h-2/3 rounded-full"></div>
+              <div class="w-1.5 bg-primary/50 h-1/2 rounded-full"></div>
+              <div class="w-1.5 bg-primary/40 h-3/4 rounded-full"></div>
+              <div class="w-1.5 bg-primary h-full rounded-full"></div>
+            </div>
+          </div>
+          <!-- Device Health -->
+          <div
+            class="bg-white rounded-2xl p-6 flex items-center shadow-[0_12_32_4_rgba(10,46,255,0.04)] border border-[#e4e7ec80]"
+          >
+            <div
+              class="flex-shrink-0 w-16 h-16 rounded-full primary-gradient flex items-center justify-center text-white mr-6 shadow-lg"
+            >
+              <span
+                class="material-symbols-outlined text-[32px]"
+                style="font-variation-settings: &quot;FILL&quot; 1"
+                >security</span
+              >
+            </div>
+            <div class="flex-1">
+              <p
+                class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1"
+              >
+                Device Health
+              </p>
+              <h4 class="text-4xl font-extrabold text-on-surface leading-none mb-1">92%</h4>
+              <p class="flex items-center gap-1 text-green-600 text-[12px] font-semibold">
+                <span class="material-symbols-outlined text-sm">trending_up</span>
+                + 8%
+              </p>
+            </div>
+            <div class="flex items-end gap-1 h-12 ml-4 opacity-60">
+              <div class="w-1.5 bg-primary/30 h-1/2 rounded-full"></div>
+              <div class="w-1.5 bg-primary/40 h-1/3 rounded-full"></div>
+              <div class="w-1.5 bg-primary/50 h-full rounded-full"></div>
+              <div class="w-1.5 bg-primary/40 h-3/4 rounded-full"></div>
+              <div class="w-1.5 bg-primary h-[90%] rounded-full"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Analytics Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+          <!-- Device Performance Chart -->
+          <div class="glass-card rounded-2xl p-6 flex flex-col h-[400px]">
+            <div class="flex justify-between items-center mb-6">
+              <h5 class="text-[12px] font-bold text-on-surface tracking-tight">
+                DEVICE PERFORMANCE
+              </h5>
+              <button
+                class="relative flex items-center gap-2 px-3 py-2 border border-outline-variant/30 rounded-lg bg-white shadow-sm cursor-pointer hover:bg-surface-container-low transition-colors"
+              >
+                <span class="material-symbols-outlined text-[18px] text-on-surface-variant"
+                  >calendar_today</span
+                >
+                <span class="text-label-md text-on-surface font-semibold">May 6, 2026</span>
+                <span class="material-symbols-outlined text-[18px] text-on-surface-variant"
+                  >expand_more</span
+                >
+                <input
+                  type="date"
+                  class="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                  onchange="
+                    this.previousElementSibling.previousElementSibling.textContent = new Date(
+                      this.value
+                    ).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })
+                  "
+                  placeholder="2026-05-15"
+                />
+              </button>
+            </div>
+            <div class="flex-1 relative flex flex-col pt-2">
+              <!-- Y-Axis Labels -->
+              <div
+                class="absolute left-0 top-0 bottom-12 flex flex-col justify-between text-[11px] text-on-surface-variant/70 font-semibold pr-4 w-8 text-right"
+              >
+                <span class="">100</span>
+                <span class="">75</span>
+                <span class="">50</span>
+                <span class="">25</span>
+                <span class="">0</span>
+              </div>
+              <!-- Chart Content Container -->
+              <div class="ml-10 flex-1 relative flex flex-col">
+                <!-- Grid Lines -->
+                <div
+                  class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-12"
+                >
+                  <div class="border-t border-dotted border-outline-variant/30 w-full"></div>
+                  <div class="border-t border-dotted border-outline-variant/30 w-full"></div>
+                  <div class="border-t border-dotted border-outline-variant/30 w-full"></div>
+                  <div class="border-t border-dotted border-outline-variant/30 w-full"></div>
+                  <div class="border-t border-solid border-outline-variant/40 w-full"></div>
+                </div>
+                <!-- The Chart -->
+                <div class="absolute inset-0 flex items-end pb-12 px-4 gap-2 justify-between">
+                  <div class="relative flex-1 flex flex-col items-center h-full group">
+                    <div
+                      class="w-2.5 h-[65%] primary-gradient rounded-t-full mt-auto relative z-10"
+                    ></div>
+                    <div
+                      class="w-2.5 h-[45%] bg-primary/40 rounded-t-full absolute bottom-0 left-1/2 ml-1 z-0"
+                    ></div>
+                  </div>
+                  <div class="relative flex-1 flex flex-col items-center h-full">
+                    <div class="w-2.5 h-[20%] primary-gradient rounded-t-full mt-auto"></div>
+                  </div>
+                  <div class="relative flex-1 flex flex-col items-center h-full">
+                    <div
+                      class="w-2.5 h-[85%] primary-gradient rounded-t-full mt-auto relative z-10"
+                    ></div>
+                    <div
+                      class="w-2.5 h-[30%] bg-primary/40 rounded-t-full absolute bottom-0 left-1/2 ml-1 z-0"
+                    ></div>
+                  </div>
+                  <div class="relative flex-1 flex flex-col items-center h-full">
+                    <div class="w-2.5 h-[55%] primary-gradient rounded-t-full mt-auto"></div>
+                  </div>
+                  <div class="relative flex-1 flex flex-col items-center h-full">
+                    <div
+                      class="w-2.5 h-[70%] primary-gradient rounded-t-full mt-auto relative z-10"
+                    ></div>
+                    <div
+                      class="w-2.5 h-[15%] bg-primary/40 rounded-t-full absolute bottom-0 left-1/2 ml-1 z-0"
+                    ></div>
+                  </div>
+                  <div class="relative flex-1 flex flex-col items-center h-full">
+                    <div
+                      class="w-2.5 h-[80%] primary-gradient rounded-t-full mt-auto relative z-10"
+                    ></div>
+                    <div
+                      class="w-2.5 h-[35%] bg-primary/40 rounded-t-full absolute bottom-0 left-1/2 ml-1 z-0"
+                    ></div>
+                  </div>
+                  <div class="relative flex-1 flex flex-col items-center h-full">
+                    <div class="w-2.5 h-[30%] primary-gradient rounded-t-full mt-auto"></div>
+                  </div>
+                  <div class="relative flex-1 flex flex-col items-center h-full">
+                    <div
+                      class="w-2.5 h-[80%] primary-gradient rounded-t-full mt-auto relative z-10"
+                    ></div>
+                    <div
+                      class="w-2.5 h-[15%] bg-primary/40 rounded-t-full absolute bottom-0 left-1/2 ml-1 z-0"
+                    ></div>
+                  </div>
+                  <div class="relative flex-1 flex flex-col items-center h-full">
+                    <div class="w-2.5 h-[75%] primary-gradient rounded-t-full mt-auto"></div>
+                  </div>
+                  <div class="relative flex-1 flex flex-col items-center h-full">
+                    <div
+                      class="w-2.5 h-[75%] primary-gradient rounded-t-full mt-auto relative z-10"
+                    ></div>
+                    <div
+                      class="w-2.5 h-[40%] bg-primary/40 rounded-t-full absolute bottom-0 left-1/2 ml-1 z-0"
+                    ></div>
+                  </div>
+                  <div class="relative flex-1 flex flex-col items-center h-full">
+                    <div class="w-2.5 h-[15%] primary-gradient rounded-t-full mt-auto"></div>
+                  </div>
+                  <div class="relative flex-1 flex flex-col items-center h-full">
+                    <div
+                      class="w-2.5 h-[65%] primary-gradient rounded-t-full mt-auto relative z-10"
+                    ></div>
+                    <div
+                      class="w-2.5 h-[55%] bg-primary/40 rounded-t-full absolute bottom-0 left-1/2 ml-1 z-0"
+                    ></div>
+                  </div>
+                  <svg
+                    class="absolute inset-0 h-full w-full pointer-events-none pb-12"
+                    preserveAspectRatio="none"
+                    viewBox="0 0 100 100"
+                  >
+                    <path
+                      d="M0,45 C10,40 20,20 30,30 C40,40 50,60 60,35 C70,25 85,25 100,55"
+                      fill="none"
+                      stroke="#2640ff"
+                      stroke-width="1.5"
+                    ></path>
+                    <path
+                      d="M0,75 C15,70 25,60 35,65 C45,75 55,85 65,70 C75,65 85,75 100,85"
+                      dasharray="2,2"
+                      fill="none"
+                      stroke="#1fd6c1"
+                      stroke-dasharray="2 2"
+                      stroke-width="1.5"
+                    ></path>
+                  </svg>
+                </div>
+                <!-- X-Axis Labels -->
+                <div
+                  class="absolute bottom-0 left-0 right-0 h-10 flex justify-between items-center text-[10px] text-on-surface-variant font-semibold px-2"
+                >
+                  <span class="">12 AM</span>
+                  <span class="">3 AM</span>
+                  <span class="">6 AM</span>
+                  <span class="">9 AM</span>
+                  <span class="">12 PM</span>
+                  <span class="">3 PM</span>
+                  <span class="">6 PM</span>
+                  <span class="">9 PM</span>
+                  <span class="">12 AM</span>
+                </div>
+              </div>
+            </div>
+            <!-- Stylized Legend -->
+            <div class="flex items-center justify-center gap-6 pt-4 mt-auto">
+              <div class="flex items-center gap-2">
+                <div
+                  class="w-4 h-4 rounded bg-primary flex items-center justify-center text-white text-[10px]"
+                >
+                  <span class="material-symbols-outlined text-[14px]">check</span>
+                </div>
+                <span class="text-label-sm text-on-surface-variant font-semibold">Voltage (V)</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-5 h-0.5 bg-primary"></div>
+                <span class="text-label-sm text-on-surface-variant font-semibold">Current (A)</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="flex gap-0.5">
+                  <div class="w-1 h-0.5 bg-[#1fd6c1]"></div>
+                  <div class="w-1 h-0.5 bg-[#1fd6c1]"></div>
+                  <div class="w-1 h-0.5 bg-[#1fd6c1]"></div>
+                </div>
+                <span class="text-label-sm text-on-surface-variant font-semibold"
+                  >Salinity (ppt)</span
+                >
+              </div>
+            </div>
+          </div>
+          <!-- System Overview Donut Chart -->
+          <div class="glass-card rounded-2xl p-6 flex flex-col h-[400px]">
+            <h5
+              class="font-headline-md !text-[18px] font-bold text-on-surface uppercase tracking-tight mb-6"
+            >
+              System Overview
+            </h5>
+            <div class="flex-1 flex items-center justify-center relative">
+              <svg class="w-64 h-64 -rotate-90">
+                <circle
+                  cx="128"
+                  cy="128"
+                  fill="transparent"
+                  r="100"
+                  stroke="#E4E7EC"
+                  stroke-width="16"
+                ></circle>
+                <circle
+                  cx="128"
+                  cy="128"
+                  fill="transparent"
+                  r="100"
+                  stroke="url(#blueGrad)"
+                  stroke-dasharray="628"
+                  stroke-dashoffset="150"
+                  stroke-linecap="round"
+                  stroke-width="20"
+                ></circle>
+                <defs>
+                  <linearGradient id="blueGrad" x1="0%" x2="100%" y1="0%" y2="0%">
+                    <stop offset="0%" style="stop-color: #0a2eff; stop-opacity: 1"></stop>
+                    <stop offset="100%" style="stop-color: #3d73ff; stop-opacity: 1"></stop>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div class="absolute flex flex-col items-center">
+                <div
+                  class="w-12 h-12 rounded-full primary-gradient flex items-center justify-center text-white mb-2 shadow-lg"
+                >
+                  <span
+                    class="material-symbols-outlined"
+                    style="font-variation-settings: &quot;FILL&quot; 1"
+                    >bolt</span
+                  >
+                </div>
+                <span class="text-headline-md font-extrabold text-on-surface">76%</span>
+                <span class="text-label-sm text-on-surface-variant">Usage</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-3 gap-4 pt-6 border-t border-outline-variant/20">
+              <div class="text-center">
+                <p class="text-[10px] text-on-surface-variant uppercase font-bold mb-1">
+                  Efficiency
+                </p>
+                <p class="text-body-md font-bold text-green-600">54%</p>
+              </div>
+              <div class="text-center border-x border-outline-variant/20">
+                <p class="text-[10px] text-on-surface-variant uppercase font-bold mb-1">
+                  System Load
+                </p>
+                <p class="text-body-md font-bold text-primary">24%</p>
+              </div>
+              <div class="text-center">
+                <p class="text-[10px] text-on-surface-variant uppercase font-bold mb-1">Active</p>
+                <p class="text-body-md font-bold text-on-surface">1/1</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Bottom Widgets -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+          <!-- Widget 1: Device Status Card -->
+          <div
+            class="glass-card rounded-2xl p-6 flex flex-col hover:border-primary/30 transition-colors cursor-pointer group"
+          >
+            <div class="flex justify-between items-center mb-6">
+              <span class="text-[14px] font-bold text-on-surface tracking-tight uppercase"
+                >DEVICE - 0001</span
+              >
+              <div
+                class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-600 text-[12px] font-bold"
+              >
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                Active
+              </div>
+            </div>
+            <div class="space-y-3 mb-6">
+              <div
+                class="flex items-center justify-between p-3 rounded-2xl border border-outline-variant/10 bg-surface-bright/50"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary"
+                  >
+                    <span class="material-symbols-outlined text-[20px]">bolt</span>
+                  </div>
+                  <span class="text-label-md text-on-surface-variant">Voltage</span>
+                </div>
+                <div class="flex items-center gap-4">
+                  <span class="font-bold text-on-surface">230 V</span>
+                  <span class="text-[12px] font-bold text-green-600">+ Normal</span>
+                </div>
+              </div>
+              <div
+                class="flex items-center justify-between p-3 rounded-2xl border border-outline-variant/10 bg-surface-bright/50"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[20px]"
+                      style="font-variation-settings: &quot;FILL&quot; 1"
+                      >stars</span
+                    >
+                  </div>
+                  <span class="text-label-md text-on-surface-variant">Current</span>
+                </div>
+                <div class="flex items-center gap-4">
+                  <span class="font-bold text-on-surface">2.15 A</span>
+                  <span class="text-[12px] font-bold text-green-600">+ Normal</span>
+                </div>
+              </div>
+              <div
+                class="flex items-center justify-between p-3 rounded-2xl border border-outline-variant/10 bg-surface-bright/50"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary"
+                  >
+                    <span class="material-symbols-outlined text-[20px]">water_drop</span>
+                  </div>
+                  <span class="text-label-md text-on-surface-variant">Salinity</span>
+                </div>
+                <div class="flex items-center gap-4">
+                  <span class="font-bold text-on-surface">35 ppt</span>
+                  <span class="text-[12px] font-bold text-green-600">+ Normal</span>
+                </div>
+              </div>
+            </div>
+            <button
+              class="w-full py-3.5 primary-gradient rounded-xl text-label-md font-bold text-white shadow-lg mt-auto transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:brightness-110"
+            >
+              View Details
+            </button>
+          </div>
+          <!-- Widget 2: System Logs -->
+          <div class="glass-card rounded-2xl p-6 flex flex-col h-[400px]">
+            <div class="flex justify-between items-center mb-6">
+              <h5 class="text-[12px] font-bold text-[#3C476F] uppercase tracking-tight">
+                SYSTEM LOGS
+              </h5>
+              <button
+                class="text-primary text-label-sm font-bold px-3 py-1 border border-outline-variant/30 rounded-lg bg-white shadow-sm hover:bg-surface-container-low transition-colors"
+              >
+                View All
+              </button>
+            </div>
+            <div class="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+              <div class="space-y-0">
+                <!-- Item 1 -->
+                <div
+                  class="flex items-center gap-4 py-4 border-b border-dotted border-outline-variant/30"
+                >
+                  <div
+                    class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0"
+                  >
+                    <span class="material-symbols-outlined text-green-500 text-[20px]"
+                      >power_settings_new</span
+                    >
+                  </div>
+                  <div>
+                    <p class="text-label-md font-bold text-[#3C476F]">Device-0001 is turned ON</p>
+                    <p class="text-[12px] text-on-surface-variant font-medium">
+                      May 25, 2025 • 11:19 AM
+                    </p>
+                  </div>
+                </div>
+                <!-- Item 2 -->
+                <div
+                  class="flex items-center gap-4 py-4 border-b border-dotted border-outline-variant/30"
+                >
+                  <div
+                    class="w-10 h-10 rounded-full bg-error/5 flex items-center justify-center flex-shrink-0"
+                  >
+                    <span class="material-symbols-outlined text-error text-[20px]"
+                      >power_settings_new</span
+                    >
+                  </div>
+                  <div>
+                    <p class="text-label-md font-bold text-[#3C476F]">Device-0001 is turned OFF</p>
+                    <p class="text-[12px] text-on-surface-variant font-medium">
+                      May 25, 2025 • 12:17 PM
+                    </p>
+                  </div>
+                </div>
+                <!-- Item 3 -->
+                <div
+                  class="flex items-center gap-4 py-4 border-b border-dotted border-outline-variant/30"
+                >
+                  <div
+                    class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0"
+                  >
+                    <span class="material-symbols-outlined text-green-500 text-[20px]"
+                      >power_settings_new</span
+                    >
+                  </div>
+                  <div>
+                    <p class="text-label-md font-bold text-[#3C476F]">Device-0001 is turned ON</p>
+                    <p class="text-[12px] text-on-surface-variant font-medium">
+                      May 25, 2025 • 11:19 AM
+                    </p>
+                  </div>
+                </div>
+                <!-- Item 4 -->
+                <div class="flex items-center gap-4 py-4">
+                  <div
+                    class="w-10 h-10 rounded-full bg-error/5 flex items-center justify-center flex-shrink-0"
+                  >
+                    <span class="material-symbols-outlined text-error text-[20px]"
+                      >power_settings_new</span
+                    >
+                  </div>
+                  <div>
+                    <p class="text-label-md font-bold text-[#3C476F]">Device-0001 is turned OFF</p>
+                    <p class="text-[12px] text-on-surface-variant font-medium">
+                      May 25, 2025 • 12:17 PM
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Widget 3: Recent Alerts -->
+          <div class="glass-card rounded-2xl p-6 flex flex-col h-[400px]">
+            <div class="flex justify-between items-center mb-6">
+              <h5 class="text-[12px] font-bold text-on-surface tracking-tight uppercase">
+                RECENT ALERTS
+              </h5>
+            </div>
+            <div class="flex-1 space-y-0">
+              <!-- Item 1: High Salinity -->
+              <div
+                class="flex items-center gap-4 py-4 border-b border-dashed border-outline-variant/20"
+              >
+                <div
+                  class="w-12 h-12 rounded-full bg-[#FFF9E7] flex items-center justify-center flex-shrink-0"
+                >
+                  <span
+                    class="material-symbols-outlined text-[#FDB022] text-[24px]"
+                    style="font-variation-settings: &quot;FILL&quot; 1"
+                    >warning</span
+                  >
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-[14px] font-semibold text-on-surface leading-tight mb-1">
+                    High Salinity Detected
+                  </p>
+                  <p class="text-[11px] text-on-surface-variant font-medium truncate">
+                    Device-0001 • May 25, 2025 • 10:45 AM
+                  </p>
+                </div>
+              </div>
+              <!-- Item 2: System Maintenance -->
+              <div
+                class="flex items-center gap-4 py-4 border-b border-dashed border-outline-variant/20"
+              >
+                <div
+                  class="w-12 h-12 rounded-full bg-[#EBF1FF] flex items-center justify-center flex-shrink-0"
+                >
+                  <span
+                    class="material-symbols-outlined text-[#0A2EFF] text-[24px]"
+                    style="font-variation-settings: &quot;FILL&quot; 0"
+                    >info</span
+                  >
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-[14px] font-semibold text-on-surface leading-tight mb-1">
+                    System Maintenance Reminder
+                  </p>
+                  <p class="text-[11px] text-on-surface-variant font-medium truncate">
+                    Device-0001 • May 24, 2025 • 09:15 AM
+                  </p>
+                </div>
+              </div>
+              <!-- Item 3: System Back to Normal -->
+              <div class="flex items-center gap-4 py-4">
+                <div
+                  class="w-12 h-12 rounded-full bg-[#EBFDF1] flex items-center justify-center flex-shrink-0"
+                >
+                  <span
+                    class="material-symbols-outlined text-[#12B76A] text-[24px]"
+                    style="font-variation-settings: &quot;FILL&quot; 0"
+                    >check_circle</span
+                  >
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-[14px] font-semibold text-on-surface leading-tight mb-1">
+                    System Back to Normal
+                  </p>
+                  <p class="text-[11px] text-on-surface-variant font-medium truncate">
+                    Device-0001 • May 23, 2025 • 04:30 PM
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-auto pt-4">
+              <a
+                class="flex items-center gap-2 text-primary font-bold text-[14px] hover:underline"
+                href="#"
+              >
+                See All Alerts
+                <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- Contextual FAB (Only on Dashboard) -->
+  </body>
+</html>

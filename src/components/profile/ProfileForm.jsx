@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { updateUserProfile } from "../../services/user.service";
 import { useNotification } from "../../context/useNotification";
-import { Edit3, User, MapPin, X, Check } from "lucide-react";
+import { Edit3, MapPin, X, Calendar, Mail, Phone, Camera } from "lucide-react";
+import { cn } from "../../utils/cn";
 
 export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmitting }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -21,6 +22,8 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
     street: "",
     baranggay: "",
     municipality: "",
+    province: "Quezon",
+    aboutMe: "",
   });
 
   // 🛰️ 1. EFFECT HOOK: Sync profileData to local state
@@ -38,6 +41,8 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
         street: profileData.address?.street || "",
         baranggay: profileData.address?.baranggay || "",
         municipality: profileData.address?.municipality || "",
+        province: profileData.address?.province || "Quezon",
+        aboutMe: profileData.aboutMe || "",
       });
     }
   }, [profileData]);
@@ -51,7 +56,6 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
   };
 
   const handleCancel = () => {
-    // ↩️ Ibalik sa pinakahuling snapshot galing sa parent profileData
     if (profileData) {
       setFormData({
         firstName: profileData.firstName?.trim() || "",
@@ -65,6 +69,8 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
         street: profileData.address?.street || "",
         baranggay: profileData.address?.baranggay || "",
         municipality: profileData.address?.municipality || "",
+        province: profileData.address?.province || "Quezon",
+        aboutMe: profileData.aboutMe || "",
       });
     }
     setIsEditing(false);
@@ -75,7 +81,6 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
     setLoading(true);
     if (setIsSubmitting) setIsSubmitting(true);
 
-    // I-reconstruct ang flattened structure pabalik sa nested address object
     const payload = {
       firstName: String(formData.firstName || "").trim(),
       middleName: String(formData.middleName || "").trim(),
@@ -84,10 +89,12 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
       birthDate: formData.birthDate,
       gender: formData.gender,
       mobileNum: String(formData.mobileNum || "").trim(),
+      aboutMe: String(formData.aboutMe || "").trim(),
       address: {
         street: String(formData.street || "").trim(),
         baranggay: String(formData.baranggay || "").trim(),
         municipality: String(formData.municipality || "").trim(),
+        province: String(formData.province || "Quezon").trim(),
       },
     };
 
@@ -104,185 +111,304 @@ export const ProfileForm = ({ profileData, currentUid, onSaveSuccess, setIsSubmi
     }
   };
 
+  const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+  const initials = (formData.firstName?.[0] || "") + (formData.lastName?.[0] || "");
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 animate-in fade-in duration-300">
-      {/* 🛠️ Profile Header with Edit Control */}
-      <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-        <div className="flex items-center gap-2">
-          <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
-            <User size={16} />
-          </div>
-          <div>
-            <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider">
-              Account Identity
-            </h3>
-            <p className="text-[10px] font-bold text-slate-400">
-              View or modify your personal profile
-            </p>
+    <div className="z-20 space-y-5 animate-in fade-in duration-500">
+      {/* Profile Card Header - Overlapping with Hero */}
+      <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 flex flex-col items-center border border-white relative pb-6 mx-6">
+        <div className="relative -mt-[60px] mb-4 flex flex-col items-center">
+          <div className="relative">
+            <div className="w-[120px] h-[120px] rounded-full border-[4px] border-white overflow-hidden bg-slate-100 flex items-center justify-center text-primary font-black text-3xl shadow-inner">
+              {profileData?.photoURL ? (
+                <img
+                  alt={fullName}
+                  className="w-full h-full object-cover"
+                  src={profileData.photoURL}
+                />
+              ) : (
+                initials.toUpperCase() || "?"
+              )}
+            </div>
+            <button className="absolute bottom-1 right-1 w-8 h-8 bg-white rounded-full border-2 border-white shadow-lg flex items-center justify-center text-primary hover:bg-slate-50 transition-all active:scale-90 z-30">
+              <Camera size={14} />
+            </button>
           </div>
         </div>
 
-        {!isEditing ? (
-          <button
-            type="button"
-            onClick={() => setIsEditing(true)}
-            className="flex items-center gap-2 px-3 py-1.5 text-[10px] font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-100 transition-all active:scale-95"
-          >
-            <Edit3 size={12} /> Edit Profile
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={handleCancel}
-            className="flex items-center gap-2 px-3 py-1.5 text-[10px] font-bold text-slate-600 bg-slate-50 hover:bg-slate-100 rounded-lg border border-slate-200 transition-all active:scale-95"
-          >
-            <X size={12} /> Cancel Edit
-          </button>
-        )}
+        <div className="text-center space-y-3 px-6">
+          <div className="space-y-0.5">
+            <h2 className="font-display text-xl font-bold text-[#0b1c30]">
+              {fullName || "Anonymous User"}
+            </h2>
+            <p className="text-primary font-medium text-[13px]">{profileData?.role || "Member"}</p>
+          </div>
+          <div className="flex flex-col items-center gap-1.5 text-slate-500">
+            <div className="flex items-center gap-1.5">
+              <MapPin size={14} className="text-primary" />
+              <span className="text-[12px] font-medium">
+                {formData.baranggay || "Location unset"}, Philippines
+              </span>
+            </div>
+            <div className="flex flex-col items-center gap-y-1">
+              <div className="flex items-center gap-1.5">
+                <Calendar size={14} className="text-primary" />
+                <span className="text-[12px] font-medium">
+                  Joined:{" "}
+                  {profileData?.createdAt
+                    ? new Date(profileData.createdAt).toLocaleDateString("en-US", {
+                        month: "short",
+                        year: "numeric",
+                      })
+                    : "Just now"}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Mail size={14} className="text-primary" />
+                <span className="text-[12px] font-medium">{formData.email}</span>
+              </div>
+            </div>
+          </div>
+          <div className="pt-1">
+            <div className="bg-emerald-50 px-3 py-0.5 rounded-full border border-emerald-100 inline-flex items-center gap-1.5">
+              <div className="w-1 h-1 bg-emerald-500 rounded-full animate-pulse" />
+              <span className="text-emerald-600 font-bold text-[9px] uppercase tracking-wider">
+                Active
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* 👤 Group 1: Identity Profile */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Field label="Email Address" value={formData.email} isEditing={false} />
-        <Field
-          label="First Name"
-          name="firstName"
-          value={formData.firstName}
-          onChange={handleChange}
-          isEditing={isEditing}
-          required
-        />
-        <Field
-          label="Last Name"
-          name="lastName"
-          value={formData.lastName}
-          onChange={handleChange}
-          isEditing={isEditing}
-          required
-        />
-        <Field
-          label="Middle Name"
-          name="middleName"
-          value={formData.middleName}
-          onChange={handleChange}
-          isEditing={isEditing}
-        />
-        <Field
-          label="Suffix"
-          name="suffix"
-          value={formData.suffix}
-          onChange={handleChange}
-          isEditing={isEditing}
-        />
-        <Field
-          label="Birth Date"
-          name="birthDate"
-          type="date"
-          value={formData.birthDate}
-          onChange={handleChange}
-          isEditing={isEditing}
-        />
-
-        <div className="flex flex-col space-y-1">
-          <label className="text-[10px] font-black text-slate-500 uppercase tracking-wide">
-            Gender
-          </label>
-          {!isEditing ? (
-            <p className="p-3 text-xs font-semibold text-slate-800 bg-slate-50/50 rounded-xl border border-transparent truncate">
-              {formData.gender}
+      {/* Profile Form Section */}
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 mb-8 mx-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className="font-display text-lg font-bold text-[#0b1c30]">
+              <span className="text-black">Profile</span>{" "}
+              <span className="text-primary">Information</span>
+            </h3>
+            <p className="text-slate-500 text-[12px] mt-0.5">
+              Manage your personal account details.
             </p>
-          ) : (
-            <select
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              className="w-full p-3 text-xs font-medium bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all cursor-pointer"
+          </div>
+          {!isEditing ? (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-primary text-primary hover:bg-primary/5 font-bold text-[12px] transition-all"
             >
-              <option value="Not Specified">Not Specified</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
+              <Edit3 size={14} />
+              Edit
+            </button>
+          ) : (
+            <button
+              onClick={handleCancel}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 font-bold text-[12px] transition-all"
+            >
+              <X size={14} />
+              Cancel
+            </button>
           )}
         </div>
 
-        <Field
-          label="Mobile Number"
-          name="mobileNum"
-          value={formData.mobileNum}
-          onChange={handleChange}
-          isEditing={isEditing}
-        />
-      </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Row 1: Names */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <Field
+              label="First Name"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              isEditing={isEditing}
+              required
+            />
+            <Field
+              label="Middle Name"
+              name="middleName"
+              value={formData.middleName}
+              onChange={handleChange}
+              isEditing={isEditing}
+            />
+            <Field
+              label="Last Name"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              isEditing={isEditing}
+              required
+            />
+          </div>
 
-      {/* 📍 Group 2: Geography & Location Settings */}
-      <div className="space-y-4 pt-4 border-t border-slate-100">
-        <div className="flex items-center gap-2">
-          <MapPin size={14} className="text-slate-400" />
-          <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider">
-            Address Parameters
-          </h3>
-        </div>
+          {/* Row 2: Email & Contact */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Field
+              label="Email Address"
+              icon={Mail}
+              value={formData.email}
+              isEditing={false}
+              type="email"
+            />
+            <Field
+              label="Contact"
+              name="mobileNum"
+              icon={Phone}
+              value={formData.mobileNum}
+              onChange={handleChange}
+              isEditing={isEditing}
+              type="tel"
+            />
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field
-            label="Street"
-            name="street"
-            value={formData.street}
-            onChange={handleChange}
-            isEditing={isEditing}
-          />
-          <Field
-            label="Baranggay"
-            name="baranggay"
-            value={formData.baranggay}
-            onChange={handleChange}
-            isEditing={isEditing}
-          />
-          <Field
-            label="Municipality"
-            name="municipality"
-            value={formData.municipality}
-            onChange={handleChange}
-            isEditing={isEditing}
-          />
-        </div>
-      </div>
+          {/* Row 3: Address 1 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Field
+              label="Street"
+              name="street"
+              value={formData.street}
+              onChange={handleChange}
+              isEditing={isEditing}
+            />
+            <div className="grid grid-cols-2 gap-3">
+              <Field
+                label="Barangay"
+                name="baranggay"
+                value={formData.baranggay}
+                onChange={handleChange}
+                isEditing={isEditing}
+              />
+              <Field
+                label="Municipality"
+                name="municipality"
+                value={formData.municipality}
+                onChange={handleChange}
+                isEditing={isEditing}
+              />
+            </div>
+          </div>
 
-      {/* 💾 Submission Controls */}
-      {isEditing && (
-        <div className="flex justify-end gap-2 pt-4 border-t border-slate-100">
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-5 py-3 text-xs font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
-          >
-            {loading ? (
-              "Saving Changes..."
+          {/* Row 4: Province, BirthDate, Gender */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="space-y-1">
+              <label className="font-bold text-[10px] uppercase tracking-wider text-slate-400">
+                Province
+              </label>
+              {!isEditing ? (
+                <p className="w-full bg-slate-50 border-transparent rounded-xl px-3.5 py-2.5 text-[13px] font-semibold text-slate-700">
+                  {formData.province}
+                </p>
+              ) : (
+                <select
+                  name="province"
+                  value={formData.province}
+                  onChange={handleChange}
+                  className="w-full bg-slate-50 border-slate-200 rounded-xl px-3.5 py-2.5 focus:ring-primary/20 focus:border-primary transition-all font-semibold text-[13px] appearance-none"
+                >
+                  <option>Quezon</option>
+                  <option>Metro Manila</option>
+                  <option>Cavite</option>
+                </select>
+              )}
+            </div>
+            <Field
+              label="Birth Date"
+              name="birthDate"
+              type="date"
+              value={formData.birthDate}
+              onChange={handleChange}
+              isEditing={isEditing}
+            />
+            <div className="space-y-1">
+              <label className="font-bold text-[10px] uppercase tracking-wider text-slate-400">
+                Gender
+              </label>
+              {!isEditing ? (
+                <p className="w-full bg-slate-50 border-transparent rounded-xl px-3.5 py-2.5 text-[13px] font-semibold text-slate-700">
+                  {formData.gender}
+                </p>
+              ) : (
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  className="w-full bg-slate-50 border-slate-200 rounded-xl px-3.5 py-2.5 focus:ring-primary/20 focus:border-primary transition-all font-semibold text-[13px] appearance-none"
+                >
+                  <option value="Not Specified">Not Specified</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              )}
+            </div>
+          </div>
+
+          {/* Row 5: About Me */}
+          <div className="space-y-1">
+            <label className="font-bold text-[10px] uppercase tracking-wider text-slate-400">
+              About Me
+            </label>
+            {!isEditing ? (
+              <p className="w-full bg-slate-50 border-transparent rounded-xl px-3.5 py-2.5 text-[13px] font-semibold text-slate-700 whitespace-pre-wrap">
+                {formData.aboutMe || "N/A"}
+              </p>
             ) : (
-              <>
-                <Check size={14} /> Save Profile
-              </>
+              <textarea
+                name="aboutMe"
+                value={formData.aboutMe}
+                onChange={handleChange}
+                rows={3}
+                className="w-full bg-slate-50 border-slate-200 rounded-xl px-3.5 py-2.5 focus:ring-primary/20 focus:border-primary transition-all font-semibold text-[13px] resize-none"
+              />
             )}
-          </button>
-        </div>
-      )}
-    </form>
+          </div>
+
+          {/* 💾 Submission Controls */}
+          {isEditing && (
+            <div className="flex justify-end pt-3 border-t border-slate-100">
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-primary text-white font-black py-3 px-8 rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all text-[12px] uppercase tracking-widest disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {loading ? "Saving..." : "Save Changes"}
+              </button>
+            </div>
+          )}
+        </form>
+      </div>
+    </div>
   );
 };
 
-const Field = ({ label, isEditing, type = "text", ...props }) => (
-  <div className="flex flex-col space-y-1">
-    <label className="text-[10px] font-black text-slate-500 uppercase tracking-wide">{label}</label>
-    {!isEditing ? (
-      <p className="p-3 text-xs font-semibold text-slate-800 bg-slate-50/50 rounded-xl border border-transparent truncate">
-        {props.value || "N/A"}
-      </p>
-    ) : (
-      <input
-        type={type}
-        className="w-full p-3 text-xs font-medium bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all disabled:opacity-60 disabled:bg-slate-100 disabled:cursor-not-allowed"
-        {...props}
-      />
-    )}
+const Field = ({ label, isEditing, type = "text", icon: Icon, ...props }) => (
+  <div className="space-y-1.5 min-w-0">
+    <label className="font-bold text-[11px] uppercase tracking-wider text-slate-400">{label}</label>
+    <div className="relative">
+      {Icon && (
+        <Icon
+          size={18}
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-primary pointer-events-none"
+        />
+      )}
+      {!isEditing && label !== "Email Address" ? (
+        <p
+          className={cn(
+            "w-full bg-slate-50 border-transparent rounded-xl py-3 px-4 text-[14px] font-semibold text-slate-700 truncate",
+            Icon && "pl-11"
+          )}
+        >
+          {props.value || "—"}
+        </p>
+      ) : (
+        <input
+          type={type}
+          disabled={!isEditing && label === "Email Address"}
+          className={cn(
+            "w-full bg-slate-50 border-slate-200 rounded-xl py-3 px-4 focus:ring-primary/20 focus:border-primary transition-all font-semibold text-[14px] outline-none disabled:bg-slate-100/50 disabled:cursor-not-allowed",
+            Icon && "pl-11"
+          )}
+          {...props}
+        />
+      )}
+    </div>
   </div>
 );

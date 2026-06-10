@@ -17,8 +17,8 @@ import {
   PerformanceAnalyticsCard,
   SystemOverviewCard,
   ResidentDeviceStatusWidget,
-  RecentAlertsFeed,
 } from "../../components";
+import { RecentAlertsFeed } from "../../components/dashboard";
 import { METRICS, SENSOR_CONFIG, ROUTES } from "../../constants";
 import { Footer } from "../../layout";
 

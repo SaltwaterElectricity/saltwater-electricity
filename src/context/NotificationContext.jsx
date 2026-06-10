@@ -16,11 +16,11 @@ export const NotificationProvider = ({ children }) => {
   return (
     <NotificationContext.Provider value={{ showNotification }}>
       {children}
-      <Toast 
-        isOpen={toastConfig.isOpen} 
-        message={toastConfig.message} 
-        type={toastConfig.type} 
-        onClose={hideNotification} 
+      <Toast
+        isOpen={toastConfig.isOpen}
+        message={toastConfig.message}
+        type={toastConfig.type}
+        onClose={hideNotification}
       />
     </NotificationContext.Provider>
   );

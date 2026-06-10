@@ -58,10 +58,10 @@ export const validateEmail = (email) => {
 
 export const validatePassword = (password) => {
   const code = "auth/weak-password";
-  // 1. LENGTH CHECK (Minimum 8 characters)
-  if (!password || password.length < 8) {
+  // 1. LENGTH CHECK (Minimum 12 characters)
+  if (!password || password.length < 12) {
     throw new appError(
-      AUTH_ERROR_MESSAGES[code] || "Security Check: Password must be at least 8 characters.",
+      AUTH_ERROR_MESSAGES[code] || "Security Check: Password must be at least 12 characters.",
       true,
       code
     );

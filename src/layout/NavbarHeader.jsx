@@ -41,14 +41,6 @@ export const NavbarHeader = ({ currentUid }) => {
       </div>
 
       <div className="flex items-center space-x-4">
-        <div className="relative hidden sm:block">
-          <input
-            className="bg-slate-100/50 border-none rounded-full px-4 py-2 text-sm w-64 focus:ring-2 focus:ring-blue-500 transition-all outline-none"
-            placeholder="Search grid components..."
-            type="text"
-          />
-        </div>
-
         {/* Notifications */}
         <button className="hover:bg-slate-100/50 rounded-full p-2 text-slate-600 relative transition-colors">
           <span className="material-symbols-outlined">notifications</span>

@@ -8,14 +8,14 @@ import GlobalSearch from "../../ui/GlobalSearch";
  * Advanced filtering suite including search, date range, and role/activity/severity/status dropdowns.
  */
 const AuditLogFilters = ({ searchTerm, setSearchTerm, filters, setFilters, onClearFilters }) => {
-  const [showDatePicker, setShowSortOptions] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const dateRef = useRef(null);
 
   // Handle click outside to close date picker
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dateRef.current && !dateRef.current.contains(event.target)) {
-        setShowSortOptions(false);
+        setShowDatePicker(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -43,7 +43,7 @@ const AuditLogFilters = ({ searchTerm, setSearchTerm, filters, setFilters, onCle
         {/* Date Range Picker Simulated */}
         <div className="relative w-full lg:w-auto" ref={dateRef}>
           <button
-            onClick={() => setShowSortOptions(!showDatePicker)}
+            onClick={() => setShowDatePicker(!showDatePicker)}
             className="flex items-center gap-3 bg-white border border-gray-200 px-4 py-3 rounded-xl text-sm font-semibold shadow-sm min-w-[240px] justify-between hover:bg-gray-50 transition-colors text-slate-700"
           >
             <div className="flex items-center gap-2">
@@ -80,13 +80,13 @@ const AuditLogFilters = ({ searchTerm, setSearchTerm, filters, setFilters, onCle
                 <div className="absolute bottom-4 right-6 flex gap-2 pt-4">
                   <button
                     className="px-4 py-2 text-xs font-bold text-gray-500 hover:bg-gray-50 rounded-lg"
-                    onClick={() => setShowSortOptions(false)}
+                    onClick={() => setShowDatePicker(false)}
                   >
                     Cancel
                   </button>
                   <button
                     className="px-4 py-2 text-xs font-bold bg-primary text-white rounded-lg shadow-sm active:scale-95 transition-all"
-                    onClick={() => setShowSortOptions(false)}
+                    onClick={() => setShowDatePicker(false)}
                   >
                     Apply Range
                   </button>

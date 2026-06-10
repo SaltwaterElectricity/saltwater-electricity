@@ -17,7 +17,9 @@ export const ROUTES = Object.freeze({
 
   // Resident
   DASHBOARD: "/dashboard",
+  HISTORY_OVERVIEW: "/history",
   DEVICE_ANALYTICS: "/analytics/:deviceId",
+  DEVICE_HISTORY: "/history/:deviceId",
   DEVICE_REQUESTS: "/device-requests",
   ALERTS: "/alerts",
 });

@@ -32,12 +32,3 @@ export const formatCountdown = (ms) => {
 
   return [hours, minutes, seconds].map((v) => v.toString().padStart(2, "0")).join(":");
 };
-
-/**
- * Checks if the cancellation window is still active.
- * @param {number|string} createdAt - Timestamp of creation
- * @returns {boolean}
- */
-export const isCancellationActive = (createdAt) => {
-  return getRemainingCancellationTime(createdAt) > 0;
-};

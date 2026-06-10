@@ -9,10 +9,10 @@ import {
   CardErrorBoundary,
   DeviceRequestModal,
   SummaryCard,
-  RecentAlertsFeed,
   EmptyState,
   DeviceDetailsPanel,
 } from "../../components";
+import { RecentAlertsFeed } from "../../components/dashboard";
 import { ROUTES } from "../../constants/routes";
 import Toast from "../../components/ui/Toast";
 

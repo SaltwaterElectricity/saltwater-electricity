@@ -1,5 +1,5 @@
 import { ref, push, serverTimestamp, onValue, query, limitToLast } from "firebase/database";
-import { auth, db } from "../firebaseConfig";
+import { db } from "../firebaseConfig";
 import { appError } from "../utils/appError";
 import { logger } from "../utils/logger";
 
@@ -67,73 +67,6 @@ export const createNotification = async (
       ),
     };
   }
-};
-
-/**
- * Triggers a secure SMS alert via the backend serverless function.
- * Specifically for critical threshold breaches (TDS/PPM).
- *
- * @param {string} mobileNum - Recipient's mobile number.
- * @param {string} message - Content of the SMS alert.
- * @returns {Promise<Object>} - { success, error }
- */
-export const sendSMSAlert = async (mobileNum, message) => {
-  if (!mobileNum || mobileNum === "N/A" || !message) {
-    return {
-      success: false,
-      error: new appError("Invalid SMS parameters.", true, "notification/invalid-sms-data"),
-    };
-  }
-
-  try {
-    const headers = {
-      "Content-Type": "application/json",
-    };
-
-    // 🛡️ SECURITY: Attach ID Token if available to authenticate the request
-    const currentUser = auth.currentUser;
-    if (currentUser) {
-      const token = await currentUser.getIdToken();
-      headers["Authorization"] = `Bearer ${token}`;
-    }
-
-    const response = await fetch("/api/sendSMS", {
-      method: "POST",
-      headers,
-      body: JSON.stringify({ number: mobileNum, message }),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.error || "SMS delivery failed.");
-    }
-
-    return { success: true, error: null };
-  } catch (error) {
-    logger.error("[Notification Service]: SMS trigger failed.", error);
-    return {
-      success: false,
-      error: new appError(
-        "SMS Alert failed to deliver. System fallback to in-app notification.",
-        true,
-        "notification/sms-failed"
-      ),
-    };
-  }
-};
-
-/**
- * Specifically logs notifications for security escalations.
- * Part of the Enumeration Prevention Protocol (EPP).
- */
-export const notifySecurityIncident = async (incidentType, identifier, details) => {
-  return await createNotification(
-    "admin", // Escalate to administrative dashboard
-    "Security Alert: Detection Node",
-    `EPP Triggered: ${incidentType} detected for identifier ${identifier}. ${details}`,
-    NOTIFICATION_TYPES.CRITICAL
-  );
 };
 
 /**
