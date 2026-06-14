@@ -145,7 +145,9 @@ const HistoricalTable = ({ logs = [], residentsMap = {}, loading = false, onRefr
                           />
                           <div>
                             <p className="text-[11px] font-black text-on-surface uppercase tracking-tight">
-                              {user.firstName ? `${user.firstName} ${user.lastName}` : "System Node"}
+                              {user.firstName
+                                ? `${user.firstName} ${user.lastName}`
+                                : "System Node"}
                             </p>
                             <p className="text-[9px] text-outline font-bold truncate max-w-[120px]">
                               {user.email || "LOGS@INFRA"}
@@ -165,22 +167,29 @@ const HistoricalTable = ({ logs = [], residentsMap = {}, loading = false, onRefr
                       </td>
                       <td className="p-4 text-center">
                         <p className="text-[11px] font-black text-on-surface">
-                          {log.voltage}<span className="text-[8px] text-outline ml-0.5 font-bold uppercase">v</span>
+                          {log.voltage}
+                          <span className="text-[8px] text-outline ml-0.5 font-bold uppercase">
+                            v
+                          </span>
                         </p>
                       </td>
                       <td className="p-4 text-center">
                         <p className="text-[11px] font-black text-on-surface">
-                          {log.tds}<span className="text-[8px] text-outline ml-0.5 font-bold uppercase">ppm</span>
+                          {log.tds}
+                          <span className="text-[8px] text-outline ml-0.5 font-bold uppercase">
+                            ppm
+                          </span>
                         </p>
                       </td>
                       <td className="p-4 text-center">
                         <p className="text-[11px] font-black text-on-surface">
-                          {log.current}<span className="text-[8px] text-outline ml-0.5 font-bold uppercase">a</span>
+                          {log.current}
+                          <span className="text-[8px] text-outline ml-0.5 font-bold uppercase">
+                            a
+                          </span>
                         </p>
                       </td>
-                      <td className="p-4 text-center">
-                        {getStatusBadge(log.voltage, log.tds)}
-                      </td>
+                      <td className="p-4 text-center">{getStatusBadge(log.voltage, log.tds)}</td>
                     </tr>
                   );
                 })
@@ -192,13 +201,18 @@ const HistoricalTable = ({ logs = [], residentsMap = {}, loading = false, onRefr
         {/* Pagination Footer */}
         <div className="p-6 bg-surface-container-lowest border-t border-outline-variant flex justify-between items-center">
           <p className="text-[10px] text-secondary font-black uppercase tracking-widest">
-            Showing <span className="text-on-surface">{(currentPage - 1) * itemsPerPage + 1}</span> to{" "}
-            <span className="text-on-surface">{Math.min(currentPage * itemsPerPage, logs.length)}</span> of{" "}
-            <span className="text-on-surface">{logs.length}</span> records
+            Showing <span className="text-on-surface">{(currentPage - 1) * itemsPerPage + 1}</span>{" "}
+            to{" "}
+            <span className="text-on-surface">
+              {Math.min(currentPage * itemsPerPage, logs.length)}
+            </span>{" "}
+            of <span className="text-on-surface">{logs.length}</span> records
           </p>
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-3">
-              <span className="text-[10px] text-secondary font-black uppercase tracking-tight">Rows</span>
+              <span className="text-[10px] text-secondary font-black uppercase tracking-tight">
+                Rows
+              </span>
               <select className="bg-surface-container-low border border-outline-variant/30 rounded-lg text-[10px] px-3 py-1 font-black focus:ring-1 focus:ring-primary cursor-pointer shadow-sm outline-none">
                 <option>5</option>
                 <option>10</option>
@@ -227,7 +241,9 @@ const HistoricalTable = ({ logs = [], residentsMap = {}, loading = false, onRefr
                 );
               })}
 
-              {totalPages > 5 && <span className="px-2 text-outline font-black text-[10px]">...</span>}
+              {totalPages > 5 && (
+                <span className="px-2 text-outline font-black text-[10px]">...</span>
+              )}
 
               <button
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}

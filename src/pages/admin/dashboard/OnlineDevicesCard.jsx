@@ -23,9 +23,7 @@ const OnlineDevicesCard = memo(({ value }) => {
             "bg-orange-50 text-orange-600"
           )}
         >
-          <span className="material-symbols-outlined text-[14px]">
-            wifi
-          </span>
+          <span className="material-symbols-outlined text-[14px]">wifi</span>
           Live
         </div>
       </div>

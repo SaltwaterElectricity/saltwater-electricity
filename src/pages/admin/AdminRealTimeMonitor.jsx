@@ -46,8 +46,9 @@ const AdminRealTimeMonitor = () => {
       if (isOnline) {
         // Warning if maintenance is required or if values are outside nominal range
         const tdsValue = tel.tds ?? tel.tds_ppm ?? 0;
-        const isWarning = tel.is_maintenance || tdsValue > 800 || tel.voltage > 250 || tel.voltage < 210;
-        
+        const isWarning =
+          tel.is_maintenance || tdsValue > 800 || tel.voltage > 250 || tel.voltage < 210;
+
         status = isWarning ? "Warning" : "Online";
       }
 
@@ -81,7 +82,10 @@ const AdminRealTimeMonitor = () => {
 
   const stats = useMemo(() => {
     const totalVoltage = hydratedDevices.reduce((acc, d) => acc + (d.telemetry?.voltage || 0), 0);
-    const totalSalinity = hydratedDevices.reduce((acc, d) => acc + (d.telemetry?.tds || d.telemetry?.tds_ppm || 0), 0);
+    const totalSalinity = hydratedDevices.reduce(
+      (acc, d) => acc + (d.telemetry?.tds || d.telemetry?.tds_ppm || 0),
+      0
+    );
     const online = hydratedDevices.filter((d) => d.isOnline).length;
     const offline = hydratedDevices.length - online;
 

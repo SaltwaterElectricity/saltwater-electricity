@@ -1,5 +1,16 @@
 import { memo } from "react";
-import { X, User, Phone, MapPin, CheckCircle2, AlertTriangle, WifiOff, Bolt, ShieldAlert, Calendar } from "lucide-react";
+import {
+  X,
+  User,
+  Phone,
+  MapPin,
+  CheckCircle2,
+  AlertTriangle,
+  WifiOff,
+  Bolt,
+  ShieldAlert,
+  Calendar,
+} from "lucide-react";
 import { cn } from "../../../utils/cn";
 
 /**
@@ -223,23 +234,33 @@ const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) 
               className="grid grid-cols-2 gap-y-6 scroll-mt-[260px] animate-in fade-in slide-in-from-bottom-4 duration-500"
             >
               <InfoItem icon={User} label="Resident Name" value={device.residentName} />
-              <InfoItem 
+              <InfoItem
                 icon={Calendar}
-                label="Assigned Date" 
-                value={device.assignedAt ? new Date(device.assignedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }).toUpperCase() : "NOT ASSIGNED"} 
+                label="Assigned Date"
+                value={
+                  device.assignedAt
+                    ? new Date(device.assignedAt)
+                        .toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                        .toUpperCase()
+                    : "NOT ASSIGNED"
+                }
               />
               <InfoItem icon={Phone} label="Contact Number" value={device.residentPhone || "N/A"} />
               <InfoItem label="Device ID" value={device.device_id} />
               <InfoItem icon={MapPin} label="Address" value={device.residentLocation} />
-              <InfoItem 
-                icon={Bolt} 
-                label="Power Mode" 
-                value={device.telemetry?.power_mode || "Active"} 
+              <InfoItem
+                icon={Bolt}
+                label="Power Mode"
+                value={device.telemetry?.power_mode || "Active"}
               />
-              <InfoItem 
-                icon={ShieldAlert} 
-                label="Maintenance" 
-                value={device.telemetry?.is_maintenance ? "Required" : "Nominal"} 
+              <InfoItem
+                icon={ShieldAlert}
+                label="Maintenance"
+                value={device.telemetry?.is_maintenance ? "Required" : "Nominal"}
                 color={device.telemetry?.is_maintenance ? "text-orange-500" : "text-emerald-500"}
               />
             </div>

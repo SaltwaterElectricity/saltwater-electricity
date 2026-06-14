@@ -66,7 +66,9 @@ const HistoricalFilterBar = ({
             className="w-full h-14 flex items-center justify-between px-5 border-2 border-outline-variant/30 rounded-xl text-body-sm font-bold text-on-surface hover:bg-surface-container-low hover:border-primary/20 transition-all active:scale-95 shadow-sm"
           >
             <div className="flex items-center gap-3 truncate mr-2">
-              <span className="material-symbols-outlined text-primary text-[20px] shrink-0">devices</span>
+              <span className="material-symbols-outlined text-primary text-[20px] shrink-0">
+                devices
+              </span>
               <span className="truncate">{deviceLabel}</span>
             </div>
             <span className="material-symbols-outlined text-outline shrink-0">
@@ -106,15 +108,19 @@ const HistoricalFilterBar = ({
 
         {/* Date Selector (Standardized Width) */}
         <div className="flex-1 min-w-[220px] relative">
-          <button 
+          <button
             onClick={() => setIsDateMenuOpen(!isDateMenuOpen)}
             className="w-full h-14 flex items-center justify-between px-5 border-2 border-outline-variant/30 rounded-xl text-body-sm font-bold text-on-surface hover:bg-surface-container-low hover:border-primary/20 transition-all active:scale-95 shadow-sm"
           >
             <div className="flex items-center gap-3 truncate mr-2">
-              <span className="material-symbols-outlined text-primary text-[20px] shrink-0">calendar_today</span>
+              <span className="material-symbols-outlined text-primary text-[20px] shrink-0">
+                calendar_today
+              </span>
               <span className="truncate">{dateFilter || "Latest Records"}</span>
             </div>
-            <span className="material-symbols-outlined text-outline shrink-0">keyboard_arrow_down</span>
+            <span className="material-symbols-outlined text-outline shrink-0">
+              keyboard_arrow_down
+            </span>
           </button>
 
           {isDateMenuOpen && (
@@ -131,10 +137,12 @@ const HistoricalFilterBar = ({
                     </button>
                   ))}
                 </div>
-                
+
                 <div className="pt-4 border-t border-outline-variant/20">
-                  <p className="text-[10px] font-black text-outline uppercase tracking-widest mb-2 px-1">Custom Date</p>
-                  <input 
+                  <p className="text-[10px] font-black text-outline uppercase tracking-widest mb-2 px-1">
+                    Custom Date
+                  </p>
+                  <input
                     type="date"
                     className="w-full px-4 py-2.5 rounded-xl border-2 border-outline-variant/30 text-body-sm font-bold focus:border-primary outline-none transition-all"
                     value={dateFilter || ""}
@@ -155,9 +163,7 @@ const HistoricalFilterBar = ({
             onClick={handleClearFilters}
             className="h-14 px-6 text-primary font-black text-body-sm hover:bg-primary/5 rounded-xl transition-all flex items-center gap-3 border-2 border-primary/20 hover:border-primary active:scale-95 whitespace-nowrap"
           >
-            <span className="material-symbols-outlined text-[22px]">
-              filter_list_off
-            </span>
+            <span className="material-symbols-outlined text-[22px]">filter_list_off</span>
             Clear Filters
           </button>
         </div>

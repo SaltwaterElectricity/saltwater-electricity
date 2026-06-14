@@ -23,9 +23,7 @@ const OfflineDevicesCard = memo(({ value }) => {
             "bg-red-50 text-red-600"
           )}
         >
-          <span className="material-symbols-outlined text-[14px]">
-            wifi_off
-          </span>
+          <span className="material-symbols-outlined text-[14px]">wifi_off</span>
           Live
         </div>
       </div>

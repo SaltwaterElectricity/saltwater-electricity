@@ -213,10 +213,9 @@ const DeviceAnalytics = () => {
                   AI Summary
                 </p>
                 <p className="text-[11px] font-bold text-white leading-tight mt-1">
-                  {logs.length > 0 
+                  {logs.length > 0
                     ? `Consistency remains high at 94% over the last ${logs.length} readings.`
-                    : "Synchronizing with device history..."
-                  }
+                    : "Synchronizing with device history..."}
                 </p>
               </div>
             </div>

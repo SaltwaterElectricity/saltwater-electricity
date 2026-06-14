@@ -23,9 +23,7 @@ const TotalDevicesAdminCard = memo(({ value }) => {
             "bg-blue-50 text-primary"
           )}
         >
-          <span className="material-symbols-outlined text-[14px]">
-            sensors
-          </span>
+          <span className="material-symbols-outlined text-[14px]">sensors</span>
           Live
         </div>
       </div>

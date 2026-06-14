@@ -8,7 +8,13 @@ import {
   HistoricalCharts,
   HistoricalTable,
 } from "../../components/dashboard";
-import { useDevices, useResidentManagement, useHistory, useMultiDeviceHistory, useAssignments } from "../../hooks";
+import {
+  useDevices,
+  useResidentManagement,
+  useHistory,
+  useMultiDeviceHistory,
+  useAssignments,
+} from "../../hooks";
 import { useAuth } from "../../context/useAuth";
 
 /**
@@ -73,11 +79,11 @@ const HistoricalData = () => {
   const isAllSelected = selectedDeviceId === "all";
 
   // A. Single device history branch
-  const { logs: singleLogs, loading: singleLoading, refresh: singleRefresh } = useHistory(
-    !isAllSelected ? selectedDeviceId : null,
-    100,
-    dateFilter
-  );
+  const {
+    logs: singleLogs,
+    loading: singleLoading,
+    refresh: singleRefresh,
+  } = useHistory(!isAllSelected ? selectedDeviceId : null, 100, dateFilter);
 
   // B. Multi device history branch (aggregate view)
   // STRATEGY: Residents only fetch logs for THEIR devices to avoid Permission Denied errors
@@ -86,7 +92,11 @@ const HistoricalData = () => {
     return userDevices.map((d) => d.device_id);
   }, [isPrivileged, devices, userDevices]);
 
-  const { data: multiHistory, loading: multiLoading, refresh: multiRefresh } = useMultiDeviceHistory(
+  const {
+    data: multiHistory,
+    loading: multiLoading,
+    refresh: multiRefresh,
+  } = useMultiDeviceHistory(
     isAllSelected ? deviceIdsToFetch : [],
     20 // Fetch limited set per device for overview performance
   );
@@ -168,57 +178,57 @@ const HistoricalData = () => {
 
   // --- 8. Loading Orchestration ---
   const isLoading =
-    devicesLoading || residentsLoading || assignmentsLoading || (isAllSelected ? multiLoading : singleLoading);
+    devicesLoading ||
+    residentsLoading ||
+    assignmentsLoading ||
+    (isAllSelected ? multiLoading : singleLoading);
 
   // --- 9. Render: Unified Layout ---
   return (
     <div className="animate-fade-in historical-legacy-container bg-background min-h-full overflow-x-hidden flex flex-col pb-20">
-        {/* Mirroring code1.html <main> content area */}
+      {/* Mirroring code1.html <main> content area */}
 
-        {/* 1. Header (Condensed vertical padding) */}
-        <HistoricalHeader />
+      {/* 1. Header (Condensed vertical padding) */}
+      <HistoricalHeader />
 
-        {/* 2. Metric Cards Row (Floating overlap removed for decompression) */}
-        <div className="mt-6">
-          <HistoricalMetricCards 
-            devicesCount={isPrivileged ? (devices?.length || 0) : (userDevices?.length || 0)}
-            usersCount={isPrivileged ? (residentStats?.total || 0) : (userDevices.length > 0 ? 1 : 0)}
-            vCount={readingStats.v}
-            sCount={readingStats.s}
-            cCount={readingStats.c}
-          />
-        </div>
+      {/* 2. Metric Cards Row (Floating overlap removed for decompression) */}
+      <div className="mt-6">
+        <HistoricalMetricCards
+          devicesCount={isPrivileged ? devices?.length || 0 : userDevices?.length || 0}
+          usersCount={isPrivileged ? residentStats?.total || 0 : userDevices.length > 0 ? 1 : 0}
+          vCount={readingStats.v}
+          sCount={readingStats.s}
+          cCount={readingStats.c}
+        />
+      </div>
 
-        {/* 3. Filter Bar (Clear separation) */}
-        <div className="mt-6">
-          <HistoricalFilterBar 
-            devices={isPrivileged ? devices : userDevices}
-            selectedDeviceId={selectedDeviceId}
-            onDeviceChange={setSelectedDeviceId}
-            dateFilter={dateFilter}
-            onDateChange={setDateFilter}
-            searchTerm={searchTerm}
-            onSearch={setSearchTerm}
-          />
-        </div>
+      {/* 3. Filter Bar (Clear separation) */}
+      <div className="mt-6">
+        <HistoricalFilterBar
+          devices={isPrivileged ? devices : userDevices}
+          selectedDeviceId={selectedDeviceId}
+          onDeviceChange={setSelectedDeviceId}
+          dateFilter={dateFilter}
+          onDateChange={setDateFilter}
+          searchTerm={searchTerm}
+          onSearch={setSearchTerm}
+        />
+      </div>
 
-        {/* 4. Charts Grid (Primary focus) */}
-        <div className="mt-6">
-          <HistoricalCharts 
-            logs={filteredLogs} 
-            loading={isLoading} 
-          />
-        </div>
+      {/* 4. Charts Grid (Primary focus) */}
+      <div className="mt-6">
+        <HistoricalCharts logs={filteredLogs} loading={isLoading} />
+      </div>
 
-        {/* 5. Historical Data Records Table (Detailed drill-down) */}
-        <div className="mt-8">
-          <HistoricalTable 
-            logs={filteredLogs} 
-            residentsMap={residentsMap}
-            loading={isLoading}
-            onRefresh={isAllSelected ? multiRefresh : singleRefresh}
-          />
-        </div>
+      {/* 5. Historical Data Records Table (Detailed drill-down) */}
+      <div className="mt-8">
+        <HistoricalTable
+          logs={filteredLogs}
+          residentsMap={residentsMap}
+          loading={isLoading}
+          onRefresh={isAllSelected ? multiRefresh : singleRefresh}
+        />
+      </div>
     </div>
   );
 };

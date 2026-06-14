@@ -65,7 +65,6 @@ const ResidentDeviceStatusWidget = memo(({ userDevices = [], telemetry = {}, onV
                   <span className="text-label-sm font-bold text-on-surface">
                     {(reading.tds ?? reading.tds_ppm) || "0"} ppt
                   </span>
-
                 </div>
               </div>
             </div>

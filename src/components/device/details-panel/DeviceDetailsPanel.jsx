@@ -179,15 +179,15 @@ const DeviceDetailsPanel = ({ isOpen, onClose, device, telemetry, assignment, au
             <DetailItem icon={Calendar} label="Assigned Date" value={assignedDate} />
             <DetailItem icon={MapPin} label="Address" value={address} fullWidth />
             {/* Extended Telemetry Fields */}
-            <DetailItem 
-              icon={Settings} 
-              label="Power Mode" 
-              value={telemetry?.power_mode || "Standby"} 
+            <DetailItem
+              icon={Settings}
+              label="Power Mode"
+              value={telemetry?.power_mode || "Standby"}
             />
-            <DetailItem 
-              icon={ShieldAlert} 
-              label="Maintenance" 
-              value={telemetry?.is_maintenance ? "Required" : "Nominal"} 
+            <DetailItem
+              icon={ShieldAlert}
+              label="Maintenance"
+              value={telemetry?.is_maintenance ? "Required" : "Nominal"}
               color={telemetry?.is_maintenance ? "text-orange-500" : "text-emerald-500"}
             />
           </div>
@@ -218,7 +218,12 @@ const DetailItem = ({ icon: Icon, label, value, fullWidth, color }) => (
       <p className="font-display text-[11px] uppercase tracking-wider text-slate-400 mb-0.5">
         {label}
       </p>
-      <p className={cn("font-sans text-[15px] font-semibold leading-tight", color || "text-slate-700")}>
+      <p
+        className={cn(
+          "font-sans text-[15px] font-semibold leading-tight",
+          color || "text-slate-700"
+        )}
+      >
         {value}
       </p>
     </div>

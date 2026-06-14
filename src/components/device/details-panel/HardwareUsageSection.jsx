@@ -16,7 +16,7 @@ export const HardwareUsageSection = ({ telemetry }) => {
     const esp = telemetry?.esp_ma ?? 0;
     const bulb = telemetry?.bulb_ma ?? 0;
     const sensorTotal = telemetry?.sensor_ma ?? 0;
-    
+
     // Split sensor_ma between voltage and salinity modules if not explicitly provided
     const vSensor = Math.round(sensorTotal * 0.4);
     const sSensor = Math.round(sensorTotal * 0.6);
