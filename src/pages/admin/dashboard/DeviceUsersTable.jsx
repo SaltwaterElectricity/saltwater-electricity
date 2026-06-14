@@ -54,15 +54,15 @@ const DeviceUsersTable = memo(({ users = [], loading = false }) => {
                   </div>
                 </td>
                 <td className="px-8 py-4 text-[11px] text-on-surface">
-                  {user.address?.baranggay || "Purok -1 SNQ"}
+                  {user.address?.baranggay || "Unassigned"}
                 </td>
                 <td className="px-8 py-4 text-[11px] text-on-surface">
-                  {user.deviceId || "SD-001-SQN"}
+                  {user.deviceId || "No Device"}
                 </td>
                 <td className="px-8 py-4 text-[11px] text-outline">
                   {user.assignedAt
                     ? new Date(user.assignedAt).toLocaleDateString()
-                    : "APRIL 12, 2025"}
+                    : "Not available"}
                 </td>
                 <td className="px-8 py-4 text-right">
                   <button className="text-primary font-bold text-[11px] hover:underline transition-all">

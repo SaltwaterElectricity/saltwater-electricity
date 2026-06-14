@@ -10,14 +10,17 @@ export const HardwareUsageSection = ({ telemetry }) => {
   const currentTotal = telemetry?.current ? Math.round(telemetry.current * 1000) : 0; // Convert to mA
   const tsKey = telemetry?.timestamp ?? "standby";
 
-  // Requirement: Breakdown mapping (Estimated based on hardware specs if telemetry lacks granular keys)
+  // Requirement: Breakdown mapping using actual telemetry data
   const components = useMemo(() => {
-    // If telemetry has granular keys, use them. Otherwise use fallback estimates.
-    const esp = telemetry?.esp_ma || Math.min(120, currentTotal > 0 ? 120 : 0);
-    const vSensor = telemetry?.sensor_ma ? Math.round(telemetry.sensor_ma / 2) : 8;
-    const sSensor = telemetry?.sensor_ma ? Math.round(telemetry.sensor_ma / 2) : 20;
+    // Prioritize actual readings from the device
+    const esp = telemetry?.esp_ma ?? 0;
+    const bulb = telemetry?.bulb_ma ?? 0;
+    const sensorTotal = telemetry?.sensor_ma ?? 0;
+    
+    // Split sensor_ma between voltage and salinity modules if not explicitly provided
+    const vSensor = Math.round(sensorTotal * 0.4);
+    const sSensor = Math.round(sensorTotal * 0.6);
     const relay = telemetry?.relay_active ? 15 : 0;
-    const bulb = telemetry?.relay_active ? 200 : 0; // Estimated bulb draw
 
     return [
       {
@@ -56,7 +59,7 @@ export const HardwareUsageSection = ({ telemetry }) => {
         color: "from-blue-500 to-cyan-500",
       },
     ];
-  }, [telemetry, currentTotal]);
+  }, [telemetry]);
 
   const timestamp = telemetry?.timestamp
     ? new Date(telemetry.timestamp).toLocaleTimeString([], {

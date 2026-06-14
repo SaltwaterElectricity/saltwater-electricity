@@ -83,12 +83,19 @@ const ResidentDashboard = () => {
     [requests]
   );
 
+  const activeDevicesCount = useMemo(() => {
+    return userDevices.filter((d) => {
+      const tel = telemetry?.[d.device_id];
+      return tel && tel.voltage > 0;
+    }).length;
+  }, [userDevices, telemetry]);
+
   const healthScore = useMemo(() => {
     if (!latestLog) return 0;
-    const tds = latestLog.tds_ppm || 0;
+    const tdsValue = latestLog.tds ?? latestLog.tds_ppm ?? 0;
     const config = SENSOR_CONFIG[METRICS.TDS];
-    if (tds < config.warning) return 98;
-    if (tds < config.critical) return 85;
+    if (tdsValue < config.warning) return 98;
+    if (tdsValue < config.critical) return 85;
     return 45;
   }, [latestLog]);
 
@@ -130,14 +137,14 @@ const ResidentDashboard = () => {
       }
 
       const b = buckets.get(bucketTs);
-      // Ensure zero values are accepted (not ignored)
-      const v = typeof log.voltage === "number" ? log.voltage : parseFloat(log.voltage);
-      const c = typeof log.current === "number" ? log.current : parseFloat(log.current);
-      const s = typeof log.tds_ppm === "number" ? log.tds_ppm : parseFloat(log.tds_ppm);
+      // Requirement: Use normalized keys (voltage, current, tds)
+      const v = Number(log.voltage) || 0;
+      const c = Number(log.current) || 0;
+      const s = Number(log.tds ?? log.tds_ppm) || 0;
 
-      if (!isNaN(v)) b.v.push(v);
-      if (!isNaN(c)) b.c.push(c);
-      if (!isNaN(s)) b.s.push(s);
+      b.v.push(v);
+      b.c.push(c);
+      b.s.push(s);
     });
 
     return Array.from(buckets.values())
@@ -217,7 +224,7 @@ const ResidentDashboard = () => {
         <SystemOverviewCard
           healthScore={healthScore}
           totalDevices={totalDevicesCount}
-          activeDevices={totalDevicesCount}
+          activeDevices={activeDevicesCount}
         />
       </div>
 

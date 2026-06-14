@@ -8,7 +8,8 @@ import {
   HistoricalCharts,
   HistoricalTable,
 } from "../../components/dashboard";
-import { useDevices, useResidentManagement, useHistory, useMultiDeviceHistory } from "../../hooks";
+import { useDevices, useResidentManagement, useHistory, useMultiDeviceHistory, useAssignments } from "../../hooks";
+import { useAuth } from "../../context/useAuth";
 
 /**
  * HistoricalData Page - Unified Legacy Mirror
@@ -19,6 +20,8 @@ import { useDevices, useResidentManagement, useHistory, useMultiDeviceHistory } 
  */
 const HistoricalData = () => {
   const { deviceId } = useParams();
+  const { user, isAdmin, isSuperAdmin } = useAuth();
+  const isPrivileged = isAdmin || isSuperAdmin;
 
   // --- 1. State: UI & Filtering ---
   const [selectedDeviceId, setSelectedDeviceId] = useState(deviceId || "all");
@@ -34,6 +37,7 @@ const HistoricalData = () => {
 
   // --- 2. Core Data Fetching ---
   const { devices, loading: devicesLoading } = useDevices();
+  const { assignments, loading: assignmentsLoading } = useAssignments();
   const { residents, stats: residentStats, loading: residentsLoading } = useResidentManagement();
 
   // Create device -> user ID mapping for efficient lookup
@@ -44,20 +48,46 @@ const HistoricalData = () => {
     }, {});
   }, [devices]);
 
+  // Find all devices assigned to the current resident
+  const userDevices = useMemo(() => {
+    if (!user || !devices) return [];
+    const userId = String(user.uid || user.id || "");
+    if (!userId) return [];
+
+    // 1. Identify IDs from primary assignment node
+    const assignedIds = assignments
+      ? Object.entries(assignments)
+          .filter(([_, data]) => String(data.userId) === userId)
+          .map(([id]) => id)
+      : [];
+
+    // 2. Filter devices that either have the direct ID match or the legacy field match
+    return devices.filter((d) => {
+      const isPrimaryMatch = assignedIds.includes(d.device_id);
+      const isLegacyMatch = String(d.assigned_user_id || "") === userId;
+      return isPrimaryMatch || isLegacyMatch;
+    });
+  }, [user, devices, assignments]);
+
   // --- 3. Data Strategy: Single vs Multi View ---
   const isAllSelected = selectedDeviceId === "all";
 
   // A. Single device history branch
-  const { logs: singleLogs, loading: singleLoading } = useHistory(
+  const { logs: singleLogs, loading: singleLoading, refresh: singleRefresh } = useHistory(
     !isAllSelected ? selectedDeviceId : null,
     100,
     dateFilter
   );
 
   // B. Multi device history branch (aggregate view)
-  const allDeviceIds = useMemo(() => devices.map((d) => d.device_id), [devices]);
-  const { data: multiHistory, loading: multiLoading } = useMultiDeviceHistory(
-    isAllSelected ? allDeviceIds : [],
+  // STRATEGY: Residents only fetch logs for THEIR devices to avoid Permission Denied errors
+  const deviceIdsToFetch = useMemo(() => {
+    if (isPrivileged) return devices.map((d) => d.device_id);
+    return userDevices.map((d) => d.device_id);
+  }, [isPrivileged, devices, userDevices]);
+
+  const { data: multiHistory, loading: multiLoading, refresh: multiRefresh } = useMultiDeviceHistory(
+    isAllSelected ? deviceIdsToFetch : [],
     20 // Fetch limited set per device for overview performance
   );
 
@@ -76,7 +106,7 @@ const HistoricalData = () => {
     const flattened = [];
 
     multiHistory.forEach((entry) => {
-      allDeviceIds.forEach((id) => {
+      deviceIdsToFetch.forEach((id) => {
         if (entry[`${id}_full`]) {
           flattened.push({
             id: `${id}-${entry.timestamp}`,
@@ -91,7 +121,7 @@ const HistoricalData = () => {
 
     // Maintain chronological integrity (newest first)
     return flattened.sort((a, b) => b.__normalizedTs - a.__normalizedTs);
-  }, [isAllSelected, singleLogs, multiHistory, allDeviceIds, selectedDeviceId, deviceUserMap]);
+  }, [isAllSelected, singleLogs, multiHistory, deviceIdsToFetch, selectedDeviceId, deviceUserMap]);
 
   // --- 5. User Hydration: Resident Mapping ---
   const residentsMap = useMemo(() => {
@@ -108,11 +138,11 @@ const HistoricalData = () => {
     const term = searchTerm.toLowerCase();
 
     return activeLogs.filter((log) => {
-      const user = residentsMap[log.userId] || {};
-      const userName = `${user.firstName || ""} ${user.lastName || ""}`.toLowerCase();
-      const userEmail = (user.email || "").toLowerCase();
+      const u = residentsMap[log.userId] || {};
+      const userName = `${u.firstName || ""} ${u.lastName || ""}`.toLowerCase();
+      const userEmail = (u.email || "").toLowerCase();
       const deviceName = (log.deviceId || "").toLowerCase();
-      const location = (user.address?.baranggay || "").toLowerCase();
+      const location = (u.address?.baranggay || "").toLowerCase();
 
       return (
         userName.includes(term) ||
@@ -123,44 +153,72 @@ const HistoricalData = () => {
     });
   }, [activeLogs, searchTerm, residentsMap]);
 
-  // --- 7. Loading Orchestration ---
+  // --- 7. Metric Calculation (Actual Data) ---
+  const readingStats = useMemo(() => {
+    return (filteredLogs || []).reduce(
+      (acc, log) => {
+        if (log.voltage > 0) acc.v++;
+        if ((log.tds || log.tds_ppm) > 0) acc.s++;
+        if (log.current > 0) acc.c++;
+        return acc;
+      },
+      { v: 0, s: 0, c: 0 }
+    );
+  }, [filteredLogs]);
+
+  // --- 8. Loading Orchestration ---
   const isLoading =
-    devicesLoading || residentsLoading || (isAllSelected ? multiLoading : singleLoading);
+    devicesLoading || residentsLoading || assignmentsLoading || (isAllSelected ? multiLoading : singleLoading);
 
-  // --- 8. Render: Unified Layout ---
+  // --- 9. Render: Unified Layout ---
   return (
-    <div className="animate-fade-in historical-legacy-container -mx-gutter md:-mx-margin -mt-gutter md:-mt-margin bg-background min-h-full overflow-x-hidden">
-      {/* Mirroring code1.html <main> content area */}
+    <div className="animate-fade-in historical-legacy-container bg-background min-h-full overflow-x-hidden flex flex-col pb-20">
+        {/* Mirroring code1.html <main> content area */}
 
-      {/* 1. Header with Illustration */}
-      <HistoricalHeader onSearch={setSearchTerm} />
+        {/* 1. Header (Condensed vertical padding) */}
+        <HistoricalHeader />
 
-      {/* 2. Metric Cards Row */}
-      <HistoricalMetricCards
-        devicesCount={devices.length}
-        usersCount={residentStats.total}
-        logsCount={activeLogs.length}
-      />
+        {/* 2. Metric Cards Row (Floating overlap removed for decompression) */}
+        <div className="mt-6">
+          <HistoricalMetricCards 
+            devicesCount={isPrivileged ? (devices?.length || 0) : (userDevices?.length || 0)}
+            usersCount={isPrivileged ? (residentStats?.total || 0) : (userDevices.length > 0 ? 1 : 0)}
+            vCount={readingStats.v}
+            sCount={readingStats.s}
+            cCount={readingStats.c}
+          />
+        </div>
 
-      {/* 3. Filter Bar */}
-      <HistoricalFilterBar
-        devices={devices}
-        selectedDeviceId={selectedDeviceId}
-        onDeviceChange={setSelectedDeviceId}
-        dateFilter={dateFilter}
-        onDateChange={setDateFilter}
-        searchTerm={searchTerm}
-        onSearch={setSearchTerm}
-      />
+        {/* 3. Filter Bar (Clear separation) */}
+        <div className="mt-6">
+          <HistoricalFilterBar 
+            devices={isPrivileged ? devices : userDevices}
+            selectedDeviceId={selectedDeviceId}
+            onDeviceChange={setSelectedDeviceId}
+            dateFilter={dateFilter}
+            onDateChange={setDateFilter}
+            searchTerm={searchTerm}
+            onSearch={setSearchTerm}
+          />
+        </div>
 
-      {/* 4. Charts Grid (Trends & Sidebar Usage) */}
-      <HistoricalCharts logs={filteredLogs} loading={isLoading} />
+        {/* 4. Charts Grid (Primary focus) */}
+        <div className="mt-6">
+          <HistoricalCharts 
+            logs={filteredLogs} 
+            loading={isLoading} 
+          />
+        </div>
 
-      {/* 5. Historical Data Records Table */}
-      <HistoricalTable logs={filteredLogs} residentsMap={residentsMap} loading={isLoading} />
-
-      {/* Padding at the bottom to match layout spacing */}
-      <div className="h-xl" />
+        {/* 5. Historical Data Records Table (Detailed drill-down) */}
+        <div className="mt-8">
+          <HistoricalTable 
+            logs={filteredLogs} 
+            residentsMap={residentsMap}
+            loading={isLoading}
+            onRefresh={isAllSelected ? multiRefresh : singleRefresh}
+          />
+        </div>
     </div>
   );
 };

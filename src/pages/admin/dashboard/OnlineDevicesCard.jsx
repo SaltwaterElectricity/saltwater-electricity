@@ -5,7 +5,7 @@ import { cn } from "../../../utils/cn";
  * OnlineDevicesCard Component (Admin Dashboard Exclusive)
  * Mirrors the specific design from dashboard.html
  */
-const OnlineDevicesCard = memo(({ value, trendValue = "+2", trend = "up" }) => {
+const OnlineDevicesCard = memo(({ value }) => {
   return (
     <div className="bg-white rounded-xl shadow-sm p-6 flex flex-col min-h-[180px] relative overflow-hidden group">
       <div className="flex justify-between items-start w-full">
@@ -20,13 +20,13 @@ const OnlineDevicesCard = memo(({ value, trendValue = "+2", trend = "up" }) => {
         <div
           className={cn(
             "flex items-center gap-1 px-2 py-1 rounded-full font-bold text-[11px]",
-            trend === "up" ? "bg-orange-50 text-orange-600" : "bg-red-50 text-red-600"
+            "bg-orange-50 text-orange-600"
           )}
         >
           <span className="material-symbols-outlined text-[14px]">
-            {trend === "up" ? "arrow_drop_up" : "arrow_drop_down"}
+            wifi
           </span>
-          {trendValue}
+          Live
         </div>
       </div>
       <div className="mt-4">

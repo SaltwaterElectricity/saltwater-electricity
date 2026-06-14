@@ -117,7 +117,9 @@ const DeviceAnalytics = () => {
               <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shadow-inner">
                 <ShieldCheck size={20} />
               </div>
-              <span className="text-xl font-black text-emerald-600 tracking-tighter">98.4%</span>
+              <span className="text-xl font-black text-emerald-600 tracking-tighter">
+                {reading ? "98.4%" : "0.0%"}
+              </span>
             </div>
           </div>
         </div>
@@ -211,7 +213,10 @@ const DeviceAnalytics = () => {
                   AI Summary
                 </p>
                 <p className="text-[11px] font-bold text-white leading-tight mt-1">
-                  Consistency remains high at 94% over the last 24h cycle.
+                  {logs.length > 0 
+                    ? `Consistency remains high at 94% over the last ${logs.length} readings.`
+                    : "Synchronizing with device history..."
+                  }
                 </p>
               </div>
             </div>

@@ -17,8 +17,8 @@ const SystemHealthCard = memo(({ value, status = "Optimal" }) => {
           </span>
         </div>
         <div className="flex items-center gap-1 bg-teal-50 px-2 py-1 rounded-full text-teal-600 font-bold text-[11px]">
-          <span className="material-symbols-outlined text-[14px]">trending_up</span>
-          Stable
+          <span className="material-symbols-outlined text-[14px]">bolt</span>
+          Live
         </div>
       </div>
       <div className="mt-4">

@@ -5,7 +5,7 @@ import { cn } from "../../../utils/cn";
  * TotalDevicesAdminCard Component (Admin Dashboard Exclusive)
  * Mirrors the specific design from dashboard.html
  */
-const TotalDevicesAdminCard = memo(({ value, trendValue = "12%", trend = "up" }) => {
+const TotalDevicesAdminCard = memo(({ value }) => {
   return (
     <div className="bg-white rounded-xl shadow-sm p-6 flex flex-col min-h-[180px] relative overflow-hidden group">
       <div className="flex justify-between items-start w-full">
@@ -20,13 +20,13 @@ const TotalDevicesAdminCard = memo(({ value, trendValue = "12%", trend = "up" })
         <div
           className={cn(
             "flex items-center gap-1 px-2 py-1 rounded-full font-bold text-[11px]",
-            trend === "up" ? "bg-green-50 text-green-600" : "bg-red-50 text-red-600"
+            "bg-blue-50 text-primary"
           )}
         >
           <span className="material-symbols-outlined text-[14px]">
-            {trend === "up" ? "arrow_drop_up" : "arrow_drop_down"}
+            sensors
           </span>
-          {trendValue}
+          Live
         </div>
       </div>
       <div className="mt-4">

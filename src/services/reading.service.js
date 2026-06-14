@@ -82,17 +82,31 @@ export const transformReading = (data) => {
       current: 0,
       timestamp: Date.now(),
       relay_active: false,
+      bulb_ma: 0,
+      esp_ma: 0,
+      sensor_ma: 0,
+      power_mode: "Standby",
+      is_maintenance: false,
+      device_id: "Unknown",
     };
   }
 
-  const transformed = { ...data };
+  const transformed = {
+    ...data,
+    bulb_ma: data.bulb_ma ?? 0,
+    esp_ma: data.esp_ma ?? 0,
+    sensor_ma: data.sensor_ma ?? 0,
+    power_mode: data.power_mode || "Active",
+    is_maintenance: !!data.is_maintenance,
+    device_id: data.device_id || "Unknown",
+  };
 
   // 1. CALCULATE DERIVED METRICS: Total Current in Amps
   // Priority: 1. total_ma (if exists), 2. Sum of bulb+esp+sensor
   const rawTotalMa = transformed.total_ma;
-  const bulb = Number(transformed.bulb_ma) || 0;
-  const esp = Number(transformed.esp_ma) || 0;
-  const sensor = Number(transformed.sensor_ma) || 0;
+  const bulb = Number(transformed.bulb_ma);
+  const esp = Number(transformed.esp_ma);
+  const sensor = Number(transformed.sensor_ma);
 
   const totalMa = rawTotalMa !== undefined ? Number(rawTotalMa) : bulb + esp + sensor;
 
@@ -223,8 +237,8 @@ export const updateBulbState = async (deviceId, newState) => {
     // 2. Update Latest Reading Node (Preserves all fields: esp_ma, sensor_ma, power_mode, etc.)
     updates[`readings/${deviceId}/latest`] = baseReading;
 
-    // 3. Add to Historical Logs
-    updates[`logs/${deviceId}/${clientTs}`] = baseReading;
+    // 3. Add to Historical Logs (Nested under readings node)
+    updates[`readings/${deviceId}/logs/${clientTs}`] = baseReading;
 
     // 4. Hardware Command Node (Anti-Replay Protection)
     updates[`commands/${deviceId}/relay`] = newState;
@@ -310,14 +324,14 @@ export const getHistoricalLogs = async (deviceId, limit = 50, date = null) => {
     // Firebase orderByKey() queries always compare strings.
     // We convert timestamps to strings to match the keys written in updateBulbState.
     logsRef = query(
-      ref(db, `logs/${deviceId}`),
+      ref(db, `readings/${deviceId}/logs`),
       orderByKey(),
       startAt(startTs.toString()),
       endAt(endTs.toString())
     );
   } else {
     // Default: Get most recent logs
-    logsRef = query(ref(db, `logs/${deviceId}`), orderByKey(), limitToLast(limit));
+    logsRef = query(ref(db, `readings/${deviceId}/logs`), orderByKey(), limitToLast(limit));
   }
 
   try {
@@ -346,30 +360,51 @@ export const getHistoricalLogs = async (deviceId, limit = 50, date = null) => {
 };
 
 export const subscribeToAllTelemetry = (deviceIds, callback, onError = null) => {
-  const telemetryRef = ref(db, "readings");
+  if (!Array.isArray(deviceIds) || deviceIds.length === 0) {
+    // If no IDs, return immediately with empty state
+    callback({});
+    return () => {};
+  }
 
-  return onValue(
-    telemetryRef,
-    (snapshot) => {
-      const readings = snapshot.val() || {};
-      const normalizedTelemetry = {};
+  const normalizedTelemetry = {};
+  const unsubscribes = [];
 
-      // First, initialize all provided device IDs with default standby data
-      deviceIds.forEach((id) => {
-        normalizedTelemetry[id] = transformReading(null);
-      });
+  // 1. Initialize all IDs with default standby data immediately
+  deviceIds.forEach((id) => {
+    normalizedTelemetry[id] = transformReading(null);
+  });
+  callback({ ...normalizedTelemetry });
 
-      // Then, overwrite with actual 'latest' data if it exists
-      Object.keys(readings).forEach((id) => {
-        if (readings[id]?.latest) {
-          normalizedTelemetry[id] = transformReading(readings[id].latest);
+  // 2. Subscribe to each device node individually (Rule-compliant)
+  deviceIds.forEach((id) => {
+    const deviceRef = ref(db, `readings/${id}/latest`);
+    const unsub = onValue(
+      deviceRef,
+      (snapshot) => {
+        try {
+          const data = snapshot.val();
+          normalizedTelemetry[id] = transformReading(data);
+          // Trigger callback with a shallow copy to ensure state updates in hooks
+          callback({ ...normalizedTelemetry });
+        } catch (err) {
+          logger.warn(`[Telemetry Service] Parse error for device ${id}:`, err);
         }
-      });
+      },
+      (error) => {
+        logger.error(`[Telemetry Service] Subscription failed for device ${id}:`, error);
+        // On failure, keep the standby data but inform the error handler if it's the first time
+        if (onError && Object.keys(normalizedTelemetry).length === 1) {
+          onError(error);
+        }
+      }
+    );
+    unsubscribes.push(unsub);
+  });
 
-      callback(normalizedTelemetry);
-    },
-    onError
-  );
+  // 3. Return combined cleanup function
+  return () => {
+    unsubscribes.forEach((un) => un());
+  };
 };
 
 export default {

@@ -11,7 +11,7 @@ const PerformanceAnalyticsCard = memo(
     selectedDate,
     setSelectedDate,
     logsLoading,
-    logs = [],
+    _logs = [],
     performanceChartData,
     deviceIds = [],
   }) => {
@@ -64,7 +64,7 @@ const PerformanceAnalyticsCard = memo(
                 Check your request status for pending hardware.
               </p>
             </div>
-          ) : logs.length === 0 ? (
+          ) : !performanceChartData || performanceChartData.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full opacity-50 text-center animate-in fade-in duration-500">
               <div className="p-4 rounded-full bg-surface-variant/20 mb-3">
                 <Activity size={32} className="text-on-surface-variant" />

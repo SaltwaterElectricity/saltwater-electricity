@@ -133,3 +133,11 @@ Depth achieved through light and soft colored blurs.
 2.  **Elevation:** depth is achieved through **Backdrop Blurs** and subtle white borders rather than heavy black shadows.
 3.  **Shapes:** Maintain expansive radii (12px to 20px) to suggest sea glass. Avoid sharp 90-degree corners.
 4.  **Rhythm:** Prioritize negative space. Components should breathe with a minimum of 24px padding (`p-md`).
+
+---
+
+## 5. Data Visualization Standards
+
+1.  **Animated Transitions:** Every component containing a graph or chart MUST implement smooth entrance and update animations. This reinforces the "living system" feel of real-time IoT data.
+2.  **Animation Duration:** Standard duration for data point transitions should be between `1200ms` and `1800ms` to suggest fluid energy flow.
+3.  **Interaction Feedback:** Graphs should utilize subtle active dots and tooltip animations to provide empathetic feedback during user inspection.

@@ -18,20 +18,16 @@ const MetricCard = ({ label, value, unit, type, colorClass }) => {
   const progress = Math.min(Math.max(((val - min) / (max - min)) * 100, 0), 100);
 
   return (
-    <div className="bg-slate-50/80 p-5 rounded-2xl border border-slate-100 transition-all hover:bg-slate-100/50 flex flex-col items-center text-center">
-      <div className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 font-body-md flex flex-col items-center min-h-[20px] justify-center">
-        {label.split(" ").map((word) => (
-          <span key={`${label}-${word}`} className="leading-none">
-            {word}
-          </span>
-        ))}
+    <div className="bg-slate-50/80 p-4 rounded-2xl border border-slate-100 transition-all hover:bg-slate-100/50 flex flex-col items-center text-center">
+      <div className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-3 font-body-md flex items-center min-h-[14px] justify-center whitespace-nowrap">
+        {label}
       </div>
 
-      <div className="mb-4 flex-1 flex flex-col items-center justify-center">
-        <p className="text-2xl font-black text-slate-900 tabular-nums leading-none">
+      <div className="mb-3 flex-1 flex flex-col items-center justify-center">
+        <p className="text-xl sm:text-2xl font-black text-slate-900 tabular-nums leading-none">
           {value ?? "--"}
         </p>
-        <p className="text-primary font-black text-[12px] uppercase tracking-[0.2em] mt-2 leading-none">
+        <p className="text-primary font-black text-[10px] uppercase tracking-[0.2em] mt-1.5 leading-none">
           {unit}
         </p>
       </div>
@@ -61,11 +57,12 @@ export const ProvisionDeviceCard = ({ onAction }) => {
         <div className="w-10 h-10 rounded-full flex items-center justify-center text-white shrink-0 shadow-[0_4px_12px_rgba(10,46,255,0.3)] bg-primary group-hover:scale-110 transition-transform duration-500">
           <Plus size={24} strokeWidth={3} />
         </div>
-        <div className="text-left">
-          <h4 className="font-display text-on-surface text-sm sm:text-base font-bold uppercase tracking-tight italic">
+        <div className="text-left flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
+          <h4 className="font-display text-on-surface text-sm sm:text-base font-bold uppercase tracking-tight italic whitespace-nowrap">
             Request for Another Device
           </h4>
-          <p className="font-body-md text-on-surface-variant text-[10px] sm:text-xs mt-0.5">
+          <span className="hidden md:block text-primary/40 font-black text-lg">/</span>
+          <p className="font-body-md text-on-surface-variant text-[10px] sm:text-xs whitespace-nowrap opacity-80">
             Add your saltwater electricity devices with just a click.
           </p>
         </div>
@@ -151,16 +148,15 @@ export const UserDeviceLayout = ({
 
   return (
     <div className="bg-cardBg rounded-[24px] shadow-premium p-6 sm:p-8 relative overflow-hidden animate-fade-in flex flex-col h-full border border-white/40">
-      {/* Header Section */}
       <div className="flex items-start justify-between mb-8">
-        <div className="min-w-0">
-          <div className="flex items-center space-x-2 mb-1.5 flex-wrap gap-y-2">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-between mb-2 gap-4">
             <h3 className="text-xl sm:text-2xl font-black text-slate-900 uppercase tracking-tight italic font-display truncate">
               {deviceName || "Aqua Unit"}
             </h3>
             <span
               className={cn(
-                "flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider border shrink-0",
+                "flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider border shrink-0 shadow-sm",
                 status.bg,
                 status.color,
                 status.border
@@ -177,7 +173,7 @@ export const UserDeviceLayout = ({
 
         <button
           onClick={handleAnalyticsRedirect}
-          className="w-9 h-9 flex items-center justify-center text-slate-400 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors shrink-0"
+          className="w-9 h-9 flex items-center justify-center text-slate-400 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors shrink-0 ml-4"
         >
           <Maximize2 size={16} />
         </button>

@@ -106,9 +106,9 @@ export const SENSOR_CONFIG = Object.freeze({
     unit: "V",
     icon: "⚡",
     min: 0,
-    max: 15,
-    warning: 3.2,
-    critical: 2.8,
+    max: 300, // Headroom for 220V-240V systems
+    warning: 210, // Standard threshold for brownout/overvoltage alerts
+    critical: 200,
     precision: 2,
   },
   [METRICS.CURRENT]: {

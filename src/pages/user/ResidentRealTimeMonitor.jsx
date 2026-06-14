@@ -99,14 +99,16 @@ const ResidentRealTimeMonitor = () => {
         onClose={() => setToastConfig((prev) => ({ ...prev, isOpen: false }))}
       />
 
-      {/* 1. PAGE HEADER SECTION */}
-      <section className="pb-8 lg:pb-12">
-        <h2 className="font-display text-4xl lg:text-5xl font-black text-on-surface tracking-tighter uppercase italic">
-          My Devices
-        </h2>
-        <p className="font-body-md text-on-surface-variant text-base mt-2 max-w-2xl">
-          Real-time oversight of your personal saltwater electricity infrastructure nodes.
-        </p>
+      {/* 1. PAGE HEADER SECTION (Mirrored from legacy design) */}
+      <section className="pt-10 pb-6 border-b border-outline-variant/10 mb-10 animate-in fade-in slide-in-from-top-4 duration-700">
+        <div>
+          <h2 className="font-headline-lg text-headline-lg text-on-surface tracking-tight uppercase">
+            My Devices
+          </h2>
+          <p className="font-body-md text-on-surface-variant mt-1">
+            Monitor real-time readings of your saltwater electricity devices.
+          </p>
+        </div>
       </section>
 
       {/* 2. BENTO GRID MAIN CONTENT (12-column layout) */}

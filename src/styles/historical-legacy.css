@@ -57,42 +57,46 @@
   --color-on-secondary-fixed-variant: #3e465b;
   --color-inverse-on-surface: #eff0ff;
 
-  /* SPACING SYNC - Optimized for Layout Fit */
-  --spacing-2xl: 48px;
+  /* SPACING SYNC - Optimized for Decompressed Layout Fit */
+  --spacing-2xl: 64px;
   --spacing-sidebar-width: 256px;
-  --spacing-gutter: 24px;
-  --spacing-md: 16px;
-  --spacing-container-margin: 32px;
-  --spacing-xl: 32px;
-  --spacing-lg: 24px;
-  --spacing-sm: 8px;
-  --spacing-xs: 4px;
+  --spacing-gutter: 32px;
+  --spacing-md: 24px;
+  --spacing-container-margin: 40px;
+  --spacing-xl: 48px;
+  --spacing-lg: 32px;
+  --spacing-sm: 12px;
+  --spacing-xs: 8px;
 
-  /* TYPOGRAPHY SYNC */
-  --text-label-caps: 10px;
-  --text-label-caps--line-height: 14px;
-  --text-label-caps--letter-spacing: 0.05em;
+  /* FONT FAMILY SYNC */
+  --font-sora-display: "Sora", sans-serif;
+  --font-sora-body: "Sora", sans-serif;
+
+  /* TYPOGRAPHY SYNC - Decompressed for readability */
+  --text-label-caps: 11px;
+  --text-label-caps--line-height: 16px;
+  --text-label-caps--letter-spacing: 0.06em;
   --text-label-caps--font-weight: 700;
 
-  --text-body-base: 14px;
-  --text-body-base--line-height: 20px;
+  --text-body-base: 16px;
+  --text-body-base--line-height: 24px;
   --text-body-base--font-weight: 400;
 
-  --text-label-xs: 9px;
-  --text-label-xs--line-height: 12px;
+  --text-label-xs: 11px;
+  --text-label-xs--line-height: 14px;
   --text-label-xs--font-weight: 600;
 
-  --text-display-lg: 30px;
-  --text-display-lg--line-height: 38px;
-  --text-display-lg--letter-spacing: -0.02em;
-  --text-display-lg--font-weight: 700;
+  --text-display-lg: 48px;
+  --text-display-lg--line-height: 56px;
+  --text-display-lg--letter-spacing: -0.03em;
+  --text-display-lg--font-weight: 800;
 
-  --text-headline-md: 18px;
-  --text-headline-md--line-height: 24px;
+  --text-headline-md: 24px;
+  --text-headline-md--line-height: 32px;
   --text-headline-md--font-weight: 700;
 
-  --text-body-sm: 12px;
-  --text-body-sm--line-height: 16px;
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 20px;
   --text-body-sm--font-weight: 500;
 }
 

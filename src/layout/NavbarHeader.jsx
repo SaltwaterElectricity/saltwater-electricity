@@ -19,7 +19,7 @@ export const NavbarHeader = ({ currentUid }) => {
   const shouldShowBranding = !isResident && isSidebarCollapsed;
 
   return (
-    <header className="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-white/40 flex justify-between items-center px-6 py-4 w-full">
+    <header className="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-white/40 flex justify-between items-center px-gutter md:px-margin py-4 w-full">
       <div className="flex items-center space-x-8">
         <div
           className={cn(

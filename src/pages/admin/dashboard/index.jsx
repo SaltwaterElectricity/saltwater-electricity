@@ -106,9 +106,9 @@ const AdminDashboard = () => {
     <div className="space-y-6 animate-in fade-in duration-700">
       {/* 1. METRICS GRID */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <TotalDevicesAdminCard value={stats.total || 0} trendValue="12%" trend="up" />
-        <OnlineDevicesCard value={stats.online || 0} trendValue="+2" trend="up" />
-        <OfflineDevicesCard value={stats.offline || 0} trendValue="-1" trend="down" />
+        <TotalDevicesAdminCard value={stats.total || 0} trendValue="Live" trend="up" />
+        <OnlineDevicesCard value={stats.online || 0} trendValue="Live" trend="up" />
+        <OfflineDevicesCard value={stats.offline || 0} trendValue="Live" trend="down" />
         <SystemHealthCard value={stats.health} status={stats.health > 80 ? "Optimal" : "Checkup"} />
       </div>
 

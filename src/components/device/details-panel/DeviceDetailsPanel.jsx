@@ -1,5 +1,5 @@
 import { memo, useState, useEffect, useRef } from "react";
-import { X, User, Calendar, MapPin } from "lucide-react";
+import { X, User, Calendar, MapPin, Settings, ShieldAlert } from "lucide-react";
 import { cn } from "../../../utils/cn";
 import { DeviceControlSection } from "./DeviceControlSection";
 import { HardwareUsageSection } from "./HardwareUsageSection";
@@ -178,6 +178,18 @@ const DeviceDetailsPanel = ({ isOpen, onClose, device, telemetry, assignment, au
             <DetailItem icon={User} label="USER INFO" value={fullName} />
             <DetailItem icon={Calendar} label="Assigned Date" value={assignedDate} />
             <DetailItem icon={MapPin} label="Address" value={address} fullWidth />
+            {/* Extended Telemetry Fields */}
+            <DetailItem 
+              icon={Settings} 
+              label="Power Mode" 
+              value={telemetry?.power_mode || "Standby"} 
+            />
+            <DetailItem 
+              icon={ShieldAlert} 
+              label="Maintenance" 
+              value={telemetry?.is_maintenance ? "Required" : "Nominal"} 
+              color={telemetry?.is_maintenance ? "text-orange-500" : "text-emerald-500"}
+            />
           </div>
         </section>
 
@@ -197,7 +209,7 @@ const DeviceDetailsPanel = ({ isOpen, onClose, device, telemetry, assignment, au
   );
 };
 
-const DetailItem = ({ icon: Icon, label, value, fullWidth }) => (
+const DetailItem = ({ icon: Icon, label, value, fullWidth, color }) => (
   <div className={cn("flex items-start gap-3", fullWidth && "col-span-2")}>
     <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-100/50 flex-none">
       <Icon size={18} className="text-primary" />
@@ -206,7 +218,9 @@ const DetailItem = ({ icon: Icon, label, value, fullWidth }) => (
       <p className="font-display text-[11px] uppercase tracking-wider text-slate-400 mb-0.5">
         {label}
       </p>
-      <p className="font-sans text-[15px] font-semibold text-slate-700 leading-tight">{value}</p>
+      <p className={cn("font-sans text-[15px] font-semibold leading-tight", color || "text-slate-700")}>
+        {value}
+      </p>
     </div>
   </div>
 );

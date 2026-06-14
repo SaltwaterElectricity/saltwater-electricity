@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { MapPin, Cpu } from "lucide-react";
 import { cn } from "../../../utils/cn";
+import { formatRelativeTime } from "../../../utils/timeUtils";
 
 /**
  * SUB-COMPONENT: ReadingColumn
@@ -92,7 +93,7 @@ const MonitorDeviceRow = ({ device, onView }) => {
         />
         <ReadingColumn
           label="Salinity"
-          value={device.telemetry?.tds_ppm || 0}
+          value={device.telemetry?.tds || device.telemetry?.tds_ppm || 0}
           unit="ppm"
           color="purple"
         />
@@ -101,7 +102,9 @@ const MonitorDeviceRow = ({ device, onView }) => {
       {/* Action Section */}
       <div className="flex items-center">
         <div className="w-20 flex flex-col items-start">
-          <p className="text-[10px] font-bold text-gray-400">2m ago</p>
+          <p className="text-[10px] font-bold text-gray-400">
+            {formatRelativeTime(device.telemetry?.timestamp)}
+          </p>
           <p className="text-[9px] text-gray-300 font-medium">real-time</p>
         </div>
         <button

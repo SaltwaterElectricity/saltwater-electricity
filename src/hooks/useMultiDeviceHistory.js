@@ -56,9 +56,7 @@ export const useMultiDeviceHistory = (deviceIds = [], limit = 30) => {
           // Add device-specific keys
           entry[`${id}_tds`] = log.tds || 0;
           entry[`${id}_full`] = {
-            tds: log.tds || 0,
-            voltage: log.voltage || 0,
-            current: log.current || 0,
+            ...log,
             timestamp: ts,
           };
         });

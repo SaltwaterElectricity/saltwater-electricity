@@ -1,17 +1,17 @@
 import { memo } from "react";
-import { X, User, Phone, MapPin, CheckCircle2, AlertTriangle, WifiOff, Bolt } from "lucide-react";
+import { X, User, Phone, MapPin, CheckCircle2, AlertTriangle, WifiOff, Bolt, ShieldAlert, Calendar } from "lucide-react";
 import { cn } from "../../../utils/cn";
 
 /**
  * SUB-COMPONENT: InfoItem
  * Cleaner style mirrored from code1.html.
  */
-const InfoItem = ({ icon: Icon, label, value }) => (
+const InfoItem = ({ icon: Icon, label, value, color }) => (
   <div className="flex items-start space-x-3">
-    {Icon && <Icon size={20} className="text-blue-400 shrink-0" />}
+    {Icon && <Icon size={20} className={cn("text-blue-400 shrink-0", color)} />}
     <div>
       <p className="text-[10px] font-bold text-gray-400 uppercase leading-none mb-1">{label}</p>
-      <p className="text-sm font-bold text-gray-900 leading-tight">{value}</p>
+      <p className={cn("text-sm font-bold leading-tight", color || "text-gray-900")}>{value}</p>
     </div>
   </div>
 );
@@ -223,11 +223,25 @@ const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) 
               className="grid grid-cols-2 gap-y-6 scroll-mt-[260px] animate-in fade-in slide-in-from-bottom-4 duration-500"
             >
               <InfoItem icon={User} label="Resident Name" value={device.residentName} />
-              <InfoItem label="Assigned Date" value="MAY 12, 2025" />
-              <InfoItem icon={Phone} label="Contact Number" value={device.residentPhone} />
+              <InfoItem 
+                icon={Calendar}
+                label="Assigned Date" 
+                value={device.assignedAt ? new Date(device.assignedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }).toUpperCase() : "NOT ASSIGNED"} 
+              />
+              <InfoItem icon={Phone} label="Contact Number" value={device.residentPhone || "N/A"} />
               <InfoItem label="Device ID" value={device.device_id} />
               <InfoItem icon={MapPin} label="Address" value={device.residentLocation} />
-              <InfoItem label="Number of Devices" value="1" />
+              <InfoItem 
+                icon={Bolt} 
+                label="Power Mode" 
+                value={device.telemetry?.power_mode || "Active"} 
+              />
+              <InfoItem 
+                icon={ShieldAlert} 
+                label="Maintenance" 
+                value={device.telemetry?.is_maintenance ? "Required" : "Nominal"} 
+                color={device.telemetry?.is_maintenance ? "text-orange-500" : "text-emerald-500"}
+              />
             </div>
 
             {/* Readings Section */}
@@ -246,7 +260,7 @@ const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) 
                 />
                 <MiniGraphSection
                   label="Ionic Density spectrum"
-                  value={`${device.telemetry?.tds_ppm || 0} PPM`}
+                  value={`${device.telemetry?.tds || device.telemetry?.tds_ppm || 0} PPM`}
                   unit="PPM"
                   color="purple"
                   data={[45, 55, 50, 60, 52, 55, 70, 58, 62, 68, 60, 65, 55]}

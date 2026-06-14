@@ -5,7 +5,7 @@ import { memo } from "react";
  * A triple-ring circular gauge for high-density status visualization.
  * Aligned with AlonKuryente Dashboard visual language.
  */
-const SystemHealthGauge = memo(({ voltage = 90, salinity = 80, current = 70, overall = 92 }) => {
+const SystemHealthGauge = memo(({ voltage = 0, salinity = 0, current = 0, overall = 0 }) => {
   // SVG Calculations
   const size = 100;
   const center = 50;

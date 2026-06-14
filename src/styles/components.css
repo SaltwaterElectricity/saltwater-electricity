@@ -387,6 +387,46 @@
     animation: subtle-pulse 1.5s ease-in-out infinite;
   }
 
+  /* Tailwind CSS Animate Plugin Polyfill for Entry Animations */
+  .animate-in {
+    animation-duration: 500ms;
+    animation-fill-mode: both;
+  }
+
+  .fade-in {
+    animation-name: fade-in;
+  }
+
+  .slide-in-from-left-2 {
+    animation-name: slide-in-from-left;
+  }
+
+  .slide-in-from-bottom-2 {
+    animation-name: slide-in-from-bottom;
+  }
+
+  @keyframes slide-in-from-left {
+    from {
+      transform: translateX(-0.5rem);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-in-from-bottom {
+    from {
+      transform: translateY(0.5rem);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
   .side-panel-hidden {
     width: 0 !important;
     min-width: 0 !important;
