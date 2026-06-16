@@ -94,9 +94,7 @@ export const UserDeviceLayout = ({
 
     // 1. Critical Checks (High or Low)
     const isCritical =
-      tVal >= tdsCfg.critical ||
-      tVal <= tdsCfg.lowCritical ||
-      vVal <= voltCfg.lowCritical;
+      tVal >= tdsCfg.critical || tVal <= tdsCfg.lowCritical || vVal <= voltCfg.lowCritical;
 
     if (isCritical) {
       return {
@@ -110,9 +108,7 @@ export const UserDeviceLayout = ({
 
     // 2. Warning Checks (High or Low)
     const isWarning =
-      tVal >= tdsCfg.warning ||
-      tVal <= tdsCfg.lowWarning ||
-      vVal <= voltCfg.lowWarning;
+      tVal >= tdsCfg.warning || tVal <= tdsCfg.lowWarning || vVal <= voltCfg.lowWarning;
 
     if (isWarning) {
       return {

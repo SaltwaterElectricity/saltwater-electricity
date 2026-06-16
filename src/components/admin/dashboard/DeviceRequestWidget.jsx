@@ -17,9 +17,7 @@ const RequestItem = ({ request }) => {
   return (
     <div className="pb-6 border-b border-outline-variant/20 last:border-0 last:pb-0 border border-outline-variant/30 rounded-xl p-4">
       <div className="text-center mb-4">
-        <p className="text-base font-bold text-on-surface">
-          {loading ? "..." : fullName}
-        </p>
+        <p className="text-base font-bold text-on-surface">{loading ? "..." : fullName}</p>
         <p className="text-[11px] text-outline mt-1">
           {new Date(request.createdAt).toLocaleDateString("en-US", {
             month: "long",

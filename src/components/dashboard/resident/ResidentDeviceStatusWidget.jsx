@@ -67,21 +67,32 @@ const ResidentDeviceStatusWidget = memo(({ userDevices = [], telemetry = {}, onV
               {/* Technical Metrics Grid */}
               <div className="grid grid-cols-3 gap-2">
                 <div className="flex flex-col items-center p-2 rounded-xl bg-white/50 border border-outline-variant/5">
-                  <span className="material-symbols-outlined text-[18px] text-primary mb-1">bolt</span>
+                  <span className="material-symbols-outlined text-[18px] text-primary mb-1">
+                    bolt
+                  </span>
                   <p className="text-[11px] font-bold text-on-surface leading-none">
                     {reading.voltage?.toFixed(1) || "0.0"}V
                   </p>
-                  <p className="text-[8px] text-on-surface-variant font-bold uppercase mt-1">Volt</p>
+                  <p className="text-[8px] text-on-surface-variant font-bold uppercase mt-1">
+                    Volt
+                  </p>
                 </div>
                 <div className="flex flex-col items-center p-2 rounded-xl bg-white/50 border border-outline-variant/5">
-                  <span className="material-symbols-outlined text-[18px] text-primary mb-1" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
+                  <span
+                    className="material-symbols-outlined text-[18px] text-primary mb-1"
+                    style={{ fontVariationSettings: "'FILL' 1" }}
+                  >
+                    stars
+                  </span>
                   <p className="text-[11px] font-bold text-on-surface leading-none">
                     {reading.current?.toFixed(2) || "0.00"}A
                   </p>
                   <p className="text-[8px] text-on-surface-variant font-bold uppercase mt-1">Amp</p>
                 </div>
                 <div className="flex flex-col items-center p-2 rounded-xl bg-white/50 border border-outline-variant/5">
-                  <span className="material-symbols-outlined text-[18px] text-primary mb-1">water_drop</span>
+                  <span className="material-symbols-outlined text-[18px] text-primary mb-1">
+                    water_drop
+                  </span>
                   <p className="text-[11px] font-bold text-on-surface leading-none">
                     {Math.round(reading.tds || reading.tds_ppm || 0)}
                   </p>
@@ -94,7 +105,9 @@ const ResidentDeviceStatusWidget = memo(({ userDevices = [], telemetry = {}, onV
 
         {userDevices.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full opacity-40 py-10">
-            <span className="material-symbols-outlined text-[48px] mb-2 text-on-surface-variant">router</span>
+            <span className="material-symbols-outlined text-[48px] mb-2 text-on-surface-variant">
+              router
+            </span>
             <p className="text-label-sm font-bold uppercase tracking-widest">No Nodes Found</p>
           </div>
         )}

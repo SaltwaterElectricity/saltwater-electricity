@@ -70,8 +70,13 @@ const ComposedDeviceChart = ({ data = [] }) => {
               <stop offset="100%" stopColor="#3d73ff" stopOpacity={0.4} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="1 4" vertical={false} stroke="#c5c5da" strokeOpacity={0.5} />
-          
+          <CartesianGrid
+            strokeDasharray="1 4"
+            vertical={false}
+            stroke="#c5c5da"
+            strokeOpacity={0.5}
+          />
+
           {/* Solid base line mirrored from legacy border-t border-solid */}
           <ReferenceLine y={0} stroke="#c5c5da" strokeWidth={1.5} strokeOpacity={0.8} />
 

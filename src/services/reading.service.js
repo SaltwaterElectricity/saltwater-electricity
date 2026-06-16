@@ -385,7 +385,7 @@ export const getHistoricalLogs = async (deviceId, limit = 50, date = null) => {
     const logs = Object.entries(data).map(([key, val]) => {
       const numericKey = parseInt(key);
       const dbTs = Number(val.timestamp);
-      const timestamp = !isNaN(dbTs) ? dbTs : (isNaN(numericKey) ? null : numericKey);
+      const timestamp = !isNaN(dbTs) ? dbTs : isNaN(numericKey) ? null : numericKey;
 
       return {
         id: key,

@@ -16,16 +16,23 @@ const ResidentManagementSkeleton = memo(() => {
       {/* 2. STATS SECTION SKELETON */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-white rounded-xl p-6 shadow-sm border border-gray-50 flex items-center h-[108px]">
+          <div
+            key={i}
+            className="bg-white rounded-xl p-6 shadow-sm border border-gray-50 flex items-center h-[108px]"
+          >
             <div className="w-14 h-14 bg-slate-100 rounded-xl mr-4 shrink-0 animate-pulse" />
             <div className="flex-1 space-y-2">
               <div className="h-2.5 w-24 bg-slate-100 rounded animate-pulse" />
               <div className="h-6 w-12 bg-slate-200 rounded animate-pulse" />
             </div>
             <div className="flex items-end gap-[3px] h-10 self-end mb-1">
-               {[1, 2, 3, 4, 5].map((j) => (
-                 <div key={j} className="w-1 bg-slate-50 rounded-t-sm animate-pulse" style={{ height: `${20 + Math.random() * 60}%` }} />
-               ))}
+              {[1, 2, 3, 4, 5].map((j) => (
+                <div
+                  key={j}
+                  className="w-1 bg-slate-50 rounded-t-sm animate-pulse"
+                  style={{ height: `${20 + Math.random() * 60}%` }}
+                />
+              ))}
             </div>
           </div>
         ))}
@@ -45,9 +52,9 @@ const ResidentManagementSkeleton = memo(() => {
       <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100">
         <div className="h-14 bg-slate-50 border-b border-slate-100 flex items-center px-6">
           <div className="flex-1 grid grid-cols-5 gap-4">
-             {[1, 2, 3, 4, 5].map((i) => (
-               <div key={i} className="h-3 w-20 bg-slate-200/50 rounded animate-pulse" />
-             ))}
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="h-3 w-20 bg-slate-200/50 rounded animate-pulse" />
+            ))}
           </div>
         </div>
         <div className="divide-y divide-slate-50">

@@ -16,7 +16,10 @@ const DeviceManagementSkeleton = memo(() => {
       {/* 2. SUMMARY SECTION CARDS SKELETON */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-white rounded-2xl p-6 flex items-center gap-4 shadow-sm border border-slate-100 h-28">
+          <div
+            key={i}
+            className="bg-white rounded-2xl p-6 flex items-center gap-4 shadow-sm border border-slate-100 h-28"
+          >
             <div className="w-16 h-16 shrink-0 rounded-2xl bg-slate-100 animate-pulse" />
             <div className="flex-1 space-y-2">
               <div className="h-3 w-20 bg-slate-100 rounded animate-pulse" />
@@ -39,7 +42,10 @@ const DeviceManagementSkeleton = memo(() => {
       {/* 4. DEVICE GRID SKELETON */}
       <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
         {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div key={i} className="rounded-2xl border-[1.5px] p-6 relative overflow-hidden flex flex-col items-center bg-white border-slate-100 h-[420px]">
+          <div
+            key={i}
+            className="rounded-2xl border-[1.5px] p-6 relative overflow-hidden flex flex-col items-center bg-white border-slate-100 h-[420px]"
+          >
             <div className="absolute top-4 left-4">
               <div className="bg-slate-50 border border-slate-100 w-12 h-12 rounded-xl animate-pulse" />
             </div>

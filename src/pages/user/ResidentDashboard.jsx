@@ -112,7 +112,7 @@ const ResidentDashboard = () => {
     if (!log) return 0;
     const tdsValue = log.tds ?? log.tds_ppm ?? 0;
     const config = SENSOR_CONFIG[METRICS.TDS];
-    
+
     if (tdsValue <= config.warning) {
       const progress = tdsValue / config.warning;
       return Math.round(100 - progress * 15);
@@ -129,9 +129,9 @@ const ResidentDashboard = () => {
   // Calculate Health Trend: Comparison with the previous recorded log
   const healthTrend = useMemo(() => {
     if (!logs || logs.length < 2) {
-      return { 
-        value: healthScore > 90 ? "Normal" : healthScore > 70 ? "Stable" : "Critical", 
-        trend: healthScore > 70 ? "up" : "down" 
+      return {
+        value: healthScore > 90 ? "Normal" : healthScore > 70 ? "Stable" : "Critical",
+        trend: healthScore > 70 ? "up" : "down",
       };
     }
 
@@ -140,10 +140,10 @@ const ResidentDashboard = () => {
     const diff = currentScore - prevScore;
 
     if (diff === 0) return { value: "Stable", trend: "up" };
-    
+
     return {
       value: `${Math.abs(diff)}%`,
-      trend: diff > 0 ? "up" : "down"
+      trend: diff > 0 ? "up" : "down",
     };
   }, [logs, healthScore]);
 
@@ -161,7 +161,7 @@ const ResidentDashboard = () => {
       const tel = telemetry?.[d.device_id];
       // IDOR/STALE DEFENSE: Only count as active if voltage > 0 AND reading is relatively fresh
       const telTs = tel?.__normalizedTs || tel?.timestamp || 0;
-      const isRecent = tel && (mountTime - telTs) < (APP_SETTINGS.STALE_THRESHOLD || 30000);
+      const isRecent = tel && mountTime - telTs < (APP_SETTINGS.STALE_THRESHOLD || 30000);
       return tel && tel.voltage > 0 && isRecent;
     }).length;
   }, [userDevices, telemetry, mountTime]);
@@ -169,7 +169,7 @@ const ResidentDashboard = () => {
   // Derived technical metrics for System Overview
   const { efficiency, systemLoad } = useMemo(() => {
     if (!latestLog) return { efficiency: 0, systemLoad: 0 };
-    
+
     const v = Number(latestLog.voltage) || 0;
     const c = Number(latestLog.current) || 0;
 
@@ -180,7 +180,7 @@ const ResidentDashboard = () => {
 
     return {
       efficiency: Math.round(effVal),
-      systemLoad: Math.round(loadVal)
+      systemLoad: Math.round(loadVal),
     };
   }, [latestLog]);
 
@@ -292,10 +292,10 @@ const ResidentDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 fill-mode-both">
         <TotalDevicesCard value={totalDevicesCount} />
         <RequestDeviceCard value={pendingRequests} />
-        <DeviceHealthCard 
-          value={healthScore} 
-          trendValue={healthTrend.value} 
-          trend={healthTrend.trend} 
+        <DeviceHealthCard
+          value={healthScore}
+          trendValue={healthTrend.value}
+          trend={healthTrend.trend}
         />
       </div>
 

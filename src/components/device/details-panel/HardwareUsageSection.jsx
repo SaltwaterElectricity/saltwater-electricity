@@ -193,7 +193,9 @@ export const HardwareUsageSection = ({ telemetry }) => {
                   className={cn(
                     "h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-1500 ease-out"
                   )}
-                  style={{ width: isMounted ? `${Math.min(100, (comp.value / 200) * 100)}%` : "0%" }}
+                  style={{
+                    width: isMounted ? `${Math.min(100, (comp.value / 200) * 100)}%` : "0%",
+                  }}
                 />
               </div>
             </div>

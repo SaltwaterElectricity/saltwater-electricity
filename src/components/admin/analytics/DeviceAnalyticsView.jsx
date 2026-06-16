@@ -4,7 +4,12 @@ import { ArrowLeft, History, Download, ShieldCheck, Activity, Zap } from "lucide
 import { cn } from "../../../utils/cn";
 import { useReadings, useHistory } from "../../../hooks";
 import { DeviceAnalyticsChart } from "../../../components";
-import { SalinityGauge, VoltageGauge, BulbPowerUsageGauge, BulbToggle } from "../../../components/ui";
+import {
+  SalinityGauge,
+  VoltageGauge,
+  BulbPowerUsageGauge,
+  BulbToggle,
+} from "../../../components/ui";
 import { processLogsInWindows } from "../../../utils/chartUtils";
 import { METRICS, METRIC_CONFIG } from "../../../constants";
 import { logActivity } from "../../../services/audit.service";

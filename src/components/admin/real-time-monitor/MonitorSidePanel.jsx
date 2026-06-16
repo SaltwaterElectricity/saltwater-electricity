@@ -53,21 +53,29 @@ const MiniGraphSection = ({ label, value, unit, color, data = [], maxVal = 1000 
       <div className="relative h-32 flex items-end justify-between px-1">
         {/* Tooltip Overlay (Follows hover or last point) */}
         {data.length > 0 && (
-          <div 
+          <div
             className="absolute -top-12 bg-black text-white shadow-lg rounded-lg border-2 border-white p-2 text-center z-10 font-extrabold min-w-[60px] transition-all duration-300"
             style={{ left: `${(hoverIndex / (data.length - 1)) * 90}%` }}
           >
             <p className="text-gray-400 text-[9px] uppercase tracking-wider mb-0.5">
-              {new Date(data[hoverIndex]?.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              {new Date(data[hoverIndex]?.timestamp).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
             </p>
-            <p className="text-white text-xs">{data[hoverIndex]?.val}{unit}</p>
+            <p className="text-white text-xs">
+              {data[hoverIndex]?.val}
+              {unit}
+            </p>
           </div>
         )}
 
         {data.map((point, i) => {
           const height = Math.max(10, Math.min(100, (point.val / maxVal) * 100));
-          const pointKey = point.timestamp ? `${label}-${point.timestamp}` : `${label}-fallback-${i}`;
-          
+          const pointKey = point.timestamp
+            ? `${label}-${point.timestamp}`
+            : `${label}-fallback-${i}`;
+
           return (
             <div
               key={pointKey}
@@ -90,9 +98,13 @@ const MiniGraphSection = ({ label, value, unit, color, data = [], maxVal = 1000 
 
       {/* X-Axis Labels (Approximate) */}
       <div className="flex justify-between mt-2 text-[9px] text-gray-400 font-medium">
-        {data.filter((_, i) => i % 2 === 0).map((p, i) => (
-          <span key={`label-${p.timestamp || i}`}>{new Date(p.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-        ))}
+        {data
+          .filter((_, i) => i % 2 === 0)
+          .map((p, i) => (
+            <span key={`label-${p.timestamp || i}`}>
+              {new Date(p.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            </span>
+          ))}
       </div>
     </div>
   );
@@ -169,13 +181,15 @@ const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) 
         .finally(() => {
           if (isMounted) setLoadingHistory(false);
         });
-      
+
       return () => {
         isMounted = false;
         clearTimeout(timer);
       };
     }
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, [isOpen, device?.device_id]);
 
   const scrollToSection = (tabId) => {
@@ -187,13 +201,15 @@ const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) 
   };
 
   // Transform history for graphs
-  const voltageData = useMemo(() => 
-    history.map(h => ({ val: h.voltage, timestamp: h.__normalizedTs })), 
-  [history]);
-  
-  const tdsData = useMemo(() => 
-    history.map(h => ({ val: h.tds, timestamp: h.__normalizedTs })), 
-  [history]);
+  const voltageData = useMemo(
+    () => history.map((h) => ({ val: h.voltage, timestamp: h.__normalizedTs })),
+    [history]
+  );
+
+  const tdsData = useMemo(
+    () => history.map((h) => ({ val: h.tds, timestamp: h.__normalizedTs })),
+    [history]
+  );
 
   return (
     <aside
@@ -325,9 +341,11 @@ const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) 
               </div>
               <div className="space-y-10">
                 {loadingHistory ? (
-                   <div className="h-32 flex items-center justify-center bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest animate-pulse">Syncing History...</p>
-                   </div>
+                  <div className="h-32 flex items-center justify-center bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest animate-pulse">
+                      Syncing History...
+                    </p>
+                  </div>
                 ) : (
                   <>
                     <MiniGraphSection
@@ -365,7 +383,7 @@ const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) 
               <div className="space-y-4">
                 {/* Dynamically derived alerts based on device state */}
                 {device.isOnline ? (
-                   <AlertRow
+                  <AlertRow
                     icon={CheckCircle2}
                     title="Network Stable"
                     desc="Node is successfully broadcasting telemetry."
@@ -381,8 +399,8 @@ const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) 
                     status="danger"
                   />
                 )}
-                
-                {(device.telemetry?.tds > 800) && (
+
+                {device.telemetry?.tds > 800 && (
                   <AlertRow
                     icon={AlertTriangle}
                     title="High Salinity"
@@ -405,7 +423,7 @@ const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) 
                 <AlertRow
                   icon={Bolt}
                   title="System Active"
-                  desc={`Power mode currently set to: ${device.telemetry?.power_mode || 'Active'}`}
+                  desc={`Power mode currently set to: ${device.telemetry?.power_mode || "Active"}`}
                   time="Current"
                   status="success"
                 />

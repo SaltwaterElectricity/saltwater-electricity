@@ -35,13 +35,18 @@ export const DeviceControlSection = ({ deviceId, telemetry }) => {
   };
 
   return (
-    <section id="section-control" className="scroll-mt-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <section
+      id="section-control"
+      className="scroll-mt-6 animate-in fade-in slide-in-from-bottom-4 duration-700"
+    >
       <h3 className="font-display text-lg font-bold mb-6 text-primary">Device Controls</h3>
 
       <div
         className={cn(
           "bg-white border rounded-[32px] p-8 transition-all duration-500 shadow-sm hover:shadow-md border-b-2",
-          isBulbOn && isMounted ? "border-primary border-b-primary" : "border-slate-100 border-b-slate-200"
+          isBulbOn && isMounted
+            ? "border-primary border-b-primary"
+            : "border-slate-100 border-b-slate-200"
         )}
       >
         <div className="flex flex-col items-center text-center space-y-8">
@@ -50,8 +55,8 @@ export const DeviceControlSection = ({ deviceId, telemetry }) => {
             <div
               className={cn(
                 "w-16 h-16 flex items-center justify-center rounded-[24px] transition-all duration-700 ease-out",
-                isBulbOn && isMounted 
-                  ? "bg-orange-100 shadow-[0_0_30px_rgba(249,115,22,0.3)] scale-110" 
+                isBulbOn && isMounted
+                  ? "bg-orange-100 shadow-[0_0_30px_rgba(249,115,22,0.3)] scale-110"
                   : "bg-slate-50 opacity-50"
               )}
             >
@@ -71,7 +76,9 @@ export const DeviceControlSection = ({ deviceId, telemetry }) => {
                   <div
                     className={cn(
                       "w-1.5 h-1.5 rounded-full transition-all duration-1000",
-                      isOnline ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)] animate-pulse" : "bg-slate-300"
+                      isOnline
+                        ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)] animate-pulse"
+                        : "bg-slate-300"
                     )}
                   />
                   <span
@@ -114,14 +121,21 @@ export const DeviceControlSection = ({ deviceId, telemetry }) => {
                   {isUpdating ? (
                     <div className="w-3 h-3 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
                   ) : (
-                    <div className={cn("w-1 h-1 rounded-full", isBulbOn && isMounted ? "bg-primary" : "bg-slate-200")} />
+                    <div
+                      className={cn(
+                        "w-1 h-1 rounded-full",
+                        isBulbOn && isMounted ? "bg-primary" : "bg-slate-200"
+                      )}
+                    />
                   )}
                 </span>
               </button>
-              <span className={cn(
-                "text-[10px] font-black uppercase tracking-widest transition-colors duration-500",
-                isBulbOn && isMounted ? "text-primary" : "text-slate-300"
-              )}>
+              <span
+                className={cn(
+                  "text-[10px] font-black uppercase tracking-widest transition-colors duration-500",
+                  isBulbOn && isMounted ? "text-primary" : "text-slate-300"
+                )}
+              >
                 Active On
               </span>
             </div>

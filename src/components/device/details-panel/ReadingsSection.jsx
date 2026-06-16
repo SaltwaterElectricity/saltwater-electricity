@@ -20,7 +20,7 @@ export const ReadingsSection = ({ deviceId, telemetry }) => {
 
   const voltage = telemetry?.voltage || 0;
   const tds = telemetry?.tds || 0;
-  
+
   // 1. HYDRATION: Count-up for primary readings
   const animatedVoltage = useCountUp(voltage, 1500, 1);
   const animatedTds = useCountUp(tds, 1500, 0);
@@ -53,7 +53,10 @@ export const ReadingsSection = ({ deviceId, telemetry }) => {
   }, [logs, voltage, tds]);
 
   return (
-    <section id="section-readings" className="scroll-mt-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+    <section
+      id="section-readings"
+      className="scroll-mt-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100"
+    >
       <div className="flex justify-between items-center mb-6">
         <h3 className="font-display text-lg font-bold text-primary">Real-Time Readings</h3>
         {loading && <Loader2 className="w-4 h-4 text-slate-300 animate-spin" />}
@@ -107,11 +110,23 @@ export const ReadingsSection = ({ deviceId, telemetry }) => {
   );
 };
 
-const ReadingGraphCard = ({ icon: Icon, label, value, unit, subValue, color, bars, telemetry, isMounted }) => (
+const ReadingGraphCard = ({
+  icon: Icon,
+  label,
+  value,
+  unit,
+  subValue,
+  color,
+  bars,
+  telemetry,
+  isMounted,
+}) => (
   <div
     className={cn(
       "bg-white border rounded-[32px] p-8 hover:shadow-xl transition-all duration-500 border-slate-100 group overflow-hidden border-b-2",
-      color === "primary" ? "hover:border-primary border-b-primary/20" : "hover:border-orange-500 border-b-orange-500/20"
+      color === "primary"
+        ? "hover:border-primary border-b-primary/20"
+        : "hover:border-orange-500 border-b-orange-500/20"
     )}
   >
     <div className="flex justify-between items-start mb-8">
@@ -120,8 +135,17 @@ const ReadingGraphCard = ({ icon: Icon, label, value, unit, subValue, color, bar
           {label}
         </p>
         <div className="flex items-baseline gap-2">
-          <span className="font-display text-4xl font-black text-slate-900 tracking-tighter">{value}</span>
-          <span className={cn("text-sm font-black uppercase tracking-widest", color === "primary" ? "text-primary" : "text-orange-500")}>{unit}</span>
+          <span className="font-display text-4xl font-black text-slate-900 tracking-tighter">
+            {value}
+          </span>
+          <span
+            className={cn(
+              "text-sm font-black uppercase tracking-widest",
+              color === "primary" ? "text-primary" : "text-orange-500"
+            )}
+          >
+            {unit}
+          </span>
         </div>
         <p className="text-[11px] text-slate-400 font-bold mt-3 flex items-center gap-1.5 uppercase tracking-tight">
           <Clock size={12} className="text-slate-300" /> {subValue}
@@ -170,7 +194,7 @@ const ReadingGraphCard = ({ icon: Icon, label, value, unit, subValue, color, bar
                     : "bg-gradient-to-t from-orange-600 to-orange-400 shadow-[0_0_10px_rgba(249,115,22,0.2)]"
                 )}
                 style={{
-                  height: isMounted ? `${Math.max(4, h)}%` : "2%", 
+                  height: isMounted ? `${Math.max(4, h)}%` : "2%",
                   transitionDelay: `${i * 30}ms`,
                   opacity: 0.2 + (i / bars.length) * 0.8,
                 }}

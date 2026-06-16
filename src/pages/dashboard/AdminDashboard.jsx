@@ -50,7 +50,8 @@ const AdminDashboard = () => {
     devices.forEach((d) => {
       const tel = telemetry[d.device_id];
       // IDOR/STALE DEFENSE: Only count as online if data is fresh per APP_SETTINGS
-      const isOnline = tel && tel.timestamp && now - tel.timestamp < onlineThreshold && !tel.isFallback;
+      const isOnline =
+        tel && tel.timestamp && now - tel.timestamp < onlineThreshold && !tel.isFallback;
 
       if (isOnline) {
         onlineCount++;
@@ -80,7 +81,7 @@ const AdminDashboard = () => {
   // Priority: 1. Active units with data, 2. Most recently added units
   const comparisonConfig = useMemo(() => {
     const COLORS = ["#004ac6", "#00A3C4", "#8E44AD", "#F39C12", "#27AE60"];
-    
+
     // Sort devices by telemetry timestamp (freshness) to prioritize active ones in the comparison
     const sortedDevices = [...devices].sort((a, b) => {
       const tsA = telemetry[a.device_id]?.timestamp || 0;
@@ -95,9 +96,10 @@ const AdminDashboard = () => {
     }));
   }, [devices, telemetry]);
 
-  const comparisonDeviceIds = useMemo(() => 
-    comparisonConfig.length > 0 ? comparisonConfig.map((c) => c.id) : [], 
-  [comparisonConfig]);
+  const comparisonDeviceIds = useMemo(
+    () => (comparisonConfig.length > 0 ? comparisonConfig.map((c) => c.id) : []),
+    [comparisonConfig]
+  );
   const { data: multiHistoryData, loading: historyLoading } = useMultiDeviceHistory(
     comparisonDeviceIds,
     100,

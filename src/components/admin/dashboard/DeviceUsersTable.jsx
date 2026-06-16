@@ -39,8 +39,8 @@ const DeviceUsersTable = memo(({ users = [], loading = false, searchTerm = "", s
           </thead>
           <tbody className="divide-y divide-outline-variant/10">
             {users.map((user) => (
-              <tr 
-                key={user.uid || user.id} 
+              <tr
+                key={user.uid || user.id}
                 className="hover:bg-primary/5 transition-all duration-300 group animate-in fade-in slide-in-from-bottom-2 fill-mode-both"
               >
                 <td className="px-8 py-4">
@@ -76,7 +76,11 @@ const DeviceUsersTable = memo(({ users = [], loading = false, searchTerm = "", s
                 <td className="px-8 py-4">
                   <span className="text-[11px] font-bold text-outline">
                     {user.assignedAt
-                      ? new Date(user.assignedAt).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })
+                      ? new Date(user.assignedAt).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "2-digit",
+                          year: "numeric",
+                        })
                       : "Not available"}
                   </span>
                 </td>
@@ -89,12 +93,11 @@ const DeviceUsersTable = memo(({ users = [], loading = false, searchTerm = "", s
             ))}
             {loading && (
               <tr>
-                <td
-                  colSpan="5"
-                  className="px-8 py-20 text-center"
-                >
+                <td colSpan="5" className="px-8 py-20 text-center">
                   <div className="flex flex-col items-center gap-3 opacity-30 animate-pulse">
-                    <span className="material-symbols-outlined text-4xl text-primary animate-spin">sync</span>
+                    <span className="material-symbols-outlined text-4xl text-primary animate-spin">
+                      sync
+                    </span>
                     <p className="text-[10px] font-black text-outline uppercase tracking-[0.3em]">
                       Synchronizing Technical records...
                     </p>
@@ -104,15 +107,12 @@ const DeviceUsersTable = memo(({ users = [], loading = false, searchTerm = "", s
             )}
             {!loading && users.length === 0 && (
               <tr>
-                <td
-                  colSpan="5"
-                  className="px-8 py-20 text-center"
-                >
+                <td colSpan="5" className="px-8 py-20 text-center">
                   <div className="flex flex-col items-center gap-2 opacity-20">
-                     <span className="material-symbols-outlined text-4xl">person_off</span>
-                     <p className="text-[10px] font-black text-outline uppercase tracking-[0.3em]">
-                       No active assignments found
-                     </p>
+                    <span className="material-symbols-outlined text-4xl">person_off</span>
+                    <p className="text-[10px] font-black text-outline uppercase tracking-[0.3em]">
+                      No active assignments found
+                    </p>
                   </div>
                 </td>
               </tr>

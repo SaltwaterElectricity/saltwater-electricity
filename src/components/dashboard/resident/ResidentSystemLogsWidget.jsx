@@ -27,8 +27,10 @@ const ResidentSystemLogsWidget = memo(({ logs = [], loading = false }) => {
           <div className="space-y-0">
             {logs.map((log, index) => {
               const isLast = index === logs.length - 1;
-              const isPowerOn = log.details?.toLowerCase().includes("on") || log.action?.includes("ON");
-              const isPowerOff = log.details?.toLowerCase().includes("off") || log.action?.includes("OFF");
+              const isPowerOn =
+                log.details?.toLowerCase().includes("on") || log.action?.includes("ON");
+              const isPowerOff =
+                log.details?.toLowerCase().includes("off") || log.action?.includes("OFF");
 
               return (
                 <div

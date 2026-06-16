@@ -4,7 +4,7 @@ import { logger } from "../utils/logger";
 
 /**
  * Hook: useReadings
- * 
+ *
  * Provides real-time telemetry updates for a specific device.
  * IMPLEMENTS: Visibility-Aware Smart Subscription (Adaptive Polling Hybrid)
  * - Automatically unsubscribes when tab is hidden to save resources.

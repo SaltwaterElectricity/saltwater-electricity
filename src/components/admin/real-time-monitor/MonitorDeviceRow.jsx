@@ -15,12 +15,12 @@ const ReadingColumn = ({ label, value, unit, color }) => {
     const numValue = parseFloat(value) || 0;
     // Scale the bars around the current value's "intensity"
     // Voltage ~220 is mid, TDS ~400 is mid.
-    const intensity = label === "Voltage" ? (numValue / 250) : (numValue / 1000);
-    
+    const intensity = label === "Voltage" ? numValue / 250 : numValue / 1000;
+
     return Array.from({ length: 6 }).map((_, i) => ({
       id: i,
       // Variation: base intensity + some variance
-      h: Math.max(10, Math.min(100, (intensity * 60) + (Math.sin(i * 1.5) * 20) + 20))
+      h: Math.max(10, Math.min(100, intensity * 60 + Math.sin(i * 1.5) * 20 + 20)),
     }));
   }, [value, label]);
 

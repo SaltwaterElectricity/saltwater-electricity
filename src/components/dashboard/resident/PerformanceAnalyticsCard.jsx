@@ -8,13 +8,7 @@ import { ComposedDeviceChart } from "../../index";
  * Mirrored from legacy user-dashboard.html design.
  */
 const PerformanceAnalyticsCard = memo(
-  ({
-    selectedDate,
-    setSelectedDate,
-    logsLoading,
-    performanceChartData,
-    deviceIds = [],
-  }) => {
+  ({ selectedDate, setSelectedDate, logsLoading, performanceChartData, deviceIds = [] }) => {
     const dateInputRef = useRef(null);
     const hasDevices = deviceIds.length > 0;
 

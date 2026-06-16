@@ -9,8 +9,7 @@ const RequestManagementHeader = memo(() => {
   return (
     <div className="w-full flex flex-col text-left">
       <h2 className="font-headline-lg text-3xl text-on-background font-extrabold tracking-tight">
-        <span className="text-black">REQUEST</span>{" "}
-        <span className="text-primary">VALIDATION</span>
+        <span className="text-black">REQUEST</span> <span className="text-primary">VALIDATION</span>
       </h2>
       <p className="text-body-md text-on-surface-variant mt-2 font-medium">
         Monitor and manage incoming device and user requests with Saltwater Electricity Monitoring

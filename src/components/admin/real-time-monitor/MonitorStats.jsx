@@ -13,10 +13,10 @@ const MonitorStats = ({ stats }) => {
   const getBars = (value, maxVal, color, prefix) => {
     const intensity = Math.min(1, value / maxVal);
     return Array.from({ length: 6 }).map((_, i) => {
-      const height = Math.max(10, (intensity * 60) + (Math.sin(i * 1.5) * 20) + 20);
+      const height = Math.max(10, intensity * 60 + Math.sin(i * 1.5) * 20 + 20);
       return (
         <div
-          key={`stat-bar-${prefix}-${height}-${i === 4 ? 'highlight' : 'base'}`}
+          key={`stat-bar-${prefix}-${height}-${i === 4 ? "highlight" : "base"}`}
           className={cn(
             "w-1.5 rounded-full transition-all duration-1000 ease-out",
             color === "blue" ? "bg-blue-100" : "bg-purple-100",

@@ -16,7 +16,10 @@ const RequestValidationSkeleton = memo(() => {
       {/* 2. STATISTIC SUMMARY CARDS SKELETON */}
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-50 h-[140px] flex items-start gap-4">
+          <div
+            key={i}
+            className="bg-white p-6 rounded-2xl shadow-sm border border-slate-50 h-[140px] flex items-start gap-4"
+          >
             <div className="w-14 h-14 rounded-2xl bg-slate-100 animate-pulse shrink-0" />
             <div className="flex-1 space-y-3 pt-1">
               <div className="h-3 w-24 bg-slate-100 rounded animate-pulse" />
@@ -42,9 +45,9 @@ const RequestValidationSkeleton = memo(() => {
         <div className="bg-white rounded-[20px] shadow-sm border border-[#F1F5F9] overflow-hidden">
           <div className="bg-[#f2f3ff]/30 h-14 border-b border-outline-variant/20 flex items-center px-6">
             <div className="flex-1 grid grid-cols-5 gap-4">
-               {[1, 2, 3, 4, 5].map((i) => (
-                 <div key={i} className="h-3 w-24 bg-slate-200/50 rounded animate-pulse" />
-               ))}
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="h-3 w-24 bg-slate-200/50 rounded animate-pulse" />
+              ))}
             </div>
           </div>
           <div className="divide-y divide-outline-variant/10">

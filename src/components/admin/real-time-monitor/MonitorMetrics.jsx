@@ -12,7 +12,7 @@ const MonitorMetrics = ({ stats }) => {
   const getBars = (value, maxVal, colorClass, prefix) => {
     const intensity = maxVal > 0 ? Math.min(1, value / maxVal) : 0;
     return Array.from({ length: 4 }).map((_, i) => {
-      const height = Math.max(15, (intensity * 70) + (Math.sin(i * 2) * 15) + 15);
+      const height = Math.max(15, intensity * 70 + Math.sin(i * 2) * 15 + 15);
       return (
         <div
           key={`metrics-bar-${prefix}-${height}-${Math.random()}`}
@@ -21,9 +21,9 @@ const MonitorMetrics = ({ stats }) => {
             colorClass,
             i === 3 && "opacity-100 scale-y-110"
           )}
-          style={{ 
+          style={{
             height: `${height}%`,
-            opacity: 0.3 + (i * 0.2)
+            opacity: 0.3 + i * 0.2,
           }}
         />
       );
