@@ -25,6 +25,7 @@ const StatCard = ({ label, value, percentage, icon: Icon, colorClass, shadowClas
           <p className="text-xs text-slate-400 mt-2">{percentage}% of total</p>
         </div>
       </div>
+      <div className="self-end mb-1 w-20" />
     </div>
   );
 };

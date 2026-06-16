@@ -60,40 +60,35 @@ const RequestTableRow = memo(({ request, onView }) => {
   };
 
   return (
-    <tr className="hover:bg-slate-50/50 transition-colors">
+    <tr className="hover:bg-[#f2f3ff]/20 transition-colors group">
       <td className="px-6 py-4">
         <div className="flex items-center gap-3">
           <div
             className={cn(
-              "w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-sm shrink-0 bg-gradient-to-br",
+              "w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-sm shrink-0 bg-gradient-to-br transition-transform group-hover:scale-110",
               getAvatarGradient(request.residentName)
             )}
           >
             {getInitials(request.residentName)}
           </div>
           <div className="overflow-hidden">
-            <p className="text-sm font-bold text-slate-900 truncate">{request.residentName}</p>
-            <p className="text-[11px] text-slate-500 truncate">
+            <p className="text-sm font-bold text-on-surface truncate">{request.residentName}</p>
+            <p className="text-[11px] text-on-surface-variant truncate font-medium">
               {request.residentEmail || "No Email Provided"}
             </p>
           </div>
         </div>
       </td>
-      <td className="px-6 py-4">
-        <p className="text-sm text-slate-700 font-medium">
-          {request.requestType
-            ?.split("_")
-            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-            .join(" ") || "General Request"}
-        </p>
-        <p className="text-[10px] text-slate-400 font-medium uppercase tracking-tighter">
-          Device: {request.deviceName}
-        </p>
+      <td className="px-6 py-4 text-sm text-on-surface-variant font-medium">
+        {request.requestType
+          ?.split("_")
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(" ") || "General Request"}
       </td>
-      <td className="px-6 py-4">
+      <td className="px-6 py-4 text-center">
         <span
           className={cn(
-            "px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider",
+            "px-3 py-1 rounded-full text-[11px] font-bold inline-block min-w-[85px]",
             getStatusStyle(request.status)
           )}
         >
@@ -101,15 +96,15 @@ const RequestTableRow = memo(({ request, onView }) => {
         </span>
       </td>
       <td className="px-6 py-4">
-        <div className="text-sm text-slate-700">
-          <p className="font-medium">{formatDate(request.createdAt)}</p>
-          <p className="text-[11px] text-slate-400">{formatTime(request.createdAt)}</p>
+        <div className="text-sm text-on-surface-variant">
+          <p className="font-bold">{formatDate(request.createdAt)}</p>
+          <p className="text-[11px] font-medium">{formatTime(request.createdAt)}</p>
         </div>
       </td>
-      <td className="px-6 py-4">
+      <td className="px-6 py-4 text-right">
         <button
           onClick={() => onView(request)}
-          className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg border border-blue-600 text-blue-600 hover:bg-blue-50 transition-all text-xs font-bold active:scale-95 shadow-sm"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary text-primary hover:bg-primary/5 transition-all text-xs font-bold active:scale-95 shadow-sm"
         >
           View
         </button>

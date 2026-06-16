@@ -12,7 +12,7 @@ import {
   ConfirmationModal,
   EditUserModal,
   AccountProvisioningModal,
-  UserTableSkeleton,
+  ResidentManagementSkeleton,
 } from "../../components";
 
 import {
@@ -86,6 +86,10 @@ const ResidentManagement = () => {
   );
 
   const isTargetActive = selectedUser?.status === USER_STATUS.ACTIVE;
+
+  if (loading && allResidents.length === 0) {
+    return <ResidentManagementSkeleton />;
+  }
 
   return (
     <div className="w-full antialiased space-y-8">
@@ -161,21 +165,17 @@ const ResidentManagement = () => {
 
       {/* Data Table */}
       <div className="glass-card rounded-2xl overflow-hidden shadow-sm border border-outline-variant/30 transition-all hover:translate-y-[-2px]">
-        {loading && allResidents.length === 0 ? (
-          <UserTableSkeleton />
-        ) : (
-          <ResidentTable
-            residents={residents}
-            onActionClick={(userData) => {
-              setSelectedUser(userData);
-              setIsModalOpen(true);
-            }}
-            onEditClick={(userData) => {
-              setSelectedEditUser(userData);
-              setIsEditModalOpen(true);
-            }}
-          />
-        )}
+        <ResidentTable
+          residents={residents}
+          onActionClick={(userData) => {
+            setSelectedUser(userData);
+            setIsModalOpen(true);
+          }}
+          onEditClick={(userData) => {
+            setSelectedEditUser(userData);
+            setIsEditModalOpen(true);
+          }}
+        />
       </div>
 
       {/* Provisioning Modal */}

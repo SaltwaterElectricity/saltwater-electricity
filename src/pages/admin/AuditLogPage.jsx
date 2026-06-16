@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
 import { useAuditLogs } from "../../hooks";
+import { AuditLogSkeleton } from "../../components/skeleton";
 
 // Modular Components
 import {
@@ -203,6 +204,10 @@ const AuditLogPage = () => {
     });
     setCurrentPage(1);
   }, []);
+
+  if (loading) {
+    return <AuditLogSkeleton />;
+  }
 
   return (
     <div className="space-y-4 antialiased font-sans">

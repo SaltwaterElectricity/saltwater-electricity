@@ -1,21 +1,21 @@
 import { useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import "../../styles/historical-legacy.css";
+import "../../../styles/historical-legacy.css";
 import {
   HistoricalHeader,
   HistoricalMetricCards,
   HistoricalFilterBar,
   HistoricalCharts,
   HistoricalTable,
-} from "../../components/dashboard";
+} from "../../../components/dashboard";
 import {
   useDevices,
   useResidentManagement,
   useHistory,
   useMultiDeviceHistory,
   useAssignments,
-} from "../../hooks";
-import { useAuth } from "../../context/useAuth";
+} from "../../../hooks";
+import { useAuth } from "../../../context/useAuth";
 
 /**
  * HistoricalData Page - Unified Legacy Mirror

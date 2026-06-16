@@ -105,7 +105,7 @@ const ResidentRealTimeMonitor = () => {
           <h2 className="font-headline-lg text-headline-lg text-on-surface tracking-tight uppercase">
             My Devices
           </h2>
-          <p className="font-body-md text-on-surface-variant mt-1">
+          <p className="font-body-md text-on-surface-variant mt-1 ">
             Monitor real-time readings of your saltwater electricity devices.
           </p>
         </div>

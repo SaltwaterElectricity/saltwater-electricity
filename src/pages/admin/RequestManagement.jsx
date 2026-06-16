@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { useAuth } from "../../context/useAuth";
 import { useDeviceRequests, useUserSubscription } from "../../hooks";
+import { RequestValidationSkeleton } from "../../components/skeleton";
 import { ROLES } from "../../constants/roles";
 import { updateRequestStatus } from "../../services/request.service";
 import Toast from "../../components/ui/Toast";
@@ -134,8 +135,12 @@ const RequestManagement = () => {
     }
   };
 
+  if (requestsLoading || usersLoading) {
+    return <RequestValidationSkeleton />;
+  }
+
   return (
-    <div className="space-y-8 antialiased">
+    <div className="w-full flex flex-col items-start space-y-8 antialiased">
       <Toast
         isOpen={showToast}
         message={toastConfig.message}
@@ -147,7 +152,9 @@ const RequestManagement = () => {
       <RequestManagementHeader />
 
       {/* STATISTIC SUMMARY CARDS */}
-      <RequestManagementStats requests={hydratedRequests} />
+      <div className="w-full">
+        <RequestManagementStats requests={hydratedRequests} />
+      </div>
 
       {/* MAIN TABLE CONTAINER with Filters */}
       <RequestTable

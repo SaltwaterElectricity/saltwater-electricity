@@ -6,19 +6,20 @@ import {
   useDevices,
   useMultiDeviceHistory,
   useResidentManagement,
-} from "../../../hooks";
-import AnalyticsChart from "./AnalyticsChart";
-import SystemHealthGauge from "./SystemHealthGauge";
-import DeviceFeatureBarChart from "./DeviceFeatureBarChart";
-import DeviceUsersTable from "./DeviceUsersTable";
-import TotalDevicesAdminCard from "./TotalDevicesAdminCard";
-import OnlineDevicesCard from "./OnlineDevicesCard";
-import OfflineDevicesCard from "./OfflineDevicesCard";
-import SystemHealthCard from "./SystemHealthCard";
-import { RecentAlertsFeed } from "../../../components/dashboard";
-import DeviceRequestWidget from "./DeviceRequestWidget";
-import { ROUTES } from "../../../constants/routes";
-import { SENSOR_CONFIG, METRICS } from "../../../constants";
+} from "../../hooks";
+import AnalyticsChart from "../../components/admin/dashboard/AnalyticsChart";
+import SystemHealthGauge from "../../components/admin/dashboard/SystemHealthGauge";
+import DeviceFeatureBarChart from "../../components/admin/dashboard/DeviceFeatureBarChart";
+import DeviceUsersTable from "../../components/admin/dashboard/DeviceUsersTable";
+import TotalDevicesAdminCard from "../../components/admin/dashboard/TotalDevicesAdminCard";
+import OnlineDevicesCard from "../../components/admin/dashboard/OnlineDevicesCard";
+import OfflineDevicesCard from "../../components/admin/dashboard/OfflineDevicesCard";
+import SystemHealthCard from "../../components/admin/dashboard/SystemHealthCard";
+import { RecentAlertsFeed } from "../../components/dashboard";
+import DeviceRequestWidget from "../../components/admin/dashboard/DeviceRequestWidget";
+import { AdminDashboardSkeleton } from "../../components/skeleton";
+import { ROUTES } from "../../constants/routes";
+import { SENSOR_CONFIG, METRICS, APP_SETTINGS } from "../../constants";
 
 /**
  * MAIN ADMIN DASHBOARD PAGE
@@ -26,14 +27,17 @@ import { SENSOR_CONFIG, METRICS } from "../../../constants";
  */
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const { residents, loading: residentsLoading } = useResidentManagement();
+  const { residents, filters, loading: residentsLoading } = useResidentManagement();
   const { logs: auditLogs, loading: auditLoading } = useAuditLogs(10);
   const { requests } = useDeviceRequests();
   const { devices, telemetry, loading: devicesLoading } = useDevices();
 
+  // 1. DATE SELECTION STATE: Default to 'null' for Recent Analysis (Last 50 logs)
+  const [selectedDate, setSelectedDate] = useState(null);
+
   // Use a stable 'now' for the duration of a render cycle
   const [now] = useState(() => Date.now());
-  const onlineThreshold = 300000; // 5 minutes
+  const onlineThreshold = APP_SETTINGS.STALE_THRESHOLD || 30000;
 
   // Aggregated Stats Calculation
   const stats = useMemo(() => {
@@ -45,7 +49,8 @@ const AdminDashboard = () => {
 
     devices.forEach((d) => {
       const tel = telemetry[d.device_id];
-      const isOnline = tel && tel.timestamp && now - tel.timestamp < onlineThreshold;
+      // IDOR/STALE DEFENSE: Only count as online if data is fresh per APP_SETTINGS
+      const isOnline = tel && tel.timestamp && now - tel.timestamp < onlineThreshold && !tel.isFallback;
 
       if (isOnline) {
         onlineCount++;
@@ -64,25 +69,40 @@ const AdminDashboard = () => {
       online: onlineCount,
       offline: total - onlineCount,
       health: total > 0 ? Math.round((onlineCount / total) * 100) : 0,
-      // Averages (Normalized 0-100) for Gauge
-      avgV: onlineCount > 0 ? Math.min((sumV / onlineCount / (vConfig.max || 15)) * 100, 100) : 0,
+      // Averages (Normalized 0-100) for Gauge - Uses basis data from SENSOR_CONFIG
+      avgV: onlineCount > 0 ? Math.min((sumV / onlineCount / (vConfig.max || 300)) * 100, 100) : 0,
       avgS: onlineCount > 0 ? Math.min((sumS / onlineCount / (sConfig.max || 1000)) * 100, 100) : 0,
       avgC: onlineCount > 0 ? Math.min((sumC / onlineCount / (cConfig.max || 5)) * 100, 100) : 0,
     };
-  }, [devices, telemetry, now]);
+  }, [devices, telemetry, now, onlineThreshold]);
 
   // CONFIGURATION: Multi-Device Comparison Setup
+  // Priority: 1. Active units with data, 2. Most recently added units
   const comparisonConfig = useMemo(() => {
     const COLORS = ["#004ac6", "#00A3C4", "#8E44AD", "#F39C12", "#27AE60"];
-    return devices.slice(0, 3).map((d, index) => ({
+    
+    // Sort devices by telemetry timestamp (freshness) to prioritize active ones in the comparison
+    const sortedDevices = [...devices].sort((a, b) => {
+      const tsA = telemetry[a.device_id]?.timestamp || 0;
+      const tsB = telemetry[b.device_id]?.timestamp || 0;
+      return tsB - tsA;
+    });
+
+    return sortedDevices.slice(0, 3).map((d, index) => ({
       id: d.device_id,
       name: d.device_name || `Unit ${d.device_id.substring(0, 4)}`,
       color: COLORS[index % COLORS.length],
     }));
-  }, [devices]);
+  }, [devices, telemetry]);
 
-  const comparisonDeviceIds = useMemo(() => comparisonConfig.map((c) => c.id), [comparisonConfig]);
-  const { data: multiHistoryData } = useMultiDeviceHistory(comparisonDeviceIds, 20);
+  const comparisonDeviceIds = useMemo(() => 
+    comparisonConfig.length > 0 ? comparisonConfig.map((c) => c.id) : [], 
+  [comparisonConfig]);
+  const { data: multiHistoryData, loading: historyLoading } = useMultiDeviceHistory(
+    comparisonDeviceIds,
+    100,
+    selectedDate
+  );
 
   // Normalized Feature Data for Bar Chart
   const deviceFeatureData = useMemo(() => {
@@ -95,12 +115,16 @@ const AdminDashboard = () => {
       const name = d.device_name || `Unit ${d.device_id.substring(0, 4)}`;
       return {
         name: name.length > 12 ? name.substring(0, 10) + ".." : name,
-        voltage: Math.min((tel.voltage / (vConfig.max || 15)) * 100, 100) || 0,
+        voltage: Math.min((tel.voltage / (vConfig.max || 300)) * 100, 100) || 0,
         salinity: Math.min((tel.tds / (sConfig.max || 1000)) * 100, 100) || 0,
         current: Math.min((tel.current / (cConfig.max || 5)) * 100, 100) || 0,
       };
     });
   }, [devices, telemetry]);
+
+  if (residentsLoading || auditLoading || devicesLoading || historyLoading) {
+    return <AdminDashboardSkeleton />;
+  }
 
   return (
     <div className="space-y-6 animate-in fade-in duration-700">
@@ -115,7 +139,13 @@ const AdminDashboard = () => {
       {/* 2. PERFORMANCE & HEALTH SECTION */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-9">
-          <AnalyticsChart data={multiHistoryData} devices={comparisonConfig} />
+          <AnalyticsChart
+            data={multiHistoryData}
+            devices={comparisonConfig}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+            loading={historyLoading}
+          />
         </div>
         <div className="lg:col-span-3">
           <SystemHealthGauge
@@ -148,6 +178,8 @@ const AdminDashboard = () => {
           <DeviceUsersTable
             users={residents?.filter((r) => r.deviceId).slice(0, 3) || []}
             loading={residentsLoading}
+            searchTerm={filters.searchTerm}
+            setSearchTerm={filters.setSearchTerm}
           />
         </div>
       </div>

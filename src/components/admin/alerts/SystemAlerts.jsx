@@ -1,8 +1,9 @@
 import { useState, useMemo } from "react";
-import { useAuth } from "../../context/useAuth";
-import { useNotifications } from "../../hooks/useNotifications";
-import { cn } from "../../utils/cn";
-import { Footer } from "../../layout";
+import { useAuth } from "../../../context/useAuth";
+import { useNotifications } from "../../../hooks/useNotifications";
+import { cn } from "../../../utils/cn";
+import { SystemAlertsSkeleton } from "../../skeleton";
+import { Footer } from "../../../layout";
 
 /**
  * Alerts Component
@@ -65,6 +66,10 @@ const Alerts = () => {
     return `${days}d ago`;
   };
 
+  if (loading) {
+    return <SystemAlertsSkeleton />;
+  }
+
   return (
     <div className="animate-in fade-in duration-700 space-y-8">
       {/* 1. CONTENT HEADER SECTION */}
@@ -116,16 +121,7 @@ const Alerts = () => {
 
       {/* 2. MAIN NOTIFICATION CONTAINER */}
       <div className="bg-white rounded-[24px] shadow-[0px_12px_32px_-4px_rgba(10,46,255,0.04)] border border-outline-variant/30 overflow-hidden p-6 md:p-8 min-h-[600px]">
-        {loading ? (
-          <div className="flex flex-col items-center justify-center py-40 gap-4 opacity-50">
-            <span className="material-symbols-outlined animate-spin text-4xl text-primary">
-              sync
-            </span>
-            <span className="text-label-sm font-bold text-outline uppercase tracking-[0.3em]">
-              Synchronizing Secure Stream...
-            </span>
-          </div>
-        ) : Object.keys(groupedNotifications).length === 0 ? (
+        {Object.keys(groupedNotifications).length === 0 ? (
           <div className="flex flex-col items-center justify-center py-40 gap-6 opacity-30">
             <span className="material-symbols-outlined text-6xl">notifications_off</span>
             <div className="text-center">

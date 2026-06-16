@@ -5,6 +5,7 @@ import {
   query,
   limitToLast,
   orderByKey,
+  orderByChild,
   startAt,
   endAt,
   update,
@@ -32,9 +33,19 @@ const verifyDeviceAccess = async (deviceId) => {
   const currentUser = auth.currentUser;
   if (!currentUser) throw new appError("Authentication required.", true, "auth/unauthorized");
 
-  // 1. Admin/SuperAdmin Bypass
+  // 1. Admin/SuperAdmin Bypass (Checks both Token Claims and DB Role for redundancy)
   const claims = await getUserClaims(currentUser);
   if (claims?.admin || claims?.superAdmin) return true;
+
+  // DB Role Fallback: Sinisiguro nito na ang Admin ay hindi maba-block kahit hindi pa refresh ang token
+  try {
+    const roleRef = ref(db, `roles/${currentUser.uid}/role`);
+    const roleSnap = await get(roleRef);
+    const role = roleSnap.val();
+    if (role === "admin" || role === "superAdmin") return true;
+  } catch (err) {
+    logger.warn("[Security]: Database role check skipped during access verification.", err);
+  }
 
   // 2. Ownership Check: Verify if device is assigned to this user
   try {
@@ -73,7 +84,7 @@ const PRECISION_CONFIG = {
  * @param {Object} data - Raw reading data from Firebase
  * @returns {Object} - Transformed data (guaranteed to have voltage, tds, current)
  */
-export const transformReading = (data) => {
+export const transformReading = (data, id = "Unknown") => {
   // If no data, return default standby state
   if (!data || typeof data !== "object") {
     return {
@@ -87,7 +98,8 @@ export const transformReading = (data) => {
       sensor_ma: 0,
       power_mode: "Standby",
       is_maintenance: false,
-      device_id: "Unknown",
+      device_id: id,
+      isFallback: true, // 🛡️ PHANTOM DEFENSE: Mark as local fallback
     };
   }
 
@@ -98,7 +110,8 @@ export const transformReading = (data) => {
     sensor_ma: data.sensor_ma ?? 0,
     power_mode: data.power_mode || "Active",
     is_maintenance: !!data.is_maintenance,
-    device_id: data.device_id || "Unknown",
+    device_id: data.device_id || id,
+    isFallback: false,
   };
 
   // 1. CALCULATE DERIVED METRICS: Total Current in Amps
@@ -252,16 +265,55 @@ export const updateBulbState = async (deviceId, newState) => {
       { severity: "low" }
     ).catch((err) => logger.error("[Reading Service]: Audit logging failed for relay toggle", err));
 
-    // CRITICAL ALERT CHECK: Trigger notification if TDS exceeds critical threshold
+    // CRITICAL ALERT CHECK: Trigger notification if TDS or Voltage hits critical thresholds
     const tds = currentData.tds_ppm || 0;
+    const voltage = currentData.voltage || 0;
     const tdsConfig = SENSOR_CONFIG[METRICS.TDS];
-    if (tds >= tdsConfig.critical) {
-      const userId = auth.currentUser?.uid || "system";
-      const alertTitle = "CRITICAL: Salinity Alert";
-      const alertMessage = `Unit ${deviceId} detected critical TDS levels (${tds} PPM). Please inspect the facility immediately.`;
+    const voltConfig = SENSOR_CONFIG[METRICS.VOLTAGE];
+    const userId = auth.currentUser?.uid || "system";
 
-      // 1. In-App Notification (Persistent)
-      await createNotification(userId, alertTitle, alertMessage, NOTIFICATION_TYPES.CRITICAL);
+    // 1. High Salinity Check
+    if (tds >= tdsConfig.critical) {
+      await createNotification(
+        userId,
+        "CRITICAL: Salinity Alert",
+        `Unit ${deviceId} detected critical high TDS levels (${tds} PPM). Please inspect the facility immediately.`,
+        NOTIFICATION_TYPES.CRITICAL
+      );
+    }
+
+    // 2. Electrolyte Weakening (Low Salinity) Check
+    if (tds <= tdsConfig.lowCritical) {
+      await createNotification(
+        userId,
+        "CRITICAL: Low Salinity",
+        `Unit ${deviceId} detected critically low TDS (${tds} PPM). Minimum ions for electricity generation not met.`,
+        NOTIFICATION_TYPES.CRITICAL
+      );
+    } else if (tds <= tdsConfig.lowWarning) {
+      await createNotification(
+        userId,
+        "WARNING: Electrolyte Weakening",
+        `Unit ${deviceId} detected low TDS (${tds} PPM). Saltwater efficiency is decreasing.`,
+        NOTIFICATION_TYPES.WARNING
+      );
+    }
+
+    // 3. Battery/Voltage Check
+    if (voltage <= voltConfig.lowCritical) {
+      await createNotification(
+        userId,
+        "CRITICAL: Battery Exhausted",
+        `Unit ${deviceId} voltage is critically low (${voltage}V). System may shut down soon.`,
+        NOTIFICATION_TYPES.CRITICAL
+      );
+    } else if (voltage <= voltConfig.lowWarning) {
+      await createNotification(
+        userId,
+        "WARNING: Low Power",
+        `Unit ${deviceId} voltage is low (${voltage}V). Check electrolyte levels.`,
+        NOTIFICATION_TYPES.WARNING
+      );
     }
 
     await update(ref(db), updates);
@@ -299,55 +351,51 @@ export const getHistoricalLogs = async (deviceId, limit = 50, date = null) => {
   let logsRef;
 
   if (date) {
-    // Ensure we capture the full 24 hours of the selected date in LOCAL time
-    const day = new Date(date);
-    // Use local time bounds for the query since clientTs uses local machine time (Date.now())
-    const startTs = new Date(
-      day.getFullYear(),
-      day.getMonth(),
-      day.getDate(),
-      0,
-      0,
-      0,
-      0
-    ).getTime();
-    const endTs = new Date(
-      day.getFullYear(),
-      day.getMonth(),
-      day.getDate(),
-      23,
-      59,
-      59,
-      999
-    ).getTime();
+    // 1. DATE BOUNDS: Convert YYYY-MM-DD to absolute millisecond range for the full local day.
+    const [y, m, d] = date.split("-").map(Number);
+    const startTs = new Date(y, m - 1, d, 0, 0, 0, 0).getTime();
+    const endTs = new Date(y, m - 1, d, 23, 59, 59, 999).getTime();
 
-    // Firebase orderByKey() queries always compare strings.
-    // We convert timestamps to strings to match the keys written in updateBulbState.
+    // 🛡️ SECURITY: Apply a safety limit even for date queries to prevent browser-crashing payloads.
+    // 🛡️ RECOVERY: Use orderByChild('timestamp') to support both Push IDs and numeric keys.
     logsRef = query(
       ref(db, `readings/${deviceId}/logs`),
-      orderByKey(),
-      startAt(startTs.toString()),
-      endAt(endTs.toString())
+      orderByChild("timestamp"),
+      startAt(startTs),
+      endAt(endTs),
+      limitToLast(Math.max(limit, 500)) // Safety headroom
     );
   } else {
-    // Default: Get most recent logs
+    // Default: Get most recent logs. Using orderByKey() for the 'recent' view is still valid and cheap.
     logsRef = query(ref(db, `readings/${deviceId}/logs`), orderByKey(), limitToLast(limit));
   }
 
   try {
     const snapshot = await get(logsRef);
-    if (!snapshot.exists()) return [];
+    if (!snapshot.exists()) {
+      logger.debug(`[Reading Service]: No logs found for ${deviceId} in range.`);
+      return [];
+    }
 
     const data = snapshot.val();
 
-    // Transform and normalize historical data
-    return Object.entries(data)
-      .map(([key, val]) => ({
+    // 2. DATA NORMALIZATION:
+    // Some logs might use numeric keys (clientTs), others use Push IDs.
+    // We normalize everything to have a numeric __normalizedTs.
+    const logs = Object.entries(data).map(([key, val]) => {
+      const numericKey = parseInt(key);
+      const dbTs = Number(val.timestamp);
+      const timestamp = !isNaN(dbTs) ? dbTs : (isNaN(numericKey) ? null : numericKey);
+
+      return {
         id: key,
         ...transformReading(val),
-        // Robust timestamp normalization: Prefer server timestamp, fallback to key, then now
-        __normalizedTs: val.timestamp || parseInt(key) || Date.now(),
-      }))
+        __normalizedTs: timestamp,
+      };
+    });
+
+    return logs
+      .filter((log) => log.__normalizedTs !== null && !isNaN(log.__normalizedTs))
       .sort((a, b) => b.__normalizedTs - a.__normalizedTs);
   } catch (error) {
     logger.error("[Reading Service]: Logs fetch failure", error);

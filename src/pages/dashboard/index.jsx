@@ -4,7 +4,7 @@ import { useAuth } from "../../context/useAuth";
 import { ROLES } from "../../constants/roles";
 
 // Import mula sa iyong subfolders
-import AdminDashboard from "../admin/dashboard";
+import AdminDashboard from "./AdminDashboard";
 import ResidentDashboard from "../user/ResidentDashboard";
 
 const DashboardController = () => {

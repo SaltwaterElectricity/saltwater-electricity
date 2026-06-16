@@ -62,6 +62,7 @@
           ".validate": "newData.hasChildren(['tds_ppm', 'voltage'])"
         },
         "logs": {
+          ".indexOn": ["timestamp"],
           "$log_id": {
             ".write": "auth != null && (root.child('device_assignments').child($device_id).child('userId').val() == auth.uid || root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
             ".validate": "newData.hasChildren(['timestamp', 'tds_ppm'])"

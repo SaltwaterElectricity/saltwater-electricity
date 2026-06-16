@@ -15,3 +15,4 @@ export { useSearch } from "./useSearch";
 export { useTimeout } from "./useTimeout";
 export { useUserSubscription } from "./useUserSubscription";
 export { useResidentManagement } from "./useResidentManagement";
+export { useCountUp } from "./useCountUp";

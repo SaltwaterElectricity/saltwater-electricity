@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState, useEffect, useMemo } from "react";
 import {
   X,
   User,
@@ -12,6 +12,8 @@ import {
   Calendar,
 } from "lucide-react";
 import { cn } from "../../../utils/cn";
+import { getHistoricalLogs } from "../../../services/reading.service";
+import { logger } from "../../../utils/logger";
 
 /**
  * SUB-COMPONENT: InfoItem
@@ -28,81 +30,76 @@ const InfoItem = ({ icon: Icon, label, value, color }) => (
 );
 
 /**
- * SUB-COMPONENT: TimeRangeFilters
- * Button group for selecting time intervals.
- */
-const TimeRangeFilters = () => (
-  <div className="flex items-center space-x-2 p-1.5 bg-gray-50/50 rounded-full mb-8 overflow-x-auto whitespace-nowrap border border-gray-100 scrollbar-none">
-    {["1HR", "3HR", "6HR", "24HR", "3D", "7D", "1M"].map((range, i) => (
-      <button
-        key={range}
-        className={cn(
-          "px-5 py-2 text-[11px] font-bold rounded-full transition-all duration-200",
-          i === 0
-            ? "bg-primary text-white shadow-sm hover:bg-blue-700"
-            : "text-primary hover:bg-primary hover:text-white"
-        )}
-      >
-        {range}
-      </button>
-    ))}
-  </div>
-);
-
-/**
  * SUB-COMPONENT: MiniGraphSection
  * Mirrored from code1.html with tooltip and time labels.
+ * Now uses actual historical data points.
  */
-const MiniGraphSection = ({ label, value, unit, color, data }) => (
-  <div className="pt-4">
-    <div className="flex items-center justify-between mb-4">
-      <div>
-        <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-          {label} ({unit})
-        </p>
-        <div className="flex items-center space-x-2">
-          <span className="text-xl font-bold text-gray-900">{value}</span>
+const MiniGraphSection = ({ label, value, unit, color, data = [], maxVal = 1000 }) => {
+  const [hoverIndex, setHighlightIndex] = useState(data.length - 1);
+
+  return (
+    <div className="pt-4">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+            {label} ({unit})
+          </p>
+          <div className="flex items-center space-x-2">
+            <span className="text-xl font-bold text-gray-900">{value}</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div className="relative h-32 flex items-end justify-between px-1">
-      {/* Tooltip Overlay */}
-      <div className="absolute -top-12 left-[80%] bg-black text-white shadow-lg rounded-lg border-2 border-white p-2 text-center z-10 font-extrabold min-w-[60px]">
-        <p className="text-gray-400 text-[11px] uppercase tracking-wider mb-0.5">10:25</p>
-        <p className="text-white text-sm">{value}</p>
+      <div className="relative h-32 flex items-end justify-between px-1">
+        {/* Tooltip Overlay (Follows hover or last point) */}
+        {data.length > 0 && (
+          <div 
+            className="absolute -top-12 bg-black text-white shadow-lg rounded-lg border-2 border-white p-2 text-center z-10 font-extrabold min-w-[60px] transition-all duration-300"
+            style={{ left: `${(hoverIndex / (data.length - 1)) * 90}%` }}
+          >
+            <p className="text-gray-400 text-[9px] uppercase tracking-wider mb-0.5">
+              {new Date(data[hoverIndex]?.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </p>
+            <p className="text-white text-xs">{data[hoverIndex]?.val}{unit}</p>
+          </div>
+        )}
+
+        {data.map((point, i) => {
+          const height = Math.max(10, Math.min(100, (point.val / maxVal) * 100));
+          const pointKey = point.timestamp ? `${label}-${point.timestamp}` : `${label}-fallback-${i}`;
+          
+          return (
+            <div
+              key={pointKey}
+              onMouseEnter={() => setHighlightIndex(i)}
+              className={cn(
+                "w-1.5 rounded-t transition-all duration-700 cursor-pointer",
+                i === hoverIndex
+                  ? color === "blue"
+                    ? "bg-blue-600 h-[90%]"
+                    : "bg-purple-600 h-[85%]"
+                  : color === "blue"
+                    ? "bg-blue-200 hover:bg-blue-400"
+                    : "bg-purple-200 hover:bg-purple-400"
+              )}
+              style={{ height: i === hoverIndex ? undefined : `${height}%` }}
+            />
+          );
+        })}
       </div>
 
-      {data.map((h, i) => (
-        <div
-          key={`${label}-bar-${i + 1}`}
-          className={cn(
-            "w-1.5 rounded-t transition-all duration-700",
-            i === 6 // Highlight a bar like in code1.html
-              ? color === "blue"
-                ? "bg-blue-600 h-[85%]"
-                : "bg-purple-600 h-[80%]"
-              : color === "blue"
-                ? "bg-blue-400"
-                : "bg-purple-400"
-          )}
-          style={{ height: i === 6 ? undefined : `${h}%` }}
-        />
-      ))}
+      {/* X-Axis Labels (Approximate) */}
+      <div className="flex justify-between mt-2 text-[9px] text-gray-400 font-medium">
+        {data.filter((_, i) => i % 2 === 0).map((p, i) => (
+          <span key={`label-${p.timestamp || i}`}>{new Date(p.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        ))}
+      </div>
     </div>
-
-    {/* X-Axis Labels */}
-    <div className="flex justify-between mt-2 text-[9px] text-gray-400 font-medium">
-      {["10:00", "10:05", "10:10", "10:15", "10:20", "10:25", "10:30"].map((t) => (
-        <span key={t}>{t}</span>
-      ))}
-    </div>
-  </div>
-);
+  );
+};
 
 /**
  * SUB-COMPONENT: AlertRow
- * Compact style mirrored from code1.html.
  */
 const AlertRow = ({ icon: Icon, title, desc, time, status }) => (
   <div className="flex items-center justify-between">
@@ -147,8 +144,40 @@ const AlertRow = ({ icon: Icon, title, desc, time, status }) => (
 /**
  * COMPONENT: MonitorSidePanel
  * Mirrored from code1.html AnalyticsSidePanel.
+ * Now hydrates with actual historical logs.
  */
 const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) => {
+  const [history, setHistory] = useState([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (isOpen && device?.device_id) {
+      // Use set timeout to defer state update and avoid synchronous effect warning
+      const timer = setTimeout(() => {
+        if (isMounted) setLoadingHistory(true);
+      }, 0);
+
+      getHistoricalLogs(device.device_id, 14)
+        .then((logs) => {
+          if (isMounted) {
+            // Convert to ascending for the mini-graphs
+            setHistory([...logs].reverse());
+          }
+        })
+        .catch((err) => logger.error("[SidePanel]: History failed", err))
+        .finally(() => {
+          if (isMounted) setLoadingHistory(false);
+        });
+      
+      return () => {
+        isMounted = false;
+        clearTimeout(timer);
+      };
+    }
+    return () => { isMounted = false; };
+  }, [isOpen, device?.device_id]);
+
   const scrollToSection = (tabId) => {
     setActiveTab(tabId);
     const element = document.getElementById(`section-${tabId}`);
@@ -156,6 +185,15 @@ const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) 
       element.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
+
+  // Transform history for graphs
+  const voltageData = useMemo(() => 
+    history.map(h => ({ val: h.voltage, timestamp: h.__normalizedTs })), 
+  [history]);
+  
+  const tdsData = useMemo(() => 
+    history.map(h => ({ val: h.tds, timestamp: h.__normalizedTs })), 
+  [history]);
 
   return (
     <aside
@@ -211,7 +249,7 @@ const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) 
             <div className="flex space-x-8 mt-8 border-b border-gray-50">
               {["overview", "readings", "alerts"].map((tab) => (
                 <button
-                  key={tab}
+                  key={`tab-nav-item-${tab}`}
                   onClick={() => scrollToSection(tab)}
                   className={cn(
                     "pb-3 text-sm font-bold border-b-2 transition-all capitalize",
@@ -270,22 +308,46 @@ const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) 
               id="section-readings"
               className="pt-4 scroll-mt-[260px] animate-in fade-in slide-in-from-bottom-4 duration-500"
             >
-              <TimeRangeFilters />
+              <div className="flex items-center space-x-2 p-1.5 bg-gray-50/50 rounded-full mb-8 overflow-x-auto whitespace-nowrap border border-gray-100 scrollbar-none">
+                {["1HR", "3HR", "6HR", "24HR", "3D", "7D", "1M"].map((range) => (
+                  <button
+                    key={`range-filter-${range}`}
+                    className={cn(
+                      "px-5 py-2 text-[11px] font-bold rounded-full transition-all duration-200",
+                      range === "1HR"
+                        ? "bg-primary text-white shadow-sm hover:bg-blue-700"
+                        : "text-primary hover:bg-primary hover:text-white"
+                    )}
+                  >
+                    {range}
+                  </button>
+                ))}
+              </div>
               <div className="space-y-10">
-                <MiniGraphSection
-                  label="Voltage potential"
-                  value={`${device.telemetry?.voltage || 0}V`}
-                  unit="V"
-                  color="blue"
-                  data={[40, 65, 55, 70, 60, 62, 85, 60, 78, 82, 75, 58, 60]}
-                />
-                <MiniGraphSection
-                  label="Ionic Density spectrum"
-                  value={`${device.telemetry?.tds || device.telemetry?.tds_ppm || 0} PPM`}
-                  unit="PPM"
-                  color="purple"
-                  data={[45, 55, 50, 60, 52, 55, 70, 58, 62, 68, 60, 65, 55]}
-                />
+                {loadingHistory ? (
+                   <div className="h-32 flex items-center justify-center bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest animate-pulse">Syncing History...</p>
+                   </div>
+                ) : (
+                  <>
+                    <MiniGraphSection
+                      label="Voltage potential"
+                      value={`${device.telemetry?.voltage || 0}V`}
+                      unit="V"
+                      color="blue"
+                      data={voltageData}
+                      maxVal={250}
+                    />
+                    <MiniGraphSection
+                      label="Ionic Density spectrum"
+                      value={`${device.telemetry?.tds || device.telemetry?.tds_ppm || 0} PPM`}
+                      unit="PPM"
+                      color="purple"
+                      data={tdsData}
+                      maxVal={1000}
+                    />
+                  </>
+                )}
               </div>
             </div>
 
@@ -295,39 +357,57 @@ const MonitorSidePanel = ({ isOpen, onClose, device, activeTab, setActiveTab }) 
               className="pt-4 scroll-mt-[260px] animate-in fade-in slide-in-from-bottom-4 duration-500"
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-bold text-gray-900">Recent Alerts</h3>
+                <h3 className="text-sm font-bold text-gray-900">System Alerts</h3>
                 <button className="text-[10px] font-bold text-primary hover:underline">
                   View All
                 </button>
               </div>
               <div className="space-y-4">
-                <AlertRow
-                  icon={CheckCircle2}
-                  title="Voltage Stable"
-                  desc="Voltage reading is within normal range."
-                  time="Just now"
-                  status="success"
-                />
-                <AlertRow
-                  icon={AlertTriangle}
-                  title="Salinity High"
-                  desc="Salinity level is above normal threshold."
-                  time="10 mins ago"
-                  status="warning"
-                />
-                <AlertRow
-                  icon={WifiOff}
-                  title="Device Offline"
-                  desc="Device was offline for 5 minutes."
-                  time="25 mins ago"
-                  status="muted"
-                />
+                {/* Dynamically derived alerts based on device state */}
+                {device.isOnline ? (
+                   <AlertRow
+                    icon={CheckCircle2}
+                    title="Network Stable"
+                    desc="Node is successfully broadcasting telemetry."
+                    time="Live"
+                    status="success"
+                  />
+                ) : (
+                  <AlertRow
+                    icon={WifiOff}
+                    title="Node Offline"
+                    desc="Telemetry stream interrupted. Check facility internet."
+                    time="N/A"
+                    status="danger"
+                  />
+                )}
+                
+                {(device.telemetry?.tds > 800) && (
+                  <AlertRow
+                    icon={AlertTriangle}
+                    title="High Salinity"
+                    desc="Density spectrum exceeding nominal efficiency bounds."
+                    time="Recent"
+                    status="warning"
+                  />
+                )}
+
+                {device.telemetry?.is_maintenance && (
+                  <AlertRow
+                    icon={ShieldAlert}
+                    title="Maintenance Flag"
+                    desc="Hardware requires immediate manual inspection."
+                    time="Live"
+                    status="danger"
+                  />
+                )}
+
                 <AlertRow
                   icon={Bolt}
-                  title="Voltage Spike Detected"
-                  desc="Voltage reached 240V at 09:45 AM."
-                  time="1 hour ago"
-                  status="danger"
+                  title="System Active"
+                  desc={`Power mode currently set to: ${device.telemetry?.power_mode || 'Active'}`}
+                  time="Current"
+                  status="success"
                 />
               </div>
             </div>

@@ -5,7 +5,7 @@ import { cn } from "../../../utils/cn";
  * OfflineDevicesCard Component (Admin Dashboard Exclusive)
  * Mirrors the specific design from dashboard.html
  */
-const OfflineDevicesCard = memo(({ value }) => {
+const OfflineDevicesCard = memo(({ value, trend = "down", trendValue = "Live" }) => {
   return (
     <div className="bg-white rounded-xl shadow-sm p-6 flex flex-col min-h-[180px] relative overflow-hidden group">
       <div className="flex justify-between items-start w-full">
@@ -23,8 +23,10 @@ const OfflineDevicesCard = memo(({ value }) => {
             "bg-red-50 text-red-600"
           )}
         >
-          <span className="material-symbols-outlined text-[14px]">wifi_off</span>
-          Live
+          <span className="material-symbols-outlined text-[14px]">
+            {trend === "up" ? "arrow_drop_up" : "arrow_drop_down"}
+          </span>
+          {trendValue}
         </div>
       </div>
       <div className="mt-4">

@@ -1,17 +1,17 @@
 import { memo, useRef } from "react";
-import { Calendar, RefreshCw, Activity, Check, ChevronDown, Zap } from "lucide-react";
+import { Activity, RefreshCw, Zap } from "lucide-react";
 import { ComposedDeviceChart } from "../../index";
 
 /**
  * PerformanceAnalyticsCard Component
  * Wraps the Device Performance chart with date filtering capabilities.
+ * Mirrored from legacy user-dashboard.html design.
  */
 const PerformanceAnalyticsCard = memo(
   ({
     selectedDate,
     setSelectedDate,
     logsLoading,
-    _logs = [],
     performanceChartData,
     deviceIds = [],
   }) => {
@@ -28,15 +28,22 @@ const PerformanceAnalyticsCard = memo(
             onClick={() => dateInputRef.current?.showPicker()}
             className="relative flex items-center gap-2 px-3 py-2 border border-outline-variant/30 rounded-lg bg-white shadow-sm hover:bg-surface-container-low transition-all cursor-pointer group/calendar active:scale-95"
           >
-            <Calendar className="w-[18px] h-[18px] text-on-surface-variant group-hover/calendar:text-primary transition-colors" />
-            <span className="text-label-md text-on-surface font-semibold ml-2 mr-1">
-              {new Date(selectedDate).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })}
+            <span className="material-symbols-outlined text-[18px] text-on-surface-variant group-hover/calendar:text-primary transition-colors">
+              calendar_today
             </span>
-            <ChevronDown className="w-[18px] h-[18px] text-on-surface-variant" />
+            <span className="text-label-md text-on-surface font-semibold ml-2 mr-1">
+              {(() => {
+                const [y, m, d] = selectedDate.split("-");
+                return new Date(y, m - 1, d).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                });
+              })()}
+            </span>
+            <span className="material-symbols-outlined text-[18px] text-on-surface-variant">
+              expand_more
+            </span>
             <input
               ref={dateInputRef}
               type="date"
@@ -81,25 +88,29 @@ const PerformanceAnalyticsCard = memo(
           )}
         </div>
 
-        {/* Stylized Legend mirrored from user-dashboard.html */}
+        {/* Stylized Legend mirrored exactly from user-dashboard.html */}
         <div className="flex items-center justify-center gap-6 pt-4 mt-auto">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 rounded bg-primary flex items-center justify-center text-white shadow-sm">
-              <Check size={10} strokeWidth={4} />
+              <span className="material-symbols-outlined text-[14px]">check</span>
             </div>
-            <span className="text-label-sm text-on-surface-variant font-semibold">Voltage (V)</span>
+            <span className="text-label-sm text-on-surface-variant font-semibold whitespace-nowrap">
+              Voltage (V)
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-5 h-0.5 bg-primary rounded-full shadow-sm" />
-            <span className="text-label-sm text-on-surface-variant font-semibold">Current (A)</span>
+            <span className="text-label-sm text-on-surface-variant font-semibold whitespace-nowrap">
+              Current (A)
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex gap-0.5">
-              <div className="w-1 h-0.5 bg-[#1fd6c1]" />
-              <div className="w-1 h-0.5 bg-[#1fd6c1]" />
-              <div className="w-1 h-0.5 bg-[#1fd6c1]" />
+              <div className="w-1.5 h-0.5 bg-[#1fd6c1] rounded-full" />
+              <div className="w-1.5 h-0.5 bg-[#1fd6c1] rounded-full" />
+              <div className="w-1.5 h-0.5 bg-[#1fd6c1] rounded-full" />
             </div>
-            <span className="text-label-sm text-on-surface-variant font-semibold">
+            <span className="text-label-sm text-on-surface-variant font-semibold whitespace-nowrap">
               Salinity (ppt)
             </span>
           </div>

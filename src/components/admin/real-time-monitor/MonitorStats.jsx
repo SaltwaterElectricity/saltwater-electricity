@@ -1,12 +1,33 @@
 import { memo } from "react";
 import { Zap, FlaskConical } from "lucide-react";
+import { cn } from "../../../utils/cn";
 
 /**
  * COMPONENT: MonitorStats
  * Mirrored from code1.html TopSummaryCards.
  * Contains Total Voltage and Total Salinity horizontal cards.
+ * Now features dynamic mini-graphs reflective of actual system totals.
  */
 const MonitorStats = ({ stats }) => {
+  // Logic to generate dynamic bars that reflect the scale of the system totals
+  const getBars = (value, maxVal, color, prefix) => {
+    const intensity = Math.min(1, value / maxVal);
+    return Array.from({ length: 6 }).map((_, i) => {
+      const height = Math.max(10, (intensity * 60) + (Math.sin(i * 1.5) * 20) + 20);
+      return (
+        <div
+          key={`stat-bar-${prefix}-${height}-${i === 4 ? 'highlight' : 'base'}`}
+          className={cn(
+            "w-1.5 rounded-full transition-all duration-1000 ease-out",
+            color === "blue" ? "bg-blue-100" : "bg-purple-100",
+            i === 4 && (color === "blue" ? "bg-primary" : "bg-purple-600")
+          )}
+          style={{ height: `${height}%` }}
+        />
+      );
+    });
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
       {/* Total Voltage Card */}
@@ -28,12 +49,7 @@ const MonitorStats = ({ stats }) => {
           className="flex items-end space-x-1 h-12 ml-4 shrink-0 opacity-40 group-hover:opacity-100 transition-opacity"
           data-purpose="mini-graph"
         >
-          <div className="w-1.5 bg-blue-100 rounded-full h-4" />
-          <div className="w-1.5 bg-blue-200 rounded-full h-6" />
-          <div className="w-1.5 bg-blue-300 rounded-full h-8" />
-          <div className="w-1.5 bg-blue-400 rounded-full h-12" />
-          <div className="w-1.5 bg-primary rounded-full h-10" />
-          <div className="w-1.5 bg-blue-200 rounded-full h-5" />
+          {getBars(stats.totalVoltage, 1000, "blue", "voltage")}
         </div>
       </div>
 
@@ -56,12 +72,7 @@ const MonitorStats = ({ stats }) => {
           className="flex items-end space-x-1 h-12 ml-4 shrink-0 opacity-40 group-hover:opacity-100 transition-opacity"
           data-purpose="mini-graph"
         >
-          <div className="w-1.5 bg-purple-100 rounded-full h-8" />
-          <div className="w-1.5 bg-purple-200 rounded-full h-10" />
-          <div className="w-1.5 bg-purple-300 rounded-full h-12" />
-          <div className="w-1.5 bg-purple-400 rounded-full h-8" />
-          <div className="w-1.5 bg-purple-600 rounded-full h-9" />
-          <div className="w-1.5 bg-purple-200 rounded-full h-6" />
+          {getBars(stats.totalSalinity, 5000, "purple", "salinity")}
         </div>
       </div>
     </div>

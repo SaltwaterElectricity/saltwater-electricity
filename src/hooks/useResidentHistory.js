@@ -23,7 +23,11 @@ export const useResidentHistory = (deviceIds = [], limit = 50, date = null) => {
       return;
     }
 
-    Promise.resolve().then(() => setLoading(true));
+    Promise.resolve().then(() => {
+      setLoading(true);
+      // 🛡️ STALE DEFENSE: Clear logs when the date filter changes to prevent 'ghost' data
+      setLogs([]);
+    });
     try {
       const fetchPromises = deviceIds.map((id) =>
         getHistoricalLogs(id, limit, date).catch((err) => {

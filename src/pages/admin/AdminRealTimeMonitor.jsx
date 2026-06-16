@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { Info } from "lucide-react";
 import { useDevices, useAssignments, useUserSubscription } from "../../hooks";
+import { MonitorSkeleton } from "../../components/skeleton";
 import {
   MonitorHeader,
   MonitorStats,
@@ -122,14 +123,7 @@ const AdminRealTimeMonitor = () => {
   const isLoading = devicesLoading || assignmentsLoading || usersLoading;
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-[70vh] gap-6 animate-pulse">
-        <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-        <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-xs">
-          Synchronizing Grid...
-        </p>
-      </div>
-    );
+    return <MonitorSkeleton />;
   }
 
   return (

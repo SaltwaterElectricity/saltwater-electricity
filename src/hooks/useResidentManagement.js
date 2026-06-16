@@ -25,9 +25,14 @@ export const useResidentManagement = () => {
 
   // 2. Hydrate Residents with Device/Telemetry Data
   const hydratedResidents = useMemo(() => {
-    const assignments = Object.values(assignmentsObj);
+    // FIX: Correctly map deviceId from the keys of assignmentsObj
+    const assignments = Object.entries(assignmentsObj).map(([deviceId, data]) => ({
+      ...data,
+      deviceId,
+    }));
 
-    return residents.map((res) => {
+    // 2a. Map existing residents
+    const residentsMap = residents.map((res) => {
       const assignment = assignments.find((a) => a.userId === res.id);
       const device = assignment ? devices.find((d) => d.device_id === assignment.deviceId) : null;
       const tel = device ? telemetry[device.device_id] : null;
@@ -43,6 +48,38 @@ export const useResidentManagement = () => {
         isOnline: !!isOnline,
       };
     });
+
+    // 2b. Include Orphaned Assignments (Devices assigned to UIDs missing from the users list)
+    const assignedUserIds = new Set(residents.map((r) => r.id));
+    const orphans = assignments.filter((a) => !assignedUserIds.has(a.userId));
+
+    const orphanedResidents = orphans.map((a) => {
+      const device = devices.find((d) => d.device_id === a.deviceId);
+      const tel = device ? telemetry[device.device_id] : null;
+      const isOnline = tel && tel.timestamp && now - tel.timestamp < 300000;
+
+      // Extract name from device_information if profile is missing
+      const fullName = device?.assigned_user_name || "Unknown Resident";
+      const nameParts = fullName.split(" ");
+      const firstName = nameParts[0] || "Unknown";
+      const lastName = nameParts.slice(1).join(" ") || "";
+
+      return {
+        id: a.userId,
+        uid: a.userId,
+        firstName,
+        lastName,
+        email: "Profile missing",
+        deviceId: a.deviceId,
+        assignedAt: a.assignedAt,
+        assignedDevice: device ? device.device_name || device.device_id : "No Device",
+        isOnline: !!isOnline,
+        address: { baranggay: "Unknown" },
+        status: "disabled", // Orphaned users are treated as disabled/inactive
+      };
+    });
+
+    return [...residentsMap, ...orphanedResidents];
   }, [residents, assignmentsObj, devices, telemetry, now]);
 
   // 3. Compute Stats

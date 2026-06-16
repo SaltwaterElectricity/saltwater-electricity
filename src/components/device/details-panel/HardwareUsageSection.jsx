@@ -1,14 +1,25 @@
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Cpu, Zap, Droplets, Settings, Lightbulb, Clock } from "lucide-react";
 import { cn } from "../../../utils/cn";
+import { useCountUp } from "../../../hooks/useCountUp";
 
 /**
  * HardwareUsageSection Component
- * Visualizes current consumption across internal modules.
+ * Visualizes current consumption across internal modules with sweep animations.
  */
 export const HardwareUsageSection = ({ telemetry }) => {
   const currentTotal = telemetry?.current ? Math.round(telemetry.current * 1000) : 0; // Convert to mA
   const tsKey = telemetry?.timestamp ?? "standby";
+
+  // 1. ANIMATION: Count-up for the big number
+  const animatedTotal = useCountUp(currentTotal, 1500);
+
+  // 2. ANIMATION: Local state for the "Fill" effect
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setIsMounted(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Requirement: Breakdown mapping using actual telemetry data
   const components = useMemo(() => {
@@ -73,15 +84,15 @@ export const HardwareUsageSection = ({ telemetry }) => {
     <section id="section-components" className="scroll-mt-6">
       <div className="flex flex-col gap-1 mb-6">
         <div className="flex justify-between items-center">
-          <h3 className="font-display text-lg font-bold text-primary">Hardware Component Usage</h3>
+          <h3 className="font-display text-md font-bold text-primary">Hardware Component Usage</h3>
           <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">
+            <span className="text-[6px] font-bold text-emerald-600 uppercase tracking-widest">
               Live Monitoring
             </span>
           </div>
         </div>
-        <p className="text-[13px] text-slate-400 font-medium">
+        <p className="text-[10px] text-slate-400 font-medium">
           Real-time current consumption of internal modules.
         </p>
       </div>
@@ -110,7 +121,9 @@ export const HardwareUsageSection = ({ telemetry }) => {
                 const x2 = 50 + 46 * Math.cos(angle);
                 const y2 = 50 + 46 * Math.sin(angle);
 
-                const active = i < Math.round((currentTotal / 300) * 60);
+                // Sweep Animation: Only show tick if i is less than progress AND mounted
+                const progressThreshold = (currentTotal / 300) * 60;
+                const active = isMounted && i < Math.round(progressThreshold);
 
                 return (
                   <line
@@ -124,7 +137,7 @@ export const HardwareUsageSection = ({ telemetry }) => {
                     strokeWidth="0.8"
                     strokeLinecap="round"
                     opacity={active ? 1 : 0.1}
-                    className="transition-opacity duration-700"
+                    style={{ transition: `opacity 400ms ease-out ${i * 15}ms` }}
                   />
                 );
               })}
@@ -134,7 +147,7 @@ export const HardwareUsageSection = ({ telemetry }) => {
           {/* Center Text */}
           <div className="text-center z-10 flex flex-col items-center">
             <span className="text-[64px] font-bold font-display leading-none text-slate-900 tracking-tighter">
-              {currentTotal}
+              {animatedTotal}
             </span>
             <span className="text-[20px] font-bold text-slate-400 mt-1 uppercase">mA</span>
             <span className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em] mt-4 pt-2 border-t border-slate-50 w-24">
@@ -159,10 +172,11 @@ export const HardwareUsageSection = ({ telemetry }) => {
 
       {/* Hardware Component Cards Vertical Stack */}
       <div className="space-y-3">
-        {components.map((comp) => (
+        {components.map((comp, idx) => (
           <div
             key={comp.id}
-            className="bg-white border border-slate-100 rounded-xl p-4 flex items-center gap-4 hover:shadow-md transition-all border-l-4 border-l-transparent hover:border-l-purple-500 group"
+            className="bg-white border border-slate-100 rounded-xl p-4 flex items-center gap-4 hover:shadow-md transition-all border-l-4 border-l-transparent hover:border-l-purple-500 group animate-in fade-in slide-in-from-right-4 duration-500"
+            style={{ animationDelay: `${idx * 100}ms` }}
           >
             <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-primary group-hover:bg-purple-50 group-hover:text-purple-600 transition-colors">
               <comp.icon size={20} />
@@ -177,9 +191,9 @@ export const HardwareUsageSection = ({ telemetry }) => {
               <div className="w-full bg-slate-50 h-1.5 rounded-full overflow-hidden">
                 <div
                   className={cn(
-                    "h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-1000"
+                    "h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-1500 ease-out"
                   )}
-                  style={{ width: `${Math.min(100, (comp.value / 200) * 100)}%` }}
+                  style={{ width: isMounted ? `${Math.min(100, (comp.value / 200) * 100)}%` : "0%" }}
                 />
               </div>
             </div>

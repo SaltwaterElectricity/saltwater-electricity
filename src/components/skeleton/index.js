@@ -1,3 +1,11 @@
 export { DeviceCardSkeleton } from "./DeviceCardSkeleton.jsx";
 export { UserTableSkeleton } from "./UserTableSkeleton.jsx";
 export { ProfileFormSkeleton } from "./ProfileFormSkeleton.jsx";
+export { default as DashboardSkeleton } from "./DashboardSkeleton.jsx";
+export { default as AdminDashboardSkeleton } from "./AdminDashboardSkeleton.jsx";
+export { default as MonitorSkeleton } from "./MonitorSkeleton.jsx";
+export { default as RequestValidationSkeleton } from "./RequestValidationSkeleton.jsx";
+export { default as DeviceManagementSkeleton } from "./DeviceManagementSkeleton.jsx";
+export { default as ResidentManagementSkeleton } from "./ResidentManagementSkeleton.jsx";
+export { default as SystemAlertsSkeleton } from "./SystemAlertsSkeleton.jsx";
+export { default as AuditLogSkeleton } from "./AuditLogSkeleton.jsx";

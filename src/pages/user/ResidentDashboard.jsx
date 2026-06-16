@@ -17,9 +17,11 @@ import {
   PerformanceAnalyticsCard,
   SystemOverviewCard,
   ResidentDeviceStatusWidget,
+  DashboardSkeleton,
 } from "../../components";
 import { RecentAlertsFeed } from "../../components/dashboard";
-import { METRICS, SENSOR_CONFIG, ROUTES } from "../../constants";
+
+import { METRICS, SENSOR_CONFIG, ROUTES, APP_SETTINGS } from "../../constants";
 import { Footer } from "../../layout";
 
 /**
@@ -34,25 +36,25 @@ const ResidentDashboard = () => {
   const { assignments, loading: assignmentsLoading } = useAssignments();
   const { requests, loading: requestsLoading } = useDeviceRequests(user?.uid);
 
-  // Date Filtering State: Default to today (YYYY-MM-DD)
-  const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split("T")[0]);
+  // Date Filtering State: Default to today (YYYY-MM-DD) in LOCAL time
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  });
 
   // Find all devices assigned to the current resident
-  // We check both the primary 'device_assignments' node and the legacy 'assigned_user_id' field
   const userDevices = useMemo(() => {
     if (!user || !devices) return [];
 
     const userId = String(user.uid || user.id || "");
     if (!userId) return [];
 
-    // 1. Identify IDs from primary assignment node
     const assignedIds = assignments
       ? Object.entries(assignments)
           .filter(([_, data]) => String(data.userId) === userId)
           .map(([id]) => id)
       : [];
 
-    // 2. Filter devices that either have the direct ID match or the legacy field match
     return devices.filter((d) => {
       const isPrimaryMatch = assignedIds.includes(d.device_id);
       const isLegacyMatch = String(d.assigned_user_id || "") === userId;
@@ -60,7 +62,6 @@ const ResidentDashboard = () => {
     });
   }, [user, devices, assignments]);
 
-  // Primary device for status widgets (usually the first one)
   const primaryDevice = userDevices.length > 0 ? userDevices[0] : null;
   const deviceIds = useMemo(() => userDevices.map((d) => d.device_id), [userDevices]);
 
@@ -68,13 +69,83 @@ const ResidentDashboard = () => {
   const { logs, loading: logsLoading } = useResidentHistory(deviceIds, 50, selectedDate);
   const { notifications, loading: notificationsLoading } = useNotifications(user?.uid);
 
-  // Latest entry for calculations: Priority to real-time telemetry, fallback to logs
+  /**
+   * Helper: Extracts YYYY-MM-DD from a timestamp in LOCAL time.
+   */
+  const getLocalDateString = (ts) => {
+    if (!ts) return null;
+    // Robust parsing: convert to number to handle numeric strings, then verify validity
+    const d = new Date(Number(ts));
+    if (isNaN(d.getTime())) return null;
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  };
+
+  // Latest entry for calculations: Priority to real-time telemetry (if date matches), fallback to logs
   const latestLog = useMemo(() => {
-    if (primaryDevice && telemetry && telemetry[primaryDevice.device_id]) {
-      return telemetry[primaryDevice.device_id];
+    const tel = primaryDevice && telemetry ? telemetry[primaryDevice.device_id] : null;
+
+    // 1. Check if real-time telemetry matches the selected date (Local Time)
+    // 🛡️ PHANTOM DEFENSE: Ignore local fallback standby objects
+    if (tel && !tel.isFallback) {
+      const telTs = tel.__normalizedTs || tel.timestamp;
+      if (getLocalDateString(telTs) === selectedDate) {
+        return tel;
+      }
     }
-    return logs && logs.length > 0 ? logs[0] : null;
-  }, [primaryDevice, telemetry, logs]);
+
+    // 2. Otherwise, use the latest record from the historical logs IF it matches the day
+    const logCandidate = logs && logs.length > 0 ? logs[0] : null;
+    if (logCandidate) {
+      const logTs = logCandidate.__normalizedTs || logCandidate.timestamp;
+      if (getLocalDateString(logTs) === selectedDate) {
+        return logCandidate;
+      }
+    }
+
+    return null;
+  }, [primaryDevice, telemetry, logs, selectedDate]);
+
+  /**
+   * Helper: Calculates a health percentage (0-100) based on TDS readings.
+   */
+  const calculateHealthScore = (log) => {
+    if (!log) return 0;
+    const tdsValue = log.tds ?? log.tds_ppm ?? 0;
+    const config = SENSOR_CONFIG[METRICS.TDS];
+    
+    if (tdsValue <= config.warning) {
+      const progress = tdsValue / config.warning;
+      return Math.round(100 - progress * 15);
+    } else if (tdsValue <= config.critical) {
+      const range = config.critical - config.warning;
+      const progress = (tdsValue - config.warning) / range;
+      return Math.round(85 - progress * 45);
+    }
+    return Math.max(0, Math.round(40 - ((tdsValue - config.critical) / 500) * 40));
+  };
+
+  const healthScore = useMemo(() => calculateHealthScore(latestLog), [latestLog]);
+
+  // Calculate Health Trend: Comparison with the previous recorded log
+  const healthTrend = useMemo(() => {
+    if (!logs || logs.length < 2) {
+      return { 
+        value: healthScore > 90 ? "Normal" : healthScore > 70 ? "Stable" : "Critical", 
+        trend: healthScore > 70 ? "up" : "down" 
+      };
+    }
+
+    const currentScore = healthScore;
+    const prevScore = calculateHealthScore(logs[1]);
+    const diff = currentScore - prevScore;
+
+    if (diff === 0) return { value: "Stable", trend: "up" };
+    
+    return {
+      value: `${Math.abs(diff)}%`,
+      trend: diff > 0 ? "up" : "down"
+    };
+  }, [logs, healthScore]);
 
   // KPI Calculations
   const totalDevicesCount = userDevices.length;
@@ -83,26 +154,45 @@ const ResidentDashboard = () => {
     [requests]
   );
 
+  const [mountTime] = useState(() => Date.now());
+
   const activeDevicesCount = useMemo(() => {
     return userDevices.filter((d) => {
       const tel = telemetry?.[d.device_id];
-      return tel && tel.voltage > 0;
+      // IDOR/STALE DEFENSE: Only count as active if voltage > 0 AND reading is relatively fresh
+      const telTs = tel?.__normalizedTs || tel?.timestamp || 0;
+      const isRecent = tel && (mountTime - telTs) < (APP_SETTINGS.STALE_THRESHOLD || 30000);
+      return tel && tel.voltage > 0 && isRecent;
     }).length;
-  }, [userDevices, telemetry]);
+  }, [userDevices, telemetry, mountTime]);
 
-  const healthScore = useMemo(() => {
-    if (!latestLog) return 0;
-    const tdsValue = latestLog.tds ?? latestLog.tds_ppm ?? 0;
-    const config = SENSOR_CONFIG[METRICS.TDS];
-    if (tdsValue < config.warning) return 98;
-    if (tdsValue < config.critical) return 85;
-    return 45;
+  // Derived technical metrics for System Overview
+  const { efficiency, systemLoad } = useMemo(() => {
+    if (!latestLog) return { efficiency: 0, systemLoad: 0 };
+    
+    const v = Number(latestLog.voltage) || 0;
+    const c = Number(latestLog.current) || 0;
+
+    // Efficiency: Proximity to nominal 240V
+    const effVal = Math.max(0, Math.min(100, (v / 240) * 100));
+    // Load: Current draw relative to 5A capacity (as defined in reading.service.js context)
+    const loadVal = Math.max(0, Math.min(100, (c / 5) * 100));
+
+    return {
+      efficiency: Math.round(effVal),
+      systemLoad: Math.round(loadVal)
+    };
   }, [latestLog]);
 
   // Chart Data Processing: Aggregated from all assigned devices
   const performanceChartData = useMemo(() => {
-    // Combine logs with the latest real-time telemetry point
-    const allLogs = [...(logs || [])];
+    // 🛡️ STALE DATA DEFENSE: Filter logs by selectedDate to ensure visual accuracy
+    const filteredLogs = (logs || []).filter((l) => {
+      const ts = l.__normalizedTs || l.timestamp;
+      return getLocalDateString(ts) === selectedDate;
+    });
+
+    const allLogs = [...filteredLogs];
     if (
       latestLog &&
       !allLogs.find(
@@ -119,8 +209,7 @@ const ResidentDashboard = () => {
     const cConfig = SENSOR_CONFIG[METRICS.CURRENT];
     const sConfig = SENSOR_CONFIG[METRICS.TDS];
 
-    // Group logs by time bucket (e.g., 30-minute intervals) to handle multiple devices at similar times
-    const BUCKET_SIZE = 30 * 60 * 1000; // 30 minutes
+    const BUCKET_SIZE = 30 * 60 * 1000;
     const buckets = new Map();
 
     allLogs.forEach((log) => {
@@ -128,16 +217,10 @@ const ResidentDashboard = () => {
       const bucketTs = Math.floor(ts / BUCKET_SIZE) * BUCKET_SIZE;
 
       if (!buckets.has(bucketTs)) {
-        buckets.set(bucketTs, {
-          v: [],
-          c: [],
-          s: [],
-          timestamp: bucketTs,
-        });
+        buckets.set(bucketTs, { v: [], c: [], s: [], timestamp: bucketTs });
       }
 
       const b = buckets.get(bucketTs);
-      // Requirement: Use normalized keys (voltage, current, tds)
       const v = Number(log.voltage) || 0;
       const c = Number(log.current) || 0;
       const s = Number(log.tds ?? log.tds_ppm) || 0;
@@ -149,39 +232,38 @@ const ResidentDashboard = () => {
 
     return Array.from(buckets.values())
       .sort((a, b) => a.timestamp - b.timestamp)
-      .slice(-24) // Show last 24 buckets
+      .slice(-48) // Show up to a full day of buckets (30-min intervals)
       .map((b) => {
-        // Average values in bucket
         const avgV = b.v.length > 0 ? b.v.reduce((sum, val) => sum + val, 0) / b.v.length : 0;
         const avgC = b.c.length > 0 ? b.c.reduce((sum, val) => sum + val, 0) / b.c.length : 0;
         const avgS = b.s.length > 0 ? b.s.reduce((sum, val) => sum + val, 0) / b.s.length : 0;
 
+        const bucketDate = new Date(b.timestamp);
+
         return {
           timestamp: b.timestamp,
-          timeLabel: new Date(b.timestamp).toLocaleTimeString("en-US", {
+          timeLabel: bucketDate.toLocaleTimeString("en-US", {
             hour: "numeric",
             minute: "2-digit",
             hour12: true,
           }),
-          voltageNormalized: Math.min((avgV / (vConfig.max || 15)) * 100, 100),
+          dateLabel: bucketDate.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          }),
+          voltageNormalized: Math.min((avgV / (vConfig.max || 300)) * 100, 100),
           currentNormalized: Math.min((avgC / (cConfig.max || 5)) * 100, 100),
           salinityNormalized: Math.min((avgS / (sConfig.max || 1000)) * 100, 100),
-          voltage: avgV.toFixed(2),
+          voltage: avgV.toFixed(1),
           current: avgC.toFixed(2),
-          salinity: avgS.toFixed(0),
+          salinity: avgS.toFixed(1),
         };
       });
-  }, [logs, latestLog]);
+  }, [logs, latestLog, selectedDate]);
 
   if (devicesLoading || requestsLoading || assignmentsLoading) {
-    return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center">
-        <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-        <p className="text-label-sm font-semibold text-outline uppercase tracking-widest mt-4 animate-pulse font-label-sm">
-          Syncing Facility Data...
-        </p>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   if (userDevices.length === 0 && pendingRequests === 0) {
@@ -203,20 +285,25 @@ const ResidentDashboard = () => {
 
   return (
     <div className="animate-in fade-in duration-700 space-y-stack-lg antialiased text-on-surface">
-      <WelcomeSection firstName={user?.firstName} />
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-        <TotalDevicesCard value={totalDevicesCount} />
-        <RequestDeviceCard value={pendingRequests} />
-        <DeviceHealthCard value={healthScore} trendValue="8%" trend="up" />
+      <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both">
+        <WelcomeSection firstName={user?.firstName} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 fill-mode-both">
+        <TotalDevicesCard value={totalDevicesCount} />
+        <RequestDeviceCard value={pendingRequests} />
+        <DeviceHealthCard 
+          value={healthScore} 
+          trendValue={healthTrend.value} 
+          trend={healthTrend.trend} 
+        />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-gutter animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200 fill-mode-both">
         <PerformanceAnalyticsCard
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
           logsLoading={logsLoading}
-          logs={logs}
           performanceChartData={performanceChartData}
           deviceIds={deviceIds}
         />
@@ -225,10 +312,12 @@ const ResidentDashboard = () => {
           healthScore={healthScore}
           totalDevices={totalDevicesCount}
           activeDevices={activeDevicesCount}
+          efficiency={efficiency}
+          systemLoad={systemLoad}
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter animate-in fade-in slide-in-from-bottom-10 duration-700 delay-300 fill-mode-both">
         <ResidentDeviceStatusWidget
           userDevices={userDevices}
           telemetry={telemetry}
@@ -244,7 +333,9 @@ const ResidentDashboard = () => {
         />
       </div>
 
-      <Footer />
+      <div className="animate-in fade-in duration-1000 delay-500 fill-mode-both">
+        <Footer />
+      </div>
     </div>
   );
 };

@@ -1,11 +1,11 @@
 import { useState, useMemo } from "react";
 import { useAuth } from "../../context/useAuth";
 import { useDevices } from "../../hooks";
+import { DeviceManagementSkeleton } from "../../components/skeleton";
 import {
   ManagedDeviceCard,
   AssignDeviceModal,
   ConfirmationModal,
-  LoadingSpinner,
   GlobalSearch,
   EmptyState,
 } from "../../components";
@@ -103,7 +103,7 @@ const DeviceManagement = () => {
   };
 
   if (error) return <ErrorMessage message={error?.message || error} />;
-  if (loading || authLoading) return <LoadingSpinner />;
+  if (loading || authLoading) return <DeviceManagementSkeleton />;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">

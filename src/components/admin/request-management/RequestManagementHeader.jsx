@@ -7,12 +7,12 @@ import { memo } from "react";
  */
 const RequestManagementHeader = memo(() => {
   return (
-    <div className="flex flex-col">
-      <h2 className="font-['Inter'] text-3xl text-slate-900 font-extrabold tracking-tight">
+    <div className="w-full flex flex-col text-left">
+      <h2 className="font-headline-lg text-3xl text-on-background font-extrabold tracking-tight">
         <span className="text-black">REQUEST</span>{" "}
-        <span className="text-blue-600">VALIDATION</span>
+        <span className="text-primary">VALIDATION</span>
       </h2>
-      <p className="text-slate-500 mt-2 max-w-2xl font-medium text-sm md:text-base">
+      <p className="text-body-md text-on-surface-variant mt-2 font-medium">
         Monitor and manage incoming device and user requests with Saltwater Electricity Monitoring
         System.
       </p>

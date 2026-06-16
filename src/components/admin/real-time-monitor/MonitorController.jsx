@@ -1,10 +1,10 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../../context/useAuth";
-import { ROLES } from "../../constants/roles";
+import { useAuth } from "../../../context/useAuth";
+import { ROLES } from "../../../constants/roles";
 
 // Import Role-Specific Monitor Components
-import AdminRealTimeMonitor from "../admin/AdminRealTimeMonitor";
-import ResidentRealTimeMonitor from "../user/ResidentRealTimeMonitor";
+import AdminRealTimeMonitor from "../../../pages/admin/AdminRealTimeMonitor";
+import ResidentRealTimeMonitor from "../../../pages/user/ResidentRealTimeMonitor";
 
 /**
  * PAGE: RealTimeMonitor (Controller)

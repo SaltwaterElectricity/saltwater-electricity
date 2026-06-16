@@ -1,12 +1,35 @@
 import { memo } from "react";
 import { Box, Wifi, WifiOff } from "lucide-react";
+import { cn } from "../../../utils/cn";
 
 /**
  * COMPONENT: MonitorMetrics
  * Mirrored from code1.html BottomSummaryCards.
  * Contains Total, Online, and Inactive device cards.
+ * Now features dynamic mini-graphs that scale with actual unit counts.
  */
 const MonitorMetrics = ({ stats }) => {
+  const getBars = (value, maxVal, colorClass, prefix) => {
+    const intensity = maxVal > 0 ? Math.min(1, value / maxVal) : 0;
+    return Array.from({ length: 4 }).map((_, i) => {
+      const height = Math.max(15, (intensity * 70) + (Math.sin(i * 2) * 15) + 15);
+      return (
+        <div
+          key={`metrics-bar-${prefix}-${height}-${Math.random()}`}
+          className={cn(
+            "w-1 rounded-full transition-all duration-1000 ease-out",
+            colorClass,
+            i === 3 && "opacity-100 scale-y-110"
+          )}
+          style={{ 
+            height: `${height}%`,
+            opacity: 0.3 + (i * 0.2)
+          }}
+        />
+      );
+    });
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       {/* Total Devices */}
@@ -19,11 +42,8 @@ const MonitorMetrics = ({ stats }) => {
           <h3 className="text-2xl font-bold text-gray-900">{stats.total}</h3>
           <p className="text-[10px] text-gray-400">Across all locations</p>
         </div>
-        <div className="flex items-end space-x-1 h-8 ml-2 opacity-30 group-hover:opacity-100 transition-opacity">
-          <div className="w-1 bg-blue-100 rounded-full h-3" />
-          <div className="w-1 bg-blue-200 rounded-full h-4" />
-          <div className="w-1 bg-blue-300 rounded-full h-6" />
-          <div className="w-1 bg-primary rounded-full h-8" />
+        <div className="flex items-end space-x-1 h-8 ml-2 group-hover:opacity-100 transition-opacity">
+          {getBars(stats.total, stats.total, "bg-primary", "total")}
         </div>
       </div>
 
@@ -37,11 +57,8 @@ const MonitorMetrics = ({ stats }) => {
           <h3 className="text-2xl font-bold text-gray-900">{stats.online}</h3>
           <p className="text-[10px] text-gray-400">Active devices</p>
         </div>
-        <div className="flex items-end space-x-1 h-8 ml-2 opacity-30 group-hover:opacity-100 transition-opacity">
-          <div className="w-1 bg-green-100 rounded-full h-5" />
-          <div className="w-1 bg-green-200 rounded-full h-7" />
-          <div className="w-1 bg-green-500 rounded-full h-8" />
-          <div className="w-1 bg-green-200 rounded-full h-4" />
+        <div className="flex items-end space-x-1 h-8 ml-2 group-hover:opacity-100 transition-opacity">
+          {getBars(stats.online, stats.total, "bg-green-500", "online")}
         </div>
       </div>
 
@@ -57,11 +74,8 @@ const MonitorMetrics = ({ stats }) => {
           <h3 className="text-2xl font-bold text-gray-900">{stats.offline}</h3>
           <p className="text-[10px] text-gray-400">Inactive devices</p>
         </div>
-        <div className="flex items-end space-x-1 h-8 ml-2 opacity-30 group-hover:opacity-100 transition-opacity">
-          <div className="w-1 bg-gray-100 rounded-full h-6" />
-          <div className="w-1 bg-gray-200 rounded-full h-8" />
-          <div className="w-1 bg-gray-300 rounded-full h-5" />
-          <div className="w-1 bg-gray-200 rounded-full h-2" />
+        <div className="flex items-end space-x-1 h-8 ml-2 group-hover:opacity-100 transition-opacity">
+          {getBars(stats.offline, stats.total, "bg-slate-400", "offline")}
         </div>
       </div>
     </div>

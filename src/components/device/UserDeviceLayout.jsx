@@ -2,7 +2,7 @@ import { ArrowRight, Maximize2, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "../../utils/cn";
 import { ROUTES } from "../../constants/routes";
-import { SENSOR_CONFIG, METRICS } from "../../constants";
+import { SENSOR_CONFIG, METRICS } from "../../constants/sensor.constants";
 
 /**
  * MetricCard Component
@@ -19,12 +19,12 @@ const MetricCard = ({ label, value, unit, type, colorClass }) => {
 
   return (
     <div className="bg-slate-50/80 p-4 rounded-2xl border border-slate-100 transition-all hover:bg-slate-100/50 flex flex-col items-center text-center">
-      <div className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-3 font-body-md flex items-center min-h-[14px] justify-center whitespace-nowrap">
+      <div className="text-[6px] font-black text-slate-400 uppercase tracking-widest mb-3 font-body-md flex items-center min-h-[14px] justify-center whitespace-nowrap">
         {label}
       </div>
 
       <div className="mb-3 flex-1 flex flex-col items-center justify-center">
-        <p className="text-xl sm:text-2xl font-black text-slate-900 tabular-nums leading-none">
+        <p className="text-lg sm:text-xl font-black text-slate-900 tabular-nums leading-none">
           {value ?? "--"}
         </p>
         <p className="text-primary font-black text-[10px] uppercase tracking-[0.2em] mt-1.5 leading-none">
@@ -57,12 +57,11 @@ export const ProvisionDeviceCard = ({ onAction }) => {
         <div className="w-10 h-10 rounded-full flex items-center justify-center text-white shrink-0 shadow-[0_4px_12px_rgba(10,46,255,0.3)] bg-primary group-hover:scale-110 transition-transform duration-500">
           <Plus size={24} strokeWidth={3} />
         </div>
-        <div className="text-left flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
-          <h4 className="font-display text-on-surface text-sm sm:text-base font-bold uppercase tracking-tight italic whitespace-nowrap">
+        <div className="text-left">
+          <h4 className="font-display text-on-surface text-sm sm:text-base font-bold uppercase tracking-tight italic">
             Request for Another Device
           </h4>
-          <span className="hidden md:block text-primary/40 font-black text-lg">/</span>
-          <p className="font-body-md text-on-surface-variant text-[10px] sm:text-xs whitespace-nowrap opacity-80">
+          <p className="font-body-md text-on-surface-variant text-[10px] sm:text-xs mt-0.5">
             Add your saltwater electricity devices with just a click.
           </p>
         </div>
@@ -87,19 +86,35 @@ export const UserDeviceLayout = ({
 }) => {
   const navigate = useNavigate();
 
-  const getStatusConfig = (tds) => {
-    const config = SENSOR_CONFIG[METRICS.TDS];
-    const val = Number(tds) || 0;
+  const getStatusConfig = (tds, voltage) => {
+    const tdsCfg = SENSOR_CONFIG[METRICS.TDS];
+    const voltCfg = SENSOR_CONFIG[METRICS.VOLTAGE];
+    const tVal = Number(tds) || 0;
+    const vVal = Number(voltage) || 0;
 
-    if (val < config.warning)
+    // 1. Critical Checks (High or Low)
+    const isCritical =
+      tVal >= tdsCfg.critical ||
+      tVal <= tdsCfg.lowCritical ||
+      vVal <= voltCfg.lowCritical;
+
+    if (isCritical) {
       return {
-        label: "Active",
-        color: "text-green-600",
-        bg: "bg-green-50",
-        dot: "bg-green-500",
-        border: "border-green-100",
+        label: "Critical",
+        color: "text-red-600",
+        bg: "bg-red-50",
+        dot: "bg-red-500",
+        border: "border-red-100",
       };
-    if (val < config.critical)
+    }
+
+    // 2. Warning Checks (High or Low)
+    const isWarning =
+      tVal >= tdsCfg.warning ||
+      tVal <= tdsCfg.lowWarning ||
+      vVal <= voltCfg.lowWarning;
+
+    if (isWarning) {
       return {
         label: "Check",
         color: "text-orange-600",
@@ -107,12 +122,15 @@ export const UserDeviceLayout = ({
         dot: "bg-orange-500",
         border: "border-orange-100",
       };
+    }
+
+    // 3. Normal State
     return {
-      label: "Critical",
-      color: "text-red-600",
-      bg: "bg-red-50",
-      dot: "bg-red-500",
-      border: "border-red-100",
+      label: "Active",
+      color: "text-green-600",
+      bg: "bg-green-50",
+      dot: "bg-green-500",
+      border: "border-green-100",
     };
   };
 
@@ -120,7 +138,7 @@ export const UserDeviceLayout = ({
   const voltage = telemetry?.voltage ?? 0;
   const current = telemetry?.current ?? 0;
   const tds = telemetry?.tds ?? 0;
-  const status = getStatusConfig(tds);
+  const status = getStatusConfig(tds, voltage);
 
   const handleAnalyticsRedirect = () => {
     if (onViewDetails) {
@@ -147,16 +165,16 @@ export const UserDeviceLayout = ({
     : "Never";
 
   return (
-    <div className="bg-cardBg rounded-[24px] shadow-premium p-6 sm:p-8 relative overflow-hidden animate-fade-in flex flex-col h-full border border-white/40">
+    <div className="bg-cardBg rounded-[24px] shadow-premium p-4 sm:p-6 relative overflow-hidden animate-fade-in flex flex-col h-full border border-white/40">
       <div className="flex items-start justify-between mb-8">
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between mb-2 gap-4">
-            <h3 className="text-xl sm:text-2xl font-black text-slate-900 uppercase tracking-tight italic font-display truncate">
-              {deviceName || "Aqua Unit"}
+            <h3 className="text-xl sm:text-xl font-black text-slate-850 uppercase tracking-tight italic font-display truncate">
+              {deviceName || "Device Unit"}
             </h3>
             <span
               className={cn(
-                "flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider border shrink-0 shadow-sm",
+                "flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[6px] font-black uppercase tracking-wider border shrink-0 shadow-sm",
                 status.bg,
                 status.color,
                 status.border

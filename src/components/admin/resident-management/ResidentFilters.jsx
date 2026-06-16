@@ -20,7 +20,7 @@ const ResidentFilters = memo(({ filters, onAddClick }) => {
     <div className="glass-card rounded-2xl p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4 shadow-sm border border-outline-variant/30 transition-all hover:translate-y-[-2px]">
       <div className="flex flex-1 flex-col lg:flex-row gap-4 items-center">
         {/* Search */}
-        <div className="flex-1 max-w-md w-full">
+        <div className="flex-1 w-full">
           <GlobalSearch
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}

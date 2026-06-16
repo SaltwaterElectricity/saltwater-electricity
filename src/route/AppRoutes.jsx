@@ -12,14 +12,14 @@ import LoginPage from "../pages/auth/LoginPage";
 import UserManagement from "../pages/admin/UserManagement";
 import ResidentManagement from "../pages/admin/ResidentManagement";
 import DashboardController from "../pages/dashboard";
-import RealTimeMonitor from "../pages/dashboard/RealTimeMonitor";
+import RealTimeMonitor from "../components/admin/real-time-monitor/MonitorController";
 import DeviceManagement from "../pages/admin/DeviceManagement";
 import RequestManagement from "../pages/admin/RequestManagement";
 import AuditLogPage from "../pages/admin/AuditLogPage";
-import DeviceAnalytics from "../pages/dashboard/DeviceAnalytics";
-import HistoricalData from "../pages/dashboard/HistoricalData";
+import DeviceAnalytics from "../components/admin/analytics/DeviceAnalyticsView";
+import HistoricalData from "../components/admin/historical/HistoricalDataView";
 import DeviceRequest from "../pages/user/DeviceRequest";
-import Alerts from "../pages/dashboard/Alerts";
+import Alerts from "../components/admin/alerts/SystemAlerts";
 import LandingPage from "../pages/public/LandingPage";
 import PrivateRoute from "./PrivateRoute";
 

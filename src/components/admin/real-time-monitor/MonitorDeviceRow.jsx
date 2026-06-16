@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { MapPin, Cpu } from "lucide-react";
 import { cn } from "../../../utils/cn";
 import { formatRelativeTime } from "../../../utils/timeUtils";
@@ -6,39 +6,50 @@ import { formatRelativeTime } from "../../../utils/timeUtils";
 /**
  * SUB-COMPONENT: ReadingColumn
  * Visualizes a reading (Voltage/Salinity) with a mini-graph.
+ * Now dynamically generates heights based on the value to reflect actual data scale.
  */
-const ReadingColumn = ({ label, value, unit, color }) => (
-  <div className="w-40 group/reading">
-    <div className="flex flex-col mb-1">
-      <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">{label}</span>
-      <span className="text-sm font-bold text-gray-900">
-        {value}
-        {unit}
-      </span>
+const ReadingColumn = ({ label, value, unit, color }) => {
+  // Logic to generate pseudo-random but stable bar heights based on the actual value
+  // This makes the mini-graph feel "real" and reflective of the current data point.
+  const bars = useMemo(() => {
+    const numValue = parseFloat(value) || 0;
+    // Scale the bars around the current value's "intensity"
+    // Voltage ~220 is mid, TDS ~400 is mid.
+    const intensity = label === "Voltage" ? (numValue / 250) : (numValue / 1000);
+    
+    return Array.from({ length: 6 }).map((_, i) => ({
+      id: i,
+      // Variation: base intensity + some variance
+      h: Math.max(10, Math.min(100, (intensity * 60) + (Math.sin(i * 1.5) * 20) + 20))
+    }));
+  }, [value, label]);
+
+  return (
+    <div className="w-40 group/reading">
+      <div className="flex flex-col mb-1">
+        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">{label}</span>
+        <span className="text-sm font-bold text-gray-900">
+          {value}
+          {unit}
+        </span>
+      </div>
+      <div className="flex items-end space-x-1 h-8">
+        {bars.map((bar) => (
+          <div
+            key={`${label}-${bar.id}`}
+            className={cn(
+              "flex-1 rounded-sm transition-all duration-700 ease-out",
+              color === "blue"
+                ? "bg-blue-100 group-hover/reading:bg-primary"
+                : "bg-purple-100 group-hover/reading:bg-purple-600"
+            )}
+            style={{ height: `${bar.h}%` }}
+          />
+        ))}
+      </div>
     </div>
-    <div className="flex items-end space-x-1 h-8">
-      {[
-        { id: 1, h: 3 },
-        { id: 2, h: 5 },
-        { id: 3, h: 8 },
-        { id: 4, h: 7 },
-        { id: 5, h: 6 },
-        { id: 6, h: 4 },
-      ].map((bar) => (
-        <div
-          key={`${label}-${bar.id}`}
-          className={cn(
-            "flex-1 rounded-sm transition-all duration-500",
-            color === "blue"
-              ? "bg-blue-100 group-hover/reading:bg-primary"
-              : "bg-purple-100 group-hover/reading:bg-purple-600"
-          )}
-          style={{ height: `${bar.h * 4}px` }}
-        />
-      ))}
-    </div>
-  </div>
-);
+  );
+};
 
 /**
  * COMPONENT: MonitorDeviceRow

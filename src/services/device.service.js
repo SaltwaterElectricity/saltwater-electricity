@@ -257,10 +257,14 @@ export const subscribeToAssignmentDetails = (deviceId, callback, onError = null)
       const assignmentData = snapshot.val();
       if (assignmentData?.userId) {
         const userRef = ref(db, `users/${assignmentData.userId}`);
-        onValue(
-          userRef,
-          (userSnapshot) => {
+        const deviceRef = ref(db, `device_information/${deviceId}`);
+
+        // Fetch both user profile and device metadata for fallback name
+        Promise.all([get(userRef), get(deviceRef)])
+          .then(([userSnapshot, deviceSnapshot]) => {
             const userData = userSnapshot.val();
+            const deviceData = deviceSnapshot.val();
+
             if (userData) {
               callback({
                 fullName:
@@ -270,14 +274,16 @@ export const subscribeToAssignmentDetails = (deviceId, callback, onError = null)
               });
             } else {
               callback({
-                fullName: "User Not Found",
-                address: "N/A",
-                assignedAt: null,
+                fullName: deviceData?.assigned_user_name || "Resident Profile Missing",
+                address: "Contact Admin",
+                assignedAt: assignmentData.assignedAt,
               });
             }
-          },
-          { onlyOnce: true }
-        );
+          })
+          .catch((err) => {
+            logger.error("[Assignment Details]: Hydration failed", err);
+            if (onError) onError(err);
+          });
       } else {
         callback({
           fullName: "Not Assigned",
