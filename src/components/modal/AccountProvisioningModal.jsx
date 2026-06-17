@@ -66,6 +66,7 @@ const AccountProvisioningModal = ({ isOpen, onClose, mode = "user" }) => {
       baranggay: "",
       birthDate: "",
       firstName: "",
+      middleName: "",
       lastName: "",
       email: "",
       mobileNum: "",
@@ -79,6 +80,7 @@ const AccountProvisioningModal = ({ isOpen, onClose, mode = "user" }) => {
   const progress = useMemo(() => {
     const required = [
       "firstName",
+      "middleName",
       "lastName",
       "email",
       "baranggay",
@@ -156,7 +158,7 @@ const AccountProvisioningModal = ({ isOpen, onClose, mode = "user" }) => {
             <h3 className="text-3xl font-black tracking-tight text-slate-900">
               {config.titlePrefix} <span className="text-blue-600">{config.titleSuffix}</span>
             </h3>
-            <p className="font-medium text-slate-500 mt-2 text-sm max-w-lg leading-relaxed text-pretty">
+            <p className="font-medium text-slate-500 mt-2 text-sm leading-relaxed text-pretty">
               {config.description}
             </p>
           </header>
@@ -214,7 +216,7 @@ const AccountProvisioningModal = ({ isOpen, onClose, mode = "user" }) => {
               </div>
               <h5 className="text-lg font-black text-slate-900 text-center leading-tight">
                 {watchedFields.firstName || watchedFields.lastName
-                  ? `${watchedFields.firstName} ${watchedFields.lastName}`
+                  ? `${watchedFields.firstName} ${watchedFields.middleName ? watchedFields.middleName + " " : ""}${watchedFields.lastName}`
                   : "New User Candidate"}
               </h5>
               <span className="bg-blue-600/10 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider mt-3">
@@ -229,6 +231,11 @@ const AccountProvisioningModal = ({ isOpen, onClose, mode = "user" }) => {
                   val: watchedFields.email,
                   placeholder: "—",
                   noCaps: true,
+                },
+                {
+                  label: "Middle Name",
+                  val: watchedFields.middleName,
+                  placeholder: "None provided",
                 },
                 {
                   label: "Gender",

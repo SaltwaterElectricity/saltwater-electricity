@@ -17,7 +17,7 @@ import {
   PerformanceAnalyticsCard,
   SystemOverviewCard,
   ResidentDeviceStatusWidget,
-  DashboardSkeleton,
+  ResidentDashboardSkeleton,
 } from "../../components";
 import { RecentAlertsFeed } from "../../components/dashboard";
 
@@ -262,8 +262,16 @@ const ResidentDashboard = () => {
       });
   }, [logs, latestLog, selectedDate]);
 
-  if (devicesLoading || requestsLoading || assignmentsLoading) {
-    return <DashboardSkeleton />;
+  // COMBINED LOADING STATE
+  const isSyncing =
+    devicesLoading ||
+    requestsLoading ||
+    assignmentsLoading ||
+    notificationsLoading ||
+    (userDevices.length > 0 && logsLoading);
+
+  if (isSyncing) {
+    return <ResidentDashboardSkeleton />;
   }
 
   if (userDevices.length === 0 && pendingRequests === 0) {

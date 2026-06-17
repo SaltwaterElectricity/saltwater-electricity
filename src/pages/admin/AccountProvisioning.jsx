@@ -211,8 +211,10 @@ const AccountProvisioning = ({ mode = "user" }) => {
         description={config.modalDesc}
         confirmText="Finalize & Register"
       >
-        {/* INJECTED SUMMARY CONTENT */}
-        <RegistrationSummary data={tempData} />
+        {/* INJECTED SUMMARY CONTENT WITH HEIGHT CONSTRAINT */}
+        <div className="max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
+          <RegistrationSummary data={tempData} />
+        </div>
       </ConfirmationModal>
     </div>
   );

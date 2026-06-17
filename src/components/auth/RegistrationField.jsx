@@ -67,22 +67,22 @@ export const RegistrationFields = ({ register, errors, currentUserRole = ROLES.R
             validation={{ required: "First name is required" }}
           />
           <InputField
+            label="Middle Name"
+            name="middleName"
+            register={register}
+            errors={errors}
+            placeholder="e.g. Santos"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <InputField
             label="Last Name"
             name="lastName"
             register={register}
             errors={errors}
             placeholder="e.g. Dela Cruz"
             validation={{ required: "Last name is required" }}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <InputField
-            label="Middle Name"
-            name="middleName"
-            register={register}
-            errors={errors}
-            placeholder="e.g. Santos"
           />
           <div className="flex flex-col gap-1.5">
             <label className="text-[11px] font-semibold text-slate-500">

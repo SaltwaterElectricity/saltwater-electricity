@@ -1,6 +1,5 @@
 import { initFirebaseAdmin } from "./_utils/firebase.js";
 import { sendSuccess, sendError, handleOptions } from "./_utils/response.js";
-import axios from "axios";
 
 /**
  * Vercel Serverless Function: triggerHardwareAlert
@@ -84,7 +83,7 @@ export default async function handler(req, res) {
 
     const mobileNum = userSnap.val().mobileNum;
 
-    // Format number for PhilSMS (ensure 639... format)
+    // Format number for SMS (ensure 639... format)
     let formattedNumber = mobileNum
       .toString()
       .trim()
@@ -95,44 +94,38 @@ export default async function handler(req, res) {
       formattedNumber = "63" + formattedNumber;
     }
 
-    // 5. Trigger PhilSMS
-    const apiToken = process.env.PHILSMS_API_TOKEN;
-    const senderId = process.env.PHILSMS_SENDER_ID || "PhilSMS";
-
-    if (!apiToken) {
-      console.error("[triggerHardwareAlert] Missing PhilSMS configuration.");
-      throw new Error("SMS service configuration error.");
+    // 5. Dispatch to Private SMS Gateway Queue (CENTRALIZED PROTOCOL)
+    // All SMS alerts are routed to a single designated master device (gatewayUid).
+    const MASTER_GATEWAY_UID = process.env.MASTER_GATEWAY_UID;
+    
+    if (!MASTER_GATEWAY_UID) {
+      console.error("[triggerHardwareAlert] MASTER_GATEWAY_UID not configured in environment.");
+      return sendError(res, "SMS Gateway configuration error.", 500, "hw/gateway-missing");
     }
 
+    const smsQueueRef = db.ref("sms_queue");
     const message = `[SALT-ELEC] ALERT: Unit ${deviceId} detected critical TDS levels: ${tdsValue} PPM. Check dashboard now.`;
+    
+    const queueEntry = {
+      number: formattedNumber,
+      message: message,
+      deviceId: deviceId,
+      gatewayUid: MASTER_GATEWAY_UID, // Route all messages to the master device
+      status: "pending",
+      createdAt: now,
+    };
 
-    const smsResponse = await axios.post(
-      "https://dashboard.philsms.com/api/v3/sms/send",
-      {
-        recipient: formattedNumber,
-        sender_id: senderId,
-        type: "plain",
-        message: message,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${apiToken}`,
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      }
-    );
+    const newSmsRef = await smsQueueRef.push(queueEntry);
 
     // 6. Update Metadata
     await alertMetaRef.set({
       lastSmsSent: now,
       lastTdsValue: tdsValue,
-      status: "delivered",
-      smsUid:
-        smsResponse.data.data?.id || smsResponse.data.data?.uid || smsResponse.data.message_id,
+      status: "queued",
+      smsQueueId: newSmsRef.key,
     });
 
-    return sendSuccess(res, { message: "Alert delivered." });
+    return sendSuccess(res, { message: "Alert queued for private gateway dispatch." });
   } catch (error) {
     return sendError(res, error, 500, "hw/process-failed");
   }

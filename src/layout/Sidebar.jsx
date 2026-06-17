@@ -9,6 +9,7 @@ import { ROUTES } from "../constants/routes";
 import { ROLES } from "../constants/roles";
 import { ConfirmationModal } from "../components/modal/ConfirmationModal";
 import Toast from "../components/ui/Toast";
+import { SidebarSkeleton } from "../components/skeleton";
 import { useUI } from "../context/useUI";
 
 // Sub-components
@@ -23,7 +24,7 @@ import { SuperAdminSidebar } from "./SuperAdminSidebar";
  */
 const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
   const navigate = useNavigate();
-  const { isAdmin, userRole, currentUser, user } = useAuth() || {};
+  const { isAdmin, userRole, currentUser, user, loading: authLoading } = useAuth() || {};
   const { notifications } = useNotifications(isAdmin ? "admin" : currentUser?.uid);
   const { deviceId } = useActiveDevice(currentUser?.uid, isAdmin);
   const { isSidebarCollapsed, toggleSidebarCollapse } = useUI();
@@ -63,6 +64,10 @@ const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
       _toggleSidebar();
     }
   };
+
+  if (authLoading) {
+    return <SidebarSkeleton isCollapsed={isSidebarCollapsed} />;
+  }
 
   const renderSidebar = () => {
     if (isResident) {

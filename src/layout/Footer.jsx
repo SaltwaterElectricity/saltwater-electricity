@@ -20,7 +20,7 @@ export const Footer = memo(() => {
                 iot- based monitoring system
               </span>
             </div>
-            <p className="text-on-surface-variant text-body-md max-w-sm mt-4">
+            <p className="text-on-surface-variant text-body-md mt-4">
               Advanced saltwater electricity monitoring and real-time telemetry solutions for
               sustainable marine energy systems.
             </p>

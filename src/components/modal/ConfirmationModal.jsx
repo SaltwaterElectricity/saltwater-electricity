@@ -19,17 +19,17 @@ export const ConfirmationModal = ({
 
   return (
     <ModalBackdrop>
-      <div className="relative w-full max-w-[440px] bg-white/80 backdrop-blur-2xl rounded-[20px] p-8 shadow-2xl border border-white animate-in fade-in zoom-in-95 duration-200 flex flex-col gap-6">
+      <div className="relative w-full max-w-[440px] max-h-[90vh] bg-white/80 backdrop-blur-2xl rounded-[20px] p-8 shadow-2xl border border-white animate-in fade-in zoom-in-95 duration-200 flex flex-col">
         {/* CLOSE BUTTON */}
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+          className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer z-10"
         >
           <X size={20} />
         </button>
 
         {/* HEADER (Left-aligned) */}
-        <div className="flex flex-col gap-4 items-start">
+        <div className="flex flex-col gap-4 items-start shrink-0 mb-6">
           <div
             className={cn(
               "w-14 h-14 rounded-full flex items-center justify-center transition-transform",
@@ -56,15 +56,15 @@ export const ConfirmationModal = ({
           </h2>
         </div>
 
-        {/* DESCRIPTION */}
-        <div className="space-y-4">
+        {/* SCROLLABLE CONTENT AREA */}
+        <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-4 mb-6">
           <p className="text-slate-500 font-medium leading-relaxed text-left">{description}</p>
           {/* Custom Body (e.g. Warning Highlight) */}
           {children}
         </div>
 
         {/* FOOTER ACTIONS */}
-        <div className="flex flex-col sm:flex-row gap-3 mt-2">
+        <div className="flex flex-col sm:flex-row gap-3 shrink-0 pt-2">
           <button
             onClick={onClose}
             disabled={isSubmitting}

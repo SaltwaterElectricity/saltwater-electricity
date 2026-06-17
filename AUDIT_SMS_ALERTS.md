@@ -28,45 +28,39 @@ To evaluate and recommend a strategy for implementing real-time SMS alerts when 
 | **Cost**        | Small fee per SMS + monthly number fee.                | Cost of SIM card + local prepaid load.                            |
 | **Scalability** | Can send thousands of alerts simultaneously.           | Limited to one SMS at a time per hardware unit.                   |
 
-### **Recommendation: Use an SMS Provider (PhilSMS)**
+### **Recommendation: Use a Centralized Private SMS Gateway (Android)**
 
-For a system monitoring critical parameters like water salinity, **reliability and local accessibility are top priorities**. **PhilSMS (philsms.com)** is recommended as it provides:
+For a system monitoring critical parameters like water salinity, **cost-efficiency and offline reliability** are prioritized. The system now uses a **Centralized Private SMS Gateway** model:
 
-- **GCash Payment Support:** Seamless top-ups via the Philippines' most popular mobile wallet.
-- **Local Pricing:** Competitive rates (approx. ₱0.35 per SMS).
-- **Ease of Use:** Simple REST API that integrates perfectly with our Vercel Serverless environment.
+- **Zero Cost:** Uses local prepaid load or unlimited SMS plans from a native SIM card.
+- **Independence:** No reliance on third-party APIs (PhilSMS/Twilio).
+- **Control:** All alerts are routed through a single master device managed by the administrator.
 
-A DIY GSM module adds multiple hardware failure points and increases the power consumption of the IoT node.
+A DIY GSM module was considered but rejected in favor of an Android-based gateway (running this app via Cordova) which provides better signal handling and simpler maintenance.
 
 ---
 
-## 4. Proposed Architecture (Cloud-Native)
+## 4. Proposed Architecture (Centralized Private Gateway)
 
-To adhere to the **CRITICAL SECURITY MANDATE** (no client-side API keys), the following flow is implemented:
-
-1.  **Hardware (ESP32):** Pushes data to Firebase. Can also directly call the `triggerHardwareAlert` API for immediate delivery.
-2.  **Backend Proxy (Vercel):** `api/sendSMS.js` and `api/triggerHardwareAlert.js` handle the PhilSMS API calls securely using `PHILSMS_API_TOKEN`.
-3.  **Logic:**
-    - Checks for critical thresholds (TDS/PPM).
-    - Fetches the `mobileNum` of the assigned user.
-    - Triggers the SMS via PhilSMS.
+1.  **Hardware (ESP32):** Pushes data to Firebase. Calls the `triggerHardwareAlert` API for immediate delivery.
+2.  **Backend Logic (Vercel):** `api/triggerHardwareAlert.js` processes the alert and identifies the owner's mobile number.
+3.  **Queueing:** Instead of calling a provider, the backend pushes a message to the `sms_queue` in Firebase, assigned to a hardcoded `MASTER_GATEWAY_UID`.
+4.  **Dispatch:** The designated Android device (the Master Gateway) listens to the queue and sends the SMS via its SIM card.
 
 ---
 
 ## 5. Implementation Roadmap
 
-### Phase 1: Backend Setup (Completed)
+### Phase 1: Gateway Setup (Completed)
 
-- Integrated PhilSMS via `api/sendSMS.js` and `api/triggerHardwareAlert.js`.
-- Configured environment variables: `PHILSMS_API_TOKEN` and `PHILSMS_SENDER_ID`.
+- Decommissioned PhilSMS integration.
+- Configured `MASTER_GATEWAY_UID` in environment variables.
+- Updated `triggerHardwareAlert` to route all alerts to the master gateway.
 
-### Phase 2: Notification Service Extension
+### Phase 2: Native Integration (Completed)
 
-- Updated `src/services/notification.service.js` to point to the new backend endpoint.
-
-### Phase 3: Trigger Integration
-
-- Hardware alerts can now trigger SMS directly via `triggerHardwareAlert` endpoint.
+- Implemented `src/services/smsGateway.service.js` for Cordova-based SMS dispatch.
+- Integrated background mode to ensure 24/7 uptime on the Android device.
 
 ### Phase 4: UI Updates
 
@@ -77,4 +71,4 @@ To adhere to the **CRITICAL SECURITY MANDATE** (no client-side API keys), the fo
 
 ## 6. Audit Conclusion
 
-Implementing SMS via a provider like **PhilSMS** is the most robust and secure approach for the Philippine context. It leverages existing project patterns (Serverless APIs), ensures critical alerts are delivered offline, and simplifies billing via GCash.
+The transition to a **Centralized Private SMS Gateway** is the optimal choice for this project. It eliminates recurring costs, ensures that critical alerts are delivered even when third-party provider balances are low, and leverages the native capabilities of the Android ecosystem. By routing all system alerts through a single, administrator-controlled device, we maintain maximum security and operational transparency.

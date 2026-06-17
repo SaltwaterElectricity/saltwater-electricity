@@ -15,6 +15,7 @@ const RecentAlertsFeed = memo(
     onViewAll,
     loading = false,
     emptyMessage = "No active alerts recorded.",
+    className = "",
   }) => {
     const isSidebar = variant === "sidebar";
 
@@ -22,7 +23,8 @@ const RecentAlertsFeed = memo(
       <div
         className={cn(
           "bg-white rounded-xl shadow-sm flex flex-col border border-outline-variant/10 overflow-hidden",
-          isSidebar ? "h-[520px]" : "h-[450px]"
+          isSidebar ? "h-[520px]" : "h-[400px]",
+          className
         )}
       >
         {/* Header */}

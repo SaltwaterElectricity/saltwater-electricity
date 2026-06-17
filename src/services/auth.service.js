@@ -34,16 +34,16 @@ export const AUTH_ERROR_MESSAGES = Object.freeze({
   "auth/wrong-password": "Invalid email or password. Please try again.",
   "auth/invalid-credential": "Invalid email or password. Please try again.",
   "auth/missing-credentials": "Email and password are required.",
-  "auth/requires-recent-login": "Security timeout. Please re-verify your identity again.",
+  "auth/requires-recent-login": "Security timeout. Please log in again to verify your identity.",
   "auth/network-request-failed":
-    "Connection Error: Please check the facility's internet stability.",
+    "Connection Error: The system is having trouble reaching the internet. Please check your link.",
   "auth/too-many-requests":
-    "Account temporarily locked due to many failed attempts. Try again later.",
+    "Account temporarily locked due to many failed attempts. Please try again in a few minutes.",
   "auth/user-disabled": "This account has been disabled by a system administrator.",
-  PERMISSION_DENIED: "Security Check: You do not have permission to access this data.",
-  "db/permission-denied": "Security Check: You do not have permission to access this data.",
+  PERMISSION_DENIED: "Security Check: Access denied. You do not have the required permissions.",
+  "db/permission-denied": "Security Check: Access denied. You do not have the required permissions.",
   unavailable: "The service is currently offline. Please check your connection.",
-  default: "An unexpected authentication error occurred.",
+  default: "An unexpected error occurred. Please try again.",
 });
 
 export const validateEmail = (email) => {
@@ -118,8 +118,8 @@ export const changeUserPassword = async (
     // 📊 I-update ang Realtime Database Flags
     const { uid } = user;
     const updates = {};
-    updates[`/accounts/${uid}/requiresPasswordChange`] = false;
-    updates[`/accounts/${uid}/updatedAt`] = serverTimestamp();
+    updates[`accounts/${uid}/requiresPasswordChange`] = false;
+    updates[`accounts/${uid}/updatedAt`] = serverTimestamp();
 
     await update(ref(db), updates);
 

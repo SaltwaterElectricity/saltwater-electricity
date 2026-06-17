@@ -166,7 +166,7 @@ export const UserTable = ({ users = [], onActionClick, onEditClick, activeView }
           ) : (
             <tr>
               <td colSpan="6" className="px-8 py-20 text-center">
-                <div className="flex flex-col items-center justify-center max-w-sm mx-auto space-y-4">
+                <div className="flex flex-col items-center justify-center mx-auto space-y-4">
                   <div className="p-6 bg-surface-container-low rounded-3xl text-outline border border-outline-variant/20">
                     <Users size={40} />
                   </div>

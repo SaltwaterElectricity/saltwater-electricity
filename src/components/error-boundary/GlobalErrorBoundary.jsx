@@ -15,7 +15,7 @@ class GlobalErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <div className="min-h-screen bg-slate-50 flex items-center justify-center p-8">
-          <div className="max-w-md w-full text-center bg-white p-12 rounded-[32px] shadow-xl shadow-slate-200/50 border border-slate-100">
+          <div className="w-full text-center bg-white p-12 rounded-[32px] shadow-xl shadow-slate-200/50 border border-slate-100">
             <div className="w-20 h-20 bg-amber-50 rounded-3xl flex items-center justify-center mx-auto mb-8">
               <AlertTriangle size={40} className="text-amber-500" />
             </div>

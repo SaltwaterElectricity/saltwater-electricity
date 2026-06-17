@@ -51,7 +51,7 @@ const triggerSecureEmail = async (emailData) => {
     return {
       success: false,
       error: new appError(
-        "Communications link interrupted. Please verify your connection or try again later.",
+        "Connection lost. Please check your network and try again later.",
         true,
         "email/delivery-failed"
       ),
@@ -64,7 +64,7 @@ export const sendOTPEmail = async (email, otpCode) => {
   if (!email || !otpCode) {
     return {
       success: false,
-      error: new appError("Missing recipient or reset code.", true, "email/invalid-parameters"),
+      error: new appError("Required information for the security code is missing.", true, "email/invalid-parameters"),
     };
   }
 

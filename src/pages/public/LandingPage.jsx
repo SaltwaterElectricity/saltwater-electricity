@@ -64,7 +64,10 @@ const LandingPage = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-container-padding pt-24 pb-section-gap grid grid-cols-1 md:grid-cols-2 gap-gutter items-center relative">
+      <section
+        id="home"
+        className="max-w-7xl mx-auto px-container-padding pt-24 pb-section-gap grid grid-cols-1 md:grid-cols-2 gap-gutter items-center relative"
+      >
         <div className="z-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-fixed text-on-primary-fixed mb-stack-lg border border-primary/10 shadow-sm">
             <span className="material-symbols-outlined text-[18px]">verified</span>
@@ -76,7 +79,7 @@ const LandingPage = () => {
             Smart Monitoring for <br />
             <span className="text-primary">Saltwater Energy</span>&nbsp;Device&apos;s
           </h1>
-          <p className="font-body-lg text-body-lg text-on-surface-variant mb-stack-lg max-w-xl">
+          <p className="font-body-lg text-body-lg text-on-surface-variant mb-stack-lg">
             Internet of Things - based Real-time monitoring and Intelligent Alert Notifications for
             safer, efficient and sustainable usage of Saltwater Electricity Devices.
           </p>
@@ -92,7 +95,7 @@ const LandingPage = () => {
 
         {/* Right Side: LoginHero with 3D Cube */}
         <div className="relative flex justify-center items-center">
-          <div className="absolute w-[120%] h-[120%] bg-primary/5 rounded-full -z-10 blur-3xl" />
+          <div className="absolute w-[120%] h-[120%] bg-[radial-gradient(circle,var(--tw-gradient-stops))] from-primary/5 to-transparent rounded-full -z-10 blur-3xl" />
           <LoginHero />
         </div>
       </section>
@@ -100,8 +103,9 @@ const LandingPage = () => {
       {/* Trust Bar (Marquee) */}
       <div className="w-full overflow-hidden bg-surface-container-low py-2 border-y border-outline-variant/30">
         <div className="animate-marquee whitespace-nowrap items-center">
-          <div className="flex items-center gap-24 px-12 cursor-default">
-            <div className="flex items-center gap-4 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300">
+          {/* First set of logos */}
+          <div className="flex items-center gap-24 px-12 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300 cursor-default">
+            <div className="flex items-center gap-4">
               <img
                 alt="PUP Logo"
                 className="h-10 w-auto object-contain mix-blend-multiply"
@@ -111,7 +115,7 @@ const LandingPage = () => {
                 Polytechnic University of the Philippines - Unisan Campus
               </span>
             </div>
-            <div className="flex items-center gap-4 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300">
+            <div className="flex items-center gap-4">
               <img
                 alt="San Andres Logo"
                 className="h-10 w-auto object-contain mix-blend-multiply"
@@ -121,7 +125,7 @@ const LandingPage = () => {
                 Alibijaban Island, San Andres Municipality
               </span>
             </div>
-            <div className="flex items-center gap-4 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300">
+            <div className="flex items-center gap-4">
               <img
                 alt="Saltwater Electricity Logo"
                 className="h-10 w-auto object-contain mix-blend-multiply"
@@ -129,6 +133,39 @@ const LandingPage = () => {
               />
               <span className="font-h3 text-h5 font-bold tracking-tight text-on-surface whitespace-nowrap">
                 Saltwater Electricity Device Monitoring
+              </span>
+            </div>
+          </div>
+          {/* Second identical set for seamless looping */}
+          <div className="flex items-center gap-24 px-12 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300 cursor-default">
+            <div className="flex items-center gap-4">
+              <img
+                alt="PUP Logo"
+                className="h-10 w-auto object-contain mix-blend-multiply"
+                src={pupLogo}
+              />
+              <span className="font-h3 text-h5 font-bold tracking-tight text-on-surface whitespace-nowrap">
+                Polytechnic University of the Philippines - Unisan Campus
+              </span>
+            </div>
+            <div className="flex items-center gap-4">
+              <img
+                alt="San Andres Logo"
+                className="h-10 w-auto object-contain mix-blend-multiply"
+                src={sanAndresLogo}
+              />
+              <span className="font-h3 text-h5 font-bold tracking-tight text-on-surface whitespace-nowrap">
+                Alibijaban Island, San Andres Municipality
+              </span>
+            </div>
+            <div className="flex items-center gap-4">
+              <img
+                alt="Saltwater Electricity Logo"
+                className="h-10 w-auto object-contain mix-blend-multiply"
+                src={saltwaterLogo}
+              />
+              <span className="font-h3 text-h5 font-bold tracking-tight text-on-surface whitespace-nowrap">
+                Saltwater Electricity
               </span>
             </div>
           </div>
@@ -144,7 +181,7 @@ const LandingPage = () => {
           <h2 className="font-h1 text-h2 md:text-h1 text-on-surface mb-6 tracking-tight uppercase">
             SYSTEM FEATURES
           </h2>
-          <p className="text-on-surface-variant max-w-2xl mx-auto font-body-lg text-body-lg leading-relaxed">
+          <p className="text-on-surface-variant mx-auto font-body-lg text-body-lg leading-relaxed">
             Our advanced saltwater monitoring ecosystem provides real-time oversight and intelligent
             automation, ensuring maximum efficiency for your marine energy assets.
           </p>
@@ -208,6 +245,10 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
+
+      {/* Placeholder for About and Contact - Targets for Nav links */}
+      <section id="about" className="py-1" />
+      <section id="contact" className="py-1" />
 
       <Footer />
     </div>

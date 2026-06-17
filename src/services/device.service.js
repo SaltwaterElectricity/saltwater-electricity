@@ -20,12 +20,12 @@ import { logActivity } from "./audit.service";
  */
 const verifyAdminClearance = async () => {
   const currentUser = auth.currentUser;
-  if (!currentUser) throw new appError("Authentication required.", true, "auth/unauthorized");
+  if (!currentUser) throw new appError("Please log in to continue.", true, "auth/unauthorized");
 
   const claims = await getUserClaims(currentUser);
   if (!claims?.admin && !claims?.superAdmin) {
     throw new appError(
-      "Access Denied: Administrative clearance required.",
+      "Access Denied: You do not have permission to perform this administrative task.",
       true,
       "auth/insufficient-clearance"
     );
@@ -53,7 +53,7 @@ export const assignDevice = async (deviceId, userId, newDeviceName) => {
 
     if (statusSnapshot.exists() && statusSnapshot.val() !== "available") {
       throw new appError(
-        "This device is already assigned to another user.",
+        "This device is already being used by another resident.",
         true,
         "device/already-occupied"
       );
@@ -63,25 +63,25 @@ export const assignDevice = async (deviceId, userId, newDeviceName) => {
     const now = serverTimestamp();
     const updates = {};
 
-    updates[`/device_assignments/${cleanDeviceId}`] = {
+    updates[`device_assignments/${cleanDeviceId}`] = {
       userId: cleanUserId,
       assignedAt: now,
       status: "active",
     };
 
-    updates[`/device_information/${cleanDeviceId}/availability`] = "assigned";
-    updates[`/device_information/${cleanDeviceId}/assigned_user_id`] = cleanUserId;
+    updates[`device_information/${cleanDeviceId}/availability`] = "assigned";
+    updates[`device_information/${cleanDeviceId}/assigned_user_id`] = cleanUserId;
 
     // Fetch user name to store in device_information for quick access
     const userSnap = await get(ref(db, `users/${cleanUserId}`));
     if (userSnap.exists()) {
       const userData = userSnap.val();
-      updates[`/device_information/${cleanDeviceId}/assigned_user_name`] =
+      updates[`device_information/${cleanDeviceId}/assigned_user_name`] =
         `${userData.firstName || ""} ${userData.lastName || ""}`.trim();
     }
 
     if (cleanName) {
-      updates[`/device_information/${cleanDeviceId}/device_name`] = cleanName;
+      updates[`device_information/${cleanDeviceId}/device_name`] = cleanName;
     }
 
     await update(ref(db), updates);
@@ -100,7 +100,7 @@ export const assignDevice = async (deviceId, userId, newDeviceName) => {
 
     logInternalError(error);
     throw new appError(
-      "The monitoring service is temporarily unavailable. Please try again.",
+      "The monitoring service is currently offline. Please try again.",
       true,
       "device/service-unavailable"
     );
@@ -114,7 +114,7 @@ export const assignDevice = async (deviceId, userId, newDeviceName) => {
  * @param {string} deviceId - ID of the device to release
  */
 export const deprovisionDevice = async (deviceId) => {
-  if (!deviceId) throw new appError("Device identifier required.", true, "device/invalid-id");
+  if (!deviceId) throw new appError("Please provide a device ID.", true, "device/invalid-id");
 
   // 🛡️ SECONDARY ROLE CHECK: Authoritative Token Verification
   await verifyAdminClearance();
@@ -123,12 +123,12 @@ export const deprovisionDevice = async (deviceId) => {
     const updates = {};
 
     // 1. Remove from assignments
-    updates[`/device_assignments/${deviceId}`] = null;
+    updates[`device_assignments/${deviceId}`] = null;
 
     // 2. Reset device info
-    updates[`/device_information/${deviceId}/availability`] = "available";
-    updates[`/device_information/${deviceId}/assigned_user_id`] = null;
-    updates[`/device_information/${deviceId}/assigned_user_name`] = null;
+    updates[`device_information/${deviceId}/availability`] = "available";
+    updates[`device_information/${deviceId}/assigned_user_id`] = null;
+    updates[`device_information/${deviceId}/assigned_user_name`] = null;
 
     await update(ref(db), updates);
 
@@ -136,7 +136,7 @@ export const deprovisionDevice = async (deviceId) => {
     await logActivity(
       "DEVICE_DEPROVISIONED",
       deviceId,
-      `Device deprovisioned and returned to available inventory.`,
+      `Device was successfully disconnected and returned to available stock.`,
       { severity: "low" }
     );
 
@@ -144,7 +144,7 @@ export const deprovisionDevice = async (deviceId) => {
   } catch (error) {
     logInternalError(error);
     throw new appError(
-      "Action failed. Please check your connection.",
+      "Action failed. Please check your system connection.",
       true,
       "device/override-failed"
     );

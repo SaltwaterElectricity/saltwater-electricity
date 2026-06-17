@@ -31,7 +31,7 @@ import { SENSOR_CONFIG, METRICS, METRIC_MAP } from "../constants";
  */
 const verifyDeviceAccess = async (deviceId) => {
   const currentUser = auth.currentUser;
-  if (!currentUser) throw new appError("Authentication required.", true, "auth/unauthorized");
+  if (!currentUser) throw new appError("Please log in to continue.", true, "auth/unauthorized");
 
   // 1. Admin/SuperAdmin Bypass (Checks both Token Claims and DB Role for redundancy)
   const claims = await getUserClaims(currentUser);
@@ -61,7 +61,7 @@ const verifyDeviceAccess = async (deviceId) => {
   }
 
   throw new appError(
-    "Access Denied: You are not authorized to monitor this device.",
+    "Access Denied: You do not have permission to view this device.",
     true,
     "auth/insufficient-clearance"
   );
@@ -189,7 +189,7 @@ export const subscribeToLatestReading = (deviceId, onSuccess, onError) => {
             if (onError)
               onError(
                 new appError(
-                  "Data processing error: Could not interpret sensor values.",
+                  "Data processing error: The system had trouble reading the sensor data.",
                   true,
                   "reading/parse-error"
                 )
@@ -199,7 +199,7 @@ export const subscribeToLatestReading = (deviceId, onSuccess, onError) => {
         (error) => {
           logger.error("[Reading Service]: Real-time connection failed.", error);
           const wrappedError = new appError(
-            "Communications link interrupted. Please check your network.",
+            "Connection lost. Please check your internet network.",
             true,
             "reading/connection-failed"
           );
@@ -400,7 +400,7 @@ export const getHistoricalLogs = async (deviceId, limit = 50, date = null) => {
   } catch (error) {
     logger.error("[Reading Service]: Logs fetch failure", error);
     throw new appError(
-      "The historical data service is currently unavailable.",
+      "The records service is currently offline. Please try again later.",
       true,
       "reading/logs-fetch-failed"
     );

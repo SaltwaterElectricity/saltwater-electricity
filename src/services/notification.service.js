@@ -34,7 +34,7 @@ export const createNotification = async (
   if (!userId || !title || !message) {
     return {
       success: false,
-      error: new appError("Incomplete notification parameters.", true, "notification/invalid-data"),
+      error: new appError("Required alert information is missing.", true, "notification/invalid-data"),
     };
   }
 
@@ -61,7 +61,7 @@ export const createNotification = async (
     return {
       success: false,
       error: new appError(
-        "Notification failure: Could not deliver the alert.",
+        "Alert Error: We could not send the notification. Please try again later.",
         true,
         "notification/write-failed"
       ),

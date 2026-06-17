@@ -35,7 +35,7 @@ export const generateOTP = async (userId_not_used, email) => {
       const text = await response.text();
       logger.error("Non-JSON response from generateOTP:", text);
       throw new appError(
-        "The security service returned an invalid response.",
+        "The security service encountered a communications error. Please try again.",
         true,
         "otp/invalid-response"
       );
@@ -54,7 +54,7 @@ export const generateOTP = async (userId_not_used, email) => {
     if (error instanceof appError) throw error;
     logger.error("OTP Generation Error:", error);
     throw new appError(
-      "The security service is currently unavailable. Please try again.",
+      "The security service is currently offline. Please try again in a few moments.",
       true,
       "otp/service-unavailable"
     );
@@ -67,7 +67,7 @@ export const generateOTP = async (userId_not_used, email) => {
  */
 export const verifyOTP = async (trackingId, inputCode, shouldDelete = false) => {
   if (!trackingId || !inputCode) {
-    throw new appError("Verification parameters are missing.", true, "otp/invalid-parameters");
+    throw new appError("Some security information is missing. Please try again.", true, "otp/invalid-parameters");
   }
 
   try {
@@ -87,7 +87,7 @@ export const verifyOTP = async (trackingId, inputCode, shouldDelete = false) => 
       const text = await response.text();
       logger.error("Non-JSON response from verifyOTP:", text);
       throw new appError(
-        "Security verification returned an invalid response.",
+        "The verification service encountered a communications error.",
         true,
         "otp/invalid-response"
       );

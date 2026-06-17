@@ -20,11 +20,11 @@ export const USER_STATUS = Object.freeze({
 });
 
 const DB_ERRORS = Object.freeze({
-  MISSING_UID: "Safety Check: User ID is required to provision data.",
-  MISSING_DATA: "Safety Check: Form data is incomplete.",
-  PROVISION_FAILED: "Server Error: Could not initialize user tables.",
-  FETCH_FAILED: "Server Error: Could not retrieve user profile.",
-  UPDATE_FAILED: "Server Error: Could not update status.",
+  MISSING_UID: "Safety Check: Account identifier is required to set up data.",
+  MISSING_DATA: "Safety Check: The registration form is incomplete.",
+  PROVISION_FAILED: "System Error: Could not set up the user account records. Please try again.",
+  FETCH_FAILED: "System Error: Could not retrieve the user profile.",
+  UPDATE_FAILED: "System Error: Could not update account status.",
 });
 
 const SUPER_ADMIN_EMAIL = import.meta.env.VITE_SUPER_ADMIN_EMAIL;
@@ -66,13 +66,13 @@ export const provisionUserSystem = async (uid, formData) => {
 
   const updates = {
     // NODE: Profile Info
-    [`/users/${uid}`]: {
+    [`users/${uid}`]: {
       ...cleanProfile,
       isPrivate: isActualSuperAdmin,
       updatedAt: now,
     },
     // NODE: Account Status & Security Flags
-    [`/accounts/${uid}`]: {
+    [`accounts/${uid}`]: {
       userId: uid,
       userName: cleanProfile.userName,
       status: USER_STATUS.ACTIVE,
@@ -81,7 +81,7 @@ export const provisionUserSystem = async (uid, formData) => {
       createdAt: now,
     },
     // NODE: Authorization (Source of Truth for Rules)
-    [`/roles/${uid}`]: {
+    [`roles/${uid}`]: {
       role: finalRole,
       isPrivate: isActualSuperAdmin,
       updatedAt: now,
@@ -173,8 +173,8 @@ export const updateUserStatus = async (uid, newStatus) => {
   const now = serverTimestamp();
 
   const updates = {
-    [`/accounts/${uid}/status`]: newStatus,
-    [`/accounts/${uid}/updatedAt`]: now,
+    [`accounts/${uid}/status`]: newStatus,
+    [`accounts/${uid}/updatedAt`]: now,
   };
 
   try {
@@ -196,18 +196,18 @@ export const updateUserProfile = async (uid, formData) => {
   if (!uid) throw new appError("User ID is required.", true, "db/missing-uid");
 
   const updates = {
-    [`/users/${uid}/firstName`]: formData.firstName?.trim() || "",
-    [`/users/${uid}/middleName`]: formData.middleName?.trim() || "",
-    [`/users/${uid}/lastName`]: formData.lastName?.trim() || "",
-    [`/users/${uid}/suffix`]: formData.suffix?.trim() || "",
-    [`/users/${uid}/gender`]: formData.gender || "Not Specified",
-    [`/users/${uid}/mobileNum`]: formData.mobileNum?.trim() || "N/A",
-    [`/users/${uid}/address/street`]: formData.street?.trim() || "Unset",
-    [`/users/${uid}/address/baranggay`]: formData.baranggay?.trim() || "Unset",
-    [`/users/${uid}/address/cityProvince`]: formData.cityProvince?.trim() || "Unset",
-    [`/users/${uid}/address/region`]: formData.region?.trim() || "Unset",
-    [`/users/${uid}/address/zipCode`]: formData.zipCode?.trim() || "",
-    [`/users/${uid}/updatedAt`]: serverTimestamp(),
+    [`users/${uid}/firstName`]: formData.firstName?.trim() || "",
+    [`users/${uid}/middleName`]: formData.middleName?.trim() || "",
+    [`users/${uid}/lastName`]: formData.lastName?.trim() || "",
+    [`users/${uid}/suffix`]: formData.suffix?.trim() || "",
+    [`users/${uid}/gender`]: formData.gender || "Not Specified",
+    [`users/${uid}/mobileNum`]: formData.mobileNum?.trim() || "N/A",
+    [`users/${uid}/address/street`]: formData.street?.trim() || "Unset",
+    [`users/${uid}/address/baranggay`]: formData.baranggay?.trim() || "Unset",
+    [`users/${uid}/address/cityProvince`]: formData.cityProvince?.trim() || "Unset",
+    [`users/${uid}/address/region`]: formData.region?.trim() || "Unset",
+    [`users/${uid}/address/zipCode`]: formData.zipCode?.trim() || "",
+    [`users/${uid}/updatedAt`]: serverTimestamp(),
   };
 
   try {

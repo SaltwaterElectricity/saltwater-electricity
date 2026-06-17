@@ -2,9 +2,13 @@ import { useState } from "react";
 import { useAuth } from "./context/useAuth";
 import { AnimatedLogo, GlobalErrorBoundary, SessionExpiredModal } from "./components";
 import { AppRoutes } from "./route/AppRoutes";
+import { useSmsGateway } from "./hooks";
 
 function App() {
-  const { loading } = useAuth();
+  const { loading, currentUser } = useAuth();
+
+  // Initialize Private SMS Gateway (Android only)
+  useSmsGateway(currentUser?.uid);
 
   /**
    * isAnimationComplete State

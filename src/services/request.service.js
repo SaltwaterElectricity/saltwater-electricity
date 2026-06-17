@@ -27,12 +27,12 @@ import { logActivity } from "./audit.service";
  */
 const verifyAdminClearance = async () => {
   const currentUser = auth.currentUser;
-  if (!currentUser) throw new appError("Authentication required.", true, "auth/unauthorized");
+  if (!currentUser) throw new appError("Please log in to continue.", true, "auth/unauthorized");
 
   const claims = await getUserClaims(currentUser);
   if (!claims?.admin && !claims?.superAdmin) {
     throw new appError(
-      "Access Denied: Administrative clearance required for this operation.",
+      "Access Denied: You do not have permission to perform this administrative task.",
       true,
       "auth/insufficient-clearance"
     );
@@ -51,7 +51,7 @@ export const createDeviceRequest = async (deviceData) => {
 
   if (!currentUser) {
     throw new appError(
-      "User identification is required to submit a request. Please log in.",
+      "You must be logged in to submit a request. Please log in first.",
       true,
       "request/missing-auth"
     );
@@ -61,7 +61,7 @@ export const createDeviceRequest = async (deviceData) => {
 
   if (!deviceData?.requestType || !deviceData?.deviceName) {
     throw new appError(
-      "Incomplete request data. Please provide both request type and device name.",
+      "Incomplete information. Please provide both the request type and device name.",
       true,
       "request/incomplete-data"
     );
@@ -102,7 +102,7 @@ export const createDeviceRequest = async (deviceData) => {
 
     // Wrap Firebase errors in a descriptive operational appError
     throw new appError(
-      "The request service is currently unavailable. Please try again later.",
+      "The request service is currently offline. Please try again in a few moments.",
       true,
       "request/submission-failed"
     );
@@ -118,7 +118,7 @@ export const createDeviceRequest = async (deviceData) => {
  */
 export const cancelDeviceRequest = async (requestId, reasonData) => {
   const currentUser = auth.currentUser;
-  if (!currentUser) throw new appError("Authentication required.", true, "auth/unauthorized");
+  if (!currentUser) throw new appError("Please log in to continue.", true, "auth/unauthorized");
 
   try {
     // 1. Fetch Request to verify state

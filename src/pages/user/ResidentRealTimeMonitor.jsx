@@ -5,12 +5,12 @@ import { useDevices, useAssignments, useAuditLogs } from "../../hooks";
 import {
   UserDeviceLayout,
   ProvisionDeviceCard,
-  DeviceCardSkeleton,
   CardErrorBoundary,
   DeviceRequestModal,
   SummaryCard,
   EmptyState,
   DeviceDetailsPanel,
+  ResidentMonitorSkeleton,
 } from "../../components";
 import { RecentAlertsFeed } from "../../components/dashboard";
 import { ROUTES } from "../../constants/routes";
@@ -70,22 +70,7 @@ const ResidentRealTimeMonitor = () => {
   const isLoading = devicesLoading || assignmentsLoading;
 
   if (isLoading) {
-    return (
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-10">
-        <div className="xl:col-span-4 space-y-10 animate-pulse">
-          <div className="h-32 bg-white/50 rounded-[24px]" />
-          <div className="h-[520px] bg-white/50 rounded-[24px]" />
-        </div>
-        <div className="xl:col-span-8 space-y-10">
-          <div className="h-20 bg-white/50 rounded-[24px] animate-pulse" />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            {["s1", "s2", "s3", "s4"].map((id) => (
-              <DeviceCardSkeleton key={id} />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
+    return <ResidentMonitorSkeleton />;
   }
 
   const totalDevicesFormatted = personalUnits.length.toString().padStart(2, "0");

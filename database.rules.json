@@ -8,7 +8,7 @@
       ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
       "$uid": {
         ".read": "auth != null && auth.uid == $uid",
-        ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || auth.uid == $uid || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && newData.parent().child('roles').child($uid).child('role').val() == 'resident'))"
+        ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || auth.uid == $uid || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && newData.parent().parent().child('roles').child($uid).child('role').val() == 'resident'))"
       }
     },
 
@@ -16,11 +16,22 @@
       ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
       "$uid": {
         ".read": "auth != null && auth.uid == $uid",
-        ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || auth.uid == $uid || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && newData.parent().child('roles').child($uid).child('role').val() == 'resident'))"
+        // Allows SuperAdmin, self-updates, or Admin managing Residents
+        ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || auth.uid == $uid || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && newData.parent().parent().child('roles').child($uid).child('role').val() == 'resident'))",
+
+        "status": {
+          ".validate": "newData.val() == 'active' || newData.val() == 'disabled' || newData.val() == 'suspended'"
+        },
+        "requiresPasswordChange": {
+          ".validate": "newData.isBoolean()"
+        },
+        "updatedAt": {
+          ".validate": "newData.val() <= now"
+        }
       }
     },
 
-    "roles": {
+    "roles": { 
       ".indexOn": ["role"],
       ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
       "$uid": {
