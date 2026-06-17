@@ -76,7 +76,7 @@ const Alerts = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
           <h2 className="text-h2 font-bold text-on-surface">ALERTS AND NOTIFICATIONS</h2>
-          <p className="text-on-surface-variant font-body-md mt-1">
+          <p className="text-on-surface-variant font-body-md mt-1 max-w-2xl">
             Track important device alerts, warnings, and system notifications in real-time.
           </p>
         </div>

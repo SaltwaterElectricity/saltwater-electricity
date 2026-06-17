@@ -14,9 +14,7 @@ import { deleteApp } from "firebase/app";
 // Constants & Components
 import { ROUTES } from "../../constants/routes";
 import { ROLES } from "../../constants/roles";
-import { RegistrationFields } from "../../components/auth/RegistrationField";
-import { RegistrationSummary } from "../../components/auth/RegistrationSummary";
-import { ConfirmationModal } from "../../components/modal/ConfirmationModal";
+import { RegistrationFields, RegistrationSummary, ConfirmationModal } from "../../components";
 
 /**
  * AccountProvisioning Component
@@ -150,7 +148,7 @@ const AccountProvisioning = ({ mode = "user" }) => {
       {/* HEADER SECTION */}
       <header className="mb-10 border-b border-slate-100 pb-8 pr-12">
         <h1 className="text-2xl font-black text-slate-900 tracking-tight">{config.title}</h1>
-        <p className="text-slate-500 mt-2 text-sm italic">{config.description}</p>
+        <p className="text-slate-500 mt-2 text-sm italic max-w-2xl">{config.description}</p>
       </header>
 
       {/* ERROR DISPLAY */}

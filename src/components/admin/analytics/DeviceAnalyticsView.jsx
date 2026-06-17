@@ -3,13 +3,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, History, Download, ShieldCheck, Activity, Zap } from "lucide-react";
 import { cn } from "../../../utils/cn";
 import { useReadings, useHistory } from "../../../hooks";
-import { DeviceAnalyticsChart } from "../../../components";
 import {
+  DeviceAnalyticsChart,
   SalinityGauge,
   VoltageGauge,
   BulbPowerUsageGauge,
   BulbToggle,
-} from "../../../components/ui";
+} from "../../../components";
 import { processLogsInWindows } from "../../../utils/chartUtils";
 import { METRICS, METRIC_CONFIG } from "../../../constants";
 import { logActivity } from "../../../services/audit.service";

@@ -11,8 +11,8 @@ import {
   EmptyState,
   DeviceDetailsPanel,
   ResidentMonitorSkeleton,
+  RecentAlertsFeed,
 } from "../../components";
-import { RecentAlertsFeed } from "../../components/dashboard";
 import { ROUTES } from "../../constants/routes";
 import Toast from "../../components/ui/Toast";
 

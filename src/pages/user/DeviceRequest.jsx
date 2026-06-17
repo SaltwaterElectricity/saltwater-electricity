@@ -58,7 +58,7 @@ const DeviceRequest = () => {
           <h1 className="font-h2 text-3xl lg:text-4xl text-on-surface tracking-tight uppercase">
             Device Request <span className="text-primary">History</span>
           </h1>
-          <p className="text-on-surface-variant mt-2 font-body-md">
+          <p className="text-on-surface-variant mt-2 font-body-md max-w-2xl">
             Monitor the lifecycle of your utility expansion and hardware requests.
           </p>
         </div>

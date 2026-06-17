@@ -34,10 +34,10 @@ const Toast = ({ message, type = "success", isOpen, onClose, duration = 5000 }) 
   const Icon = icons[type];
 
   return (
-    <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[100] animate-in fade-in slide-in-from-top-10 duration-300">
+    <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[100] animate-in fade-in slide-in-from-top-10 duration-300 w-full max-w-fit px-4">
       <div
         className={cn(
-          "flex items-center gap-3 px-6 py-4 rounded-2xl border shadow-2xl min-w-[320px]",
+          "flex items-center gap-3 px-6 py-4 rounded-2xl border shadow-2xl min-w-[320px] max-w-lg",
           styles[type]
         )}
       >

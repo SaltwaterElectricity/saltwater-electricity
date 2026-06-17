@@ -57,7 +57,7 @@ export const RegistrationFields = ({ register, errors, currentUserRole = ROLES.R
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <InputField
             label="First Name"
             name="firstName"
@@ -73,9 +73,6 @@ export const RegistrationFields = ({ register, errors, currentUserRole = ROLES.R
             errors={errors}
             placeholder="e.g. Santos"
           />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <InputField
             label="Last Name"
             name="lastName"
@@ -84,6 +81,9 @@ export const RegistrationFields = ({ register, errors, currentUserRole = ROLES.R
             placeholder="e.g. Dela Cruz"
             validation={{ required: "Last name is required" }}
           />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="flex flex-col gap-1.5">
             <label className="text-[11px] font-semibold text-slate-500">
               Gender <span className="text-red-500">*</span>

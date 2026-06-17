@@ -18,8 +18,8 @@ import {
   SystemOverviewCard,
   ResidentDeviceStatusWidget,
   ResidentDashboardSkeleton,
+  RecentAlertsFeed,
 } from "../../components";
-import { RecentAlertsFeed } from "../../components/dashboard";
 
 import { METRICS, SENSOR_CONFIG, ROUTES, APP_SETTINGS } from "../../constants";
 import { Footer } from "../../layout";

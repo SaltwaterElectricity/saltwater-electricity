@@ -7,7 +7,7 @@ import {
   HistoricalFilterBar,
   HistoricalCharts,
   HistoricalTable,
-} from "../../../components/dashboard";
+} from "../../../components";
 import {
   useDevices,
   useResidentManagement,

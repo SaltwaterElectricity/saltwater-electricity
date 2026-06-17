@@ -58,15 +58,15 @@
   --color-inverse-on-surface: #eff0ff;
 
   /* SPACING SYNC - Optimized for Decompressed Layout Fit */
-  --spacing-2xl: 64px;
+  --spacing-legacy-2xl: 64px;
   --spacing-sidebar-width: 256px;
   --spacing-gutter: 32px;
-  --spacing-md: 24px;
+  --spacing-legacy-md: 24px;
   --spacing-container-margin: 40px;
-  --spacing-xl: 48px;
-  --spacing-lg: 32px;
-  --spacing-sm: 12px;
-  --spacing-xs: 8px;
+  --spacing-legacy-xl: 48px;
+  --spacing-legacy-lg: 32px;
+  --spacing-legacy-sm: 12px;
+  --spacing-legacy-xs: 8px;
 
   /* FONT FAMILY SYNC */
   --font-sora-display: "Sora", sans-serif;

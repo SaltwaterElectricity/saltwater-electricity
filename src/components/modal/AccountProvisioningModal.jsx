@@ -12,9 +12,11 @@ import { deleteApp } from "firebase/app";
 
 // Constants & Components
 import { ROLES } from "../../constants/roles";
-import { RegistrationFields } from "../../components/auth/RegistrationField";
-import { RegistrationSummary } from "../../components/auth/RegistrationSummary";
-import { ConfirmationModal } from "./ConfirmationModal";
+import {
+  RegistrationFields,
+  RegistrationSummary,
+  ConfirmationModal,
+} from "../../components";
 import ModalBackdrop from "./ModalBackdrop";
 
 /**
