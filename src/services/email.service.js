@@ -107,14 +107,13 @@ export const sendOnboardingEmail = async (userData, autoPassword) => {
     templateType: "onboarding",
     templateData: {
       firstName: userData.firstName,
-      userName: userData.userName,
       tempPassword: autoPassword,
       role: userData.role,
     },
   });
 
   return {
-    success: true,
+    success: result.success,
     emailSent: result.success,
     error: result.error,
   };

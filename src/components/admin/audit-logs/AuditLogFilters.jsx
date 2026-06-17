@@ -34,7 +34,7 @@ const AuditLogFilters = ({ searchTerm, setSearchTerm, filters, setFilters, onCle
           <GlobalSearch
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
-            placeholder="Search username, email, action, device, or details..."
+            placeholder="Search email, action, device, or details..."
             variant="solid"
             className="w-full"
           />

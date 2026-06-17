@@ -55,8 +55,8 @@ const ResidentFilters = memo(({ filters, onAddClick }) => {
           >
             <option value="Location">All Locations</option>
             {/* These could be dynamic based on user data */}
-            <option value="San Andres">San Andres</option>
-            <option value="Unisan">Unisan</option>
+            <option value="San Andres">Pulo 1</option>
+            <option value="Unisan">Pulo 2</option>
           </select>
           <ChevronDown
             className="absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none"

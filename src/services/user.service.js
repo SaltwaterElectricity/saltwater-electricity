@@ -39,7 +39,6 @@ const sanitizeUserData = (data) => {
     suffix: data.suffix?.trim() || "",
     gender: data.gender || "Not Specified",
     email: cleanEmail,
-    userName: data.userName?.trim() || `user_${Date.now()}`,
     mobileNum: data.mobileNum || "N/A",
     address: {
       street: data.street || "Unset",
@@ -74,7 +73,6 @@ export const provisionUserSystem = async (uid, formData) => {
     // NODE: Account Status & Security Flags
     [`accounts/${uid}`]: {
       userId: uid,
-      userName: cleanProfile.userName,
       status: USER_STATUS.ACTIVE,
       requiresPasswordChange: !isActualSuperAdmin,
       isPrivate: isActualSuperAdmin,
@@ -96,7 +94,7 @@ export const provisionUserSystem = async (uid, formData) => {
       `User ${cleanProfile.email} provisioned with role: ${finalRole}`,
       { severity: "low" }
     );
-    return { success: true };
+    return { success: true, profile: cleanProfile };
   } catch {
     throw new appError(DB_ERRORS.PROVISION_FAILED, true, "db/provision-failed");
   }
@@ -140,7 +138,7 @@ export const subscribeToAllUsers = (callback, targetRole = null, onError = null)
                 uid: uid, // Ensuring both are available
                 ...roleData, // Contains role, isPrivate, updatedAt
                 ...profileData, // Contains firstName, lastName, email, etc.
-                ...accountData, // Contains status, createdAt, userName
+                ...accountData, // Contains status, createdAt
               };
             })
             .catch(() => {

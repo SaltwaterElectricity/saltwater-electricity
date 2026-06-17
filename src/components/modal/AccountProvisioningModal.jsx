@@ -114,8 +114,9 @@ const AccountProvisioningModal = ({ isOpen, onClose, mode = "user" }) => {
 
     try {
       regResult = await registerUserAccount(tempData);
+      let provisionResult = null;
       try {
-        await provisionUserSystem(regResult.uid, {
+        provisionResult = await provisionUserSystem(regResult.uid, {
           ...tempData,
           password: regResult.tempPassword,
         });
@@ -123,7 +124,8 @@ const AccountProvisioningModal = ({ isOpen, onClose, mode = "user" }) => {
         await deleteAuthUser(regResult.tempUser);
         throw new Error(`System Provisioning Failed: ${dbError.message || "Database error."}`);
       }
-      await sendCredentials(tempData, regResult.tempPassword);
+      // Use the provisioned profile
+      await sendCredentials(provisionResult.profile || tempData, regResult.tempPassword);
       showNotification(`${tempData.firstName}'s account ${config.successMsg}`, "success");
       setIsConfirmModalOpen(false);
       setTempData(null);

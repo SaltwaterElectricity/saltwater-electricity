@@ -22,11 +22,13 @@ import {
   ResidentTable,
 } from "../../components/admin/resident-management";
 
+import { ROLES } from "../../constants/roles";
+
 /**
  * ResidentManagement Page (Refactored)
  * Orchestrates the management of resident users.
  */
-const ResidentManagement = () => {
+const ResidentManagement = ({ currentUserRole }) => {
   // --- CUSTOM HOOK ---
   const { residents, allResidents, stats, loading, error, filters } = useResidentManagement();
 
@@ -152,6 +154,7 @@ const ResidentManagement = () => {
         user={selectedEditUser}
         onSave={handleSaveUserData}
         isLoading={isEditSaving}
+        showRoleField={currentUserRole !== ROLES.SUPER_ADMIN}
       />
 
       {/* Page Header */}

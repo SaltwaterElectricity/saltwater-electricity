@@ -4,7 +4,7 @@ import { cn } from "../../utils/cn";
 import SpinnerIcon from "../ui/SpinnerIcon";
 import ModalBackdrop from "./ModalBackdrop";
 
-const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
+const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading, showRoleField = true }) => {
   // Local State
   const [formData, setFormData] = useState({
     firstName: "",
@@ -108,20 +108,22 @@ const EditUserModal = ({ isOpen, onClose, user, onSave, isLoading }) => {
               </div>
             </div>
 
-            <div className="col-span-1">
-              <label className="block text-label-sm text-outline mb-1.5 ml-1">Role</label>
-              <div className="relative">
-                <select
-                  name="role"
-                  value={formData.role}
-                  onChange={handleInputChange}
-                  className="w-full appearance-none px-4 py-3 bg-surface border border-outline-variant/30 rounded-xl outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md"
-                >
-                  <option value="admin">Admin</option>
-                  <option value="resident">Resident</option>
-                </select>
+            {showRoleField && (
+              <div className="col-span-1">
+                <label className="block text-label-sm text-outline mb-1.5 ml-1">Role</label>
+                <div className="relative">
+                  <select
+                    name="role"
+                    value={formData.role}
+                    onChange={handleInputChange}
+                    className="w-full appearance-none px-4 py-3 bg-surface border border-outline-variant/30 rounded-xl outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md"
+                  >
+                    <option value="admin">Admin</option>
+                    <option value="resident">Resident</option>
+                  </select>
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="col-span-1">
               <label className="block text-label-sm text-outline mb-1.5 ml-1">Status</label>

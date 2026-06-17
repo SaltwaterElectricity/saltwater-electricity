@@ -62,7 +62,7 @@ export const useAuditLogs = (limit = 100) => {
                   profile.adminEmail = userData.email || log.adminEmail;
                   const fullName = `${profile.firstName} ${profile.lastName}`.trim();
                   profile.adminName =
-                    fullName || userData.userName || userData.email?.split("@")[0] || "User";
+                    fullName || userData.email?.split("@")[0] || "User";
                 }
 
                 if (roleSnap.exists()) {

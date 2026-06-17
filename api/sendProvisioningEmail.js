@@ -23,39 +23,48 @@ export default async function handler(req, res) {
   sgMail.setApiKey(apiKey);
 
   try {
-    const { to, subject, templateType, templateData, htmlContent } = req.body;
+    const { to, subject, templateType, templateData = {}, htmlContent } = req.body || {};
+
+    console.warn(`[sendProvisioningEmail] Incoming request: to=${to}, type=${templateType}`);
 
     if (!to || !subject) {
+      console.warn("[sendProvisioningEmail] Missing recipient or subject.");
       return sendError(res, "Missing recipient or subject.", 400, "mail/missing-fields");
     }
 
     let finalHtml = htmlContent;
 
     if (templateType === "onboarding") {
+      const { firstName = "User", tempPassword = "N/A", role = "Resident" } = templateData;
       finalHtml = `
         <div style="font-family: sans-serif; padding: 20px;">
           <h2 style="color: #006591;">Welcome to Saltwater Electricity</h2>
-          <p>Hello ${templateData.firstName || "User"},</p>
+          <p>Hello ${firstName},</p>
           <p>Your account is ready. Use the credentials below to log in:</p>
           <div style="background: #f0f4fa; padding: 15px; border-radius: 10px; margin: 20px 0;">
-            <p><strong>Username:</strong> ${templateData.userName}</p>
-            <p><strong>Temporary Password:</strong> ${templateData.tempPassword}</p>
-            <p><strong>System Role:</strong> ${templateData.role}</p>
+            <p><strong>Temporary Password:</strong> ${tempPassword}</p>
+            <p><strong>System Role:</strong> ${role}</p>
           </div>
           <p>Change your password immediately after first login.</p>
         </div>
       `;
     } else if (templateType === "otp") {
+      const { otpCode = "000000" } = templateData;
       finalHtml = `
         <div style="font-family: sans-serif; padding: 20px;">
           <h2 style="color: #006591;">Security Code</h2>
           <p>Your 6-digit verification code is:</p>
           <div style="font-size: 32px; font-weight: bold; letter-spacing: 5px; text-align: center; margin: 30px 0;">
-            ${templateData.otpCode}
+            ${otpCode}
           </div>
           <p>This code expires in 15 minutes.</p>
         </div>
       `;
+    }
+
+    if (!finalHtml) {
+      console.warn("[sendProvisioningEmail] No HTML content generated.");
+      return sendError(res, "No email content generated.", 400, "mail/empty-content");
     }
 
     const msg = {
@@ -69,8 +78,17 @@ export default async function handler(req, res) {
     };
 
     await sgMail.send(msg);
+    console.warn("[sendProvisioningEmail] Email sent successfully to:", to);
     return sendSuccess(res);
   } catch (error) {
-    return sendError(res, error, 500, "mail/delivery-failed");
+    // SECURITY: Extract SendGrid specific error details if they exist
+    let errorMessage = error.message;
+    if (error.response && error.response.body && error.response.body.errors) {
+      errorMessage = error.response.body.errors.map((e) => e.message).join(" | ");
+    }
+
+    console.error("[sendProvisioningEmail] SendGrid Failure:", errorMessage);
+
+    return sendError(res, errorMessage, 500, "mail/delivery-failed");
   }
 }

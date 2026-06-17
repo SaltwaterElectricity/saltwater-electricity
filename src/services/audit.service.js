@@ -63,7 +63,7 @@ export const logActivity = async (
           firstName = (userData.firstName || "").trim();
           lastName = (userData.lastName || "").trim();
           const fullName = `${firstName} ${lastName}`.trim();
-          adminName = fullName || userData.userName || userData.email?.split("@")[0] || "User";
+          adminName = fullName || userData.email?.split("@")[0] || "User";
         }
 
         if (roleSnap.exists()) {

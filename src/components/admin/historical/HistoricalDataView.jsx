@@ -149,13 +149,13 @@ const HistoricalData = () => {
 
     return activeLogs.filter((log) => {
       const u = residentsMap[log.userId] || {};
-      const userName = `${u.firstName || ""} ${u.lastName || ""}`.toLowerCase();
+      const fullName = `${u.firstName || ""} ${u.lastName || ""}`.toLowerCase();
       const userEmail = (u.email || "").toLowerCase();
       const deviceName = (log.deviceId || "").toLowerCase();
       const location = (u.address?.baranggay || "").toLowerCase();
 
       return (
-        userName.includes(term) ||
+        fullName.includes(term) ||
         userEmail.includes(term) ||
         deviceName.includes(term) ||
         location.includes(term)

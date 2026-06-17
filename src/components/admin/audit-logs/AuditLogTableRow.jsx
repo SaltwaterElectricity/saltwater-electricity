@@ -104,7 +104,7 @@ const AuditLogTableRow = ({ log }) => {
         )}
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        {/* Username Column */}
+        {/* Identity Column */}
         <td className="px-6 py-4">
           <div className="flex items-center gap-3">
             <div

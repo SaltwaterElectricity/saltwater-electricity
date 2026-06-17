@@ -15,7 +15,7 @@ const AuditLogTable = ({ logs, loading }) => {
         <table className="w-full text-left border-collapse min-w-[1000px]">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-100 text-black">
-              <th className="px-6 py-4 text-[10px] font-bold uppercase">Username</th>
+              <th className="px-6 py-4 text-[10px] font-bold uppercase">Account Identity</th>
               <th className="px-6 py-4 text-[10px] font-bold uppercase">Role</th>
               <th className="px-6 py-4 text-[10px] font-bold uppercase">Action</th>
               <th className="px-6 py-4 text-[10px] font-bold uppercase">Status</th>
