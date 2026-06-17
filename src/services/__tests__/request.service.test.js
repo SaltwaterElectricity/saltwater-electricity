@@ -33,18 +33,18 @@ describe("request.service.js", () => {
 
     await expect(
       createDeviceRequest({ requestType: "new_installation", deviceName: "Test Device" })
-    ).rejects.toThrow(/User identification is required/);
+    ).rejects.toThrow(/You must be logged in to submit a request/);
 
     auth.currentUser = originalUser;
   });
 
   it("should throw error if deviceData is incomplete", async () => {
     await expect(createDeviceRequest({ requestType: "new_installation" })).rejects.toThrow(
-      /Incomplete request data/
+      /Incomplete information/
     );
 
     await expect(createDeviceRequest({ deviceName: "Test Device" })).rejects.toThrow(
-      /Incomplete request data/
+      /Incomplete information/
     );
   });
 
@@ -69,6 +69,6 @@ describe("request.service.js", () => {
         requestType: "new_installation",
         deviceName: "Test Device",
       })
-    ).rejects.toThrow(/The request service is currently unavailable/);
+    ).rejects.toThrow(/The request service is currently offline/);
   });
 });

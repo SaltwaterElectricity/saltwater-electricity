@@ -4,9 +4,20 @@ import { appError } from "../../utils/appError";
 
 // Mocking firebaseConfig to avoid Env Var check
 vi.mock("../../firebaseConfig", () => ({
-  auth: {},
+  auth: {
+    currentUser: { email: "test@example.com", uid: "test-uid" },
+  },
   db: {},
   default: {},
+}));
+
+vi.mock("firebase/database", () => ({
+  ref: vi.fn(),
+  get: vi.fn(),
+  update: vi.fn(),
+  serverTimestamp: vi.fn(),
+  onValue: vi.fn(),
+  set: vi.fn(),
 }));
 
 describe("auth.service.js validation", () => {

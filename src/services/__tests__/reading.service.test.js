@@ -27,7 +27,13 @@ describe("reading.service.js", () => {
     it("should format decimals correctly for latest readings", async () => {
       const { onValue, get } = await import("firebase/database");
 
-      // Mock verifyDeviceAccess success (first get call)
+      // Mock verifyDeviceAccess success
+      // 1. Role fallback check (get role)
+      get.mockResolvedValueOnce({
+        exists: () => false,
+        val: () => null,
+      });
+      // 2. Ownership check (get assignment)
       get.mockResolvedValueOnce({
         exists: () => true,
         val: () => ({ userId: "test-user-id" }),
@@ -45,7 +51,7 @@ describe("reading.service.js", () => {
       // Trigger the success callback
       onValue.mockImplementationOnce((ref, successCb) => {
         // We need to wait a tick for the async verifyDeviceAccess to finish
-        setTimeout(() => successCb(mockSnapshot), 0);
+        setTimeout(() => successCb(mockSnapshot), 5);
         return vi.fn(); // Unsubscribe
       });
 
@@ -53,12 +59,12 @@ describe("reading.service.js", () => {
       subscribeToLatestReading("TEST_ID", onSuccess, vi.fn());
 
       // Wait for the async call to complete
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 50));
 
       expect(onSuccess).toHaveBeenCalledWith(
         expect.objectContaining({
           voltage: 4.12,
-          tds_ppm: 345.7,
+          tds: 345.7,
           bulb_ma: 12.35,
         })
       );
@@ -73,17 +79,22 @@ describe("reading.service.js", () => {
     it("should wrap Firebase errors in appError for historical logs", async () => {
       const { get } = await import("firebase/database");
 
-      // 1. Mock verifyDeviceAccess success
+      // 1. Role fallback check
+      get.mockResolvedValueOnce({
+        exists: () => false,
+        val: () => null,
+      });
+      // 2. Ownership check
       get.mockResolvedValueOnce({
         exists: () => true,
         val: () => ({ userId: "test-user-id" }),
       });
 
-      // 2. Mock actual historical logs fetch failure
+      // 3. Mock actual historical logs fetch failure
       get.mockRejectedValueOnce(new Error("Firebase failed"));
 
       await expect(getHistoricalLogs("TEST_ID")).rejects.toThrow(
-        /historical data service is currently unavailable/
+        /records service is currently offline/
       );
     });
   });
