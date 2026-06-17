@@ -4,10 +4,10 @@ import { logger } from "../utils/logger";
 
 /**
  * SMS GATEWAY SERVICE (Private Android Mode)
- * 
+ *
  * This service transforms your Android device into a private SMS sender.
  * It listens to the 'sms_queue' in Firebase and uses the native SIM card to send alerts.
- * 
+ *
  * REQUIREMENTS:
  * 1. cordova-sms-plugin
  * 2. cordova-plugin-background-mode (Recommended)
@@ -47,11 +47,7 @@ class SmsGatewayService {
 
     const queueRef = ref(db, "sms_queue");
     // Only listen for pending messages assigned to this gateway (your UID)
-    const pendingQuery = query(
-      queueRef,
-      orderByChild("status"),
-      equalTo("pending")
-    );
+    const pendingQuery = query(queueRef, orderByChild("status"), equalTo("pending"));
 
     this.unsubscribe = onValue(pendingQuery, (snapshot) => {
       const data = snapshot.val();
@@ -69,7 +65,7 @@ class SmsGatewayService {
     this.isProcessing = true;
 
     const entries = Object.entries(queueData);
-    
+
     for (const [id, payload] of entries) {
       // 🛡️ AUTH CHECK: Ensure only items intended for this specific device/user are processed
       if (payload.gatewayUid !== this.myUid) continue;
@@ -94,8 +90,8 @@ class SmsGatewayService {
       const options = {
         replaceLineBreaks: true,
         android: {
-          intent: "" // "" means send directly without opening the SMS app
-        }
+          intent: "", // "" means send directly without opening the SMS app
+        },
       };
 
       window.SMS.send(
@@ -121,7 +117,7 @@ class SmsGatewayService {
     await update(itemRef, {
       status: "sent",
       sentAt: Date.now(),
-      error: null
+      error: null,
     });
   }
 
@@ -129,7 +125,7 @@ class SmsGatewayService {
     const itemRef = ref(db, `sms_queue/${id}`);
     await update(itemRef, {
       status: "failed",
-      error: error?.toString() || "Unknown native error"
+      error: error?.toString() || "Unknown native error",
     });
   }
 

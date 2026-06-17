@@ -51,7 +51,12 @@ const SidebarSkeleton = memo(({ isCollapsed = false }) => {
           </div>
         )}
         <div className={cn("px-2", isCollapsed ? "flex justify-center" : "")}>
-          <div className={cn("h-10 bg-red-500/5 rounded-xl animate-pulse", isCollapsed ? "w-10" : "w-full")} />
+          <div
+            className={cn(
+              "h-10 bg-red-500/5 rounded-xl animate-pulse",
+              isCollapsed ? "w-10" : "w-full"
+            )}
+          />
         </div>
       </div>
     </aside>

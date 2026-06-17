@@ -33,7 +33,7 @@ cordova platform add android
 
 To ensure the app isn't "killed" by Android's battery saver, follow these steps on your device:
 
-1.  **Battery Optimization:** Go to *Settings > Apps > Saltwater Electricity > Battery* and select **"Unrestricted"** or **"Don't Optimize."**
+1.  **Battery Optimization:** Go to _Settings > Apps > Saltwater Electricity > Battery_ and select **"Unrestricted"** or **"Don't Optimize."**
 2.  **Permissions:** Ensure the app has the **SMS Permission** allowed.
 3.  **Background Mode:** The app will automatically request background execution, but ensuring it's "Pinned" or "Locked" in your Recents menu is recommended for 100% uptime.
 

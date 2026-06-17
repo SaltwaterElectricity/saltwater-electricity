@@ -97,7 +97,7 @@ export default async function handler(req, res) {
     // 5. Dispatch to Private SMS Gateway Queue (CENTRALIZED PROTOCOL)
     // All SMS alerts are routed to a single designated master device (gatewayUid).
     const MASTER_GATEWAY_UID = process.env.MASTER_GATEWAY_UID;
-    
+
     if (!MASTER_GATEWAY_UID) {
       console.error("[triggerHardwareAlert] MASTER_GATEWAY_UID not configured in environment.");
       return sendError(res, "SMS Gateway configuration error.", 500, "hw/gateway-missing");
@@ -105,7 +105,7 @@ export default async function handler(req, res) {
 
     const smsQueueRef = db.ref("sms_queue");
     const message = `[SALT-ELEC] ALERT: Unit ${deviceId} detected critical TDS levels: ${tdsValue} PPM. Check dashboard now.`;
-    
+
     const queueEntry = {
       number: formattedNumber,
       message: message,

@@ -31,7 +31,7 @@
       }
     },
 
-    "roles": { 
+    "roles": {
       ".indexOn": ["role"],
       ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
       "$uid": {

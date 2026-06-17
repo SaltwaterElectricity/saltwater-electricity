@@ -41,7 +41,8 @@ export const AUTH_ERROR_MESSAGES = Object.freeze({
     "Account temporarily locked due to many failed attempts. Please try again in a few minutes.",
   "auth/user-disabled": "This account has been disabled by a system administrator.",
   PERMISSION_DENIED: "Security Check: Access denied. You do not have the required permissions.",
-  "db/permission-denied": "Security Check: Access denied. You do not have the required permissions.",
+  "db/permission-denied":
+    "Security Check: Access denied. You do not have the required permissions.",
   unavailable: "The service is currently offline. Please check your connection.",
   default: "An unexpected error occurred. Please try again.",
 });

@@ -64,7 +64,11 @@ export const sendOTPEmail = async (email, otpCode) => {
   if (!email || !otpCode) {
     return {
       success: false,
-      error: new appError("Required information for the security code is missing.", true, "email/invalid-parameters"),
+      error: new appError(
+        "Required information for the security code is missing.",
+        true,
+        "email/invalid-parameters"
+      ),
     };
   }
 

@@ -67,7 +67,11 @@ export const generateOTP = async (userId_not_used, email) => {
  */
 export const verifyOTP = async (trackingId, inputCode, shouldDelete = false) => {
   if (!trackingId || !inputCode) {
-    throw new appError("Some security information is missing. Please try again.", true, "otp/invalid-parameters");
+    throw new appError(
+      "Some security information is missing. Please try again.",
+      true,
+      "otp/invalid-parameters"
+    );
   }
 
   try {

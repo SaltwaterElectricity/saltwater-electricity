@@ -57,7 +57,10 @@ const ResidentDashboardSkeleton = memo(() => {
           </div>
           <div className="flex-1 space-y-4 overflow-hidden">
             {[1, 2].map((i) => (
-              <div key={i} className="p-4 rounded-2xl border border-slate-50 bg-slate-50/30 space-y-4">
+              <div
+                key={i}
+                className="p-4 rounded-2xl border border-slate-50 bg-slate-50/30 space-y-4"
+              >
                 <div className="flex justify-between">
                   <div className="flex gap-3 items-center">
                     <div className="w-10 h-10 rounded-lg bg-slate-200 animate-pulse" />
@@ -70,7 +73,10 @@ const ResidentDashboardSkeleton = memo(() => {
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   {[1, 2, 3].map((j) => (
-                    <div key={j} className="h-12 bg-white rounded-xl border border-slate-50 animate-pulse" />
+                    <div
+                      key={j}
+                      className="h-12 bg-white rounded-xl border border-slate-50 animate-pulse"
+                    />
                   ))}
                 </div>
               </div>

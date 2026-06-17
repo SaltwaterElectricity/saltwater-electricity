@@ -3,7 +3,7 @@ import { smsGateway } from "../services/smsGateway.service";
 
 /**
  * useSmsGateway Hook
- * 
+ *
  * Activates the private Android SMS Gateway listener if the user is logged in
  * and the app is running in a mobile (Cordova) environment.
  */

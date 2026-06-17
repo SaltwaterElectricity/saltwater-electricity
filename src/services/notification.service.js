@@ -34,7 +34,11 @@ export const createNotification = async (
   if (!userId || !title || !message) {
     return {
       success: false,
-      error: new appError("Required alert information is missing.", true, "notification/invalid-data"),
+      error: new appError(
+        "Required alert information is missing.",
+        true,
+        "notification/invalid-data"
+      ),
     };
   }
 
