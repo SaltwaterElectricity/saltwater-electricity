@@ -94,7 +94,7 @@ const ForcePasswordChange = ({ onSuccess }) => {
   }
 
   return (
-    <div className="p-8 bg-white rounded-[32px] max-w-md w-full shadow-2xl border border-slate-200 animate-in fade-in zoom-in duration-300">
+    <div className="p-8 bg-white rounded-[32px] w-full shadow-2xl border border-slate-200 animate-in fade-in zoom-in duration-300">
       <header className="mb-10">
         <h2 className="text-2xl font-black text-slate-900 tracking-tight">Protect Your Account</h2>
         <p className="text-sm text-slate-500 mt-2 leading-relaxed">
