@@ -20,7 +20,7 @@ import ModalBackdrop from "./ModalBackdrop";
  * Mirroring code1.html premium two-column design.
  * Features a live summary card that updates as the admin fills the form.
  */
-const AccountProvisioningModal = ({ isOpen, onClose, mode = "user" }) => {
+const AccountProvisioningModal = ({ isOpen, onClose, mode = "user", showRoleSelector = true }) => {
   // STATES
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [tempData, setTempData] = useState(null);
@@ -172,7 +172,12 @@ const AccountProvisioningModal = ({ isOpen, onClose, mode = "user" }) => {
           )}
 
           <form id="provision-form" onSubmit={handleSubmit(handlePreSubmit)} className="pb-12">
-            <RegistrationFields register={register} errors={errors} currentUserRole={userRole} />
+            <RegistrationFields
+              register={register}
+              errors={errors}
+              currentUserRole={userRole}
+              showRoleSelector={showRoleSelector}
+            />
           </form>
 
           {/* ACTIONS */}

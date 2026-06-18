@@ -38,8 +38,13 @@ const InputField = ({
   );
 };
 
-export const RegistrationFields = ({ register, errors, currentUserRole = ROLES.RESIDENT }) => {
-  const isSuperAdmin = currentUserRole === ROLES.SUPER_ADMIN;
+export const RegistrationFields = ({
+  register,
+  errors,
+  currentUserRole = ROLES.RESIDENT,
+  showRoleSelector = true,
+}) => {
+  const isSuperAdmin = currentUserRole === ROLES.SUPER_ADMIN && showRoleSelector;
 
   return (
     <div className="space-y-12">

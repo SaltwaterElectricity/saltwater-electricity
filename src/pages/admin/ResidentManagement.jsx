@@ -186,6 +186,7 @@ const ResidentManagement = ({ currentUserRole }) => {
         isOpen={isProvisioningModalOpen}
         onClose={() => setIsProvisioningModalOpen(false)}
         mode="user"
+        showRoleSelector={false}
       />
     </div>
   );

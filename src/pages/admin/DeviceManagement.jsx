@@ -181,9 +181,8 @@ const DeviceManagement = () => {
           </select>
           <select className="w-full md:w-48 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 bg-white text-blue-600 font-semibold py-2.5 px-4 outline-none transition-all">
             <option>All Locations</option>
-            <option>Metro Manila</option>
-            <option>Cebu City</option>
-            <option>Davao City</option>
+            <option>Pulo 1 Alibijaban, San Andres Quezon</option>
+            <option>Pulo 2 Alibijaban, San Andres Quezon</option>
           </select>
         </div>
       </section>
