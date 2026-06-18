@@ -99,7 +99,9 @@ const ForcePasswordChange = ({ onSuccess }) => {
     <div className="min-h-screen w-full bg-[#f7f9fb] flex flex-col items-center justify-center p-6 antialiased">
       <div className="p-7 bg-white rounded-[32px] w-full max-w-[440px] shadow-2xl border border-slate-200 animate-in fade-in zoom-in duration-300">
         <header className="mb-8">
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Protect Your Account</h2>
+          <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+            Protect Your Account
+          </h2>
           <p className="text-sm text-slate-500 mt-2 leading-relaxed">
             Change your temporary password to unlock the Saltwater Electricity dashboard.
           </p>
