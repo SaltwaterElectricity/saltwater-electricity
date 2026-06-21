@@ -145,6 +145,7 @@ export async function verifyUserRole(req, res, requiredRole) {
 Never catch database errors and return the raw message or database tables in the HTTP response.
 
 - **Correct (Sanitized)**:
+
   ```javascript
   try {
     await writeToDatabase(data);
