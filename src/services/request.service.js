@@ -82,6 +82,15 @@ export const createDeviceRequest = async (deviceData) => {
 
     const result = await push(requestRef, newRequest);
 
+    // 🛡️ SYSTEM NOTIFICATION: Alert admins of new request
+    const { createNotification } = await import("./notification.service");
+    await createNotification(
+      "admin",
+      "New Device Request",
+      `A new request for '${deviceData.deviceName}' has been submitted and is awaiting validation.`,
+      "info"
+    ).catch((err) => logger.warn("[Request Service]: Admin notification failed", err));
+
     // 🛡️ UNIFIED AUDIT LOG: Record request creation
     await logActivity(
       "DEVICE_REQUESTED",

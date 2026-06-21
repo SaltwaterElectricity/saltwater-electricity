@@ -24,13 +24,15 @@ import { SuperAdminSidebar } from "./SuperAdminSidebar";
  */
 const Sidebar = memo(({ _isOpen, _toggleSidebar }) => {
   const navigate = useNavigate();
-  const { isAdmin, userRole, currentUser, user, loading: authLoading } = useAuth() || {};
-  const { notifications } = useNotifications(isAdmin ? "admin" : currentUser?.uid);
+  const { isAdmin, isSuperAdmin, userRole, currentUser, user, loading: authLoading } = useAuth() || {};
+  
+  const notificationScope = (isAdmin || isSuperAdmin) ? "all" : currentUser?.uid;
+  const { notifications } = useNotifications(notificationScope);
+  
   const { deviceId } = useActiveDevice(currentUser?.uid, isAdmin);
   const { isSidebarCollapsed, toggleSidebarCollapse } = useUI();
 
   const isResident = userRole === ROLES.RESIDENT;
-  const isSuperAdmin = userRole === ROLES.SUPER_ADMIN;
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   // LOGOUT STATE

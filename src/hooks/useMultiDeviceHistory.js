@@ -59,9 +59,13 @@ export const useMultiDeviceHistory = (deviceIds = [], limit = 30, date = null) =
           }
 
           const entry = timeMap.get(normalizedTs);
-          // Add device-specific keys
+          // Add device-specific keys for comparative charts
           entry[`${id}_tds`] = Number(log.tds) || 0;
-          entry[`${id}_full_${id}`] = {
+          entry[`${id}_voltage`] = Number(log.voltage) || 0;
+          entry[`${id}_current`] = Number(log.current) || 0;
+
+          // Add full log object for detailed table/audit views
+          entry[`${id}_full`] = {
             ...log,
             timestamp: ts,
           };

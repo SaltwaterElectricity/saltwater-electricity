@@ -116,9 +116,9 @@ const SuperAdminNav = memo(({ isExpanded, isAdmin, userRole, unreadCount, handle
     </div>
 
     <SidebarLink
-      to={isAdmin ? ROUTES.ADMIN_REQUEST_MANAGEMENT : ROUTES.DEVICE_REQUESTS}
+      to={ROUTES.ADMIN_REQUEST_MANAGEMENT}
       icon="check_box"
-      label={isAdmin ? "Request Validation" : "Device Requests"}
+      label="Request Validation"
       isResident={false}
       isSuperAdmin={true}
       isCollapsed={!isExpanded}
@@ -128,15 +128,6 @@ const SuperAdminNav = memo(({ isExpanded, isAdmin, userRole, unreadCount, handle
       to={ROUTES.ADMIN_DEVICE_MANAGEMENT}
       icon="devices"
       label="Device Management"
-      isResident={false}
-      isSuperAdmin={true}
-      isCollapsed={!isExpanded}
-      onClick={handleLinkClick}
-    />
-    <SidebarLink
-      to={ROUTES.ADMIN_RESIDENT_MANAGEMENT}
-      icon="manage_accounts"
-      label="Resident Management"
       isResident={false}
       isSuperAdmin={true}
       isCollapsed={!isExpanded}
@@ -164,8 +155,17 @@ const SuperAdminNav = memo(({ isExpanded, isAdmin, userRole, unreadCount, handle
       onClick={handleLinkClick}
     />
     <SidebarLink
-      to={ROUTES.ADMIN_AUDIT_LOGS}
+      to={ROUTES.HISTORY_OVERVIEW}
       icon="history"
+      label="Historical Data"
+      isResident={false}
+      isSuperAdmin={true}
+      isCollapsed={!isExpanded}
+      onClick={handleLinkClick}
+    />
+    <SidebarLink
+      to={ROUTES.ADMIN_AUDIT_LOGS}
+      icon="receipt_long"
       label="Audit Logs"
       isResident={false}
       isSuperAdmin={true}

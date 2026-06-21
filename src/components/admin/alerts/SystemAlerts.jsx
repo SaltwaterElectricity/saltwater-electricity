@@ -11,13 +11,14 @@ import { Footer } from "../../../layout";
  * Supports role-based fetching and real-time filtering.
  */
 const Alerts = () => {
-  const { currentUser, isAdmin } = useAuth();
+  const { currentUser, isAdmin, isSuperAdmin } = useAuth();
   const [filter, setFilter] = useState("all");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // Requirement 2: Role-Based Logic
-  // Admins fetch system-wide 'admin' alerts; Residents fetch personalized UID alerts.
-  const { notifications, loading } = useNotifications(isAdmin ? "admin" : currentUser?.uid);
+  // Admins and Super Admins fetch the global 'all' feed; Residents fetch personalized UID alerts.
+  const notificationScope = (isAdmin || isSuperAdmin) ? "all" : currentUser?.uid;
+  const { notifications, loading } = useNotifications(notificationScope);
 
   // Requirement 3: State Management - Filtering & Grouping
   const groupedNotifications = useMemo(() => {
@@ -169,9 +170,16 @@ const Alerts = () => {
 
                     {/* Alert Content */}
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-bold text-on-surface uppercase truncate group-hover/card:text-primary transition-colors">
-                        {alert.title}
-                      </h4>
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-bold text-on-surface uppercase truncate group-hover/card:text-primary transition-colors">
+                          {alert.title}
+                        </h4>
+                        {isSuperAdmin && alert.targetUid && (
+                          <span className="text-[10px] bg-outline-variant/30 text-on-surface-variant px-1.5 py-0.5 rounded font-mono uppercase">
+                            UID: {alert.targetUid.substring(0, 8)}...
+                          </span>
+                        )}
+                      </div>
                       <p className="text-on-surface-variant text-sm mt-0.5 line-clamp-1">
                         {alert.message}
                       </p>

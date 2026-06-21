@@ -21,26 +21,31 @@ export default async function handler(req, res) {
   const tdsValue = parseFloat(req.body.tdsValue);
   const secretKey = req.body.secretKey;
 
-  // 2. Strict Authentication
-  const HARDWARE_SECRET = process.env.HARDWARE_SECRET_KEY;
-  if (!HARDWARE_SECRET) {
-    console.error("[triggerHardwareAlert] Missing hardware secret.");
-    return sendError(res, "Server configuration error.", 500, "hw/config-missing");
-  }
-
-  if (secretKey !== HARDWARE_SECRET) {
-    console.warn(
-      `[SECURITY] Unauthorized hardware alert attempt. Device: ${deviceId || "Unknown"}`
-    );
-    return sendError(res, "Unauthorized", 401, "hw/unauthorized");
-  }
-
-  if (!deviceId || isNaN(tdsValue)) {
-    return sendError(res, "Invalid deviceId or tdsValue.", 400, "hw/invalid-input");
+  if (!deviceId || isNaN(tdsValue) || !secretKey) {
+    return sendError(res, "Invalid deviceId, secretKey, or tdsValue.", 400, "hw/invalid-input");
   }
 
   try {
     const { db } = initFirebaseAdmin();
+
+    // 2. Dynamic Hardware Token Authentication (Device Isolation)
+    const deviceRef = db.ref(`device_information/${deviceId}`);
+    const deviceSnap = await deviceRef.get();
+
+    if (!deviceSnap.exists()) {
+      return sendError(res, "Device not registered.", 404, "hw/unregistered");
+    }
+
+    const registeredToken = deviceSnap.val().token;
+    if (!registeredToken) {
+      console.error(`[SECURITY] Telemetry alert blocked. No token configured for device: ${deviceId}`);
+      return sendError(res, "Device security token configuration missing.", 500, "hw/config-missing");
+    }
+
+    if (secretKey !== registeredToken) {
+      console.warn(`[SECURITY] Unauthorized alert attempt for Device: ${deviceId}`);
+      return sendError(res, "Unauthorized", 401, "hw/unauthorized");
+    }
 
     // 3. Anti-Spam / Rate Limiting (15-Minute Cooldown)
     const alertMetaRef = db.ref(`system_metadata/alerts/${deviceId}`);
@@ -117,7 +122,29 @@ export default async function handler(req, res) {
 
     const newSmsRef = await smsQueueRef.push(queueEntry);
 
-    // 6. Update Metadata
+    // 6. Dispatch In-App Notifications (Unified Protocol)
+    const notificationRef = db.ref("notifications");
+    const alertTitle = "CRITICAL: Salinity Alert";
+    const alertMessage = `Unit ${deviceId} detected critical high TDS levels: ${tdsValue} PPM. Check dashboard now.`;
+
+    const notificationData = {
+      title: alertTitle,
+      message: alertMessage,
+      type: "critical",
+      isRead: false,
+      timestamp: now,
+    };
+
+    // Notify Owner
+    await notificationRef.child(userId).push(notificationData);
+
+    // Mirror to Admin
+    await notificationRef.child("admin").push({
+      ...notificationData,
+      title: `${alertTitle} (${deviceId})`,
+    });
+
+    // 7. Update Metadata
     await alertMetaRef.set({
       lastSmsSent: now,
       lastTdsValue: tdsValue,

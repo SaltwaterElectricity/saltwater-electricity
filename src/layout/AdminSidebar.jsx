@@ -154,8 +154,16 @@ const AdminNav = memo(({ isExpanded, isAdmin, userRole, unreadCount, handleLinkC
       onClick={handleLinkClick}
     />
     <SidebarLink
-      to={ROUTES.ADMIN_AUDIT_LOGS}
+      to={ROUTES.HISTORY_OVERVIEW}
       icon="history"
+      label="Historical Data"
+      isResident={false}
+      isCollapsed={!isExpanded}
+      onClick={handleLinkClick}
+    />
+    <SidebarLink
+      to={ROUTES.ADMIN_AUDIT_LOGS}
+      icon="receipt_long"
       label="Audit Logs"
       isResident={false}
       isCollapsed={!isExpanded}

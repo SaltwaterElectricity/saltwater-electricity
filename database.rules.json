@@ -111,12 +111,13 @@
         ".read": true,
         // Allows recording failed attempts (unauthenticated)
         ".write": true,
-        // CRITICAL VALIDATION: Only allow incrementing or resetting to 0
-        ".validate": "newData.hasChildren(['count', 'lockoutUntil']) && (!data.exists() || newData.child('count').val() > data.child('count').val() || newData.child('count').val() == 0)"
+        // CRITICAL VALIDATION: Only allow incrementing by exactly 1, resetting to 0, and max 5-minute future lockouts
+        ".validate": "newData.hasChildren(['count', 'lockoutUntil']) && (newData.child('count').val() == 0 || (!data.exists() && newData.child('count').val() == 1) || (data.exists() && newData.child('count').val() == data.child('count').val() + 1)) && (newData.child('lockoutUntil').val() == 0 || (newData.child('count').val() >= 5 && newData.child('lockoutUntil').val() <= now + 305000))"
       }
     },
 
     "notifications": {
+      ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
       "admin": {
         ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
         ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')"

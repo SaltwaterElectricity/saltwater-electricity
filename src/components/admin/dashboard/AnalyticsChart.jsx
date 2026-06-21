@@ -320,7 +320,7 @@ const CustomTooltip = ({ active, payload, label, devices }) => {
 
         <div className="space-y-1.5">
           {devices.map((device) => {
-            const deviceData = dataPoint[`${device.id}_full_${device.id}`];
+            const deviceData = dataPoint[`${device.id}_full`];
             const tdsValue = dataPoint[`${device.id}_tds`];
 
             if (tdsValue === undefined && !deviceData) return null;

@@ -57,9 +57,15 @@ const HistoricalMetricCards = ({
   vCount = 0,
   sCount = 0,
   cCount = 0,
+  isAdmin = false,
+  trends = null,
 }) => {
   return (
-    <section className="relative z-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+    <section
+      className={`relative z-20 grid grid-cols-1 sm:grid-cols-2 ${
+        isAdmin ? "lg:grid-cols-5" : "lg:grid-cols-4"
+      } gap-6`}
+    >
       <MetricCard
         icon="bolt"
         colorClass="text-primary"
@@ -68,7 +74,7 @@ const HistoricalMetricCards = ({
         unit="Readings"
         trend="Live"
         sparklineColor="bg-primary-fixed-dim/30 group-hover:bg-primary"
-        sparkData={[0.5, 0.75, 0.33, 1, 0.66]}
+        sparkData={trends?.v || [0.5, 0.75, 0.33, 1, 0.66]}
       />
       <MetricCard
         icon="water_drop"
@@ -77,7 +83,7 @@ const HistoricalMetricCards = ({
         value={sCount}
         unit="Readings"
         sparklineColor="bg-severity-info/30 group-hover:bg-severity-info"
-        sparkData={[0.66, 0.5, 0.75, 0.66, 1]}
+        sparkData={trends?.s || [0.66, 0.5, 0.75, 0.66, 1]}
       />
       <MetricCard
         icon="pause" // Pulse icon replacement from legacy
@@ -86,17 +92,19 @@ const HistoricalMetricCards = ({
         value={cCount}
         unit="Readings"
         sparklineColor="bg-severity-medium/30 group-hover:bg-severity-medium"
-        sparkData={[0.5, 1, 0.33, 0.5, 0.66]}
+        sparkData={trends?.c || [0.5, 1, 0.33, 0.5, 0.66]}
       />
-      <MetricCard
-        icon="group"
-        colorClass="text-success-badge"
-        label="Total Household Users"
-        value={usersCount || 0}
-        unit="Households"
-        sparklineColor="bg-success-badge/30 group-hover:bg-success-badge"
-        sparkData={[0.33, 0.66, 0.5, 0.75, 1]}
-      />
+      {isAdmin && (
+        <MetricCard
+          icon="group"
+          colorClass="text-success-badge"
+          label="Total Household Users"
+          value={usersCount || 0}
+          unit="Households"
+          sparklineColor="bg-success-badge/30 group-hover:bg-success-badge"
+          sparkData={[0.33, 0.66, 0.5, 0.75, 1]}
+        />
+      )}
       <MetricCard
         icon="devices"
         colorClass="text-severity-info"

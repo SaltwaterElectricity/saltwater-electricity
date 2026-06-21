@@ -274,46 +274,41 @@ export const updateBulbState = async (deviceId, newState) => {
 
     // 1. High Salinity Check
     if (tds >= tdsConfig.critical) {
-      await createNotification(
-        userId,
-        "CRITICAL: Salinity Alert",
-        `Unit ${deviceId} detected critical high TDS levels (${tds} PPM). Please inspect the facility immediately.`,
-        NOTIFICATION_TYPES.CRITICAL
-      );
+      const title = "CRITICAL: Salinity Alert";
+      const message = `Unit ${deviceId} detected critical high TDS levels (${tds} PPM). Please inspect the facility immediately.`;
+      
+      await createNotification(userId, title, message, NOTIFICATION_TYPES.CRITICAL);
+      await createNotification("admin", `${title} (${deviceId})`, message, NOTIFICATION_TYPES.CRITICAL);
     }
 
     // 2. Electrolyte Weakening (Low Salinity) Check
     if (tds <= tdsConfig.lowCritical) {
-      await createNotification(
-        userId,
-        "CRITICAL: Low Salinity",
-        `Unit ${deviceId} detected critically low TDS (${tds} PPM). Minimum ions for electricity generation not met.`,
-        NOTIFICATION_TYPES.CRITICAL
-      );
+      const title = "CRITICAL: Low Salinity";
+      const message = `Unit ${deviceId} detected critically low TDS (${tds} PPM). Minimum ions for electricity generation not met.`;
+      
+      await createNotification(userId, title, message, NOTIFICATION_TYPES.CRITICAL);
+      await createNotification("admin", `${title} (${deviceId})`, message, NOTIFICATION_TYPES.CRITICAL);
     } else if (tds <= tdsConfig.lowWarning) {
-      await createNotification(
-        userId,
-        "WARNING: Electrolyte Weakening",
-        `Unit ${deviceId} detected low TDS (${tds} PPM). Saltwater efficiency is decreasing.`,
-        NOTIFICATION_TYPES.WARNING
-      );
+      const title = "WARNING: Electrolyte Weakening";
+      const message = `Unit ${deviceId} detected low TDS (${tds} PPM). Saltwater efficiency is decreasing.`;
+      
+      await createNotification(userId, title, message, NOTIFICATION_TYPES.WARNING);
+      await createNotification("admin", `${title} (${deviceId})`, message, NOTIFICATION_TYPES.WARNING);
     }
 
     // 3. Battery/Voltage Check
     if (voltage <= voltConfig.lowCritical) {
-      await createNotification(
-        userId,
-        "CRITICAL: Battery Exhausted",
-        `Unit ${deviceId} voltage is critically low (${voltage}V). System may shut down soon.`,
-        NOTIFICATION_TYPES.CRITICAL
-      );
+      const title = "CRITICAL: Battery Exhausted";
+      const message = `Unit ${deviceId} voltage is critically low (${voltage}V). System may shut down soon.`;
+      
+      await createNotification(userId, title, message, NOTIFICATION_TYPES.CRITICAL);
+      await createNotification("admin", `${title} (${deviceId})`, message, NOTIFICATION_TYPES.CRITICAL);
     } else if (voltage <= voltConfig.lowWarning) {
-      await createNotification(
-        userId,
-        "WARNING: Low Power",
-        `Unit ${deviceId} voltage is low (${voltage}V). Check electrolyte levels.`,
-        NOTIFICATION_TYPES.WARNING
-      );
+      const title = "WARNING: Low Power";
+      const message = `Unit ${deviceId} voltage is low (${voltage}V). Check electrolyte levels.`;
+      
+      await createNotification(userId, title, message, NOTIFICATION_TYPES.WARNING);
+      await createNotification("admin", `${title} (${deviceId})`, message, NOTIFICATION_TYPES.WARNING);
     }
 
     await update(ref(db), updates);

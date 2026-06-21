@@ -2,6 +2,7 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import { getFunctions } from "firebase/functions";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { appError } from "./utils/appError";
 
 export const FIREBASE_CONFIG = Object.freeze({
@@ -26,6 +27,17 @@ if (!FIREBASE_CONFIG.apiKey || !FIREBASE_CONFIG.databaseURL) {
 
 // Singleton Pattern
 const app = getApps().length > 0 ? getApp() : initializeApp(FIREBASE_CONFIG);
+
+// App Check initialization (Only in production web environments)
+if (typeof window !== "undefined" && !import.meta.env.DEV) {
+  const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+  if (siteKey) {
+    initializeAppCheck(app, {
+      provider: new ReCaptchaEnterpriseProvider(siteKey),
+      isTokenAutoRefreshEnabled: true,
+    });
+  }
+}
 
 // Export Instances
 export const auth = getAuth(app);

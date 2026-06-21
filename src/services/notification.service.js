@@ -78,7 +78,12 @@ export const createNotification = async (
  */
 export const subscribeToNotifications = (userId, limit, callback, onError = null) => {
   if (!userId) return () => {};
-  const notifyRef = ref(db, `notifications/${userId}`);
+
+  // 1. Path Selection: 'all' mode for Super Admins, specific node for others
+  const isGlobal = userId === "all";
+  const notifyRef = ref(db, isGlobal ? "notifications" : `notifications/${userId}`);
+
+  // 2. Query Construction: Limit results to prevent client-side overloading
   const notifyQuery = query(notifyRef, limitToLast(limit));
 
   return onValue(
@@ -87,16 +92,41 @@ export const subscribeToNotifications = (userId, limit, callback, onError = null
       const data = snapshot.val();
       if (!data) {
         callback([]);
-      } else {
-        const list = Object.entries(data)
-          .map(([id, val]) => ({
-            id,
-            ...val,
-          }))
-          .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-        callback(list);
+        return;
       }
+
+      let list = [];
+
+      if (isGlobal) {
+        // FLAT-MAP STRATEGY: Aggregate notifications across all user keys
+        Object.entries(data).forEach(([uid, userAlerts]) => {
+          if (typeof userAlerts === "object") {
+            Object.entries(userAlerts).forEach(([id, val]) => {
+              list.push({
+                id,
+                ...val,
+                targetUid: uid, // Metadata for Super Admin context
+              });
+            });
+          }
+        });
+      } else {
+        // STANDARD STRATEGY: Direct mapping of user-specific alerts
+        list = Object.entries(data).map(([id, val]) => ({
+          id,
+          ...val,
+        }));
+      }
+
+      // 3. SORTING: Descending order by timestamp (Server or Client generated)
+      list.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+      // 4. TRUNCATION: Ensure the 'all' view doesn't exceed the requested limit after flattening
+      callback(list.slice(0, limit));
     },
-    onError
+    (error) => {
+      logger.error(`[Notification Service]: Subscription to ${userId} failed.`, error);
+      if (onError) onError(error);
+    }
   );
 };

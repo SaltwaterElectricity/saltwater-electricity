@@ -1,3 +1,4 @@
+import { initFirebaseAdmin } from "./_utils/firebase.js";
 import { sendSuccess, sendError, handleOptions } from "./_utils/response.js";
 import sgMail from "@sendgrid/mail";
 
@@ -10,6 +11,30 @@ export default async function handler(req, res) {
 
   if (req.method !== "POST") {
     return sendError(res, "Method Not Allowed", 405, "mail/method-not-allowed");
+  }
+
+  // Verify ID Token and Admin/SuperAdmin Role
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return sendError(res, "Authentication required.", 401, "mail/unauthorized");
+  }
+
+  const token = authHeader.split(" ")[1];
+  try {
+    const { auth, db } = initFirebaseAdmin();
+    const decodedToken = await auth.verifyIdToken(token);
+
+    // Read user role
+    const roleSnap = await db.ref(`roles/${decodedToken.uid}`).get();
+    const userRole = roleSnap.exists() ? roleSnap.val().role : null;
+
+    if (userRole !== "admin" && userRole !== "superAdmin") {
+      console.warn(`[SECURITY] Unauthorized email access attempt by user: ${decodedToken.email}`);
+      return sendError(res, "Forbidden: Administrative access required.", 403, "mail/forbidden");
+    }
+  } catch (error) {
+    console.error("[SECURITY] Invalid token presented to sendProvisioningEmail:", error.message);
+    return sendError(res, "Invalid session token.", 401, "mail/invalid-token");
   }
 
   const apiKey = process.env.SENDGRID_API_KEY;

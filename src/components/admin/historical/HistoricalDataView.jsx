@@ -19,7 +19,7 @@ import { useAuth } from "../../../context/useAuth";
 
 /**
  * HistoricalData Page - Unified Legacy Mirror
- *
+ *  
  * This page serves as the main orchestrator for historical IoT data.
  * It handles multi-device aggregation, user hydration, and complex filtering.
  * Mirrored from legacy design code1.html.
@@ -164,8 +164,8 @@ const HistoricalData = () => {
   }, [activeLogs, searchTerm, residentsMap]);
 
   // --- 7. Metric Calculation (Actual Data) ---
-  const readingStats = useMemo(() => {
-    return (filteredLogs || []).reduce(
+  const { readingStats, trends } = useMemo(() => {
+    const stats = (filteredLogs || []).reduce(
       (acc, log) => {
         if (log.voltage > 0) acc.v++;
         if ((log.tds || log.tds_ppm) > 0) acc.s++;
@@ -174,6 +174,16 @@ const HistoricalData = () => {
       },
       { v: 0, s: 0, c: 0 }
     );
+
+    // Dynamic Sparkline Data (Normalization 0.2 - 1.0 for visual clarity)
+    const recent = [...filteredLogs].slice(0, 10).reverse();
+    const trendLines = {
+      v: recent.map((l) => Math.max(0.2, Math.min((l.voltage || 0) / 250, 1))),
+      s: recent.map((l) => Math.max(0.2, Math.min((l.tds || 0) / 1000, 1))),
+      c: recent.map((l) => Math.max(0.2, Math.min((l.current || 0) / 5, 1))),
+    };
+
+    return { readingStats: stats, trends: trendLines };
   }, [filteredLogs]);
 
   // --- 8. Loading Orchestration ---
@@ -199,6 +209,8 @@ const HistoricalData = () => {
           vCount={readingStats.v}
           sCount={readingStats.s}
           cCount={readingStats.c}
+          isAdmin={isPrivileged}
+          trends={trends}
         />
       </div>
 
@@ -227,6 +239,7 @@ const HistoricalData = () => {
           residentsMap={residentsMap}
           loading={isLoading}
           onRefresh={isAllSelected ? multiRefresh : singleRefresh}
+          isAdmin={isPrivileged}
         />
       </div>
     </div>

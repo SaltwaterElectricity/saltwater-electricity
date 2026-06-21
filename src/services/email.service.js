@@ -1,5 +1,6 @@
 import { appError } from "../utils/appError";
 import { logger } from "../utils/logger";
+import { auth } from "../firebaseConfig";
 
 /**
  * EMAIL SERVICE (Refactored for Vercel Serverless Functions)
@@ -23,11 +24,20 @@ const triggerSecureEmail = async (emailData) => {
   }
 
   try {
+    const user = auth.currentUser;
+    const token = user ? await user.getIdToken() : null;
+
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
     const response = await fetch("/api/sendProvisioningEmail", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify(emailData),
     });
 

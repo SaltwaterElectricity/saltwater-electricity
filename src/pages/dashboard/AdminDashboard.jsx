@@ -1,11 +1,13 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
 import {
   useAuditLogs,
   useDeviceRequests,
   useDevices,
   useMultiDeviceHistory,
   useResidentManagement,
+  useNotifications,
 } from "../../hooks";
 import AnalyticsChart from "../../components/admin/dashboard/AnalyticsChart";
 import SystemHealthGauge from "../../components/admin/dashboard/SystemHealthGauge";
@@ -27,10 +29,15 @@ import { SENSOR_CONFIG, METRICS, APP_SETTINGS } from "../../constants";
  */
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const { isAdmin, isSuperAdmin } = useAuth();
   const { residents, filters, loading: residentsLoading } = useResidentManagement();
-  const { logs: auditLogs, loading: auditLoading } = useAuditLogs(10);
+  const { loading: auditLoading } = useAuditLogs(10);
   const { requests } = useDeviceRequests();
   const { devices, telemetry, loading: devicesLoading } = useDevices();
+
+  // Integrated Notification Feed (Limited to 5 for widget)
+  const notificationScope = (isAdmin || isSuperAdmin) ? "all" : "admin";
+  const { notifications, loading: notificationsLoading } = useNotifications(notificationScope, 5);
 
   // 1. DATE SELECTION STATE: Default to 'null' for Recent Analysis (Last 50 logs)
   const [selectedDate, setSelectedDate] = useState(null);
@@ -166,9 +173,9 @@ const AdminDashboard = () => {
           <RecentAlertsFeed
             title="System Alerts"
             variant="widget"
-            alerts={auditLogs}
-            loading={auditLoading}
-            onViewAll={() => navigate(ROUTES.ADMIN_AUDIT_LOGS)}
+            alerts={notifications}
+            loading={notificationsLoading}
+            onViewAll={() => navigate(ROUTES.ALERTS)}
           />
 
           <DeviceRequestWidget requests={requests} />

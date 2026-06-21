@@ -5,7 +5,13 @@ import { memo, useState } from "react";
  * Mirrored from legacy design code1.html.
  * Displays a paginated table of historical data with user avatars and status badges.
  */
-const HistoricalTable = ({ logs = [], residentsMap = {}, loading = false, onRefresh }) => {
+const HistoricalTable = ({
+  logs = [],
+  residentsMap = {},
+  loading = false,
+  onRefresh,
+  isAdmin = false,
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -65,9 +71,11 @@ const HistoricalTable = ({ logs = [], residentsMap = {}, loading = false, onRefr
                 <th className="p-4 text-[9px] text-secondary whitespace-nowrap uppercase tracking-widest font-black">
                   DATE & TIME
                 </th>
-                <th className="p-4 text-[9px] text-secondary whitespace-nowrap uppercase tracking-widest font-black">
-                  HOUSEHOLD USER
-                </th>
+                {isAdmin && (
+                  <th className="p-4 text-[9px] text-secondary whitespace-nowrap uppercase tracking-widest font-black">
+                    HOUSEHOLD USER
+                  </th>
+                )}
                 <th className="p-4 text-[9px] text-secondary whitespace-nowrap uppercase tracking-widest font-black text-center">
                   DEVICE
                 </th>
@@ -133,28 +141,30 @@ const HistoricalTable = ({ logs = [], residentsMap = {}, loading = false, onRefr
                           {date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                         </p>
                       </td>
-                      <td className="p-4">
-                        <div className="flex items-center gap-3">
-                          <img
-                            className="w-8 h-8 rounded-full border border-outline-variant/30 bg-surface-container flex items-center justify-center overflow-hidden shadow-sm group-hover:border-primary/30 transition-colors"
-                            src={
-                              user.photoURL ||
-                              `https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=eff6ff&color=2563eb&bold=true`
-                            }
-                            alt={user.firstName}
-                          />
-                          <div>
-                            <p className="text-[11px] font-black text-on-surface uppercase tracking-tight">
-                              {user.firstName
-                                ? `${user.firstName} ${user.lastName}`
-                                : "System Node"}
-                            </p>
-                            <p className="text-[9px] text-outline font-bold truncate max-w-[120px]">
-                              {user.email || "LOGS@INFRA"}
-                            </p>
+                      {isAdmin && (
+                        <td className="p-4">
+                          <div className="flex items-center gap-3">
+                            <img
+                              className="w-8 h-8 rounded-full border border-outline-variant/30 bg-surface-container flex items-center justify-center overflow-hidden shadow-sm group-hover:border-primary/30 transition-colors"
+                              src={
+                                user.photoURL ||
+                                `https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=eff6ff&color=2563eb&bold=true`
+                              }
+                              alt={user.firstName}
+                            />
+                            <div>
+                              <p className="text-[11px] font-black text-on-surface uppercase tracking-tight">
+                                {user.firstName
+                                  ? `${user.firstName} ${user.lastName}`
+                                  : "System Node"}
+                              </p>
+                              <p className="text-[9px] text-outline font-bold truncate max-w-[120px]">
+                                {user.email || "LOGS@INFRA"}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      </td>
+                        </td>
+                      )}
                       <td className="p-4 text-center">
                         <span className="px-2 py-0.5 bg-surface-container-high rounded text-[9px] font-black text-on-surface-variant uppercase tracking-widest border border-outline-variant/20">
                           {log.deviceId}

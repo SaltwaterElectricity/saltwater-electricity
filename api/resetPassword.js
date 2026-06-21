@@ -52,12 +52,25 @@ export default async function handler(req, res) {
     }
 
     const data = snapshot.val();
+    const attempts = data.attempts || 0;
+
+    if (attempts >= 3) {
+      await otpRef.remove();
+      return sendError(res, "Invalid security code or account.", 400, "auth/invalid-request");
+    }
+
     if (Date.now() > data.expiresAt) {
       await otpRef.remove();
       return sendError(res, "The security code has expired.", 400, "auth/otp-expired");
     }
 
     if (data.code !== otp.toString().trim()) {
+      const newAttempts = attempts + 1;
+      if (newAttempts >= 3) {
+        await otpRef.remove();
+      } else {
+        await otpRef.update({ attempts: newAttempts });
+      }
       return sendError(res, "Invalid security code.", 400, "auth/invalid-otp");
     }
 

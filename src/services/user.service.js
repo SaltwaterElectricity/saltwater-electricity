@@ -177,6 +177,16 @@ export const updateUserStatus = async (uid, newStatus) => {
 
   try {
     await update(ref(db), updates);
+
+    // 🛡️ SYSTEM NOTIFICATION: Alert other admins of status change
+    const { createNotification } = await import("./notification.service");
+    await createNotification(
+      "admin",
+      "Account Status Changed",
+      `Account ${uid} has been marked as ${newStatus.toUpperCase()}.`,
+      newStatus === USER_STATUS.ACTIVE ? "info" : "warning"
+    ).catch((err) => console.warn("[User Service]: Admin notification failed", err));
+
     // 🛡️ UNIFIED AUDIT LOG: Record status change
     await logActivity(
       `USER_${newStatus.toUpperCase()}`,

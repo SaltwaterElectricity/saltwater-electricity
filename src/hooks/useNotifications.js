@@ -7,20 +7,24 @@ import { logger } from "../utils/logger";
  *
  * Streams real-time notifications for a specific user.
  *
- * @param {string} userId - The unique identifier of the user (or 'admin' for system-wide alerts).
+ * @param {string} userId - The unique identifier of the user (or 'admin' for system-wide alerts, or 'all' for super admin global feed).
  * @param {number} limit - Maximum number of recent notifications to retrieve.
  */
 export const useNotifications = (userId, limit = 50) => {
   const [notifications, setNotifications] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!!userId);
   const [error, setError] = useState(null);
+
+  const [prevUserId, setPrevUserId] = useState(userId);
+  if (userId !== prevUserId) {
+    setPrevUserId(userId);
+    setNotifications([]);
+    setLoading(!!userId);
+    setError(null);
+  }
 
   useEffect(() => {
     if (!userId) {
-      Promise.resolve().then(() => {
-        setNotifications([]);
-        setLoading(false);
-      });
       return;
     }
 
