@@ -19,7 +19,7 @@ import { useAuth } from "../../../context/useAuth";
 
 /**
  * HistoricalData Page - Unified Legacy Mirror
- *  
+ *
  * This page serves as the main orchestrator for historical IoT data.
  * It handles multi-device aggregation, user hydration, and complex filtering.
  * Mirrored from legacy design code1.html.

@@ -36,7 +36,7 @@ const AdminDashboard = () => {
   const { devices, telemetry, loading: devicesLoading } = useDevices();
 
   // Integrated Notification Feed (Limited to 5 for widget)
-  const notificationScope = (isAdmin || isSuperAdmin) ? "all" : "admin";
+  const notificationScope = isAdmin || isSuperAdmin ? "all" : "admin";
   const { notifications, loading: notificationsLoading } = useNotifications(notificationScope, 5);
 
   // 1. DATE SELECTION STATE: Default to 'null' for Recent Analysis (Last 50 logs)

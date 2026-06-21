@@ -38,8 +38,15 @@ export default async function handler(req, res) {
 
     const registeredToken = deviceSnap.val().token;
     if (!registeredToken) {
-      console.error(`[SECURITY] Telemetry alert blocked. No token configured for device: ${deviceId}`);
-      return sendError(res, "Device security token configuration missing.", 500, "hw/config-missing");
+      console.error(
+        `[SECURITY] Telemetry alert blocked. No token configured for device: ${deviceId}`
+      );
+      return sendError(
+        res,
+        "Device security token configuration missing.",
+        500,
+        "hw/config-missing"
+      );
     }
 
     if (secretKey !== registeredToken) {

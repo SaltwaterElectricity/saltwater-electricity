@@ -17,7 +17,7 @@ const Alerts = () => {
 
   // Requirement 2: Role-Based Logic
   // Admins and Super Admins fetch the global 'all' feed; Residents fetch personalized UID alerts.
-  const notificationScope = (isAdmin || isSuperAdmin) ? "all" : currentUser?.uid;
+  const notificationScope = isAdmin || isSuperAdmin ? "all" : currentUser?.uid;
   const { notifications, loading } = useNotifications(notificationScope);
 
   // Requirement 3: State Management - Filtering & Grouping
