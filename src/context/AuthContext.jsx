@@ -1,42 +1,86 @@
-import { createContext, useContext, useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { subscribeToAuthChanges, getFullUserData, logoutUser } from "../services/auth.service";
 import { USER_STATUS } from "../services/user.service"; 
-
-const AuthContext = createContext();
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within an AuthProvider");
-  return context;
-};
+import { logger } from "../utils/logger";
+import { AuthContext } from "./useAuth";
+import { ref, onValue } from "firebase/database";
+import { db } from "../firebaseConfig";
+import { isSuperAdmin, isAdmin } from "../utils/rbac";
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null); // Firebase Auth User
-  const [user, setUser] = useState(null);               // Flattened DB Data (Role, Status, Profile)
+  const [user, setUser] = useState(null);               // Flattened DB Data + Token Claims
   const [loading, setLoading] = useState(true);
 
+  // Use refs to track listeners for cleanup
+  const listeners = useRef({ role: null, account: null });
+
+  // 1. Authoritative Claim Synchronization
+  const syncUserContext = async (firebaseUser, forceRefresh = false) => {
+    try {
+      if (firebaseUser) {
+        // Authoritative source: Decoded ID Token (optionally forced)
+        const data = await getFullUserData(firebaseUser.uid, firebaseUser, forceRefresh);
+        setCurrentUser(firebaseUser);
+        setUser(data || null);
+      } else {
+        setCurrentUser(null);
+        setUser(null);
+      }
+    } catch (error) {
+      logger.error("Auth Sync Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /**
+   * FORCE TOKEN REFRESH
+   * Used to immediately update permissions when a role is changed.
+   */
+  const forceTokenRefresh = async () => {
+    if (!currentUser) return;
+    setLoading(true);
+    await syncUserContext(currentUser, true);
+  };
+
   useEffect(() => {
-    
-    const unsubscribe = subscribeToAuthChanges(async (firebaseUser) => {
+    const unsubscribeAuth = subscribeToAuthChanges((firebaseUser) => {
       setLoading(true); 
 
-      try {
-        if (firebaseUser) {
-          const data = await getFullUserData(firebaseUser.uid);
-          setCurrentUser(firebaseUser);
-          setUser(data || null);
-        } else {
-          setCurrentUser(null);
-          setUser(null);
-        }
-      } catch (error) {
-        console.error("Auth Sync Error:", error);
-      } finally {
-        setLoading(false);
+      // Cleanup existing listeners if user changes or signs out
+      if (listeners.current.role) listeners.current.role();
+      if (listeners.current.account) listeners.current.account();
+      listeners.current = { role: null, account: null };
+
+      if (firebaseUser) {
+        syncUserContext(firebaseUser);
+
+        // 2. REAL-TIME RBAC MONITORING
+        // We listen to the DB nodes. If they change, it's likely a claim was updated by a backend process.
+        const roleRef = ref(db, `roles/${firebaseUser.uid}`);
+        const accountRef = ref(db, `accounts/${firebaseUser.uid}`);
+
+        listeners.current.role = onValue(roleRef, (snapshot) => {
+          // If the role node in DB changes, refresh the token to get new claims
+          forceTokenRefresh();
+        });
+
+        listeners.current.account = onValue(accountRef, (snapshot) => {
+          // If status changes (e.g. suspended), refresh token or re-sync
+          syncUserContext(firebaseUser);
+        });
+
+      } else {
+        syncUserContext(null);
       }
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeAuth();
+      if (listeners.current.role) listeners.current.role();
+      if (listeners.current.account) listeners.current.account();
+    };
   }, []);
 
   // Memoized Helpers for App.jsx and ProtectedRoute
@@ -45,15 +89,17 @@ export const AuthProvider = ({ children }) => {
     user, 
     userRole: user?.role || null,
     accountStatus: user?.status || null,
+    claims: user?.claims || {},
     
     // Security Flags
     isDisabled: user?.status === USER_STATUS.DISABLED, 
     mustChangePassword: user?.requiresPasswordChange || false,
     
     // Permission Helpers
-    isSuperAdmin: user?.role === "superAdmin",
-    isAdmin: user?.role === "admin" || user?.role === "superAdmin",
+    isSuperAdmin: isSuperAdmin(user?.claims),
+    isAdmin: isAdmin(user?.claims),
     
+    forceTokenRefresh,
     loading
   }), [currentUser, user, loading]);
 

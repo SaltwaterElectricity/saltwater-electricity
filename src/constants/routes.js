@@ -8,12 +8,18 @@ export const ROUTES = Object.freeze({
   // Admin & User Management
   ADMIN_USER_MANAGEMENT: "/admin/user-management",
   REGISTER_USER: "/admin/register-user",
-  REGISTER_STAFF: "/admin/register-staff",
   ADMIN_DEVICE_MANAGEMENT: "/admin/device-management",
-//   SMART_AQUA_MONITOR: "/monitor",
+  ADMIN_REQUEST_MANAGEMENT: "/admin/request-management",
+  ADMIN_AUDIT_LOGS: "/admin/audit-logs",
+  SALTWATER_ELECTRICITY_MONITOR: "/monitor",
+
+  //super admin
+  REGISTER_ADMIN: "/super-admin/register-admin",
 
   // Resident
   DASHBOARD: "/dashboard",
+  DEVICE_ANALYTICS: "/analytics/:deviceId",
+  DEVICE_REQUESTS: "/device-requests",
 });
 
 export const ROLE_LANDING_PAGES = Object.freeze({

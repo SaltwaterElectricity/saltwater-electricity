@@ -1,6 +1,7 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 import { getAuth } from "firebase/auth"; 
+import { appError } from "./utils/appError";
 
 export const FIREBASE_CONFIG = Object.freeze({
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -19,7 +20,7 @@ export const FIREBASE_CONFIG = Object.freeze({
 
 // Safety Check: Validate critical variables
 if (!FIREBASE_CONFIG.apiKey || !FIREBASE_CONFIG.databaseURL) {
-  throw new Error("Firebase Environment Variables missing. Check your .env file.");
+  throw new appError("Firebase Environment Variables missing. Check your .env file.", false, "config/missing-env");
 }
 
 // Singleton Pattern

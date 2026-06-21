@@ -1,138 +1,123 @@
-import { db } from "../config/firebase";
-import { 
-  doc, 
-  getDoc, 
-  runTransaction, 
-  serverTimestamp, 
-  Timestamp 
-} from "firebase/firestore";
-// IMPORT your email delivery function
+import { ref, get, set, remove, serverTimestamp } from "firebase/database";
+import { db } from "../firebaseConfig";
+import { appError } from "../utils/appError";
+import { logger } from "../utils/logger";
 import { sendOTPEmail } from "./email.service";
 
-const COLLECTIONS = Object.freeze({
-  USERS: "users",
-  OTPS: "otps" 
-});
+/**
+ * OTP SERVICE (Realtime Database)
+ * 
+ * Handles generation and verification of 6-digit security codes.
+ * Adheres to One-Time Use policies and secure server-side synchronization.
+ */
 
-const LIMITS = Object.freeze({
-  RATE_LIMIT_MS: 60000,
-  EXPIRY_MS: 300000,
-  MAX_ATTEMPTS: 5
-});
+const OTP_EXPIRY_MS = 300000; // 5 minutes
 
 /**
- * REQUEST PASSWORD RESET OTP
- * Now fully integrated with Database Integrity Checks and EmailJS.
+ * GENERATE OTP
+ * 
+ * 1. Generates a 6-digit numeric code.
+ * 2. Saves it to the '/otp-requests/{userId}' node in RTDB.
+ * 3. Sends the code via EmailJS (never returned to frontend).
  */
-export const requestPasswordResetOTP = async (typedEmail, userId) => {
-  const userRef = doc(db, COLLECTIONS.USERS, userId);
-  const otpRef = doc(db, COLLECTIONS.OTPS, userId);
+export const generateOTP = async (userId, email) => {
+  if (!userId || !email) {
+    throw new appError("User identification and email are required.", true, "otp/invalid-parameters");
+  }
 
   try {
-    // 1. DATABASE INTEGRITY CHECK (The Guard)
-    const userSnap = await getDoc(userRef);
+    // 🛡️ SECURITY: Verify user existence before sending email
+    const userRef = ref(db, `users/${userId}`);
+    const userSnap = await get(userRef);
 
-    // OWASP: Silent return if user doesn't exist
     if (!userSnap.exists()) {
-      console.warn(`Enumeration attempt blocked: ${userId}`);
-      return { success: true }; 
+      logger.warn(`OTP Request blocked: User ${userId} does not exist.`);
+      return { success: true }; // OWASP: Anti-enumeration silent return
     }
 
-    // 2. EMAIL VALIDATION: Ensure the input matches the DB record
-    const userData = userSnap.data();
-    if (userData.email.toLowerCase() !== typedEmail.toLowerCase().trim()) {
-      console.warn(`Email mismatch for ID: ${userId}`);
-      return { success: true };
+    const userData = userSnap.val();
+    if (userData.email.toLowerCase() !== email.toLowerCase().trim()) {
+      logger.warn(`OTP Request blocked: Email mismatch for ${userId}.`);
+      return { success: true }; // OWASP: Anti-enumeration silent return
     }
 
-    // This variable will hold the code generated inside the transaction 
-    // so we can use it for the email later.
-    let generatedCode = "";
+    // 1. Generate a 6-digit numeric code
+    const array = new Uint32Array(1);
+    window.crypto.getRandomValues(array);
+    const otpCode = (array[0] % 900000 + 100000).toString();
 
-    // 3. ATOMIC TRANSACTION
-    await runTransaction(db, async (transaction) => {
-      const otpDoc = await transaction.get(otpRef);
-
-      if (otpDoc.exists()) {
-        const data = otpDoc.data();
-        const createdAt = data.createdAt 
-          ? data.createdAt.toMillis() 
-          : Date.now() - (LIMITS.RATE_LIMIT_MS + 1000);
-
-        if (Date.now() - createdAt < LIMITS.RATE_LIMIT_MS) {
-          const remaining = Math.ceil((LIMITS.RATE_LIMIT_MS - (Date.now() - createdAt)) / 1000);
-          throw new Error(`Please wait ${remaining}s before requesting again.`);
-        }
-      }
-
-      // SECURE GENERATION
-      const array = new Uint32Array(1);
-      window.crypto.getRandomValues(array);
-      const otpCode = (array[0] % 900000 + 100000).toString();
-      generatedCode = otpCode; // Store for email function
-
-      transaction.set(otpRef, {
-        userId,
-        email: userData.email, // Use DB verified email
-        code: otpCode,
-        expiresAt: Timestamp.fromDate(new Date(Date.now() + LIMITS.EXPIRY_MS)),
-        createdAt: serverTimestamp(),
-        attempts: 0,
-        type: "password_reset"
-      });
+    // 2. Save to RTDB: '/otp-requests/{userId}'
+    const otpRef = ref(db, `otp-requests/${userId}`);
+    await set(otpRef, {
+      email,
+      code: otpCode,
+      createdAt: serverTimestamp(),
+      expiresAt: Date.now() + OTP_EXPIRY_MS
     });
 
-    // 4. DELIVERY: Send email ONLY if transaction succeeded
-    // We use userData.email (the Source of Truth)
-    await sendOTPEmail(userData.email, generatedCode);
+    // 3. Delivery (Secure: Only send via email)
+    await sendOTPEmail(email, otpCode);
 
     return { success: true };
+
   } catch (error) {
-    console.error("OTP Request Error:", error.message);
-    throw error;
+    if (error instanceof appError) throw error;
+    logger.error("OTP Generation Error:", error);
+    throw new appError("Failed to deliver the security code. Please try again.", true, "otp/request-failed");
   }
 };
 
 /**
- * VERIFY PASSWORD RESET OTP
+ * VERIFY OTP
+ * 
+ * 1. Reads data from '/otp-requests/{userId}'.
+ * 2. Logic: Return true if code matches AND it has not expired.
+ * 3. Once verified or expired, the function deletes the OTP entry (One-Time use).
  */
-export const verifyResetOTP = async (userId, submittedCode) => {
-  const otpRef = doc(db, COLLECTIONS.OTPS, userId);
+export const verifyOTP = async (userId, inputCode) => {
+  if (!userId || !inputCode) {
+    throw new appError("User ID and code are required for verification.", true, "otp/invalid-parameters");
+  }
+
+  const otpRef = ref(db, `otp-requests/${userId}`);
 
   try {
-    return await runTransaction(db, async (transaction) => {
-      const otpSnap = await transaction.get(otpRef);
+    const snapshot = await get(otpRef);
+    
+    if (!snapshot.exists()) {
+      throw new appError("No active security code found for this account.", true, "otp/not-found");
+    }
 
-      if (!otpSnap.exists()) {
-        throw new Error("No active reset request found.");
-      }
+    const data = snapshot.val();
 
-      const data = otpSnap.data();
+    // Logic: Return true if code matches AND not expired
+    const isExpired = Date.now() > data.expiresAt;
+    const isMatch = data.code === inputCode.toString().trim();
 
-      if (Timestamp.now().toMillis() > data.expiresAt.toMillis()) {
-        transaction.delete(otpRef);
-        throw new Error("This code has expired.");
-      }
+    // 🛡️ One-Time Use Policy: Delete if verified or if it has expired
+    if (isMatch || isExpired) {
+      await remove(otpRef);
+    }
 
-      if (data.attempts >= (LIMITS.MAX_ATTEMPTS - 1) && data.code !== submittedCode) {
-        transaction.delete(otpRef);
-        throw new Error("Security lockout: Too many failed attempts.");
-      }
+    if (isExpired) {
+      throw new appError("This security code has expired. Please request a new one.", true, "otp/expired");
+    }
 
-      // In your current service file:
-        if (data.code === submittedCode) {
-        const verifiedEmail = data.email; // Capture email before deleting doc
-        transaction.delete(otpRef);
-        return { verified: true, email: verifiedEmail }; // Return email
+    if (!isMatch) {
+      throw new appError("Invalid security code.", true, "otp/invalid-code");
+    }
 
-      } else {
-        const newAttempts = (data.attempts || 0) + 1;
-        transaction.update(otpRef, { attempts: newAttempts });
-        throw new Error(`Invalid code. ${LIMITS.MAX_ATTEMPTS - newAttempts} attempts remaining.`);
-      }
-    });
+    return { verified: true, email: data.email };
+
   } catch (error) {
-    console.error("OTP Verification Error:", error.message);
-    throw error;
+    if (error instanceof appError) throw error;
+    logger.error("OTP Verification Error:", error);
+    throw new appError(error.message || "Security verification failed.", true, "otp/verification-failed");
   }
 };
+
+/**
+ * Wrappers for UI compatibility (RequestOTPStep / VerifyOTPStep)
+ */
+export const requestPasswordResetOTP = async (email, userId) => generateOTP(userId, email);
+export const verifyResetOTP = verifyOTP;

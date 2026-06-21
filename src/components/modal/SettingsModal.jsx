@@ -1,6 +1,7 @@
 import { useState, useEffect, memo } from "react";
 import { ref, onValue } from "firebase/database"; // 👈 Idinagdag para basahin ang users node
 import { db } from "../../firebaseConfig"; // Ayusin ang path base sa folder mo
+import { useUI } from "../../context/useUI";
 import { X, User, Lock, History } from "lucide-react"; 
 import { cn } from "../../utils/cn"; 
 
@@ -8,30 +9,26 @@ import { cn } from "../../utils/cn";
 import { SecurityForm } from "../profile/SecurityForm"; 
 import { ProfileForm } from "../profile/ProfileForm";   
 import { SessionHistory } from "../profile/SessionHistory";
+import { ProfileFormSkeleton } from "../skeleton/ProfileFormSkeleton";
 
 export const SettingsModal = memo(({ uid }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("profile"); 
+  const { settingsModal, closeSettings } = useUI();
+  const { isOpen, activeTab: initialTab } = settingsModal;
+  
+  const [activeTab, setActiveTab] = useState(initialTab); 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+
+  // Sync internal activeTab with context when modal opens
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
+    if (isOpen) {
+      setActiveTab(initialTab);
+    }
+  }
 
   // 📦 State para sa Real-time User Data
   const [profileData, setProfileData] = useState(null);
-
-  // 🛰️ 1. NAKIKINIG SA CUSTOM EVENT GALING SA NAVBAR PROFILE
-  useEffect(() => {
-    const handleOpenSettings = (event) => {
-      setIsOpen(true);
-      if (event.detail) {
-        setActiveTab(event.detail); 
-      }
-    };
-
-    window.addEventListener("open-profile-settings", handleOpenSettings);
-
-    return () => {
-      window.removeEventListener("open-profile-settings", handleOpenSettings);
-    };
-  }, []);
 
   // 🛰️ 2. REAL-TIME FIREBASE LISTENER PARA SA PROFILE TAB
   useEffect(() => {
@@ -50,7 +47,7 @@ export const SettingsModal = memo(({ uid }) => {
 
   const handleSaveSuccess = () => {
     setTimeout(() => {
-      setIsOpen(false);
+      closeSettings();
       setIsSubmitting(false); 
     }, 2000); 
   };
@@ -59,7 +56,7 @@ export const SettingsModal = memo(({ uid }) => {
 
   const handleCloseModal = () => {
     if (!isSubmitting) {
-      setIsOpen(false);
+      closeSettings();
     }
   };
 
@@ -94,57 +91,52 @@ export const SettingsModal = memo(({ uid }) => {
         <div className="flex-1 flex overflow-hidden">
           
           {/* 📑 Tab Sidebar (Left side) */}
-          <div className="w-52 border-r border-slate-100 p-3 space-y-1 bg-slate-50/50 flex-shrink-0">
+          <div className="w-16 md:w-52 border-r border-slate-100 p-2 md:p-3 space-y-2 bg-slate-50/50 flex-shrink-0 flex flex-col items-center md:items-stretch">
             <TabButton 
               isActive={activeTab === "profile"} 
               onClick={() => { if (!isSubmitting) setActiveTab("profile"); }} 
               disabled={isSubmitting}
               icon={User}
-              label="Profile Details"
+              label="Profile"
             />
             <TabButton 
               isActive={activeTab === "security"} 
               onClick={() => { if (!isSubmitting) setActiveTab("security"); }} 
               disabled={isSubmitting}
               icon={Lock}
-              label="Password Setup"
+              label="Security"
             />
             <TabButton 
               isActive={activeTab === "sessions"} 
               onClick={() => { if (!isSubmitting) setActiveTab("sessions"); }} 
               disabled={isSubmitting}
               icon={History}
-              label="Login Sessions"
+              label="Sessions"
             />
           </div>
 
           {/* 🖥️ Dynamic Forms Display (Right side) */}
-          <div className="flex-1 p-6 overflow-y-auto custom-scrollbar bg-white">
+          <div className="flex-1 p-6 md:p-8 overflow-y-auto custom-scrollbar bg-white min-w-0">
             {activeTab === "profile" && (
-              <div className="animate-in fade-in duration-300">
-                {/* 🟢 UPDATED: Ibinalik ang profileData prop para ma-sync ang text inputs! */}
+              !profileData ? (
+                <ProfileFormSkeleton />
+              ) : (
                 <ProfileForm 
-                  profileData={profileData}
-                  currentUid={uid}
-                  onSaveSuccess={handleSaveSuccess} 
-                  setIsSubmitting={setIsSubmitting} 
+                  profileData={profileData} 
+                  currentUid={uid} 
+                  onSaveSuccess={handleSaveSuccess}
+                  setIsSubmitting={setIsSubmitting}
                 />
-              </div>
+              )
             )}
-            
             {activeTab === "security" && (
-              <div className="animate-in fade-in duration-300">
-                <SecurityForm 
-                  onSaveSuccess={handleSaveSuccess} 
-                  setIsSubmitting={setIsSubmitting} 
-                />
-              </div>
+              <SecurityForm 
+                onSaveSuccess={handleSaveSuccess}
+                setIsSubmitting={setIsSubmitting}
+              />
             )}
-
             {activeTab === "sessions" && (
-              <div className="animate-in fade-in duration-300">
-                <SessionHistory uid={uid} />
-              </div>
+              <SessionHistory uid={uid} />
             )}
           </div>
         </div>
@@ -157,14 +149,15 @@ const TabButton = ({ isActive, onClick, disabled, icon: Icon, label }) => (
   <button
     onClick={onClick}
     disabled={disabled}
+    title={label}
     className={cn(
-      "w-full flex items-center gap-3 p-3 rounded-xl text-xs font-bold transition-all disabled:cursor-not-allowed disabled:opacity-60",
+      "w-full flex items-center justify-center md:justify-start gap-0 md:gap-3 p-3 rounded-xl text-xs font-bold transition-all disabled:cursor-not-allowed disabled:opacity-60",
       isActive 
         ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20" 
         : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
     )}
   >
-    <Icon size={16} className={isActive ? "text-white" : "text-slate-400"} />
-    <span>{label}</span>
+    <Icon size={18} className={isActive ? "text-white" : "text-slate-400"} />
+    <span className="hidden md:inline truncate">{label}</span>
   </button>
 );

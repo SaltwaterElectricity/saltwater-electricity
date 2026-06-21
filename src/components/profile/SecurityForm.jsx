@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Eye, EyeOff, Lock, CheckCircle2 } from "lucide-react"; 
 import MemoizedToast from "../../components/ui/Toast";
 import MemoizedSpinnerIcon from "../../components/ui/SpinnerIcon"; 
-import { StrengthMeter, PasswordChecklist } from "../passwordChange"; 
+import { StrengthMeter, PasswordChecklist } from "../password-change";
+ 
 import { calculatePasswordStrength } from "../../utils/passwordMetrics"; 
 import { changeUserPassword, AUTH_ERROR_MESSAGES } from "../../services/auth.service"; 
 

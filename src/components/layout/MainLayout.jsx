@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useTimeout } from "../../hooks/useTimeout";
 import { Sidebar } from "./Sidebar";
 import { NavbarProfile } from "./NavbarProfile";
 import { SettingsModal } from "../modal/SettingsModal";
-import { useAuth } from "../../context/AuthContext"; 
+import { useAuth } from "../../context/useAuth"; 
 import { Menu, LayoutDashboard } from "lucide-react";
 import { SpinnerIcon } from "../../components/ui";
 import { cn } from "../../utils/cn";
@@ -48,8 +48,8 @@ const MainLayout = ({ children }) => {
             </div>
 
             <div className="lg:hidden flex items-center gap-1">
-              <span className="font-black text-blue-600 tracking-tighter text-sm">SMART</span>
-              <span className="font-black text-slate-900 tracking-tighter text-[10px]">AQUA</span>
+              <span className="font-black text-blue-600 tracking-tighter text-sm">SALTWATER</span>
+              <span className="font-black text-slate-900 tracking-tighter text-[10px]">ELECTRICITY</span>
             </div>
           </div>
 

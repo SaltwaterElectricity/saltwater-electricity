@@ -2,11 +2,20 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { ref, onValue } from "firebase/database";
 import { db } from "../firebaseConfig";
 import { AUTH_ERROR_MESSAGES } from "../services/auth.service";
+import { appError } from "../utils/appError";
 
 export const useFullUserData = (uid) => {
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!!uid);
   const [error, setError] = useState(null);
+  const [prevUid, setPrevUid] = useState(uid);
+
+  // Sync loading state when uid changes
+  if (uid !== prevUid) {
+    setPrevUid(uid);
+    setLoading(!!uid);
+    setError(null);
+  }
 
   // ✅ 1. Hooks must be at the TOP LEVEL
   const dataState = useRef({ profile: {}, roleData: {}, account: {} });
@@ -25,15 +34,10 @@ export const useFullUserData = (uid) => {
 
   useEffect(() => {
     if (!uid) {
-      setLoading(false);
-      setUserData(null);
       return;
     }
 
-    setLoading(true);
-    setError(null);
-
-    // ✅ 2. Reset the ref when UID changes to avoid showing old data
+    // ✅ Reset the ref when UID changes
     dataState.current = { profile: {}, roleData: {}, account: {} };
 
     const refs = {
@@ -44,7 +48,8 @@ export const useFullUserData = (uid) => {
 
     const handleError = (err) => {
       const code = err?.code || err?.message || "default";
-      setError(AUTH_ERROR_MESSAGES[code] || AUTH_ERROR_MESSAGES.default);
+      const message = AUTH_ERROR_MESSAGES[code] || AUTH_ERROR_MESSAGES.default;
+      setError(new appError(message, true, code));
       setLoading(false);
     };
 

@@ -1,4 +1,4 @@
-import { db } from "../firebaseConfig";
+import { db, auth } from "../firebaseConfig";
 import { 
   ref, 
   update, 
@@ -9,6 +9,9 @@ import {
   get,
   equalTo 
 } from "firebase/database";
+import { appError } from "../utils/appError";
+import { getUserClaims } from "./auth.service";
+import { logActivity } from "./audit.service";
 
 // Error Handling
 export const USER_STATUS = Object.freeze({
@@ -28,25 +31,43 @@ const DB_ERRORS = Object.freeze({
 const adminString = import.meta.env.VITE_SUPER_ADMIN_EMAILS || "";
 const adminList = adminString.split(",").map(email => email.trim().toLowerCase());
 
+/**
+ * INTERNAL GUARD: Verifies Admin clearance via Token Claims
+ */
+const verifyAdminClearance = async () => {
+  const currentUser = auth.currentUser;
+  if (!currentUser) throw new appError("Authentication required.", true, "auth/unauthorized");
+
+  const claims = await getUserClaims(currentUser);
+  if (!claims?.admin && !claims?.superAdmin) {
+    throw new appError("Access Denied: Administrative clearance required.", true, "auth/insufficient-clearance");
+  }
+  return true;
+};
+
+/**
+ * SCHEMA VALIDATION & SANITIZATION
+ * Ensures only allowed fields are sent to Firebase.
+ */
 const sanitizeUserData = (data) => {
   const cleanEmail = data.email?.toLowerCase().trim() || "";
   
   return {
-    firstName: data.firstName?.trim() || "",
-    middleName: data.middleName?.trim() || "",
-    lastName: data.lastName?.trim() || "",
-    suffix: data.suffix?.trim() || "",
-    age: parseInt(data.age) || 0,
-    gender: data.gender || "Not Specified",
+    firstName: data.firstName?.toString().trim().substring(0, 50) || "",
+    middleName: data.middleName?.toString().trim().substring(0, 50) || "",
+    lastName: data.lastName?.toString().trim().substring(0, 50) || "",
+    suffix: data.suffix?.toString().trim().substring(0, 10) || "",
+    age: Math.max(0, Math.min(120, parseInt(data.age) || 0)),
+    gender: ["Male", "Female", "Other", "Not Specified"].includes(data.gender) ? data.gender : "Not Specified",
     email: cleanEmail,
-    userName: data.userName?.trim() || `user_${Date.now()}`,
-    mobileNum: data.mobileNum || "N/A",
+    userName: data.userName?.toString().trim().substring(0, 30) || `user_${Date.now()}`,
+    mobileNum: data.mobileNum?.toString().trim() || "N/A",
     address: {
-      street: data.street || "Unset",
-      baranggay: data.baranggay || "Unset",
-      cityProvince: data.cityProvince || "Unset",
-      region: data.region || "Unset",
-      zipCode: data.zipCode || ""
+      street: data.street?.toString().trim() || "Unset",
+      baranggay: data.baranggay?.toString().trim() || "Unset",
+      cityProvince: data.cityProvince?.toString().trim() || "Unset",
+      region: data.region?.toString().trim() || "Unset",
+      zipCode: data.zipCode?.toString().trim() || ""
     }
   };
 };
@@ -54,8 +75,8 @@ const sanitizeUserData = (data) => {
 // PROVISIONING: Atomic multi-path update.
  
 export const provisionUserSystem = async (uid, formData) => {
-  if (!uid) throw new Error(DB_ERRORS.MISSING_UID);
-  if (!formData?.role) throw new Error(DB_ERRORS.MISSING_DATA);
+  if (!uid) throw new appError(DB_ERRORS.MISSING_UID, true, "db/missing-uid");
+  if (!formData?.role) throw new appError(DB_ERRORS.MISSING_DATA, true, "db/missing-data");
 
   // Security Guard: Verify if the requested role is actually allowed for this email
   const inputEmail = formData.email?.toLowerCase().trim();
@@ -68,16 +89,7 @@ export const provisionUserSystem = async (uid, formData) => {
   const updates = {
     // NODE: Profile Info
     [`/users/${uid}`]: {
-      firstName: cleanProfile.firstName,
-      middleName: cleanProfile.middleName,
-      lastName: cleanProfile.lastName,
-      suffix: cleanProfile.suffix,
-      age: cleanProfile.age,
-      gender: cleanProfile.gender,
-      email: cleanProfile.email,
-      userName: cleanProfile.userName,
-      mobileNum: cleanProfile.mobileNum,
-      address: cleanProfile.address,
+      ...cleanProfile,
       updatedAt: now
     },
     // NODE: Account Status & Security Flags
@@ -86,7 +98,7 @@ export const provisionUserSystem = async (uid, formData) => {
       requiresPasswordChange: !isActualSuperAdmin,
       createdAt: now
     },
-    // NODE: Authorization (Source of Truth for Rules)
+    // NODE: Authorization
     [`/roles/${uid}`]: {
       role: finalRole,
       isPrivate: isActualSuperAdmin,
@@ -96,9 +108,10 @@ export const provisionUserSystem = async (uid, formData) => {
 
   try {
     await update(ref(db), updates);
+    await logActivity('USER_PROVISIONED', uid, `User ${cleanProfile.email} provisioned with role: ${finalRole}`);
     return { success: true };
-  } catch (error) {
-    throw new Error(DB_ERRORS.PROVISION_FAILED);
+  } catch (_error) {
+    throw new appError(DB_ERRORS.PROVISION_FAILED, true, "db/provision-failed");
   }
 };
 
@@ -139,7 +152,6 @@ export const subscribeToAllUsers = (callback, targetRole = null, onError = null)
               };
             })
             .catch(() => {
-              // Fallback if profile fetch fails: gracefully return just the role data
               return { id: uid, ...roleData };
             });
 
@@ -151,8 +163,8 @@ export const subscribeToAllUsers = (callback, targetRole = null, onError = null)
       const completeList = await Promise.all(hydrationPromises);
       callback(completeList);
     },
-    (error) => {
-      if (onError) onError(error);
+    (_error) => {
+      if (onError) onError(new appError(DB_ERRORS.FETCH_FAILED, true, "db/fetch-failed"));
     }
   );
 };
@@ -160,9 +172,13 @@ export const subscribeToAllUsers = (callback, targetRole = null, onError = null)
 // STATUS MANAGEMENT: Ensures all nodes stay in sync.
  
 export const updateUserStatus = async (uid, newStatus) => {
-  if (!uid) throw new Error(DB_ERRORS.FETCH_FAILED);
+  if (!uid) throw new appError(DB_ERRORS.FETCH_FAILED, true, "db/missing-uid");
+
+  // 🛡️ SECONDARY ROLE CHECK: Authoritative Token Verification
+  await verifyAdminClearance();
+
   if (!Object.values(USER_STATUS).includes(newStatus)) {
-    throw new Error(`Invalid status type: ${newStatus}`);
+    throw new appError(`Invalid status type: ${newStatus}`, true, "db/invalid-status");
   }
 
   const now = serverTimestamp();
@@ -176,33 +192,52 @@ export const updateUserStatus = async (uid, newStatus) => {
     await update(ref(db), updates);
     return { success: true };
   } catch (error) {
-    throw new Error(DB_ERRORS.UPDATE_FAILED);
+    if (error instanceof appError) throw error;
+    throw new appError(DB_ERRORS.UPDATE_FAILED, true, "db/update-failed");
   }
 };
 
-export const updateUserProfile = async (uid, formData) => {
-  if (!uid) throw new Error("User ID is required.");
+/**
+ * UPDATES USER PROFILE
+ * Now secures the UID source and validates fields.
+ */
+export const updateUserProfile = async (targetUid, formData) => {
+  const currentUser = auth.currentUser;
+  
+  // 🛡️ SECURITY: Use targetUid for admin edits, but fallback to currentUser for self-edits
+  const uid = targetUid || currentUser?.uid;
+
+  if (!uid) throw new appError("User identification required for profile update.", true, "db/missing-uid");
+
+  // 🛡️ SECONDARY ROLE CHECK: If editing someone else, must be admin
+  if (targetUid && targetUid !== currentUser?.uid) {
+    await verifyAdminClearance();
+  }
+
+  // 🛡️ SANITIZATION: Prevents NoSQL injection by only mapping known fields
+  const clean = sanitizeUserData(formData);
 
   const updates = {
-    [`/users/${uid}/firstName`]: formData.firstName?.trim() || "",
-    [`/users/${uid}/middleName`]: formData.middleName?.trim() || "",
-    [`/users/${uid}/lastName`]: formData.lastName?.trim() || "",
-    [`/users/${uid}/suffix`]: formData.suffix?.trim() || "",
-    [`/users/${uid}/age`]: parseInt(formData.age) || 0,
-    [`/users/${uid}/gender`]: formData.gender || "Not Specified",
-    [`/users/${uid}/mobileNum`]: formData.mobileNum?.trim() || "N/A",
-    [`/users/${uid}/address/street`]: formData.street?.trim() || "Unset",
-    [`/users/${uid}/address/baranggay`]: formData.baranggay?.trim() || "Unset",
-    [`/users/${uid}/address/cityProvince`]: formData.cityProvince?.trim() || "Unset",
-    [`/users/${uid}/address/region`]: formData.region?.trim() || "Unset",
-    [`/users/${uid}/address/zipCode`]: formData.zipCode?.trim() || "",
+    [`/users/${uid}/firstName`]: clean.firstName,
+    [`/users/${uid}/middleName`]: clean.middleName,
+    [`/users/${uid}/lastName`]: clean.lastName,
+    [`/users/${uid}/suffix`]: clean.suffix,
+    [`/users/${uid}/age`]: clean.age,
+    [`/users/${uid}/gender`]: clean.gender,
+    [`/users/${uid}/mobileNum`]: clean.mobileNum,
+    [`/users/${uid}/address/street`]: clean.address.street,
+    [`/users/${uid}/address/baranggay`]: clean.address.baranggay,
+    [`/users/${uid}/address/cityProvince`]: clean.address.cityProvince,
+    [`/users/${uid}/address/region`]: clean.address.region,
+    [`/users/${uid}/address/zipCode`]: clean.address.zipCode,
     [`/users/${uid}/updatedAt`]: serverTimestamp()
   };
 
   try {
-    await update(ref(db), updates); // Gumagamit ng Atomic Multi-path Update
+    await update(ref(db), updates);
     return { success: true };
   } catch (error) {
-    throw new Error("Server Error: Could not update profile info.");
+    if (error instanceof appError) throw error;
+    throw new appError("Server Error: Could not update profile info.", true, "db/update-failed");
   }
 };

@@ -13,14 +13,14 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState("");
   const [isVerified, setIsVerified] = useState(false);
 
-  // LOGIC: Reset state whenever the modal closes to prevent data leaks
+  // LOGIC: Reset state when component unmounts
   useEffect(() => {
-    if (!isOpen) {
+    return () => {
       setStep(1);
       setEmail("");
       setIsVerified(false);
-    }
-  }, [isOpen]);
+    };
+  }, []);
 
   if (!isOpen) return null;
 

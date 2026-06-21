@@ -1,5 +1,5 @@
 import { auth, db, FIREBASE_CONFIG } from "../firebaseConfig";
-import { ref, get, update, serverTimestamp } from "firebase/database";
+import { ref, get, update, serverTimestamp, query, orderByChild, equalTo } from "firebase/database";
 import { initializeApp, deleteApp } from "firebase/app";
 import { 
   createUserWithEmailAndPassword, 
@@ -9,9 +9,12 @@ import {
   setPersistence, 
   browserLocalPersistence,
   getAuth,
-  updatePassword 
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential
 } from "firebase/auth";
 
+import { appError } from "../utils/appError";
 import { generateDefaultPassword } from "../utils/passwordGenerator";
 import { sendOnboardingEmail } from "./email.service"
 
@@ -36,42 +39,43 @@ export const AUTH_ERROR_MESSAGES = Object.freeze({
 export const validateEmail = (email) => {
   // Mas matibay kaysa sa .includes("@"). Sinisiguro nito ang format na: user@domain.com
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  
+
   if (!email || !emailRegex.test(email)) {
-    throw new Error(AUTH_ERROR_MESSAGES["auth/invalid-email"] || "A valid email is required.");
+    const code = "auth/invalid-email";
+    throw new appError(AUTH_ERROR_MESSAGES[code] || "A valid email is required.", true, code);
   }
 };
 
 export const validatePassword = (password) => {
+  const code = "auth/weak-password";
   // 1. LENGTH CHECK (Minimum 8 characters)
   if (!password || password.length < 8) {
-    throw new Error(AUTH_ERROR_MESSAGES["auth/weak-password"] || "Security Check: Password must be at least 8 characters.");
+    throw new appError(AUTH_ERROR_MESSAGES[code] || "Security Check: Password must be at least 8 characters.", true, code);
   }
 
   const complexityRegex = /^(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).*$/;
-  
+
   if (!complexityRegex.test(password)) {
     // Maaari mong gawing mas descriptive ang message sa loob ng AUTH_ERROR_MESSAGES object
-    throw new Error(AUTH_ERROR_MESSAGES["auth/weak-password"] || "Security Check: Password must include at least one number and one special character.");
+    throw new appError(AUTH_ERROR_MESSAGES[code] || "Security Check: Password must include at least one number and one special character.", true, code);
   }
 };
 
 /**
  * FINALIZED: Updates password for the current user.
  */
-
-export const changeUserPassword = async (newPassword, currentPassword = null, isForceReset = false) => {
+export const changeUserPassword = async (newPassword, { currentPassword = null, isForceReset = false } = {}) => {
   const auth = getAuth();
   const user = auth.currentUser;
 
-  if (!user) throw new Error("Session expired. Please log in again.");
+  if (!user) throw new appError("Session expired. Please log in again.", true, "auth/session-expired");
 
   validatePassword(newPassword);
 
   try {
     // 🛡️ SECURITY CHECK: Kung hindi force reset, kailangan ng re-authentication
     if (!isForceReset) {
-      if (!currentPassword) throw new Error("Current password is required for profile updates.");
+      if (!currentPassword) throw new appError("Current password is required for profile updates.", true, "auth/missing-current-password");
       const credential = EmailAuthProvider.credential(user.email, currentPassword);
       await reauthenticateWithCredential(user, credential);
     }
@@ -91,11 +95,10 @@ export const changeUserPassword = async (newPassword, currentPassword = null, is
 
     return { success: true };
   } catch (error) {
+    if (error instanceof appError) throw error;
     // 🔍 Pro-tip: Mas maganda kung itatapon mo ang native Firebase code para mahuli ng AUTH_ERROR_MESSAGES object mo sa UI.
-    throw {
-      code: error.code || "default",
-      message: error.message || "Security system encountered an error updating credentials."
-    };
+    const code = error.code || "default";
+    throw new appError(AUTH_ERROR_MESSAGES[code] || error.message || "Security system encountered an error updating credentials.", true, code);
   }
 };
 
@@ -113,7 +116,7 @@ export const registerUserAccount = async (userData) => {
     const autoPassword = generateDefaultPassword();
 
     const appName = `TempApp_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-    
+
     tempApp = initializeApp(FIREBASE_CONFIG, appName);
     const tempAuth = getAuth(tempApp);
 
@@ -126,7 +129,7 @@ export const registerUserAccount = async (userData) => {
     try {
       await sendOnboardingEmail({ email, firstName, role }, autoPassword);
       emailSent = true;
-    } catch (emailError) {
+    } catch (_emailError) {
       emailSent = false;
     }
 
@@ -144,12 +147,15 @@ export const registerUserAccount = async (userData) => {
   } catch (error) {
     // EMERGENCY CLEANUP
     if (tempApp) {
-      try { await deleteApp(tempApp); } catch (e) { /* silent cleanup fail */ }
+      try { await deleteApp(tempApp); } catch (_e) { /* silent cleanup fail */ }
     }
 
+    if (error instanceof appError) throw error;
+
     // ERROR MASKING
-    const message = AUTH_ERROR_MESSAGES[error.code] || AUTH_ERROR_MESSAGES.default;
-    throw new Error(message);
+    const code = error.code || "default";
+    const message = AUTH_ERROR_MESSAGES[code] || AUTH_ERROR_MESSAGES.default;
+    throw new appError(message, true, code);
   }
 };
 
@@ -160,23 +166,29 @@ export const loginUser = async (email, password) => {
   try {
     //SANITIZATION
     const cleanEmail = email?.toLowerCase().trim();
-    
-    if (!cleanEmail || !password) { throw { code: "auth/missing-credentials" }; }
+
+    if (!cleanEmail || !password) { 
+      const code = "auth/missing-credentials";
+      throw new appError(AUTH_ERROR_MESSAGES[code], true, code); 
+    }
 
     //PERSISTENCE
     await setPersistence(auth, browserLocalPersistence);
     const userCredential = await signInWithEmailAndPassword(auth, cleanEmail, password);
     const uid = userCredential.user.uid;
 
+    // Reset attempts on successful login
+    await update(ref(db, `login_attempts/${uid}`), { count: 0, lockoutUntil: 0 });
+
     // Verify system status before allowing the session to continue
-    const userData = await getFullUserData(uid);
-    
+    const userData = await getFullUserData(uid, userCredential.user);
+
     if (userData.status === "disabled") {
       await signOut(auth);
       sessionStorage.removeItem("is_verified");
-      throw new Error("Your account is suspended. Please contact support.");
+      throw new appError("Your account is suspended. Please contact support.", true, "auth/account-suspended");
     }
-    
+
     sessionStorage.setItem("is_verified", "true");
     return { 
       user: userCredential.user, 
@@ -184,13 +196,41 @@ export const loginUser = async (email, password) => {
     };
 
   } catch (error) {
+    // 🛡️ INCREMENT FAILED ATTEMPTS
+    if (error.code === "auth/invalid-credential" || error.code === "auth/wrong-password") {
+       const cleanEmail = email?.toLowerCase().trim();
+       const userId = await getUidByEmail(cleanEmail);
+       if (userId) {
+          const attemptsRef = ref(db, `login_attempts/${userId}`);
+          const snap = await get(attemptsRef);
+          const data = snap.val() || { count: 0 };
+          const newCount = data.count + 1;
+          const lockoutUntil = newCount >= 5 ? Date.now() + 300000 : 0;
+          await update(attemptsRef, { count: newCount, lockoutUntil });
+       }
+    }
+    // console.error("DEBUG: Firebase Auth Error:",
+    //  error.code, error.message);
     sessionStorage.removeItem("is_verified");
+    if (error instanceof appError) throw error;
+
     const errorCode = ["auth/user-not-found", "auth/wrong-password", "auth/invalid-credential"].includes(error.code) 
       ? "auth/invalid-credential" 
-      : error.code;
+      : error.code || "default";
 
-    throw new Error(AUTH_ERROR_MESSAGES[errorCode] || AUTH_ERROR_MESSAGES.default);
+    throw new appError(AUTH_ERROR_MESSAGES[errorCode] || AUTH_ERROR_MESSAGES.default, true, errorCode);
   }
+};
+
+/**
+ * Helper to get UID by email (for security lookups)
+ */
+const getUidByEmail = async (email) => {
+    const usersRef = ref(db, "users");
+    const q = query(usersRef, orderByChild("email"), equalTo(email));
+    const snap = await get(q);
+    if (!snap.exists()) return null;
+    return Object.keys(snap.val())[0];
 };
 
 /**
@@ -206,27 +246,49 @@ export const logoutUser = async () => {
     sessionStorage.removeItem("pending_uid");
 
     localStorage.removeItem("last_activity");
-    
+
     return { success: true };
+  } catch (_error) {
+    throw new appError("Security Check: Failed to securely terminate the session.", true, "auth/logout-failed");
+  }
+};
+
+/**
+ * Retrieves custom claims from the current user's ID token.
+ * This is the authoritative source for RBAC roles.
+ */
+export const getUserClaims = async (user, forceRefresh = false) => {
+  if (!user) return null;
+  try {
+    const idTokenResult = await user.getIdTokenResult(forceRefresh);
+    return idTokenResult.claims;
   } catch (error) {
-    throw new Error("Security Check: Failed to securely terminate the session.");
+    logger.error("Failed to fetch ID token claims:", error);
+    return null;
   }
 };
 
 export const subscribeToAuthChanges = (callback) => {
   if (typeof callback !== "function") {
-    throw new Error("Auth Callback must be a function.");
+    throw new appError("Auth Callback must be a function.", true, "auth/invalid-callback");
   }
   return onAuthStateChanged(auth, callback);
 };
 
 // Fetches complete user context from normalized nodes.
- 
-export const getFullUserData = async (uid) => {
-  if (!uid) throw new Error("User ID is required.");
+
+export const getFullUserData = async (uid, firebaseUser = null, forceRefresh = false) => {
+  if (!uid) throw new appError("User ID is required.", true, "auth/missing-uid");
 
   try {
-    // Fetch all three sources in parallel for speed
+    // 1. Fetch token claims if firebaseUser is provided (Authoritative RBAC)
+    let claims = null;
+    if (firebaseUser) {
+      const tokenResult = await firebaseUser.getIdTokenResult(forceRefresh);
+      claims = tokenResult.claims;
+    }
+
+    // 2. Fetch all three DB sources in parallel for speed
     const snaps = await Promise.all([
       get(ref(db, `users/${uid}`)),
       get(ref(db, `roles/${uid}`)),
@@ -237,20 +299,26 @@ export const getFullUserData = async (uid) => {
     const roleData = roleSnap.val() || {}; 
     const profile = userSnap.val() || {};
     const account = accountSnap.val() || {};
-    
-    // Combine everything into one clean object
+
+    // 3. Determine the authoritative role
+    // Prefer Token Claims if available, otherwise fallback to DB (for initial provisioning/sync)
+    const tokenRole = claims?.superAdmin ? "superAdmin" : claims?.admin ? "admin" : claims?.role;
+    const finalRole = tokenRole || roleData.role || "user";
+
     return {
       uid,
-      ...profile, // firstName, lastName, email, etc.
-      role: roleData.role || "user",
+      ...profile,
+      role: finalRole,
       status: account.status || "active",
       requiresPasswordChange: account?.requiresPasswordChange || false,
       isPrivate: roleData?.isPrivate || false,
-      updatedAt: roleData?.updatedAt || Date.now()
+      updatedAt: roleData?.updatedAt || Date.now(),
+      claims // Include raw claims for secondary checks
     };
 
   } catch (error) {
-    const errorCode = error.code || error.message || "default";
-    throw new Error(AUTH_ERROR_MESSAGES[errorCode] || AUTH_ERROR_MESSAGES.default);
+    if (error instanceof appError) throw error;
+    const errorCode = error.code || "default";
+    throw new appError(AUTH_ERROR_MESSAGES[errorCode] || AUTH_ERROR_MESSAGES.default, true, errorCode);
   }
 };

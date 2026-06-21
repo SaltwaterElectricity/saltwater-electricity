@@ -1,42 +1,57 @@
 import { ref, update, get, serverTimestamp } from "firebase/database";
-import { db } from "../firebaseConfig";
+import { auth, db } from "../firebaseConfig";
+import { appError } from "../utils/appError";
+import { logger } from "../utils/logger";
+import { getUserClaims } from "./auth.service";
 
+/**
+ * INTERNAL GUARD: Verifies Admin clearance via Token Claims
+ */
+const verifyAdminClearance = async () => {
+  const currentUser = auth.currentUser;
+  if (!currentUser) throw new appError("Authentication required.", true, "auth/unauthorized");
+
+  const claims = await getUserClaims(currentUser);
+  if (!claims?.admin && !claims?.superAdmin) {
+    throw new appError("Access Denied: Administrative clearance required.", true, "auth/insufficient-clearance");
+  }
+  return true;
+};
 
 export const assignDevice = async (deviceId, userId, newDeviceName) => {
+  // 🛡️ SECONDARY ROLE CHECK: Authoritative Token Verification
+  await verifyAdminClearance();
+
   // 1. SAFETY CHECK: Input Validation & Sanitization
   const cleanDeviceId = deviceId?.toString().trim();
   const cleanUserId = userId?.toString().trim();
   const cleanName = newDeviceName?.toString().trim().substring(0, 32);
 
   if (!cleanDeviceId || !cleanUserId) {
-    return { success: false, error: "INVALID_PARAMETERS" };
+    throw new appError("Device ID and User ID are required.", true, "device/invalid-parameters");
   }
 
   try {
     // 2. AVAILABILITY CHECK: Anti-overwrite Guard
-    // Chine-check natin ang main device node para sigurado na 'idle' pa ito
     const deviceStatusRef = ref(db, `device_information/${cleanDeviceId}/availability`);
     const statusSnapshot = await get(deviceStatusRef);
 
     if (statusSnapshot.exists() && statusSnapshot.val() !== 'available') {
-      return { success: false, error: "DEVICE_ALREADY_OCCUPIED" };
+      throw new appError("This device is already assigned to another user.", true, "device/already-occupied");
     }
 
     // 3. ATOMIC TRANSACTION DATA
     const now = serverTimestamp();
     const updates = {};
     
-    // Path A: Assignment Record (Audit Log for history)
     updates[`/device_assignments/${cleanDeviceId}`] = {
       userId: cleanUserId,
       assignedAt: now,
       status: "active"
     };
 
-    // Path B: Update Device Information (Para sa Real-time UI Update)
     updates[`/device_information/${cleanDeviceId}/availability`] = "assigned";
     
-    // Optional: I-update ang pangalan kung may binigay na bago
     if (cleanName) {
       updates[`/device_information/${cleanDeviceId}/device_name`] = cleanName;
     }
@@ -46,14 +61,45 @@ export const assignDevice = async (deviceId, userId, newDeviceName) => {
     return { success: true };
 
   } catch (error) {
-    // 4. SECURITY: Internal logging
+    if (error instanceof appError) throw error;
+    
     logInternalError(error); 
-    return { success: false, error: "SERVICE_UNAVAILABLE" };
+    throw new appError("The monitoring service is temporarily unavailable. Please try again.", true, "device/service-unavailable");
+  }
+};
+
+/**
+ * DEPROVISION DEVICE
+ * Removes user binding and resets device state to 'available'.
+ * 
+ * @param {string} deviceId - ID of the device to release
+ */
+export const deprovisionDevice = async (deviceId) => {
+  if (!deviceId) throw new appError("Device ID required.", true, "device/invalid-id");
+
+  // 🛡️ SECONDARY ROLE CHECK: Authoritative Token Verification
+  await verifyAdminClearance();
+
+  try {
+    const updates = {};
+    
+    // 1. Remove from assignments
+    updates[`/device_assignments/${deviceId}`] = null;
+    
+    // 2. Reset device info
+    updates[`/device_information/${deviceId}/availability`] = "available";
+    updates[`/device_information/${deviceId}/assigned_user_id`] = null;
+    updates[`/device_information/${deviceId}/assigned_user_name`] = null;
+
+    await update(ref(db), updates);
+    return { success: true };
+
+  } catch (error) {
+    logInternalError(error);
+    throw new appError("System override failed. Please check network.", true, "device/override-failed");
   }
 };
 
 const logInternalError = (err) => {
-  if (process.env.NODE_ENV !== 'production') {
-    console.error("[Internal DB Trace]:", err);
-  }
+  logger.error("[Internal DB Trace]:", err);
 };

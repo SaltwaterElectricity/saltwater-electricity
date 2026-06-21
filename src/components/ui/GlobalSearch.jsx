@@ -28,10 +28,10 @@ const GlobalSearch = ({
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         placeholder={placeholder}
-        className="w-full h-12 pl-12 pr-12 bg-gray-50 border-2 border-gray-100 rounded-xl 
-                   text-sm font-medium text-gray-800 transition-all duration-200
-                   placeholder:text-gray-400
-                   focus:bg-white focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-50"
+        className="w-full h-12 pl-12 pr-12 bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl 
+                   text-sm font-semibold text-slate-800 transition-all duration-300
+                   placeholder:text-slate-400
+                   focus:bg-white/40 focus:border-blue-500/50 focus:outline-none focus:ring-4 focus:ring-blue-500/10 shadow-sm"
       />
 
       {/* 3. Clear Button (Lalabas lang kung may tina-type) */}

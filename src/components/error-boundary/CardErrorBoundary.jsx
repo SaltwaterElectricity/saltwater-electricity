@@ -1,6 +1,7 @@
 // src/components/common/ErrorBoundary/CardErrorBoundary.jsx
 import React from 'react';
 import { RefreshCcw, AlertCircle } from 'lucide-react';
+import { logger } from '../../utils/logger';
 
 class CardErrorBoundary extends React.Component {
   constructor(props) {
@@ -14,7 +15,7 @@ class CardErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     // Dito mo pwedeng i-log ang error sa isang service gaya ng Sentry/LogRocket
-    console.error("Card Error Logged:", error, errorInfo);
+    logger.error("Card Error Logged:", error, errorInfo);
   }
 
   // RECOVERY LOGIC: Para ma-reset ang error state ng card lang

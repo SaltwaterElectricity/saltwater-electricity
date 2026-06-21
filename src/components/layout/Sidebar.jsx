@@ -1,6 +1,6 @@
 import { useState, memo, useCallback } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { logoutUser } from "../../services/auth.service";
 import { ROUTES } from "../../constants/routes";
 import { 
@@ -77,7 +77,7 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
       sessionStorage.clear();
       setIsLogoutModalOpen(false);
       navigate("/login", { replace: true });
-    } catch (error) {
+    } catch (_error) {
       triggerToast("Terminating session... Forcing local wipe.", "warning");
       sessionStorage.clear();
       localStorage.clear();
@@ -106,7 +106,7 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
       )}>
         
         {/* BRANDING HEADER - h-24 (96px) | px-6 (24px) */}
-        <header className="h-24 flex items-center justify-between px-6 border-b border-slate-800/40 shrink-0">
+        <header className="h-24 flex items-center justify-between px-6 border-b border-slate-800/40 bg-slate-950/20 shrink-0">
           <Logo />
           <button 
             onClick={toggleSidebar} 
@@ -117,13 +117,13 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
         </header>
 
         {/* NAVIGATION - space-y-8 (32px) */}
-        <nav className="flex-1 px-4 py-8 space-y-10 overflow-y-auto custom-scrollbar">
+        <nav className="flex-1 px-4 py-8 space-y-10 overflow-y-auto border-slate-800/40 bg-slate-950/20 custom-scrollbar">
           
           {/* ANALYTICS GROUP */}
           <div className="space-y-2">
             <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] px-4 mb-4">Analytics</p>
             <SidebarLink to={ROUTES.DASHBOARD} icon={LayoutDashboard} label="Main Dashboard" onClick={handleLinkClick} />
-            <SidebarLink to="/device-monitoring" icon={Droplets} label="Real-time Monitor" onClick={handleLinkClick} />
+            <SidebarLink to={ROUTES.SALTWATER_ELECTRICITY_MONITOR} icon={Droplets} label="Real-time Monitor" onClick={handleLinkClick} />
             <SidebarLink to="/alerts" icon={Bell} label="System Alerts" onClick={handleLinkClick} badgeCount={alertCounts.systemAlerts} />
             <SidebarLink to="/history" icon={History} label="Data History" onClick={handleLinkClick} />
           </div>
@@ -131,7 +131,14 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
           {/* OPERATIONS GROUP */}
           <div className="space-y-2">
             <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] px-4 mb-4">Operations</p>
-            <SidebarLink to="/device-requests" icon={ClipboardList} label="Device Requests" onClick={handleLinkClick} badgeCount={alertCounts.deviceRequests} badgeColor="bg-blue-600" />
+            <SidebarLink 
+              to={isAdmin ? ROUTES.ADMIN_REQUEST_MANAGEMENT : ROUTES.DEVICE_REQUESTS} 
+              icon={ClipboardList} 
+              label="Device Requests" 
+              onClick={handleLinkClick} 
+              badgeCount={alertCounts.deviceRequests} 
+              badgeColor="bg-blue-600" 
+            />
           </div>
 
           {/* ADMIN GROUP */}
@@ -140,10 +147,11 @@ export const Sidebar = memo(({ isOpen, toggleSidebar }) => {
               <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] px-4 mb-4">Administration</p>
               <SidebarLink to={ROUTES.ADMIN_USER_MANAGEMENT} icon={UserRoundPlus} label="User Management" onClick={handleLinkClick} />
               <SidebarLink to={ROUTES.ADMIN_DEVICE_MANAGEMENT} icon={Cpu} label="Device Management" onClick={handleLinkClick} />
+              <SidebarLink to={ROUTES.ADMIN_AUDIT_LOGS} icon={ShieldAlert} label="System Audit" onClick={handleLinkClick} />
               <SidebarLink to="/admin/settings" icon={Settings} label="System Settings" onClick={handleLinkClick} />
               {isSuperAdmin && (
                 <div className="pt-6 border-t border-slate-800/30 mt-6 space-y-2">
-                  <SidebarLink to="/admin/staff" icon={ShieldAlert} label="Security Roles" onClick={handleLinkClick} />
+                  <SidebarLink to={ROUTES.REGISTER_ADMIN} icon={ShieldAlert} label="Security Roles" onClick={handleLinkClick} />
                 </div>
               )}
             </div>

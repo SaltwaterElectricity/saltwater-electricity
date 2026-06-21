@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import LoginModal from "../../components/modal/LoginModal";
 import { cn } from "../../utils/cn";
-import logoImg from "../../assets/login-logo.png"; 
+import logoImg from "../../assets/logo-icon.png"; 
 
 const ROLES = {
   USER: "user",
@@ -23,15 +23,21 @@ const LoginPage = () => {
       
       <div className="bg-white w-full max-w-[380px] p-[45px_35px] rounded-xl text-center shadow-2xl animate-zoomIn">
         
-        <div className="mb-2 flex justify-center">
+        <div className="mb-2 flex flex-col items-center gap-2">
           <img 
             src={logoImg} 
             alt="SEM IoT Logo" 
-            /* In-update ang class dito:
-               Ginamit ang 'animate-cube-jump' na ginawa natin sa CSS 
-            */
-            className="w-[70%] max-w-[220px] h-auto -mt-2 animate-cube-jump"
+            /* Ginamit ang 'animate-cube-jump' na ginawa natin sa CSS */
+            className="w-[55%] max-w-[220px] h-auto -mt-2 animate-cube-jump"
           />
+          <div className="text-center space-y-0">
+            <h1 className="text-[16px] font-black tracking-[0.25em] bg-gradient-to-b from-slate-800 via-blue-900 to-black bg-clip-text text-transparent uppercase">
+              Device Monitoring
+            </h1>
+            <h2 className="text-[8px] font-bold text-blue-600 uppercase tracking-[0.4em] opacity-80">
+              Saltwater Electricity
+            </h2>
+          </div>
         </div>
 
         <div className=" mb-8">

@@ -5,6 +5,8 @@ import { assignDevice } from '../../services/device.service';
 import GlobalSearch from '../ui/GlobalSearch'; 
 import { useSearch } from '../../hooks/useSearch';
 
+import ModalBackdrop from './ModalBackdrop';
+
 const AssignDeviceModal = ({ device, isOpen, onClose, onShowToast }) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -60,7 +62,7 @@ const AssignDeviceModal = ({ device, isOpen, onClose, onShowToast }) => {
             });
             setUsers(validUsers);
           }
-        } catch (error) {
+        } catch (_error) {
           if (isMounted) onShowToast("System access restricted or offline.", "error");
         } finally {
           if (isMounted) setLoading(false);
@@ -75,30 +77,30 @@ const AssignDeviceModal = ({ device, isOpen, onClose, onShowToast }) => {
     if (!selectedUser || !editableDeviceName.trim()) return;
     setIsSubmitting(true);
     
-    const result = await assignDevice(device.device_id, selectedUser.uid, editableDeviceName.trim());
-    
-    if (result.success) {
+    try {
+      await assignDevice(device.device_id, selectedUser.uid, editableDeviceName.trim());
       onShowToast("Assignment confirmed.", "success");
       handleClose();
-    } else {
-      onShowToast(result.error || "Update failed.", "error");
+    } catch (error) {
+      onShowToast(error.message || "Update failed.", "error");
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-slideUp border border-gray-100">
+    <ModalBackdrop>
+      <div className="bg-white rounded-[32px] shadow-2xl w-full max-w-md overflow-hidden animate-slideUp border border-gray-100">
         
         {/* Header - Using 8pt (p-6 = 24px) */}
-        <div className="p-6 border-b border-gray-100 bg-gray-50/50">
-          <h2 className="text-xl font-black text-gray-900 tracking-tight">Assign Device</h2>
-          <p className="text-xs font-medium text-gray-500 mt-1">Link this hardware to a verified user.</p>
+        <div className="p-8 border-b border-gray-100 bg-gray-50/50 text-center">
+          <h2 className="text-xl font-black text-gray-900 tracking-tight uppercase leading-none italic">Assign <span className="text-blue-600">Device</span></h2>
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-2">Link this hardware to a verified user.</p>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-8 space-y-6">
           {/* User Search Section */}
           <div className="space-y-2 relative">
             <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">
@@ -179,17 +181,17 @@ const AssignDeviceModal = ({ device, isOpen, onClose, onShowToast }) => {
         </div>
 
         {/* Footer - 8pt grid (p-6) */}
-        <div className="p-6 flex gap-3 mt-2">
+        <div className="p-8 flex gap-3 border-t border-gray-100 bg-gray-50/50">
           <button 
             onClick={handleClose} 
-            className="flex-1 h-12 rounded-xl font-bold text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all text-xs tracking-widest"
+            className="flex-1 h-12 rounded-xl font-bold text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all text-[10px] tracking-widest uppercase"
           >
             CANCEL
           </button>
           <button 
             disabled={!selectedUser || isSubmitting || !editableDeviceName.trim()}
             onClick={onAssignTrigger}
-            className={`flex-1 h-12 rounded-xl font-black text-xs tracking-widest transition-all ${
+            className={`flex-1 h-12 rounded-xl font-black text-[10px] tracking-widest transition-all uppercase ${
               selectedUser && !isSubmitting && editableDeviceName.trim()
                 ? 'bg-blue-600 text-white shadow-lg shadow-blue-200 hover:bg-blue-700 active:scale-95'
                 : 'bg-gray-100 text-gray-300 cursor-not-allowed'
@@ -199,7 +201,7 @@ const AssignDeviceModal = ({ device, isOpen, onClose, onShowToast }) => {
           </button>
         </div>
       </div>
-    </div>
+    </ModalBackdrop>
   );
 };
 

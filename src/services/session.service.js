@@ -1,31 +1,31 @@
 import { ref, push, serverTimestamp } from "firebase/database";
 import { db } from "../firebaseConfig";
+import { logger } from "../utils/logger";
 
 /**
- * Nagtatala ng login event sa Realtime Database ng Smart Aqua
- * @param {string} uid - Ang Firebase UID ng user
+ * Logs a login event to the Smart Aqua Realtime Database.
+ * @param {string} uid - The user's Firebase UID.
  */
 export const logLoginSession = async (uid) => {
   if (!uid) return;
 
-  const userAgent = navigator.userAgent; // Kukuha ng browser/OS profile
+  const userAgent = navigator.userAgent;
   const sessionLogsRef = ref(db, `/accounts/${uid}/loginHistory`);
 
   const newSession = {
     loginAt: serverTimestamp(),
-    device: parseUserAgent(userAgent), // Mas malinis na Device Name
-    userAgent: userAgent, // Buong Metadata para sa forensic audits
+    device: parseUserAgent(userAgent), 
+    userAgent: userAgent,
   };
 
   try {
     await push(sessionLogsRef, newSession);
   } catch (error) {
-    console.error("Failed to log session:", error);
-    // HINDI tayo nag-u-unhandled throw dito para iwas downtime sa login page
+    logger.error("Failed to log session:", error);
   }
 };
 
-// Helper: Upang gawing readable ang mahabang User Agent string
+// Helper: Makes the User Agent string more readable
 const parseUserAgent = (ua) => {
   if (ua.includes("Mobile") || ua.includes("Android") || ua.includes("iPhone")) return "Mobile Device";
   if (ua.includes("Windows")) return "Windows Desktop";

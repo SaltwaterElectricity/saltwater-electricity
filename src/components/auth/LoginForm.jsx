@@ -2,9 +2,10 @@ import { useState, memo } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 import { loginUser, getFullUserData } from "../../services/auth.service";
-import { PasswordInput } from "../passwordChange";
+import { PasswordInput } from "../password-change";
 import { SpinnerIcon} from "../ui";
 import ForgotPasswordModal from "./ForgotPasswordModal";
+import { appError } from "../../utils/appError";
 
 
 const LoginForm = () => {
@@ -36,7 +37,7 @@ const LoginForm = () => {
     const userData = await getFullUserData(uid);
 
     if (!userData) {
-      throw new Error("Account not found. Please contact your system administrator.");
+      throw new appError("Account not found. Please contact your system administrator.", true, "auth/user-not-found");
     }
 
     // 4. SECURITY CHECK: Forced Password Change logic

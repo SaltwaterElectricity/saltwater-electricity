@@ -1,24 +1,30 @@
 import { memo } from "react";
+import { createPortal } from "react-dom";
+
 /**
  * MODAL BACKDROP WRAPPER
  * Purpose: Dims the background, adds a blur effect, and centers the child modal.
- * Uses: fixed inset-0 for full-screen coverage and flex for perfect centering.
+ * Uses: createPortal to render at document.body level for global centering.
  */
 const ModalBackdrop = ({ children }) => {
-  return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-6 sm:p-0">
+  const content = (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-8 overflow-hidden pointer-events-none">
       {/* 1. The Dimmer & Blur Layer */}
       <div 
-        className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-500" 
+        className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-500 pointer-events-auto" 
         aria-hidden="true"
       />
 
-      {/* 2. The Content Layer (Your ForcePasswordChange Modal) */}
-      <div className="relative z-10 w-full max-w-md animate-in zoom-in-95 fade-in duration-300 ease-out">
-        {children}
+      {/* 2. The Content Layer */}
+      <div className="relative z-10 flex items-center justify-center w-full h-full pointer-events-none">
+        <div className="pointer-events-auto flex justify-center w-full max-w-full">
+          {children}
+        </div>
       </div>
     </div>
   );
+
+  return createPortal(content, document.body);
 };
 const MemoizedModalBackdrop = memo(ModalBackdrop);
 export default MemoizedModalBackdrop ;

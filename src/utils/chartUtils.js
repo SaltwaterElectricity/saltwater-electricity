@@ -4,6 +4,7 @@
  */
 import { formatStats } from './formatStats';
 import { SENSOR_CONFIG, EMPTY_STATE, APP_SETTINGS } from '../constants';
+import { logger } from './logger';
 
 // --- 1. HELPER: Data Sanitization ---
 /**
@@ -32,7 +33,7 @@ export const processLogsInWindows = (
 ) => {
   // Guard Clause: Prevent processing without essential identifiers
   if (!metricKey || !metricId) {
-    console.error("[Data Engine]: Missing required metricKey or metricId mapping.");
+    logger.error("[Data Engine]: Missing required metricKey or metricId mapping.");
     return { current: [], previous: [], currentValues: [], previousValues: [], lastTs: 0 };
   }
 
@@ -102,18 +103,18 @@ export const getFormattedStats = (windowData, metricId) => {
 
     // Logic: Validation against hardware physical limits
     if (config.max && stats.latest > config.max) {
-      console.warn(`[Hardware Alert]: ${metricId} reading (${stats.latest}) is physically impossible.`);
+      logger.warn(`[Hardware Alert]: ${metricId} reading (${stats.latest}) is physically impossible.`);
     }
 
     // Logic: Detection of stuck/stale sensor hardware
     const isStale = stats.count > 10 && stats.min === stats.max;
     if (isStale) {
-      console.warn(`[Hardware Alert]: ${metricId} sensor output is flatlining (stale).`);
+      logger.warn(`[Hardware Alert]: ${metricId} sensor output is flatlining (stale).`);
     }
 
     return stats;
   } catch (error) {
-    console.error("[Data Engine Error]: Stats orchestration failed.", error.message);
+    logger.error("[Data Engine Error]: Stats orchestration failed.", error.message);
     return EMPTY_STATE.stats;
   }
 };

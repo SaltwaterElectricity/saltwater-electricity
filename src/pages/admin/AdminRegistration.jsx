@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { cn } from "../../utils/cn";
+import { useNotification } from "../../context/useNotification"; 
 
 // Services
 import { registerUserAccount } from "../../services/auth.service";
@@ -11,7 +12,6 @@ import { ROUTES } from "../../constants/routes";
 import { RegistrationFields } from "../../components/auth/RegistrationField";
 import { RegistrationSummary } from "../../components/auth/RegistrationSummary";
 import { ConfirmationModal } from "../../components/modal/ConfirmationModal";
-import { Toast } from "../../components/ui";
 
 const AdminRegistration = () => {
   // STATES
@@ -20,13 +20,7 @@ const AdminRegistration = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState("");
   const navigate = useNavigate();
-
-  // TOAST STATE
-  const [toast, setToast] = useState({ 
-    isOpen: false, 
-    message: "", 
-    type: "success" 
-  });
+  const { showNotification } = useNotification();
   
   // FORM INITIALIZATION
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
@@ -39,11 +33,6 @@ const AdminRegistration = () => {
     }
   });
 
-  // HELPER: Show Toast
-  const showToast = (message, type = "success") => {
-    setToast({ isOpen: true, message, type });
-  };
-
    //PRE-SUBMIT
   const handlePreSubmit = (data) => {
     setServerError(""); 
@@ -52,12 +41,11 @@ const AdminRegistration = () => {
   };
 
   // FINAL CONFIRMATION
-
   const handleFinalConfirm = async () => {
     // A. INTEGRITY CHECK
     if (!tempData || !tempData.email) {
       setServerError("Critical Error: Registration data is missing. Please restart the process.");
-      showToast("Data integrity check failed", "error");
+      showNotification("Data integrity check failed", "error");
       setIsModalOpen(false);
       return;
     }
@@ -78,12 +66,12 @@ const AdminRegistration = () => {
       //SUCCESS NOTIFICATION & EMAIL FALLBACK
       if (!registrationResult.emailSent) {
         // Email failed pero ang account at database ay OK.
-        showToast(
+        showNotification(
           `Account created, but email failed. Temp Password: ${registrationResult.tempPassword}`, 
           "warning"
         );
       } else {
-        showToast(`Staff account for ${tempData.firstName} has been fully provisioned!`, "success");
+        showNotification(`Staff account for ${tempData.firstName} has been fully provisioned!`, "success");
       }
       
       //CLEANUP
@@ -95,7 +83,7 @@ const AdminRegistration = () => {
       //ERROR HANDLING
       const errorMsg = err.message || "An unexpected error occurred.";
       setServerError(errorMsg);
-      showToast(errorMsg, "error");
+      showNotification(errorMsg, "error");
       
       // Automatic scroll para agad makita ang error message sa taas ng form.
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -108,7 +96,7 @@ const AdminRegistration = () => {
   return (
     <div className="max-w-4xl mx-auto p-8 my-8 bg-white border border-slate-200 rounded-3xl shadow-sm relative">
       <button 
-        onClick={() => navigate(ROUTES.ADMIN_USER_MANAGEMENT)} // -1 para bumalik sa huling page o gamitin ang ROUTES.ADMIN_DASHBOARD
+        onClick={() => navigate(ROUTES.ADMIN_USER_MANAGEMENT)} 
         className="absolute top-8 right-8 z-10 p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-all"
         title="Back to Dashboard"
       >
@@ -142,7 +130,7 @@ const AdminRegistration = () => {
         <div className="pt-6 border-t border-slate-100 space-y-6">
           <button 
             type="submit"
-            disabled={Object.keys(errors).length > 0} // <--- Dagdag na safety check
+            disabled={Object.keys(errors).length > 0} 
             className={cn(
               "w-full font-bold py-4 rounded-2xl transition-all shadow-xl flex items-center justify-center gap-2",
               Object.keys(errors).length > 0 
@@ -150,7 +138,7 @@ const AdminRegistration = () => {
                 : "bg-slate-900 hover:bg-black text-white active:scale-[0.98]"
             )}
           >
-            Review & Provision Staff
+            Review & Register Staff
           </button>
 
           {/* FOOTER SECURITY NOTE */}
@@ -176,13 +164,6 @@ const AdminRegistration = () => {
         {/* INJECTED SUMMARY CONTENT */}
         <RegistrationSummary data={tempData} />
       </ConfirmationModal>
-
-      <Toast 
-        isOpen={toast.isOpen} 
-        message={toast.message} 
-        type={toast.type} 
-        onClose={() => setToast({ ...toast, isOpen: false })} 
-      />
     </div>
   );
 };

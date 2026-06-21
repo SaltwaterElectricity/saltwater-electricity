@@ -9,17 +9,20 @@ import {
 } from "lucide-react";
 
 // Services, Hooks, at Utils
-import { useUserSubscription } from "../../hooks/useUserSubscription";
+import { useUserSubscription } from "../../hooks";
 import { updateUserStatus, updateUserProfile, USER_STATUS } from "../../services/user.service"; 
 import { cn } from "../../utils/cn";
 import { ROUTES } from "../../constants/routes";
 
 // UI Components
-import Toast from "../../components/ui/Toast";
-import SpinnerIcon from "../../components/ui/SpinnerIcon";
-import { ConfirmationModal } from "../../components/modal/ConfirmationModal";
-import EditUserModal from "../../components/modal/EditUserModal";
-import { UserTable } from "../../components/ui/UserTable"; 
+import { 
+  Toast, 
+  ConfirmationModal, 
+  EditUserModal, 
+  UserTable, 
+  GlobalSearch,
+  UserTableSkeleton 
+} from "../../components";
 
 const UserManagement = ({ currentUserRole }) => {
   const navigate = useNavigate();
@@ -59,7 +62,7 @@ const UserManagement = ({ currentUserRole }) => {
     try {
       await updateUserStatus(selectedUser.uid, newStatus);
       triggerToast(`Account ${newStatus === USER_STATUS.ACTIVE ? 'restored' : 'disabled'} successfully.`);
-    } catch (err) {
+    } catch (_err) {
       triggerToast("Update failed. Please check your permissions.", "error");
     } finally {
       setIsModalOpen(false);
@@ -75,7 +78,7 @@ const UserManagement = ({ currentUserRole }) => {
       triggerToast("User profile updated successfully.");
       setIsEditModalOpen(false);
       setSelectedEditUser(null);
-    } catch (err) {
+    } catch (_err) {
       triggerToast("Failed to update profile. Try again.", "error");
     } finally {
       setIsEditSaving(false);
@@ -133,15 +136,15 @@ const UserManagement = ({ currentUserRole }) => {
         isLoading={isEditSaving}
       />
 
-      <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-        <div className="space-y-4">
+      <header className="glass-card p-6 md:p-8 rounded-[32px] flex flex-col xl:flex-row flex-wrap items-center justify-between gap-6 xl:gap-8">
+        <div className="flex flex-col sm:flex-row items-center sm:items-center gap-4 sm:gap-8 w-full xl:w-auto">
           {isSuperAdmin && (
-            <div className="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200">
+            <div className="inline-flex p-2 bg-slate-900/5 backdrop-blur-sm rounded-2xl border border-slate-200/50 shrink-0">
               <button
                 onClick={() => setViewMode("admin")}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all",
-                  activeView === "admin" ? "bg-white text-blue-600 shadow-sm" : "text-slate-500 hover:text-slate-700"
+                  "flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all",
+                  activeView === "admin" ? "bg-white text-blue-600 shadow-md ring-1 ring-slate-200" : "text-slate-500 hover:text-slate-700"
                 )}
               >
                 <ShieldCheck size={14} /> Admins
@@ -149,8 +152,8 @@ const UserManagement = ({ currentUserRole }) => {
               <button
                 onClick={() => setViewMode("user")}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all",
-                  activeView === "user" ? "bg-white text-blue-600 shadow-sm" : "text-slate-500 hover:text-slate-700"
+                  "flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all",
+                  activeView === "user" ? "bg-white text-blue-600 shadow-md ring-1 ring-slate-200" : "text-slate-500 hover:text-slate-700"
                 )}
               >
                 <Users size={14} /> Residents
@@ -158,38 +161,39 @@ const UserManagement = ({ currentUserRole }) => {
             </div>
           )}
 
-          <div>
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight uppercase">
+          <div className="space-y-1 min-w-0 flex-1">
+            <h1 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight uppercase flex items-center gap-3 truncate">
               {activeView} <span className="text-blue-600">Directory</span>
             </h1>
-            <p className="text-slate-500 text-sm font-medium">
+            <p className="text-slate-500 text-xs lg:text-sm font-medium truncate">
               Managing system profiles and role-based parameters.
             </p>
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center gap-3">
-          <input 
-            type="text" 
-            placeholder={`Search ${activeView}s...`} 
-            className="px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none w-full md:w-80 shadow-sm"
-            onChange={(e) => setSearchTerm(e.target.value)}
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full xl:w-auto flex-wrap">
+          <GlobalSearch 
+            searchTerm={searchTerm} 
+            setSearchTerm={setSearchTerm} 
+            isSearching={loading}
+            placeholder={`Search ${activeView}s...`}
+            className="w-full xl:w-80"
           />
 
-          <div className="flex items-center gap-2 w-full md:w-auto">
+          <div className="flex items-center gap-3 w-full sm:w-auto shrink-0">
             {isSuperAdmin && activeView === "admin" && (
               <button 
                 onClick={() => navigate(ROUTES.REGISTER_STAFF)}
-                className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-black uppercase tracking-widest rounded-xl shadow-lg transition-all active:scale-95"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white text-[11px] font-black uppercase tracking-[0.1em] rounded-2xl shadow-xl transition-all active:scale-95 whitespace-nowrap"
               >
-                <ShieldPlus size={16} /> Register Staff
+                <ShieldPlus size={16} /> Register Admin
               </button>
             )}
 
             {activeView === "user" && (
               <button 
                 onClick={() => navigate(ROUTES.REGISTER_USER)}
-                className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-black uppercase tracking-widest rounded-xl shadow-lg shadow-blue-900/20 transition-all active:scale-95"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-black uppercase tracking-[0.1em] rounded-2xl shadow-xl shadow-blue-900/20 transition-all active:scale-95 whitespace-nowrap"
               >
                 <UserPlus size={16} /> Register Resident
               </button>
@@ -199,12 +203,7 @@ const UserManagement = ({ currentUserRole }) => {
       </header>
 
       {loading && uids.length === 0 ? (
-        <div className="min-h-[400px] flex flex-col items-center justify-center bg-slate-50/50 rounded-3xl border border-dashed border-slate-200 animate-in fade-in duration-500">
-          <SpinnerIcon className="w-10 h-10 text-blue-600 animate-spin mb-4" />
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-            Syncing SmartAqua Records...
-          </p>
-        </div>
+        <UserTableSkeleton />
       ) : (
         <UserTable 
           uids={uids} 

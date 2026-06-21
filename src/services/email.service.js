@@ -1,4 +1,6 @@
 import emailjs from '@emailjs/browser';
+import { appError } from "../utils/appError";
+import { logger } from "../utils/logger";
 
 //CONFIGURATION
 const CONFIG = {
@@ -14,7 +16,7 @@ const CONFIG = {
 export const sendOTPEmail = async (email, otpCode) => {
   // SAFETY CHECK
   if (!email || !otpCode) {
-    throw new Error("Validation Error: Missing recipient or reset code.");
+    throw new appError("Validation Error: Missing recipient or reset code.", true, "email/invalid-parameters");
   }
 
   // Kinakalkula ang expiry time (15 minutes mula ngayon)
@@ -34,11 +36,10 @@ export const sendOTPEmail = async (email, otpCode) => {
     const { SERVICE_ID, OTP_TEMPLATE, PUBLIC_KEY } = CONFIG;
     await emailjs.send(SERVICE_ID, OTP_TEMPLATE, templateParams, PUBLIC_KEY);
 
-    
     return { success: true };
-  } catch (error) {
+  } catch (_error) {
     // I-mask ang error para sa security
-    throw new Error("Failed to deliver the security code. Please try again later.");
+    throw new appError("Failed to deliver the security code. Please try again later.", true, "email/delivery-failed");
   }
 };
 
@@ -46,7 +47,7 @@ export const sendOTPEmail = async (email, otpCode) => {
 export const sendOnboardingEmail = async (userData, autoPassword) => {
   // SAFETY CHECK
   if (!userData?.email || !autoPassword) {
-    throw new Error("Validation Error: Missing user data or generated password.");
+    throw new appError("Validation Error: Missing user data or generated password.", true, "email/invalid-parameters");
   }
 
   const templateParams = {
@@ -56,7 +57,7 @@ export const sendOnboardingEmail = async (userData, autoPassword) => {
     defaultPassword: autoPassword,
     system_role: userData.role || "Staff",
     website_link: "https://smartaqua-monitoring.web.app",
-    company_email: COMPANY_EMAIL
+    company_email: CONFIG.COMPANY_EMAIL
   };
 
   try {
@@ -71,6 +72,8 @@ export const sendOnboardingEmail = async (userData, autoPassword) => {
 
     return { success: true, emailSent: true };
   } catch (error) {
+    // Para sa onboarding, hindi tayo nag-u-unhandled throw para ma-proceed pa rin ang account creation
+    logger.error("[Email Service]: Onboarding delivery failed.", error);
     return { success: true, emailSent: false };
   }
 };
