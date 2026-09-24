@@ -57,8 +57,7 @@ const UserManagementFilters = memo(
               onChange={(e) => setLocationFilter(e.target.value)}
             >
               <option value="Location">All Locations</option>
-              <option value="San Andres">Pulo 1</option>
-              <option value="Unisan">Pulo 2</option>
+              <option value="San Andres">San Andres</option>
             </select>
             <ChevronDown
               className="absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none"
