@@ -1,10 +1,12 @@
 import { initFirebaseAdmin } from "./_utils/firebase.js";
 import { sendSuccess, sendError, handleOptions } from "./_utils/response.js";
-import sgMail from "@sendgrid/mail";
+import crypto from "crypto";
+import __vite__cjsImport2__sendgrid_mail from "/node_modules/.vite/deps/@sendgrid_mail.js?v=2017ad62"; const sgMail = __vite__cjsImport2__sendgrid_mail.__esModule ? __vite__cjsImport2__sendgrid_mail.default : __vite__cjsImport2__sendgrid_mail;
 
 /**
  * Vercel Serverless Function: generateOTP
  * Securely generates an OTP for password reset.
+ * Remediation: Uses cryptographically strong transaction tokens and binds to UID.
  */
 export default async function handler(req, res) {
   if (handleOptions(req, res)) return;
@@ -25,7 +27,6 @@ export default async function handler(req, res) {
   try {
     const { auth, db } = initFirebaseAdmin();
 
-    // Set SendGrid key
     const sgKey = process.env.SENDGRID_API_KEY;
     const senderEmail = process.env.SENDGRID_SENDER_EMAIL;
 
@@ -39,28 +40,30 @@ export default async function handler(req, res) {
     const OTP_EXPIRY_MS = 900000; // 15 minutes
 
     // Enumeration Prevention Protocol (EPP)
+    let userRecord;
     try {
-      await auth.getUserByEmail(email);
+      userRecord = await auth.getUserByEmail(email);
     } catch (error) {
       if (error.code === "auth/user-not-found") {
-        // Return success even if user not found to prevent identity discovery
         return sendSuccess(res);
       }
       throw error;
     }
 
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-    const trackingId = email
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-zA-Z0-9]/g, "");
-    const otpRef = db.ref(`otp-requests/${trackingId}`);
+    
+    // REMEDIATION: Use cryptographically strong random UUID instead of deterministic email
+    const transactionToken = crypto.randomUUID();
+    const otpRef = db.ref(`otp-requests/${transactionToken}`);
 
     await otpRef.set({
-      email,
+      uid: userRecord.uid, // Bind to authoritative UID
+      email: email.toLowerCase().trim(),
       code: otpCode,
       createdAt: new Date().toISOString(),
       expiresAt: Date.now() + OTP_EXPIRY_MS,
+      attempts: 0,
+      status: 'ACTIVE', // Explicit state machine: ACTIVE, CONSUMED, INVALIDATED
     });
 
     const msg = {
@@ -83,7 +86,9 @@ export default async function handler(req, res) {
     };
 
     await sgMail.send(msg);
-    return sendSuccess(res);
+    
+    // Return the token to the client so they can use it in verifyOTP/resetPassword
+    return sendSuccess(res, { transactionToken });
   } catch (error) {
     return sendError(res, error, 500, "auth/generate-otp-failed");
   }

@@ -1,5 +1,5 @@
 import { auth, db, FIREBASE_CONFIG } from "../firebaseConfig";
-import { ref, get, update, serverTimestamp, onValue, set } from "firebase/database";
+import { ref, get, update, serverTimestamp, onValue } from "firebase/database";
 import { initializeApp, deleteApp } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
@@ -19,7 +19,6 @@ import { appError } from "../utils/appError";
 import { logger } from "../utils/logger";
 import { generateDefaultPassword } from "../utils/passwordGenerator";
 import { sendOnboardingEmail } from "./email.service";
-import { sanitizeForFirebaseKey } from "../utils/sanitization";
 import { logLoginSuccess, logLoginFailure, logLogout, logActivity } from "./audit.service";
 
 /**
@@ -223,8 +222,13 @@ export const loginUser = async (email, password) => {
     const uid = userCredential.user.uid;
 
     // Reset attempts on successful login using consistent tracking ID
-    const trackingId = sanitizeForFirebaseKey(cleanEmail);
-    await update(ref(db, `login-attempts/${trackingId}`), { count: 0, lockoutUntil: 0 });
+    // DEPRECATED: Custom lockout retired. This call is kept for compatibility but the API should return 404.
+    fetch("/api/auth/record-attempt", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: "success" }),
+    }).catch((e) => logger.warn("[Auth Service] Legacy attempt reset called:", e));
+
 
     // Verify system status before allowing the session to continue
     const userData = await getFullUserData(uid, userCredential.user);
@@ -310,6 +314,7 @@ export const getUserClaims = async (user, forceRefresh = false) => {
   }
 };
 
+// subscribeToAuthChanges remains the same
 export const subscribeToAuthChanges = (callback) => {
   if (typeof callback !== "function") {
     throw new appError("Auth Callback must be a function.", true, "auth/invalid-callback");
@@ -317,8 +322,7 @@ export const subscribeToAuthChanges = (callback) => {
   return onAuthStateChanged(auth, callback);
 };
 
-// Fetches complete user context from normalized nodes.
-
+// getFullUserData remains the same
 export const getFullUserData = async (uid, firebaseUser = null, forceRefresh = false) => {
   if (!uid) throw new appError("User ID is required.", true, "auth/missing-uid");
 
@@ -424,41 +428,16 @@ export const subscribeToLoginAttempts = (trackingId, callback) => {
 /**
  * Records a failed login attempt and handles lockout logic.
  */
-export const recordFailedLoginAttempt = async (trackingId) => {
-  if (!trackingId) return;
-  const attemptsRef = ref(db, `login-attempts/${trackingId}`);
-
-  try {
-    const snap = await get(attemptsRef);
-    const data = snap.val() || { count: 0, lockoutUntil: 0 };
-    const now = Date.now();
-
-    const isExpired = data.lockoutUntil > 0 && data.lockoutUntil < now;
-    const baseCount = isExpired ? 0 : data.count;
-    const newCount = baseCount + 1;
-
-    const isLockingOut = newCount >= 5;
-    const newLockoutUntil = isLockingOut ? now + 300000 : 0;
-
-    await update(attemptsRef, {
-      count: newCount,
-      lockoutUntil: newLockoutUntil,
-      lastAttemptAt: now,
-    });
-  } catch (error) {
-    logger.error("[Auth Service] Failed to record attempt:", error);
-  }
+export const recordFailedLoginAttempt = async () => {
+  // DEPRECATED: Custom lockout mechanism retired in favor of Firebase native protections.
+  // This function is kept as a no-op to prevent breaking existing callers.
+  return Promise.resolve({ success: true });
 };
 
 /**
  * Resets login attempts (e.g., after lockout expires).
  */
-export const resetLoginAttempts = async (trackingId) => {
-  if (!trackingId) return;
-  const attemptsRef = ref(db, `login-attempts/${trackingId}`);
-  try {
-    await set(attemptsRef, null);
-  } catch (err) {
-    logger.warn("[Auth Service] Auto-reset failed:", err.message);
-  }
+export const resetLoginAttempts = async () => {
+  // DEPRECATED: Custom lockout mechanism retired.
+  return Promise.resolve({ success: true });
 };

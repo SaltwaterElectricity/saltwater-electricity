@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback } from "react";
 import { Info } from "lucide-react";
 import { useDevices, useAssignments, useUserSubscription } from "../../hooks";
 import { MonitorSkeleton } from "../../components/skeleton";
+import { validateTelemetry } from "../../utils/validation";
 import {
   MonitorHeader,
   MonitorStats,
@@ -38,7 +39,8 @@ const AdminRealTimeMonitor = () => {
     return devices.map((device) => {
       const assignment = assignments[device.device_id];
       const resident = users.find((u) => u.id === assignment?.userId);
-      const tel = telemetry?.[device.device_id] || {};
+      const tel = validateTelemetry(telemetry?.[device.device_id] || {});
+
 
       const isOnline = tel.timestamp && now - tel.timestamp < 300000; // 5 mins threshold
 

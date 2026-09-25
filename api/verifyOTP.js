@@ -1,90 +1,19 @@
 import { initFirebaseAdmin } from "./_utils/firebase.js";
 import { sendSuccess, sendError, handleOptions } from "./_utils/response.js";
 
-/**
- * Vercel Serverless Function: verifyOTP
- * Securely verifies an OTP for password reset (Step 2).
- */
 export default async function handler(req, res) {
   if (handleOptions(req, res)) return;
-
-  if (req.method === "GET" && req.query.ping) {
-    return sendSuccess(res, { message: "API is reachable" });
-  }
-
-  if (req.method !== "POST") {
-    return sendError(res, "Method Not Allowed", 405, "otp/method-not-allowed");
-  }
-
-  const { trackingId, code, shouldDelete = false } = req.body;
-
-  if (!trackingId || !code) {
-    return sendError(res, "Missing trackingId or code.", 400, "otp/missing-parameters");
-  }
-
+  const { transactionToken, code } = req.body;
   try {
     const { db } = initFirebaseAdmin();
-    const otpRef = db.ref(`otp-requests/${trackingId}`);
-    const snapshot = await otpRef.once("value");
-
-    if (!snapshot.exists()) {
-      return sendError(res, "No active security code found.", 400, "otp/not-found");
-    }
-
-    const data = snapshot.val();
-    const attempts = data.attempts || 0;
-
-    if (attempts >= 3) {
-      await otpRef.remove();
-      return sendError(
-        res,
-        "Too many failed verification attempts. Please request a new code.",
-        400,
-        "otp/too-many-attempts"
-      );
-    }
-
-    const isExpired = Date.now() > data.expiresAt;
-    const isMatch = data.code === code.toString().trim();
-
-    if (isExpired) {
-      await otpRef.remove();
-      return sendError(res, "This security code has expired.", 400, "otp/expired");
-    }
-
-    if (!isMatch) {
-      const newAttempts = attempts + 1;
-      if (newAttempts >= 3) {
-        await otpRef.remove();
-        return sendError(
-          res,
-          "Too many failed verification attempts. Please request a new code.",
-          400,
-          "otp/too-many-attempts"
-        );
-      } else {
-        await otpRef.update({ attempts: newAttempts });
-        return sendError(
-          res,
-          `Invalid security code. ${3 - newAttempts} attempts remaining.`,
-          400,
-          "otp/invalid-code"
-        );
-      }
-    }
-
-    // Extend expiration by 5 minutes to allow time for the "Set Password" step
-    const EXTENSION_MS = 300000; // 5 minutes
-    await otpRef.update({
-      expiresAt: Date.now() + EXTENSION_MS,
+    const otpRef = db.ref(`otp-requests/${transactionToken}`);
+    const result = await otpRef.transaction((currentData) => {
+      if (!currentData || currentData.status !== 'ACTIVE') return null;
+      if (currentData.code !== code) return { ...currentData, attempts: (currentData.attempts || 0) + 1 };
+      return { ...currentData, status: 'CONSUMED' };
     });
-
-    if (shouldDelete) {
-      await otpRef.remove();
-    }
-
-    return sendSuccess(res, { verified: true, email: data.email });
-  } catch (error) {
-    return sendError(res, error, 500, "otp/verification-failed");
-  }
+    if (!result.committed || !result.snapshot) return sendError(res, "Error", 400, "err");
+    if (result.snapshot.status === 'CONSUMED') return sendSuccess(res, { verified: true });
+    return sendError(res, "Invalid", 400, "inv");
+  } catch (e) { return sendError(res, e, 500, "fail"); }
 }

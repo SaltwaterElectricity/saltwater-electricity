@@ -74,7 +74,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["api/**/*.js", "vite.config.js", "eslint.config.js"],
+    files: ["api/**/*.js", "vite.config.js", "eslint.config.js", "tests/**/*.js", "playwright.config.js"],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -93,6 +93,13 @@ export default defineConfig([
     },
     rules: {
       ...cypress.configs.recommended.rules,
+    },
+  },
+  {
+    files: ["tests/**/*.js", "tests/**/*.cjs"],
+    rules: {
+      "no-console": "off",
+      "no-unused-vars": "warn",
     },
   },
   {

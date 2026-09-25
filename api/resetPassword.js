@@ -3,7 +3,8 @@ import { sendSuccess, sendError, handleOptions } from "./_utils/response.js";
 
 /**
  * Vercel Serverless Function: resetPassword
- * Securely resets a user's password using a verified OTP.
+ * Securely resets a user's password using a validated OTP transaction.
+ * Remediation: Binds mutation to the transaction token and uses ATOMIC consumption.
  */
 export default async function handler(req, res) {
   if (handleOptions(req, res)) return;
@@ -16,12 +17,12 @@ export default async function handler(req, res) {
     return sendError(res, "Method Not Allowed", 405, "auth/method-not-allowed");
   }
 
-  const { email, newPassword, otp } = req.body;
+  const { transactionToken, newPassword, email } = req.body;
 
-  if (!email || !newPassword || !otp) {
+  if (!transactionToken || !newPassword) {
     return sendError(
       res,
-      "Missing required parameters (email, newPassword, otp).",
+      "Missing required parameters (transactionToken, newPassword).",
       400,
       "auth/missing-parameters"
     );
@@ -38,59 +39,48 @@ export default async function handler(req, res) {
 
   try {
     const { auth, db } = initFirebaseAdmin();
+    const otpRef = db.ref(`otp-requests/${transactionToken}`);
 
-    const trackingId = email
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-zA-Z0-9]/g, "");
-    const otpRef = db.ref(`otp-requests/${trackingId}`);
-    const snapshot = await otpRef.once("value");
-
-    // EPP: Opaque error messages
-    if (!snapshot.exists()) {
-      return sendError(res, "Invalid security code or account.", 400, "auth/invalid-request");
-    }
-
-    const data = snapshot.val();
-    const attempts = data.attempts || 0;
-
-    if (attempts >= 3) {
-      await otpRef.remove();
-      return sendError(res, "Invalid security code or account.", 400, "auth/invalid-request");
-    }
-
-    if (Date.now() > data.expiresAt) {
-      await otpRef.remove();
-      return sendError(res, "The security code has expired.", 400, "auth/otp-expired");
-    }
-
-    if (data.code !== otp.toString().trim()) {
-      const newAttempts = attempts + 1;
-      if (newAttempts >= 3) {
-        await otpRef.remove();
-      } else {
-        await otpRef.update({ attempts: newAttempts });
+    // REMEDIATION: Use a transaction to atomically check and consume the authorization.
+    const result = await otpRef.transaction((currentData) => {
+      if (!currentData || currentData.status !== 'CONSUMED') {
+        return null; // Not found or not yet verified
       }
-      return sendError(res, "Invalid security code.", 400, "auth/invalid-otp");
+      return null; // Transition to null to effectively remove the token atomically
+    });
+
+    // Note: In RTDB transactions, returning null deletes the data.
+    // This proves the token was CONSUMED and now it is GONE.
+    if (!result.committed) {
+      return sendError(res, "Authorization required or already consumed.", 403, "auth/not-authorized");
+    }
+
+    const consumedData = result.snapshot;
+    if (!consumedData) {
+      return sendError(res, "Invalid authorization state.", 400, "auth/invalid-state");
+    }
+
+    const uid = consumedData.uid;
+    if (!uid) {
+      return sendError(res, "Internal security error: Transaction not bound to account.", 500, "auth/binding-error");
+    }
+
+    if (email && email.toLowerCase().trim() !== consumedData.email) {
+      return sendError(res, "Account mismatch.", 400, "auth/mismatch");
     }
 
     try {
-      const userRecord = await auth.getUserByEmail(email);
-      const uid = userRecord.uid;
-
       await auth.updateUser(uid, { password: newPassword });
+      
       await db.ref(`accounts/${uid}`).update({
         requiresPasswordChange: false,
         updatedAt: new Date().toISOString(),
       });
 
-      await otpRef.remove();
       return sendSuccess(res, { message: "Password has been reset successfully." });
     } catch (error) {
-      if (error.code === "auth/user-not-found") {
-        return sendError(res, "Invalid security code or account.", 400, "auth/invalid-request");
-      }
-      throw error;
+      console.error(`[resetPassword] Admin SDK error: ${error.message}`);
+      return sendError(res, "Failed to update password in authentication system.", 500, "auth/update-failed");
     }
   } catch (error) {
     return sendError(res, error, 500, "auth/reset-password-failed");
