@@ -1,7 +1,7 @@
 import { initFirebaseAdmin } from "./_utils/firebase.js";
 import { sendSuccess, sendError, handleOptions } from "./_utils/response.js";
 import crypto from "crypto";
-import __vite__cjsImport2__sendgrid_mail from "/node_modules/.vite/deps/@sendgrid_mail.js?v=2017ad62"; const sgMail = __vite__cjsImport2__sendgrid_mail.__esModule ? __vite__cjsImport2__sendgrid_mail.default : __vite__cjsImport2__sendgrid_mail;
+import sgMail from "@sendgrid/mail";
 
 /**
  * Vercel Serverless Function: generateOTP
@@ -50,8 +50,8 @@ export default async function handler(req, res) {
       throw error;
     }
 
-    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-    
+    const otpCode = crypto.randomInt(100000, 999999).toString();
+
     // REMEDIATION: Use cryptographically strong random UUID instead of deterministic email
     const transactionToken = crypto.randomUUID();
     const otpRef = db.ref(`otp-requests/${transactionToken}`);
@@ -63,7 +63,7 @@ export default async function handler(req, res) {
       createdAt: new Date().toISOString(),
       expiresAt: Date.now() + OTP_EXPIRY_MS,
       attempts: 0,
-      status: 'ACTIVE', // Explicit state machine: ACTIVE, CONSUMED, INVALIDATED
+      status: "ACTIVE", // Explicit state machine: ACTIVE, CONSUMED, INVALIDATED
     });
 
     const msg = {
@@ -86,10 +86,11 @@ export default async function handler(req, res) {
     };
 
     await sgMail.send(msg);
-    
+
     // Return the token to the client so they can use it in verifyOTP/resetPassword
     return sendSuccess(res, { transactionToken });
   } catch (error) {
+    console.error("[generateOTP Error]:", error);
     return sendError(res, error, 500, "auth/generate-otp-failed");
   }
 }
