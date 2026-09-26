@@ -9,6 +9,8 @@ import sgMail from "@sendgrid/mail";
  * Remediation: Uses cryptographically strong transaction tokens and binds to UID.
  */
 export default async function handler(req, res) {
+  // Use console.error for logs to avoid lint errors in this diagnostic phase
+  console.error("[generateOTP] handler-entered");
   if (handleOptions(req, res)) return;
 
   if (req.method === "GET" && req.query.ping) {
@@ -26,6 +28,7 @@ export default async function handler(req, res) {
 
   try {
     const { auth, db } = initFirebaseAdmin();
+    console.error("[generateOTP] firebase-init-success");
 
     const sgKey = process.env.SENDGRID_API_KEY;
     const senderEmail = process.env.SENDGRID_SENDER_EMAIL;
@@ -36,6 +39,7 @@ export default async function handler(req, res) {
     }
 
     sgMail.setApiKey(sgKey);
+    console.error("[generateOTP] sendgrid-init-success");
 
     const OTP_EXPIRY_MS = 900000; // 15 minutes
 
@@ -43,6 +47,7 @@ export default async function handler(req, res) {
     let userRecord;
     try {
       userRecord = await auth.getUserByEmail(email);
+      console.error("[generateOTP] auth-success");
     } catch (error) {
       if (error.code === "auth/user-not-found") {
         return sendSuccess(res);
@@ -63,8 +68,9 @@ export default async function handler(req, res) {
       createdAt: new Date().toISOString(),
       expiresAt: Date.now() + OTP_EXPIRY_MS,
       attempts: 0,
-      status: "ACTIVE", // Explicit state machine: ACTIVE, CONSUMED, INVALIDATED
+      status: "ACTIVE", // Explicit state machine: ACTIVE, CONSUMED, INVALIDATED,
     });
+    console.error("[generateOTP] rtdb-success");
 
     const msg = {
       to: email,
@@ -85,7 +91,9 @@ export default async function handler(req, res) {
       `,
     };
 
+    console.error("[generateOTP] send-start");
     await sgMail.send(msg);
+    console.error("[generateOTP] send-complete");
 
     // Return the token to the client so they can use it in verifyOTP/resetPassword
     return sendSuccess(res, { transactionToken });
