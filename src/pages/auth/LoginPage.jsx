@@ -15,13 +15,22 @@ const LoginPage = () => {
   // 🛡️ SECURITY REDIRECT
   useEffect(() => {
     // eslint-disable-next-line no-console
-    console.log(`[ROUTE TRACE] LoginPage-effect-evaluating: currentUser=${!!currentUser}, successData=${!!successData}, isTransitioning=${isTransitioning}`);
+    console.log(`[LIFECYCLE] LoginPage-effect-evaluating: currentUser=${!!currentUser}, successData=${!!successData}, isTransitioning=${isTransitioning}`);
     if (currentUser && !successData && !isTransitioning) {
       // eslint-disable-next-line no-console
-      console.log(`[ROUTE TRACE] LoginPage-redirecting-to-root`);
+      console.log(`[LIFECYCLE] LoginPage-redirecting-to-root`);
       navigate("/", { replace: true });
     }
   }, [currentUser, successData, isTransitioning, navigate]);
+
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log(`[LIFECYCLE] LoginPage-mounted`);
+    return () => {
+      // eslint-disable-next-line no-console
+      console.log(`[LIFECYCLE] LoginPage-unmounted`);
+    };
+  }, []);
 
   const handleLoginStart = useCallback(() => {
     setIsTransitioning(true);

@@ -118,9 +118,12 @@ export const AuthProvider = ({ children }) => {
 
   // Memoized Helpers for App.jsx and ProtectedRoute
   const value = useMemo(() => {
+    // eslint-disable-next-line no-console
+    console.log(`[LIFECYCLE] AuthContext-value-recalculated: currentUser=${!!currentUser}, user=${!!user}, loading=${loading}`);
     // Determine authoritative status
     const status = user?.status || null;
     const role = user?.role || ROLES.RESIDENT;
+
 
     return {
       currentUser,
