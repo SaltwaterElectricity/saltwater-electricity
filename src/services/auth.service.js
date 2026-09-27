@@ -328,7 +328,6 @@ export const subscribeToAuthChanges = (callback) => {
     console.log(`[AUTH TRACE] firebase-listener-registration-completed`);
     return unsubscribe;
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(`[AUTH TRACE] firebase-listener-registration-error: ${error.message}`);
     throw error;
   }
@@ -415,7 +414,6 @@ export const getFullUserData = async (uid, firebaseUser = null, forceRefresh = f
     console.log(`[auth-trace] get-full-user-data-success: ${JSON.stringify(result)}`);
     return result;
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(`[auth-trace] get-full-user-data-error: ${error.message}`);
     if (error instanceof appError) throw error;
     const errorCode = error.code || "default";

@@ -30,14 +30,28 @@ import PrivateRoute from "./PrivateRoute";
  * 2. If logged in: Redirect to role-specific landing page (e.g., Dashboard).
  */
 const RootRedirect = ({ user, role }) => {
-  if (!user) return <LandingPage />;
-  if (!role) return <LandingPage />; // Fallback if role is loading
+  // eslint-disable-next-line no-console
+  console.log(`[ROUTE TRACE] RootRedirect-evaluating: user=${!!user}, role=${role}`);
+  if (!user) {
+    // eslint-disable-next-line no-console
+    console.log(`[ROUTE TRACE] RootRedirect-redirect: LandingPage (no user)`);
+    return <LandingPage />;
+  }
+  if (!role) {
+    // eslint-disable-next-line no-console
+    console.log(`[ROUTE TRACE] RootRedirect-redirect: LandingPage (no role)`);
+    return <LandingPage />; // Fallback if role is loading
+  }
 
   // If we have a role, redirect to the authorized landing page
   if (ROLE_LANDING_PAGES[role]) {
+    // eslint-disable-next-line no-console
+    console.log(`[ROUTE TRACE] RootRedirect-redirect: ${ROLE_LANDING_PAGES[role]} (role=${role})`);
     return <Navigate to={ROLE_LANDING_PAGES[role]} replace />;
   }
 
+  // eslint-disable-next-line no-console
+  console.log(`[ROUTE TRACE] RootRedirect-redirect: NotFound (role=${role} not in map)`);
   return <NotFound />;
 };
 

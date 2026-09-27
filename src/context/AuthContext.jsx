@@ -39,7 +39,6 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(`[AUTH TRACE][${traceId}] sync-user-context-error: ${error.message}`);
       logger.error("Auth Sync Error:", error);
       // SAFETY: If sync fails (e.g. token expired), clear states to trigger fallback redirects
@@ -66,7 +65,9 @@ export const AuthProvider = ({ children }) => {
     console.log(`[AUTH TRACE] AuthContext-effect-entered`);
     const unsubscribeAuth = subscribeToAuthChanges((firebaseUser) => {
       // eslint-disable-next-line no-console
-      console.log(`[AUTH TRACE] onAuthStateChanged-fired: ${firebaseUser ? firebaseUser.uid : 'null'}`);
+      console.log(
+        `[AUTH TRACE] onAuthStateChanged-fired: ${firebaseUser ? firebaseUser.uid : "null"}`
+      );
       // If user logs in (transition from null to user), clear expiration flag
       if (firebaseUser) {
         setIsSessionExpired(false);

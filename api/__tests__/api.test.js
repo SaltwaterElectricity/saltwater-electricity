@@ -49,7 +49,7 @@ vi.mock("../_utils/firebase.js", () => ({
 
 // Mock SendGrid
 vi.mock("@sendgrid/mail", () => {
-  const send = vi.fn().mockResolvedValue([ { status: 202 } ]);
+  const send = vi.fn().mockResolvedValue([{ status: 202 }]);
   const setApiKey = vi.fn();
   return {
     default: {

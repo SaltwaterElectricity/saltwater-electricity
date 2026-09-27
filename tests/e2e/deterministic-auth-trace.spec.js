@@ -1,15 +1,17 @@
 import { test, expect } from "@playwright/test";
 
 async function traceStep(label, data) {
-  console.log(`[auth-trace] ${label}: ${typeof data === 'object' ? JSON.stringify(data) : data}`);
+  console.log(`[auth-trace] ${label}: ${typeof data === "object" ? JSON.stringify(data) : data}`);
 }
 
 test("Deterministic SuperAdmin Auth Trace", async ({ page }) => {
   console.log("\n--- START DETERMINISTIC TRACE: SuperAdmin ---");
-  
+
   await page.route("**/*", async (route) => {
     const url = route.request().url();
-    if (url.includes("saltwater-electricity-git-e8acf7-saltwaterelectricitys-projects.vercel.app")) {
+    if (
+      url.includes("saltwater-electricity-git-e8acf7-saltwaterelectricitys-projects.vercel.app")
+    ) {
       const headers = {
         ...route.request().headers(),
         "x-vercel-protection-bypass": process.env.VERCEL_PROTECTION_BYPASS_TOKEN || "",
@@ -24,7 +26,7 @@ test("Deterministic SuperAdmin Auth Trace", async ({ page }) => {
   await page.goto("/login");
   await traceStep("final-url", page.url());
   await traceStep("page-title", await page.title());
-  const loginFormVisible = await page.locator('form').isVisible();
+  const loginFormVisible = await page.locator("form").isVisible();
   await traceStep("login-form-visible", loginFormVisible);
   const emailVisible = await page.locator('input[placeholder="name@example.com"]').isVisible();
   await traceStep("email-field-visible", emailVisible);
@@ -34,8 +36,8 @@ test("Deterministic SuperAdmin Auth Trace", async ({ page }) => {
   await traceStep("login-button-enabled", btnEnabled);
 
   // Capture console errors
-  page.on('console', msg => {
-    if (msg.type() === 'error') {
+  page.on("console", (msg) => {
+    if (msg.type() === "error") {
       console.log(`[auth-trace] console-error: ${msg.text()}`);
     }
   });
@@ -43,15 +45,20 @@ test("Deterministic SuperAdmin Auth Trace", async ({ page }) => {
   // 2. Login submission
   console.log("Submitting Login...");
   await traceStep("login-submit", "clicking button");
-  
-  // Intercept Firebase requests
-  const firebaseRequestPromise = page.waitForRequest(req => 
-    req.url().includes("identitytoolkit.googleapis.com"), 
-    { timeout: 15000 }
-  ).catch(() => null);
 
-  await page.locator('input[placeholder="name@example.com"]').fill(process.env.TEST_USER_SUPERADMIN_EMAIL);
-  await page.locator('input[placeholder="••••••••"]').fill(process.env.TEST_USER_SUPERADMIN_PASSWORD);
+  // Intercept Firebase requests
+  const firebaseRequestPromise = page
+    .waitForRequest((req) => req.url().includes("identitytoolkit.googleapis.com"), {
+      timeout: 15000,
+    })
+    .catch(() => null);
+
+  await page
+    .locator('input[placeholder="name@example.com"]')
+    .fill(process.env.TEST_USER_SUPERADMIN_EMAIL);
+  await page
+    .locator('input[placeholder="••••••••"]')
+    .fill(process.env.TEST_USER_SUPERADMIN_PASSWORD);
   await page.click('button:has-text("LOGIN NOW")');
 
   const firebaseReq = await firebaseRequestPromise;
@@ -75,8 +82,8 @@ test("Deterministic SuperAdmin Auth Trace", async ({ page }) => {
   try {
     // Wait for redirect or failure message
     await Promise.race([
-      page.waitForURL(url => !url.href().includes('/login'), { timeout: 15000 }),
-      page.waitForSelector('text=Invalid email or password', { timeout: 15000 })
+      page.waitForURL((url) => !url.href().includes("/login"), { timeout: 15000 }),
+      page.waitForSelector("text=Invalid email or password", { timeout: 15000 }),
     ]);
   } catch (e) {
     await traceStep("navigation-timeout", "true");
@@ -96,7 +103,7 @@ test("Deterministic SuperAdmin Auth Trace", async ({ page }) => {
     });
     await traceStep("runtime-state", state);
   } else {
-    const isInvalidMsg = await page.locator('text=Invalid email or password').isVisible();
+    const isInvalidMsg = await page.locator("text=Invalid email or password").isVisible();
     await traceStep("invalid-credentials-msg", isInvalidMsg);
   }
 

@@ -22,7 +22,7 @@ export default defineConfig({
     screenshot: "only-on-failure",
     video: "retain-on-failure",
   },
-  globalSetup: './tests/global-setup.cjs',
+  globalSetup: "./tests/global-setup.cjs",
   projects: [
     {
       name: "chromium",

@@ -101,7 +101,9 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
           await expect(page).toHaveURL(/\/login|\//, { timeout: 10000 });
 
           await performLogin(page, user.email, user.password);
-          await expect(page.locator('text=Invalid email or password')).toBeVisible({ timeout: 10000 });
+          await expect(page.locator("text=Invalid email or password")).toBeVisible({
+            timeout: 10000,
+          });
           console.log(`✅ ${roleKey}: Old password rejected.`);
         } else {
           await expect(page).toHaveURL(user.expectedRoute, { timeout: 15000 });
@@ -127,14 +129,14 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
     await performLogin(page, TEST_USERS.residentA.email, TEST_USERS.residentA.password);
 
     if (TEST_USERS.residentA.requiresPasswordChange) {
-        await page.locator('input[name="newPassword"]').fill(TEST_USERS.residentA.tempPassword);
-        await page.locator('input[name="confirmPassword"]').fill(TEST_USERS.residentA.tempPassword);
-        await page.click('button:has-text("Secure Account & Continue")');
+      await page.locator('input[name="newPassword"]').fill(TEST_USERS.residentA.tempPassword);
+      await page.locator('input[name="confirmPassword"]').fill(TEST_USERS.residentA.tempPassword);
+      await page.click('button:has-text("Secure Account & Continue")');
     }
 
     await page.goto("/admin/user-management");
     // Verify that the PrivateRoute returns <NotFound />
-    await expect(page.locator('text=Page Not Found')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator("text=Page Not Found")).toBeVisible({ timeout: 10000 });
     console.log("✅ Resident blocked from Admin route (NotFound rendered).");
 
     const logoutBtn = page.locator("text=Logout");
@@ -148,13 +150,13 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
     await performLogin(page, TEST_USERS.admin.email, TEST_USERS.admin.password);
 
     if (TEST_USERS.admin.requiresPasswordChange) {
-        await page.locator('input[name="newPassword"]').fill(TEST_USERS.admin.tempPassword);
-        await page.locator('input[name="confirmPassword"]').fill(TEST_USERS.admin.tempPassword);
-        await page.click('button:has-text("Secure Account & Continue")');
+      await page.locator('input[name="newPassword"]').fill(TEST_USERS.admin.tempPassword);
+      await page.locator('input[name="confirmPassword"]').fill(TEST_USERS.admin.tempPassword);
+      await page.click('button:has-text("Secure Account & Continue")');
     }
 
     await page.goto("/admin/register-staff");
-    await expect(page.locator('text=Page Not Found')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator("text=Page Not Found")).toBeVisible({ timeout: 10000 });
     console.log("✅ Admin blocked from SuperAdmin route (NotFound rendered).");
 
     const logoutBtn = page.locator("text=Logout");
