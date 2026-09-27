@@ -315,16 +315,20 @@ export const getUserClaims = async (user, forceRefresh = false) => {
 
 // subscribeToAuthChanges remains the same
 export const subscribeToAuthChanges = (callback) => {
+  // eslint-disable-next-line no-console
   console.log(`[AUTH TRACE] subscribeToAuthChanges-called`);
   if (typeof callback !== "function") {
     throw new appError("Auth Callback must be a function.", true, "auth/invalid-callback");
   }
   try {
+    // eslint-disable-next-line no-console
     console.log(`[AUTH TRACE] firebase-listener-registration-start`);
     const unsubscribe = onAuthStateChanged(auth, callback);
+    // eslint-disable-next-line no-console
     console.log(`[AUTH TRACE] firebase-listener-registration-completed`);
     return unsubscribe;
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error(`[AUTH TRACE] firebase-listener-registration-error: ${error.message}`);
     throw error;
   }
@@ -335,33 +339,42 @@ export const getFullUserData = async (uid, firebaseUser = null, forceRefresh = f
   if (!uid) throw new appError("User ID is required.", true, "auth/missing-uid");
 
   try {
+    // eslint-disable-next-line no-console
     console.log(`[auth-trace] get-full-user-data-start: ${uid}`);
     // 1. Fetch token claims if firebaseUser is provided (Authoritative RBAC)
     let claims = null;
     if (firebaseUser) {
       const tokenResult = await firebaseUser.getIdTokenResult(forceRefresh);
       claims = tokenResult.claims;
+      // eslint-disable-next-line no-console
       console.log(`[auth-trace] claims-fetched: ${JSON.stringify(claims)}`);
     }
 
     // 2. Fetch all three DB sources in parallel for speed
+    // eslint-disable-next-line no-console
     console.log(`[AUTH TRACE] rtdb-reads-start: ${uid}`);
     const snaps = await Promise.all([
       (async () => {
+        // eslint-disable-next-line no-console
         console.log(`[AUTH TRACE] /users read-start: ${uid}`);
         const s = await get(ref(db, `users/${uid}`));
+        // eslint-disable-next-line no-console
         console.log(`[AUTH TRACE] /users read-success: ${uid}`);
         return s;
       })(),
       (async () => {
+        // eslint-disable-next-line no-console
         console.log(`[AUTH TRACE] /roles read-start: ${uid}`);
         const s = await get(ref(db, `roles/${uid}`));
+        // eslint-disable-next-line no-console
         console.log(`[AUTH TRACE] /roles read-success: ${uid}`);
         return s;
       })(),
       (async () => {
+        // eslint-disable-next-line no-console
         console.log(`[AUTH TRACE] /accounts read-start: ${uid}`);
         const s = await get(ref(db, `accounts/${uid}`));
+        // eslint-disable-next-line no-console
         console.log(`[AUTH TRACE] /accounts read-success: ${uid}`);
         return s;
       })(),
@@ -372,8 +385,11 @@ export const getFullUserData = async (uid, firebaseUser = null, forceRefresh = f
     const profile = userSnap.val() || {};
     const account = accountSnap.val() || {};
 
+    // eslint-disable-next-line no-console
     console.log(`[auth-trace] users-read-success: ${!!profile}`);
+    // eslint-disable-next-line no-console
     console.log(`[auth-trace] roles-read-success: ${!!roleData}`);
+    // eslint-disable-next-line no-console
     console.log(`[auth-trace] accounts-read-success: ${!!account}`);
 
     // 3. Determine the authoritative role
@@ -395,9 +411,11 @@ export const getFullUserData = async (uid, firebaseUser = null, forceRefresh = f
       updatedAt: roleData?.updatedAt || Date.now(),
       claims, // Include raw claims for secondary checks
     };
+    // eslint-disable-next-line no-console
     console.log(`[auth-trace] get-full-user-data-success: ${JSON.stringify(result)}`);
     return result;
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error(`[auth-trace] get-full-user-data-error: ${error.message}`);
     if (error instanceof appError) throw error;
     const errorCode = error.code || "default";

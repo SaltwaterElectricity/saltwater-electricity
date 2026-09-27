@@ -41,7 +41,6 @@ const AdminRealTimeMonitor = () => {
       const resident = users.find((u) => u.id === assignment?.userId);
       const tel = validateTelemetry(telemetry?.[device.device_id] || {});
 
-
       const isOnline = tel.timestamp && now - tel.timestamp < 300000; // 5 mins threshold
 
       // Determine status based on telemetry thresholds and maintenance flag

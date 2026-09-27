@@ -22,29 +22,49 @@ vi.mock("../_utils/firebase.js", () => ({
             code: "123456",
             expiresAt: Date.now() + 900000,
             email: "exists@test.com",
+            status: "ACTIVE",
           }),
         }),
         remove: vi.fn().mockResolvedValue({}),
         update: vi.fn().mockResolvedValue({}),
+        transaction: vi.fn((cb) => {
+          const mockData = {
+            code: "123456",
+            expiresAt: Date.now() + 900000,
+            email: "exists@test.com",
+            status: "ACTIVE",
+          };
+          const result = cb(mockData);
+          return Promise.resolve({
+            committed: true,
+            snapshot: {
+              val: () => result || mockData,
+            },
+          });
+        }),
       })),
     },
   })),
 }));
 
 // Mock SendGrid
-vi.mock("@sendgrid/mail", () => ({
-  default: {
-    setApiKey: vi.fn(),
-    send: vi.fn().mockResolvedValue({}),
-  },
-}));
+vi.mock("@sendgrid/mail", () => {
+  const send = vi.fn().mockResolvedValue([ { status: 202 } ]);
+  const setApiKey = vi.fn();
+  return {
+    default: {
+      setApiKey,
+      send,
+    },
+  };
+});
 
 describe("API Functions", () => {
   let req, res;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    process.env.SENDGRID_API_KEY = "test-key";
+    process.env.SENDGRID_API_KEY = "SG.test-key";
     process.env.SENDGRID_SENDER_EMAIL = "test@test.com";
 
     res = {
@@ -87,7 +107,7 @@ describe("API Functions", () => {
     it("should verify a valid code", async () => {
       req = {
         method: "POST",
-        body: { trackingId: "existstestcom", code: "123456" },
+        body: { transactionToken: "existstestcom", code: "123456" },
       };
 
       await verifyOTP(req, res);

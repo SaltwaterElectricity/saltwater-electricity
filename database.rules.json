@@ -108,7 +108,7 @@
     "login-attempts": {
       "$trackingId": {
         ".read": false,
-        ".write": false,
+        ".write": false
       }
     },
 

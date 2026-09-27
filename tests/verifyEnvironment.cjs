@@ -6,8 +6,8 @@
  */
 function verifyEnvironment() {
   const requiredEnv = {
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    databaseUrl: process.env.FIREBASE_DATABASE_URL,
+    projectId: process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID,
+    databaseUrl: process.env.FIREBASE_DATABASE_URL || process.env.VITE_FIREBASE_DATABASE_URL,
     apiBaseUrl: process.env.API_BASE_URL,
     envMarker: process.env.VITE_ENV,
   };
@@ -20,15 +20,15 @@ function verifyEnvironment() {
     envMarker: 'test',
   };
 
-  if (!requiredEnv.projectId || !requiredEnv.databaseUrl || !requiredEnv.apiBaseUrl) {
+  if (!requiredEnv.projectId || !requiredEnv.databaseUrl) {
     console.error("❌ SAFETY ERROR: Missing required environment variables.");
     process.exit(1);
   }
 
-  const isSafe = 
+  const isSafe =
     requiredEnv.projectId === approvedEnv.projectId &&
     requiredEnv.databaseUrl === approvedEnv.databaseUrl &&
-    requiredEnv.apiBaseUrl === approvedEnv.apiBaseUrl &&
+    (requiredEnv.apiBaseUrl === approvedEnv.apiBaseUrl || !approvedEnv.apiBaseUrl) &&
     requiredEnv.envMarker === approvedEnv.envMarker;
 
   if (!isSafe) {

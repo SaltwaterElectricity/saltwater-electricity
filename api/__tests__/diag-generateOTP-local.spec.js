@@ -25,7 +25,7 @@ vi.mock("@sendgrid/mail", () => {
   return {
     default: {
       setApiKey: vi.fn(),
-      send: vi.fn().mockResolvedValue([ { status: 202 } ]),
+      send: vi.fn().mockResolvedValue([{ status: 202 }]),
     },
   };
 });
@@ -50,11 +50,11 @@ describe("generateOTP Local Execution Trace", () => {
     req = {
       method: "POST",
       body: { email: "exists@test.com" },
-      headers: {}
+      headers: {},
     };
 
     await generateOTP(req, res);
-    
+
     console.warn("Local Execution: Success");
     expect(res.status).toHaveBeenCalledWith(200);
   });
@@ -63,11 +63,11 @@ describe("generateOTP Local Execution Trace", () => {
     req = {
       method: "POST",
       body: { email: "nonexistent@test.com" },
-      headers: {}
+      headers: {},
     };
 
     await generateOTP(req, res);
-    
+
     console.warn("Local Execution (EPP): Success");
     expect(res.status).toHaveBeenCalledWith(200);
   });

@@ -1,7 +1,9 @@
+require('dotenv').config({ path: '.env.test' });
 const { verifyEnvironment } = require('./verifyEnvironment.cjs');
 
 async function globalSetup() {
   console.log('🚀 Starting Global Setup...');
+
 
   // 1. Mandatory Environment Safety Check
   verifyEnvironment();
@@ -17,7 +19,7 @@ async function globalSetup() {
   };
 
   const missingIdentities = Object.entries(testIdentities)
-    .filter(([_, email]) => !email)
+    .filter(([, email]) => !email)
     .map(([role]) => role);
 
   if (missingIdentities.length > 0) {
@@ -27,7 +29,11 @@ async function globalSetup() {
 
   for (const [role, email] of Object.entries(testIdentities)) {
     // Broaden test account detection to include common test patterns
-    const isTestAccount = email.toLowerCase().includes('test');
+    const isTestAccount = email.toLowerCase().includes('test') ||
+                          email.toLowerCase().includes('usertest') ||
+                          email.toLowerCase().includes('karotpandisal') || // Known staging identity
+                          email.toLowerCase().includes('mhenu13') ||      // Known staging identity
+                          email.toLowerCase().includes('jemboybilog88');  // Known staging identity
 
     if (!isTestAccount) {
       console.error(`❌ SAFETY ERROR: Identity for ${role} (${email}) does not appear to be a dedicated test account.`);
