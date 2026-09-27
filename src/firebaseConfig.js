@@ -41,6 +41,7 @@ if (typeof window !== "undefined" && !import.meta.env.DEV) {
 
 // Export Instances
 export const auth = getAuth(app);
+auth.__diagnostic_id = "singleton-auth-instance-" + Math.random().toString(36).substring(7);
 export const db = getDatabase(app);
 export const functions = getFunctions(app);
 

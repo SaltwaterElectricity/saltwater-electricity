@@ -87,7 +87,7 @@ export const changeUserPassword = async (
   newPassword,
   { currentPassword = null, isForceReset = false } = {}
 ) => {
-  const auth = getAuth();
+  // Use the singleton auth instance from firebaseConfig
   const user = auth.currentUser;
 
   if (!user)
@@ -229,7 +229,6 @@ export const loginUser = async (email, password) => {
       body: JSON.stringify({ status: "success" }),
     }).catch((e) => logger.warn("[Auth Service] Legacy attempt reset called:", e));
 
-
     // Verify system status before allowing the session to continue
     const userData = await getFullUserData(uid, userCredential.user);
 
@@ -316,10 +315,19 @@ export const getUserClaims = async (user, forceRefresh = false) => {
 
 // subscribeToAuthChanges remains the same
 export const subscribeToAuthChanges = (callback) => {
+  console.log(`[AUTH TRACE] subscribeToAuthChanges-called`);
   if (typeof callback !== "function") {
     throw new appError("Auth Callback must be a function.", true, "auth/invalid-callback");
   }
-  return onAuthStateChanged(auth, callback);
+  try {
+    console.log(`[AUTH TRACE] firebase-listener-registration-start`);
+    const unsubscribe = onAuthStateChanged(auth, callback);
+    console.log(`[AUTH TRACE] firebase-listener-registration-completed`);
+    return unsubscribe;
+  } catch (error) {
+    console.error(`[AUTH TRACE] firebase-listener-registration-error: ${error.message}`);
+    throw error;
+  }
 };
 
 // getFullUserData remains the same
@@ -327,24 +335,46 @@ export const getFullUserData = async (uid, firebaseUser = null, forceRefresh = f
   if (!uid) throw new appError("User ID is required.", true, "auth/missing-uid");
 
   try {
+    console.log(`[auth-trace] get-full-user-data-start: ${uid}`);
     // 1. Fetch token claims if firebaseUser is provided (Authoritative RBAC)
     let claims = null;
     if (firebaseUser) {
       const tokenResult = await firebaseUser.getIdTokenResult(forceRefresh);
       claims = tokenResult.claims;
+      console.log(`[auth-trace] claims-fetched: ${JSON.stringify(claims)}`);
     }
 
     // 2. Fetch all three DB sources in parallel for speed
+    console.log(`[AUTH TRACE] rtdb-reads-start: ${uid}`);
     const snaps = await Promise.all([
-      get(ref(db, `users/${uid}`)),
-      get(ref(db, `roles/${uid}`)),
-      get(ref(db, `accounts/${uid}`)),
+      (async () => {
+        console.log(`[AUTH TRACE] /users read-start: ${uid}`);
+        const s = await get(ref(db, `users/${uid}`));
+        console.log(`[AUTH TRACE] /users read-success: ${uid}`);
+        return s;
+      })(),
+      (async () => {
+        console.log(`[AUTH TRACE] /roles read-start: ${uid}`);
+        const s = await get(ref(db, `roles/${uid}`));
+        console.log(`[AUTH TRACE] /roles read-success: ${uid}`);
+        return s;
+      })(),
+      (async () => {
+        console.log(`[AUTH TRACE] /accounts read-start: ${uid}`);
+        const s = await get(ref(db, `accounts/${uid}`));
+        console.log(`[AUTH TRACE] /accounts read-success: ${uid}`);
+        return s;
+      })(),
     ]);
 
     const [userSnap, roleSnap, accountSnap] = snaps;
     const roleData = roleSnap.val() || {};
     const profile = userSnap.val() || {};
     const account = accountSnap.val() || {};
+
+    console.log(`[auth-trace] users-read-success: ${!!profile}`);
+    console.log(`[auth-trace] roles-read-success: ${!!roleData}`);
+    console.log(`[auth-trace] accounts-read-success: ${!!account}`);
 
     // 3. Determine the authoritative role
     // Prefer Token Claims if available, otherwise fallback to DB (for initial provisioning/sync)
@@ -355,7 +385,7 @@ export const getFullUserData = async (uid, firebaseUser = null, forceRefresh = f
         : claims?.role;
     const finalRole = tokenRole || roleData.role || ROLES.RESIDENT;
 
-    return {
+    const result = {
       uid,
       ...profile,
       role: finalRole,
@@ -365,7 +395,10 @@ export const getFullUserData = async (uid, firebaseUser = null, forceRefresh = f
       updatedAt: roleData?.updatedAt || Date.now(),
       claims, // Include raw claims for secondary checks
     };
+    console.log(`[auth-trace] get-full-user-data-success: ${JSON.stringify(result)}`);
+    return result;
   } catch (error) {
+    console.error(`[auth-trace] get-full-user-data-error: ${error.message}`);
     if (error instanceof appError) throw error;
     const errorCode = error.code || "default";
     throw new appError(
