@@ -4,7 +4,7 @@ import { sendSuccess, sendError, handleOptions } from "./_utils/response.js";
 export default async function handler(req, res) {
   console.error("[verifyOTP] handler-entered");
   if (handleOptions(req, res)) return;
-  
+
   const { transactionToken, code } = req.body;
   console.error(`[verifyOTP] request-params: token=${!!transactionToken}, code=${!!code}`);
 
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   try {
     const { db } = initFirebaseAdmin();
     console.error("[verifyOTP] firebase-init-success");
-    
+
     const otpRef = db.ref(`otp-requests/${transactionToken}`);
 
     const result = await otpRef.transaction((currentData) => {
@@ -48,8 +48,8 @@ export default async function handler(req, res) {
       return sendError(res, "Authorization failed or record not found.", 400, "auth/invalid-token");
     }
 
-    const snapshot = result.snapshot;
-    console.error(`[verifyOTP] snapshot-status: ${snapshot.status}`);
+    const snapshot = result.snapshot.val();
+    console.error(`[verifyOTP] snapshot-status: ${snapshot?.status}`);
 
     if (snapshot.status === "CONSUMED") {
       console.error("[verifyOTP] code-comparison-success");
@@ -59,7 +59,12 @@ export default async function handler(req, res) {
 
     if (snapshot.status === "INVALIDATED") {
       console.error("[verifyOTP] token-invalidated");
-      return sendError(res, "OTP has expired or too many failed attempts.", 400, "auth/otp-invalidated");
+      return sendError(
+        res,
+        "OTP has expired or too many failed attempts.",
+        400,
+        "auth/otp-invalidated"
+      );
     }
 
     console.error("[verifyOTP] code-comparison-failed");
