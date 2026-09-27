@@ -4,7 +4,7 @@ import { sendSuccess, sendError, handleOptions } from "./_utils/response.js";
 /**
  * Vercel Serverless Function: resetPassword
  * Securely resets a user's password using a validated OTP transaction.
- * Remediation: Binds mutation to the transaction token and uses ATOMIC consumption.
+ * Remediation: Binds mutation to the transaction token and uses ATOMIC state transition.
  */
 export default async function handler(req, res) {
   if (handleOptions(req, res)) return;
@@ -41,21 +41,19 @@ export default async function handler(req, res) {
     const { auth, db } = initFirebaseAdmin();
     const otpRef = db.ref(`otp-requests/${transactionToken}`);
 
-    // REMEDIATION: Use a transaction to atomically check and consume the authorization.
+    // ATOMIC STATE TRANSITION: CONSUMED -> RESET_COMPLETED
+    // This ensures exactly-once authorization and prevents replay.
     const result = await otpRef.transaction((currentData) => {
       if (!currentData || currentData.status !== "CONSUMED") {
-        return null; // Not found or not yet verified
+        return null; // Abort: Not found or not verified
       }
-      return null; // Transition to null to effectively remove the token atomically
+      return { ...currentData, status: "RESET_COMPLETED" };
     });
 
-    // In RTDB transactions, returning null from the callback means "do not update".
-    // If the record was not CONSUMED, result.snapshot will still contain the data (if it existed),
-    // but the record was not deleted. If the record WAS CONSUMED, it is now deleted.
-    const snapshot = result.snapshot;
-    const consumedData = snapshot ? snapshot.val() : null;
+    const snapshot = result.snapshot ? result.snapshot.val() : null;
 
-    if (!consumedData || consumedData.status !== "CONSUMED") {
+    // Authorization check: Must be committed AND transition to RESET_COMPLETED
+    if (!result.committed || !snapshot || snapshot.status !== "RESET_COMPLETED") {
       return sendError(
         res,
         "Authorization required or already consumed.",
@@ -64,8 +62,8 @@ export default async function handler(req, res) {
       );
     }
 
-    // Now we have a trusted, consumed record.
-    const uid = consumedData.uid;
+    // Authoritative UID binding from server-side state
+    const uid = snapshot.uid;
     if (!uid) {
       return sendError(
         res,
@@ -75,7 +73,7 @@ export default async function handler(req, res) {
       );
     }
 
-    if (email && email.toLowerCase().trim() !== consumedData.email) {
+    if (email && email.toLowerCase().trim() !== snapshot.email) {
       return sendError(res, "Account mismatch.", 400, "auth/mismatch");
     }
 
