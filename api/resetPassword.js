@@ -43,26 +43,36 @@ export default async function handler(req, res) {
 
     // REMEDIATION: Use a transaction to atomically check and consume the authorization.
     const result = await otpRef.transaction((currentData) => {
-      if (!currentData || currentData.status !== 'CONSUMED') {
+      if (!currentData || currentData.status !== "CONSUMED") {
         return null; // Not found or not yet verified
       }
       return null; // Transition to null to effectively remove the token atomically
     });
 
-    // Note: In RTDB transactions, returning null deletes the data.
-    // This proves the token was CONSUMED and now it is GONE.
-    if (!result.committed) {
-      return sendError(res, "Authorization required or already consumed.", 403, "auth/not-authorized");
+    // In RTDB transactions, returning null from the callback means "do not update".
+    // If the record was not CONSUMED, result.snapshot will still contain the data (if it existed),
+    // but the record was not deleted. If the record WAS CONSUMED, it is now deleted.
+    const snapshot = result.snapshot;
+    const consumedData = snapshot ? snapshot.val() : null;
+
+    if (!consumedData || consumedData.status !== "CONSUMED") {
+      return sendError(
+        res,
+        "Authorization required or already consumed.",
+        403,
+        "auth/not-authorized"
+      );
     }
 
-    const consumedData = result.snapshot;
-    if (!consumedData) {
-      return sendError(res, "Invalid authorization state.", 400, "auth/invalid-state");
-    }
-
+    // Now we have a trusted, consumed record.
     const uid = consumedData.uid;
     if (!uid) {
-      return sendError(res, "Internal security error: Transaction not bound to account.", 500, "auth/binding-error");
+      return sendError(
+        res,
+        "Internal security error: Transaction not bound to account.",
+        500,
+        "auth/binding-error"
+      );
     }
 
     if (email && email.toLowerCase().trim() !== consumedData.email) {
@@ -71,7 +81,7 @@ export default async function handler(req, res) {
 
     try {
       await auth.updateUser(uid, { password: newPassword });
-      
+
       await db.ref(`accounts/${uid}`).update({
         requiresPasswordChange: false,
         updatedAt: new Date().toISOString(),
@@ -80,7 +90,12 @@ export default async function handler(req, res) {
       return sendSuccess(res, { message: "Password has been reset successfully." });
     } catch (error) {
       console.error(`[resetPassword] Admin SDK error: ${error.message}`);
-      return sendError(res, "Failed to update password in authentication system.", 500, "auth/update-failed");
+      return sendError(
+        res,
+        "Failed to update password in authentication system.",
+        500,
+        "auth/update-failed"
+      );
     }
   } catch (error) {
     return sendError(res, error, 500, "auth/reset-password-failed");
