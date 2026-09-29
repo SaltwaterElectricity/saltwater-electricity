@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
-export default defineConfig(({ command }) => ({
+export default defineConfig(() => ({
   plugins: [react(), tailwindcss()],
 
   server: {
@@ -16,7 +16,7 @@ export default defineConfig(({ command }) => ({
     exclude: ["**/node_modules/**", "**/dist/**", "**/tests/**", "**/cypress/**"],
   },
 
-  base: command === "build" ? "./" : "/", // 👈 Only use relative paths for production builds
+  base: "/", // Root-resolved assets for SPA deployment on Vercel
   build: {
     outDir: process.env.BUILD_TARGET === "mobile" ? "../saltwaterelectricity/www" : "dist",
     emptyOutDir: true,
