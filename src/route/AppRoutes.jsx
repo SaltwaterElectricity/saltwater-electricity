@@ -3,6 +3,7 @@ import { useAuth } from "../context/useAuth";
 import { ROUTES, ROLE_LANDING_PAGES } from "../constants/routes";
 import { ROLES } from "../constants/roles";
 import { LoadingSpinner } from "../components/ui/LoadingSpinner";
+import buildInfo from "../constants/buildInfo";
 
 // Pages & Components
 import NotFound from "../pages/NotFound";
@@ -27,6 +28,7 @@ import PrivateRoute from "./PrivateRoute";
 const RootRedirect = ({ user, role }) => {
   const { mustChangePassword, loading } = useAuth();
 
+  console.log(`[RUNTIME-MARKER] Executing build: ${buildInfo}`);
   console.log(`[ROUTE-FORENSICS] RootRedirect render. User: ${user?.email || 'null'}, Role: ${role || 'null'}, mustChangePassword: ${mustChangePassword}, loading: ${loading}`);
 
   if (loading) {
