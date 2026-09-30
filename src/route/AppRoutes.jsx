@@ -27,6 +27,8 @@ import PrivateRoute from "./PrivateRoute";
 const RootRedirect = ({ user, role }) => {
   const { mustChangePassword, loading } = useAuth();
 
+  console.log(`[ROUTE-FORENSICS] RootRedirect render. User: ${user?.email || 'null'}, Role: ${role || 'null'}, mustChangePassword: ${mustChangePassword}, loading: ${loading}`);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-slate-50 font-sans antialiased">
@@ -36,22 +38,27 @@ const RootRedirect = ({ user, role }) => {
   }
 
   if (!user) {
+    console.log(`[ROUTE-FORENSICS] No user found -> LandingPage`);
     return <LandingPage />;
   }
 
   if (mustChangePassword) {
+    console.log(`[ROUTE-FORENSICS] mustChangePassword is TRUE -> /force-password-change`);
     return <Navigate to={ROUTES.FORCE_PASSWORD_CHANGE} replace />;
   }
 
   if (!role) {
+    console.log(`[ROUTE-FORENSICS] No role found -> LandingPage`);
     return <LandingPage />;
   }
 
   if (ROLE_LANDING_PAGES[role]) {
     const destination = ROLE_LANDING_PAGES[role];
+    console.log(`[ROUTE-FORENSICS] Role ${role} found in ROLE_LANDING_PAGES -> ${destination}`);
     return <Navigate to={destination} replace />;
   }
 
+  console.log(`[ROUTE-FORENSICS] Role ${role} not in ROLE_LANDING_PAGES -> NotFound`);
   return <NotFound />;
 };
 

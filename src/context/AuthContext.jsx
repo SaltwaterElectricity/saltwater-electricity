@@ -22,14 +22,17 @@ export const AuthProvider = ({ children }) => {
   // 1. Authoritative Claim Synchronization
   const syncUserContext = useCallback(async (firebaseUser, forceRefresh = false) => {
     const traceId = Math.random().toString(36).substring(7);
+    console.log(`[AUTH-FORENSICS][${traceId}] syncUserContext called. User: ${firebaseUser?.email || 'null'}, forceRefresh: ${forceRefresh}`);
     try {
       if (firebaseUser) {
         // Authoritative source: Decoded ID Token (optionally forced)
         const data = await getFullUserData(firebaseUser.uid, firebaseUser, forceRefresh);
+        console.log(`[AUTH-FORENSICS][${traceId}] getFullUserData returned:`, { role: data?.role, status: data?.status, requiresPasswordChange: data?.requiresPasswordChange });
 
         setCurrentUser(firebaseUser);
         setUser(data || null);
       } else {
+        console.log(`[AUTH-FORENSICS][${traceId}] No firebaseUser, clearing context`);
         setCurrentUser(null);
         setUser(null);
       }
@@ -39,6 +42,7 @@ export const AuthProvider = ({ children }) => {
       setCurrentUser(null);
       setUser(null);
     } finally {
+      console.log(`[AUTH-FORENSICS][${traceId}] syncUserContext completed. Setting loading=false`);
       setLoading(false);
     }
   }, []);

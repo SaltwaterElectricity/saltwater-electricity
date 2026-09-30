@@ -37,6 +37,39 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
   };
 
   test.beforeEach(async ({ page }) => {
+    const logs = [];
+    page.on('console', (msg) => {
+      const text = msg.text();
+      if (text.includes('[AUTH-FORENSICS]') || text.includes('[ROUTE-FORENSICS]')) {
+        logs.push({
+          timestamp: new Date().toISOString(),
+          type: msg.type(),
+          text: text,
+          url: page.url(),
+        });
+      }
+    });
+
+    page.on('requestfailed', (request) => {
+      logs.push({
+        timestamp: new Date().toISOString(),
+        type: 'REQUEST_FAILED',
+        text: `Request failed: ${request.url()} - ${request.failure()?.errorText}`,
+        url: page.url(),
+      });
+    });
+
+    page.on('pageerror', (exception) => {
+      logs.push({
+        timestamp: new Date().toISOString(),
+        type: 'PAGE_ERROR',
+        text: `Exception: ${exception.message}`,
+        url: page.url(),
+      });
+    });
+
+    page.forensicLogs = logs;
+
     await page.route("**/*", async (route) => {
       const url = route.request().url();
       if (
@@ -50,6 +83,20 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
         await route.continue();
       }
     });
+  });
+
+  test.afterEach(async ({ page }, testInfo) => {
+    if (testInfo.status !== testInfo.expectedStatus) {
+      console.log(`\n--- FORENSIC TIMELINE for ${testInfo.title} ---`);
+      if (page.forensicLogs && page.forensicLogs.length > 0) {
+        page.forensicLogs.forEach((log, i) => {
+          console.log(`[${i}] ${log.timestamp} | ${log.type} | ${log.url} | ${log.text}`);
+        });
+      } else {
+        console.log('No forensic logs captured.');
+      }
+      console.log(`--- END FORENSIC TIMELINE ---\n`);
+    }
   });
 
   async function performLogin(page, email, password) {
