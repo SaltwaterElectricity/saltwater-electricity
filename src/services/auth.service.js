@@ -402,7 +402,7 @@ export const getFullUserData = async (uid, firebaseUser = null, forceRefresh = f
     let finalRole = tokenRole || roleData.role || ROLES.RESIDENT;
 
     // Normalization: Translate RTDB storage role "user" to canonical application role "resident"
-    if (finalRole === 'user') {
+    if (finalRole === "user") {
       finalRole = ROLES.RESIDENT;
     }
 
