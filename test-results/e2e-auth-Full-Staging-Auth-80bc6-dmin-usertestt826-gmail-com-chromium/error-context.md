@@ -1,0 +1,286 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: e2e\auth.spec.js >> Full Staging Authentication & Authorization Suite >> Identity-Specific Flows >> Flow for superAdmin: usertestt826@gmail.com
+- Location: tests\e2e\auth.spec.js:111:7
+
+# Error details
+
+```
+Error: expect(page).toHaveURL(expected) failed
+
+Expected: "https://saltwater-electricity-6da27aytp-saltwaterelectricitys-projects.vercel.app/admin/user-management"
+Received: "https://saltwater-electricity-6da27aytp-saltwaterelectricitys-projects.vercel.app/dashboard"
+Timeout:  15000ms
+
+Call log:
+  - Expect "toHaveURL" with timeout 15000ms
+    17 × locator resolved to <html lang="en">…</html>
+       - unexpected value "https://saltwater-electricity-6da27aytp-saltwaterelectricitys-projects.vercel.app/login"
+    13 × locator resolved to <html lang="en">…</html>
+       - unexpected value "https://saltwater-electricity-6da27aytp-saltwaterelectricitys-projects.vercel.app/dashboard"
+
+```
+
+```yaml
+- complementary:
+  - img "Logo"
+  - heading "Device Monitoring" [level=1]
+  - paragraph: Saltwater Electricity
+  - button "Collapse"
+  - navigation:
+    - link "home Dashboard":
+      - /url: /dashboard
+    - link "monitoring Live Monitor":
+      - /url: /monitor
+    - paragraph: Operations
+    - link "check_box Request Validation":
+      - /url: /admin/request-management
+    - link "devices Device Management":
+      - /url: /admin/device-management
+    - link "group User Management":
+      - /url: /admin/user-management
+    - link "notification_important Alerts":
+      - /url: /alerts
+    - link "history Historical Data":
+      - /url: /history
+    - link "receipt_long Audit Logs":
+      - /url: /admin/audit-logs
+    - paragraph: Account
+    - link "settings Settings":
+      - /url: /settings
+  - text: US Test User super Admin
+  - button "logout Sign Out"
+- main:
+  - heading "Device Monitoring" [level=1]
+  - paragraph: Saltwater Electricity
+  - button "notifications"
+  - button "settings_suggest"
+  - button "TU"
+  - text: router arrow_drop_up Live
+  - paragraph: Total Devices
+  - heading "0" [level=2]
+  - paragraph: Since last month
+  - text: sensors arrow_drop_up Live
+  - paragraph: online Device
+  - heading "0" [level=2]
+  - paragraph: Active warnings
+  - text: signal_wifi_off arrow_drop_down Live
+  - paragraph: Offline Devices
+  - heading "0" [level=2]
+  - paragraph: Network status
+  - text: ecg_heart trending_up Checkup
+  - paragraph: System Health
+  - heading "0%" [level=2]
+  - text: Overall efficiency Checkup
+  - heading "Performance Line Chart" [level=3]
+  - paragraph: No comparative devices selected
+  - button "Recent Audit Stream"
+  - heading "No Units for Audit" [level=4]
+  - paragraph: Provision hardware units to begin comparative performance auditing.
+  - heading "System Health" [level=3]
+  - img
+  - text: 0% CRITICAL Voltage
+  - paragraph: 0%
+  - text: Salinity
+  - paragraph: 0%
+  - text: Current
+  - paragraph: 0%
+  - heading "System Alerts" [level=3]
+  - paragraph: No active alerts recorded.
+  - button "View all alerts"
+  - heading "DEVICE REQUEST" [level=3]
+  - paragraph: No pending requests
+  - button "View all requests"
+  - heading "DEVICES Feature Data" [level=3]
+  - text: Voltage Salinity Current
+  - paragraph: No Data Records Found
+  - heading "DEVICE USER'S" [level=3]
+  - textbox "Search users..."
+  - text: search
+  - table:
+    - rowgroup:
+      - row "HOUSEHOLD USER location Device id Receive Date Action":
+        - columnheader "HOUSEHOLD USER"
+        - columnheader "location"
+        - columnheader "Device id"
+        - columnheader "Receive Date"
+        - columnheader "Action"
+    - rowgroup:
+      - row "person_off No active assignments found":
+        - cell "person_off No active assignments found":
+          - text: person_off
+          - paragraph: No active assignments found
+  - button "View all users arrow_forward"
+```
+
+# Test source
+
+```ts
+  55  |         timestamp: new Date().toISOString(),
+  56  |         type: 'REQUEST_FAILED',
+  57  |         text: `Request failed: ${request.url()} - ${request.failure()?.errorText}`,
+  58  |         url: page.url(),
+  59  |       });
+  60  |     });
+  61  | 
+  62  |     page.on('pageerror', (exception) => {
+  63  |       logs.push({
+  64  |         timestamp: new Date().toISOString(),
+  65  |         type: 'PAGE_ERROR',
+  66  |         text: `Exception: ${exception.message}`,
+  67  |         url: page.url(),
+  68  |       });
+  69  |     });
+  70  | 
+  71  |     page.forensicLogs = logs;
+  72  | 
+  73  |     await page.route("**/*", async (route) => {
+  74  |       const url = route.request().url();
+  75  |       if (
+  76  |         url.includes("saltwater-electricity-261iibdt3-saltwaterelectricitys-projects.vercel.app")
+  77  |       ) {
+  78  |         const bypassToken = process.env.VERCEL_PROTECTION_BYPASS_TOKEN || "";
+  79  |         const separator = url.includes("?") ? "&" : "?";
+  80  |         const newUrl = `${url}${separator}x-vercel-protection-bypass=${bypassToken}`;
+  81  |         await route.continue({ url: newUrl });
+  82  |       } else {
+  83  |         await route.continue();
+  84  |       }
+  85  |     });
+  86  |   });
+  87  | 
+  88  |   test.afterEach(async ({ page }, testInfo) => {
+  89  |     if (testInfo.status !== testInfo.expectedStatus) {
+  90  |       console.log(`\n--- FORENSIC TIMELINE for ${testInfo.title} ---`);
+  91  |       if (page.forensicLogs && page.forensicLogs.length > 0) {
+  92  |         page.forensicLogs.forEach((log, i) => {
+  93  |           console.log(`[${i}] ${log.timestamp} | ${log.type} | ${log.url} | ${log.text}`);
+  94  |         });
+  95  |       } else {
+  96  |         console.log('No forensic logs captured.');
+  97  |       }
+  98  |       console.log(`--- END FORENSIC TIMELINE ---\n`);
+  99  |     }
+  100 |   });
+  101 | 
+  102 |   async function performLogin(page, email, password) {
+  103 |     await page.goto("/login");
+  104 |     await page.locator('input[placeholder="name@example.com"]').fill(email);
+  105 |     await page.locator('input[placeholder="••••••••"]').fill(password);
+  106 |     await page.click('button:has-text("LOGIN NOW")');
+  107 |   }
+  108 | 
+  109 |   test.describe("Identity-Specific Flows", () => {
+  110 |     for (const [roleKey, user] of Object.entries(TEST_USERS)) {
+  111 |       test(`Flow for ${roleKey}: ${user.email}`, async ({ page }) => {
+  112 |         console.log(`🚀 Testing flow for ${roleKey}...`);
+  113 | 
+  114 |         const rtdbRequestPromise = page
+  115 |           .waitForRequest((request) => request.url().includes("firebasedatabase.app"), {
+  116 |             timeout: 10000,
+  117 |           })
+  118 |           .catch(() => null);
+  119 | 
+  120 |         await performLogin(page, user.email, user.password);
+  121 | 
+  122 |         if (user.requiresPasswordChange) {
+  123 |           await expect(page).toHaveURL(/\/force-password-change/, { timeout: 15000 });
+  124 | 
+  125 |           await page.locator('input[name="newPassword"]').fill(user.tempPassword);
+  126 |           await page.locator('input[name="confirmPassword"]').fill(user.tempPassword);
+  127 |           await page.click('button:has-text("Secure Account & Continue")');
+  128 | 
+  129 |           // INTENTIONAL: authenticated users are redirected to dashboard via RootRedirect
+  130 |           await expect(page).toHaveURL(user.expectedRoute, { timeout: 15000 });
+  131 |           console.log(`✅ ${roleKey} redirected to ${user.expectedRoute} after password change.`);
+  132 | 
+  133 |           const logoutBtn = page.locator("text=Logout");
+  134 |           if (await logoutBtn.isVisible()) {
+  135 |             await logoutBtn.click();
+  136 |           }
+  137 |           await expect(page).toHaveURL(/\/login|\//, { timeout: 10000 });
+  138 | 
+  139 |           await performLogin(page, user.email, user.tempPassword);
+  140 |           await expect(page).toHaveURL(user.expectedRoute, { timeout: 15000 });
+  141 |           console.log(`✅ ${roleKey} authenticated with new password.`);
+  142 | 
+  143 |           const finalLogout = page.locator("text=Logout");
+  144 |           if (await finalLogout.isVisible()) {
+  145 |             await finalLogout.click();
+  146 |           }
+  147 |           await expect(page).toHaveURL(/\/login|\//, { timeout: 10000 });
+  148 | 
+  149 |           await performLogin(page, user.email, user.password);
+  150 |           await expect(page.locator("text=Invalid email or password")).toBeVisible({
+  151 |             timeout: 10000,
+  152 |           });
+  153 |           console.log(`✅ ${roleKey}: Old password rejected.`);
+  154 |         } else {
+> 155 |           await expect(page).toHaveURL(user.expectedRoute, { timeout: 15000 });
+      |                              ^ Error: expect(page).toHaveURL(expected) failed
+  156 |           console.log(`✅ ${roleKey} redirected to expected route: ${user.expectedRoute}`);
+  157 |         }
+  158 | 
+  159 |         const dbRequest = await rtdbRequestPromise;
+  160 |         if (dbRequest) {
+  161 |           expect(dbRequest.url()).toContain("saltwater-electricity-staging");
+  162 |         }
+  163 | 
+  164 |         const finalLogout = page.locator("text=Logout");
+  165 |         if (await finalLogout.isVisible()) {
+  166 |           await finalLogout.click();
+  167 |           await expect(page).toHaveURL(/\/login|\//, { timeout: 10000 });
+  168 |         }
+  169 |       });
+  170 |     }
+  171 |   });
+  172 | 
+  173 |   test("Cross-role Authorization: Resident cannot access Admin routes", async ({ page }) => {
+  174 |     console.log("🚀 Testing Cross-role Isolation: Resident -> Admin...");
+  175 |     await performLogin(page, TEST_USERS.residentA.email, TEST_USERS.residentA.password);
+  176 | 
+  177 |     if (TEST_USERS.residentA.requiresPasswordChange) {
+  178 |       await page.locator('input[name="newPassword"]').fill(TEST_USERS.residentA.tempPassword);
+  179 |       await page.locator('input[name="confirmPassword"]').fill(TEST_USERS.residentA.tempPassword);
+  180 |       await page.click('button:has-text("Secure Account & Continue")');
+  181 |     }
+  182 | 
+  183 |     await page.goto("/admin/user-management");
+  184 |     // Verify that the PrivateRoute returns <NotFound />
+  185 |     await expect(page.locator("text=Page Not Found")).toBeVisible({ timeout: 10000 });
+  186 |     console.log("✅ Resident blocked from Admin route (NotFound rendered).");
+  187 | 
+  188 |     const logoutBtn = page.locator("text=Logout");
+  189 |     if (await logoutBtn.isVisible()) {
+  190 |       await logoutBtn.click();
+  191 |     }
+  192 |   });
+  193 | 
+  194 |   test("Cross-role Authorization: Admin cannot access SuperAdmin routes", async ({ page }) => {
+  195 |     console.log("🚀 Testing Cross-role Isolation: Admin -> SuperAdmin...");
+  196 |     await performLogin(page, TEST_USERS.admin.email, TEST_USERS.admin.password);
+  197 | 
+  198 |     if (TEST_USERS.admin.requiresPasswordChange) {
+  199 |       await page.locator('input[name="newPassword"]').fill(TEST_USERS.admin.tempPassword);
+  200 |       await page.locator('input[name="confirmPassword"]').fill(TEST_USERS.admin.tempPassword);
+  201 |       await page.click('button:has-text("Secure Account & Continue")');
+  202 |     }
+  203 | 
+  204 |     await page.goto("/admin/register-staff");
+  205 |     await expect(page.locator("text=Page Not Found")).toBeVisible({ timeout: 10000 });
+  206 |     console.log("✅ Admin blocked from SuperAdmin route (NotFound rendered).");
+  207 | 
+  208 |     const logoutBtn = page.locator("text=Logout");
+  209 |     if (await logoutBtn.isVisible()) {
+  210 |       await logoutBtn.click();
+  211 |     }
+  212 |   });
+  213 | });
+  214 | 
+```

@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 import { ROUTES, ROLE_LANDING_PAGES } from "../constants/routes";
 import { ROLES } from "../constants/roles";
-import { LoadingSpinner } from "../components/ui/LoadingSpinner";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 import buildInfo from "../constants/buildInfo";
 
 // Pages & Components
@@ -28,7 +28,9 @@ import PrivateRoute from "./PrivateRoute";
 const RootRedirect = ({ user, role }) => {
   const { mustChangePassword, loading } = useAuth();
 
+  /* eslint-disable-next-line no-console */
   console.log(`[RUNTIME-MARKER] Executing build: ${buildInfo}`);
+  /* eslint-disable-next-line no-console */
   console.log(`[ROUTE-FORENSICS] RootRedirect render. User: ${user?.email || 'null'}, Role: ${role || 'null'}, mustChangePassword: ${mustChangePassword}, loading: ${loading}`);
 
   if (loading) {
@@ -40,26 +42,31 @@ const RootRedirect = ({ user, role }) => {
   }
 
   if (!user) {
+    /* eslint-disable-next-line no-console */
     console.log(`[ROUTE-FORENSICS] No user found -> LandingPage`);
     return <LandingPage />;
   }
 
   if (mustChangePassword) {
+    /* eslint-disable-next-line no-console */
     console.log(`[ROUTE-FORENSICS] mustChangePassword is TRUE -> /force-password-change`);
     return <Navigate to={ROUTES.FORCE_PASSWORD_CHANGE} replace />;
   }
 
   if (!role) {
+    /* eslint-disable-next-line no-console */
     console.log(`[ROUTE-FORENSICS] No role found -> LandingPage`);
     return <LandingPage />;
   }
 
   if (ROLE_LANDING_PAGES[role]) {
     const destination = ROLE_LANDING_PAGES[role];
+    /* eslint-disable-next-line no-console */
     console.log(`[ROUTE-FORENSICS] Role ${role} found in ROLE_LANDING_PAGES -> ${destination}`);
     return <Navigate to={destination} replace />;
   }
 
+  /* eslint-disable-next-line no-console */
   console.log(`[ROUTE-FORENSICS] Role ${role} not in ROLE_LANDING_PAGES -> NotFound`);
   return <NotFound />;
 };
