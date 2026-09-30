@@ -44,7 +44,9 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
     setIsSubmitting(true);
     setAuthError("");
 
-    if (onLoginStart) onLoginStart();
+    if (onLoginStart) {
+      onLoginStart();
+    }
 
     try {
       const response = await loginUser(data.email, data.password);
@@ -56,7 +58,12 @@ const LoginForm = ({ onLoginSuccess, onLoginStart, onLoginError }) => {
         return;
       }
 
+      // eslint-disable-next-line no-console
+      console.log(`[NAV TRACE] LoginForm: loginUser successful. requiresPasswordChange=${userData.requiresPasswordChange}`);
+
       if (userData.requiresPasswordChange) {
+        // eslint-disable-next-line no-console
+        console.log(`[NAV TRACE] LoginForm: redirecting to /force-password-change`);
         navigate("/force-password-change");
         return;
       }

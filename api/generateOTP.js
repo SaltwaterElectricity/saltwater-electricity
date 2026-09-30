@@ -30,6 +30,11 @@ export default async function handler(req, res) {
     const { auth, db } = initFirebaseAdmin();
     console.error("[generateOTP] firebase-init-success");
 
+    // SECURITY: This endpoint is specifically for PASSWORD RESET.
+    // We do NOT call enforceAccountSecurity here because the user is
+    // precisely trying to recover/reset their password.
+    // However, we still use EPP to prevent email enumeration.
+
     const sgKey = process.env.SENDGRID_API_KEY;
     const senderEmail = process.env.SENDGRID_SENDER_EMAIL;
 

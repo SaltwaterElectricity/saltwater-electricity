@@ -1,5 +1,6 @@
 import { initFirebaseAdmin } from "./_utils/firebase.js";
 import { sendSuccess, sendError, handleOptions } from "./_utils/response.js";
+import { enforceAccountSecurity } from "./_utils/security.js";
 
 /**
  * Vercel Serverless Function: resetPassword
@@ -15,6 +16,15 @@ export default async function handler(req, res) {
 
   if (req.method !== "POST") {
     return sendError(res, "Method Not Allowed", 405, "auth/method-not-allowed");
+  }
+
+  // Authoritative Account Security Enforcement
+  // Exception: skipPasswordCheck=true because this IS the password remediation endpoint.
+  const { auth, db } = initFirebaseAdmin();
+  const security = await enforceAccountSecurity(req, res, { auth, db }, { skipPasswordCheck: true });
+
+  if (!security.authorized) {
+    return sendError(res, security.message || "Unauthorized", security.status, security.code);
   }
 
   const { transactionToken, newPassword, email } = req.body;
@@ -38,7 +48,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { auth, db } = initFirebaseAdmin();
     const otpRef = db.ref(`otp-requests/${transactionToken}`);
 
     // ATOMIC STATE TRANSITION: CONSUMED -> RESET_COMPLETED

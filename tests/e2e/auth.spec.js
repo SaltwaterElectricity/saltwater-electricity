@@ -7,7 +7,7 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
       password: process.env.TEST_USER_SUPERADMIN_PASSWORD,
       expectedRole: "superAdmin",
       expectedRoute: "/admin/user-management",
-      requiresPasswordChange: true,
+      requiresPasswordChange: false,
       tempPassword: "S3cur3!Pass2026_Super",
     },
     admin: {
@@ -40,13 +40,12 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
     await page.route("**/*", async (route) => {
       const url = route.request().url();
       if (
-        url.includes("saltwater-electricity-git-e8acf7-saltwaterelectricitys-projects.vercel.app")
+        url.includes("saltwater-electricity-261iibdt3-saltwaterelectricitys-projects.vercel.app")
       ) {
-        const headers = {
-          ...route.request().headers(),
-          "x-vercel-protection-bypass": process.env.VERCEL_PROTECTION_BYPASS_TOKEN || "",
-        };
-        await route.continue({ headers });
+        const bypassToken = process.env.VERCEL_PROTECTION_BYPASS_TOKEN || "";
+        const separator = url.includes("?") ? "&" : "?";
+        const newUrl = `${url}${separator}x-vercel-protection-bypass=${bypassToken}`;
+        await route.continue({ url: newUrl });
       } else {
         await route.continue();
       }

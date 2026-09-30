@@ -1,5 +1,6 @@
 import { initFirebaseAdmin } from "./_utils/firebase.js";
 import { sendSuccess, sendError, handleOptions } from "./_utils/response.js";
+import { enforceAccountSecurity } from "./_utils/security.js";
 import sgMail from "@sendgrid/mail";
 
 /**
@@ -13,19 +14,20 @@ export default async function handler(req, res) {
     return sendError(res, "Method Not Allowed", 405, "mail/method-not-allowed");
   }
 
-  // Verify ID Token and Admin/SuperAdmin Role
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return sendError(res, "Authentication required.", 401, "mail/unauthorized");
+  // Authoritative Account Security Enforcement
+  const { auth, db } = initFirebaseAdmin();
+  const security = await enforceAccountSecurity(req, res, { auth, db });
+
+  if (!security.authorized) {
+    return sendError(res, security.message || "Unauthorized", security.status, security.code);
   }
 
-  const token = authHeader.split(" ")[1];
-  try {
-    const { auth, db } = initFirebaseAdmin();
-    const decodedToken = await auth.verifyIdToken(token);
+  const decodedToken = security.decodedToken;
+  const uid = security.uid;
 
-    // Read user role
-    const roleSnap = await db.ref(`roles/${decodedToken.uid}`).get();
+  // Verify Admin/SuperAdmin Role
+  try {
+    const roleSnap = await db.ref(`roles/${uid}`).get();
     const userRole = roleSnap.exists() ? roleSnap.val().role : null;
 
     if (userRole !== "admin" && userRole !== "superAdmin") {
@@ -33,8 +35,8 @@ export default async function handler(req, res) {
       return sendError(res, "Forbidden: Administrative access required.", 403, "mail/forbidden");
     }
   } catch (error) {
-    console.error("[SECURITY] Invalid token presented to sendProvisioningEmail:", error.message);
-    return sendError(res, "Invalid session token.", 401, "mail/invalid-token");
+    console.error("[SECURITY] Role check failed in sendProvisioningEmail:", error.message);
+    return sendError(res, "Internal security error.", 500, "mail/internal-error");
   }
 
   const apiKey = process.env.SENDGRID_API_KEY;

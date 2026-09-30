@@ -39,11 +39,11 @@ This is mandatory for changes involving: authentication, authorization, Firebase
 **Strict Prohibition**: Do not use `git add .` when unrelated changes may exist. Stage only the intended files for the current change.
 
 After every important commit, report:
+
 - commit SHA
 - files changed
 - tests/checks executed
 - remaining uncommitted changes, if any.
-
 
 ## Common Commands
 

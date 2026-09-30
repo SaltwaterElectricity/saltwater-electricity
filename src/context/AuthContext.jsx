@@ -23,31 +23,23 @@ export const AuthProvider = ({ children }) => {
   const syncUserContext = useCallback(async (firebaseUser, forceRefresh = false) => {
     const traceId = Math.random().toString(36).substring(7);
     try {
-      // eslint-disable-next-line no-console
-      console.log(`[AUTH TRACE][${traceId}] sync-user-context-start: ${firebaseUser?.uid}`);
       if (firebaseUser) {
         // Authoritative source: Decoded ID Token (optionally forced)
         const data = await getFullUserData(firebaseUser.uid, firebaseUser, forceRefresh);
-        // eslint-disable-next-line no-console
-        console.log(`[AUTH TRACE][${traceId}] sync-user-context-success: ${firebaseUser.uid}`);
+
         setCurrentUser(firebaseUser);
         setUser(data || null);
       } else {
-        // eslint-disable-next-line no-console
-        console.log(`[AUTH TRACE][${traceId}] sync-user-context-null-user`);
         setCurrentUser(null);
         setUser(null);
       }
     } catch (error) {
-      console.error(`[AUTH TRACE][${traceId}] sync-user-context-error: ${error.message}`);
+      console.error(`[ROLE-PROBE][${traceId}] sync-user-context-error: ${error.message}`);
       logger.error("Auth Sync Error:", error);
-      // SAFETY: If sync fails (e.g. token expired), clear states to trigger fallback redirects
       setCurrentUser(null);
       setUser(null);
     } finally {
       setLoading(false);
-      // eslint-disable-next-line no-console
-      console.log(`[AUTH TRACE][${traceId}] auth-context-loading-set-false`);
     }
   }, []);
 
@@ -61,24 +53,14 @@ export const AuthProvider = ({ children }) => {
 
   // 2. Auth State Persistence Subscription
   useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log(`[AUTH TRACE] AuthContext-effect-entered`);
     const unsubscribeAuth = subscribeToAuthChanges((firebaseUser) => {
-      // eslint-disable-next-line no-console
-      console.log(
-        `[AUTH TRACE] onAuthStateChanged-fired: ${firebaseUser ? firebaseUser.uid : "null"}`
-      );
       // If user logs in (transition from null to user), clear expiration flag
       if (firebaseUser) {
         setIsSessionExpired(false);
       }
       syncUserContext(firebaseUser);
     });
-    // eslint-disable-next-line no-console
-    console.log(`[AUTH TRACE] listener-registration-completed`);
     return () => {
-      // eslint-disable-next-line no-console
-      console.log(`[AUTH TRACE] unsubscribe-called`);
       unsubscribeAuth();
     };
   }, [syncUserContext]);
@@ -118,31 +100,20 @@ export const AuthProvider = ({ children }) => {
 
   // Memoized Helpers for App.jsx and ProtectedRoute
   const value = useMemo(() => {
-    // eslint-disable-next-line no-console
-    console.log(`[LIFECYCLE] AuthContext-value-recalculated: currentUser=${!!currentUser}, user=${!!user}, loading=${loading}`);
-    // Determine authoritative status
-    const status = user?.status || null;
     const role = user?.role || ROLES.RESIDENT;
-
 
     return {
       currentUser,
       user,
       userRole: role,
-      accountStatus: status,
+      accountStatus: user?.status || null,
       claims: user?.claims || {},
-
-      // Security Flags
-      isDisabled: status === USER_STATUS.DISABLED,
+      isDisabled: (user?.status || null) === USER_STATUS.DISABLED,
       mustChangePassword: user?.requiresPasswordChange || false,
-
-      // Permission Helpers (Unified Check)
       isSuperAdmin: isSuperAdmin(user),
       isAdmin: isAdmin(user),
-
       isSessionExpired,
       setIsSessionExpired,
-
       forceTokenRefresh,
       loading,
     };

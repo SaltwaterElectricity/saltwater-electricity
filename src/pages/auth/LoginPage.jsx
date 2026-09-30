@@ -14,13 +14,6 @@ const LoginPage = () => {
 
   // 🛡️ SECURITY REDIRECT
   useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log(`[LIFECYCLE] LoginPage-effect-evaluating: currentUser=${!!currentUser}, successData=${!!successData}, isTransitioning=${isTransitioning}`);
-    if (currentUser && !successData && !isTransitioning) {
-      // eslint-disable-next-line no-console
-      console.log(`[LIFECYCLE] LoginPage-redirecting-to-root`);
-      navigate("/", { replace: true });
-    }
   }, [currentUser, successData, isTransitioning, navigate]);
 
   useEffect(() => {
@@ -46,7 +39,9 @@ const LoginPage = () => {
   };
 
   const handleRedirect = useCallback(() => {
-    navigate("/dashboard", { replace: true });
+    // eslint-disable-next-line no-console
+    console.log("[NAV TRACE] LoginPage: navigate("/", { replace: true })");
+    navigate("/", { replace: true });
   }, [navigate]);
 
   return (

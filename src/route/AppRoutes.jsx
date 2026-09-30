@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 import { ROUTES, ROLE_LANDING_PAGES } from "../constants/routes";
 import { ROLES } from "../constants/roles";
+import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 
 // Pages & Components
 import NotFound from "../pages/NotFound";
@@ -23,35 +24,34 @@ import Alerts from "../components/admin/alerts/SystemAlerts";
 import LandingPage from "../pages/public/LandingPage";
 import PrivateRoute from "./PrivateRoute";
 
-/**
- * RootRedirect Component
- * Standardized redirect logic for the home route.
- * 1. If not logged in: Show LandingPage.
- * 2. If logged in: Redirect to role-specific landing page (e.g., Dashboard).
- */
 const RootRedirect = ({ user, role }) => {
-  // eslint-disable-next-line no-console
-  console.log(`[LIFECYCLE] RootRedirect-rendered: user=${!!user}, role=${role}`);
+  const { mustChangePassword, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-slate-50 font-sans antialiased">
+        <LoadingSpinner message="Verifying System Context..." size="w-12 h-12" />
+      </div>
+    );
+  }
+
   if (!user) {
-    // eslint-disable-next-line no-console
-    console.log(`[LIFECYCLE] RootRedirect-redirect: LandingPage (no user)`);
     return <LandingPage />;
   }
+
+  if (mustChangePassword) {
+    return <Navigate to={ROUTES.FORCE_PASSWORD_CHANGE} replace />;
+  }
+
   if (!role) {
-    // eslint-disable-next-line no-console
-    console.log(`[LIFECYCLE] RootRedirect-redirect: LandingPage (no role)`);
-    return <LandingPage />; // Fallback if role is loading
+    return <LandingPage />;
   }
 
-  // If we have a role, redirect to the authorized landing page
   if (ROLE_LANDING_PAGES[role]) {
-    // eslint-disable-next-line no-console
-    console.log(`[LIFECYCLE] RootRedirect-redirect: ${ROLE_LANDING_PAGES[role]} (role=${role})`);
-    return <Navigate to={ROLE_LANDING_PAGES[role]} replace />;
+    const destination = ROLE_LANDING_PAGES[role];
+    return <Navigate to={destination} replace />;
   }
 
-  // eslint-disable-next-line no-console
-  console.log(`[LIFECYCLE] RootRedirect-redirect: NotFound (role=${role} not in map)`);
   return <NotFound />;
 };
 
@@ -60,52 +60,30 @@ export const AppRoutes = () => {
 
   return (
     <Routes>
-      {/* 1. DEFAULT ROUTE: Render LandingPage at the root path ('/') */}
-      {/* Note: Using RootRedirect to handle authenticated users as well, 
-          as per standard dashboard behavior, while keeping LandingPage as the primary root component. */}
       <Route path="/" element={<RootRedirect user={currentUser} role={userRole} />} />
-
-      {/* 2. AUTH ROUTE: Render LoginPage at '/login' */}
       <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-
-      {/* Required for system security: Forced password changes */}
       <Route
         path={ROUTES.FORCE_PASSWORD_CHANGE}
         element={mustChangePassword ? <ForcePasswordChange /> : <Navigate to="/" replace />}
       />
-
-      {/* 3. PROTECTED ROUTES & PLACEHOLDERS */}
       <Route element={<PrivateRoute />}>
         <Route element={<MainLayout />}>
-          {/* Dashboard Route (Standard entry point) */}
           <Route path="/dashboard" element={<DashboardController />} />
-
-          {/* Detailed Admin Modules */}
           {(isAdmin || isSuperAdmin) && (
             <Route element={<PrivateRoute requiredRole={ROLES.ADMIN} />}>
-              <Route
-                path={ROUTES.ADMIN_USER_MANAGEMENT}
-                element={<UserManagement currentUserRole={userRole} />}
-              />
-              <Route
-                path={ROUTES.ADMIN_RESIDENT_MANAGEMENT}
-                element={<ResidentManagement currentUserRole={userRole} />}
-              />
+              <Route path={ROUTES.ADMIN_USER_MANAGEMENT} element={<UserManagement currentUserRole={userRole} />} />
+              <Route path={ROUTES.ADMIN_RESIDENT_MANAGEMENT} element={<ResidentManagement currentUserRole={userRole} />} />
               <Route path={ROUTES.ADMIN_DEVICE_MANAGEMENT} element={<DeviceManagement />} />
               <Route path={ROUTES.ADMIN_REQUEST_MANAGEMENT} element={<RequestManagement />} />
               <Route path={ROUTES.ADMIN_AUDIT_LOGS} element={<AuditLogPage />} />
               <Route path={ROUTES.REGISTER_USER} element={<AccountProvisioning mode="user" />} />
             </Route>
           )}
-
-          {/* Super Admin Module */}
           {isSuperAdmin && (
             <Route element={<PrivateRoute requiredRole={ROLES.SUPER_ADMIN} />}>
               <Route path={ROUTES.REGISTER_STAFF} element={<AccountProvisioning mode="staff" />} />
             </Route>
           )}
-
-          {/* Shared Application Views */}
           <Route path={ROUTES.ALERTS} element={<Alerts />} />
           <Route path={ROUTES.HISTORY_OVERVIEW} element={<HistoricalData />} />
           <Route path={ROUTES.DEVICE_ANALYTICS} element={<DeviceAnalytics />} />
@@ -114,8 +92,6 @@ export const AppRoutes = () => {
           <Route path={ROUTES.SMART_AQUA_MONITOR} element={<RealTimeMonitor />} />
         </Route>
       </Route>
-
-      {/* 4. SILENT 404: Catch-all renders NotFound directly if authenticated, otherwise redirects to login */}
       <Route
         path="*"
         element={currentUser ? <NotFound /> : <Navigate to={ROUTES.LOGIN} replace />}

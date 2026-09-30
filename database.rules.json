@@ -5,19 +5,19 @@
 
     "users": {
       ".indexOn": ["email"],
-      ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
+      ".read": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
       "$uid": {
         ".read": "auth != null && auth.uid == $uid",
-        ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || auth.uid == $uid || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && newData.parent().parent().child('roles').child($uid).child('role').val() == 'resident'))"
+        ".write": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || auth.uid == $uid || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && newData.parent().parent().child('roles').child($uid).child('role').val() == 'resident'))"
       }
     },
 
     "accounts": {
-      ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
+      ".read": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
       "$uid": {
         ".read": "auth != null && auth.uid == $uid",
         // Allows SuperAdmin, self-updates, or Admin managing Residents
-        ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || auth.uid == $uid || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && newData.parent().parent().child('roles').child($uid).child('role').val() == 'resident'))",
+        ".write": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || auth.uid == $uid || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && newData.parent().parent().child('roles').child($uid).child('role').val() == 'resident'))",
 
         "status": {
           ".validate": "newData.val() == 'active' || newData.val() == 'disabled' || newData.val() == 'suspended'"
@@ -33,49 +33,49 @@
 
     "roles": {
       ".indexOn": ["role"],
-      ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
+      ".read": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
       "$uid": {
         ".read": "auth != null && auth.uid == $uid",
-        ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && newData.child('role').val() == 'resident'))"
+        ".write": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && newData.child('role').val() == 'resident'))"
       }
     },
 
     "device_information": {
       ".indexOn": ["availability"],
-      ".read": "auth != null",
+      ".read": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false",
       "$device_id": {
-        ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
+        ".write": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
         ".validate": "newData.hasChildren(['device_id', 'availability'])"
       }
     },
 
     "device_assignments": {
-      ".read": "auth != null",
+      ".read": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false",
       "$device_id": {
-        ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')"
+        ".write": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')"
       }
     },
 
     "device-requests": {
       ".indexOn": ["userId"],
-      ".read": "auth != null",
+      ".read": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false",
       "$request_id": {
-        ".write": "auth != null && (!data.exists() || data.child('userId').val() == auth.uid || root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
+        ".write": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (!data.exists() || data.child('userId').val() == auth.uid || root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
         ".validate": "newData.hasChildren(['requestType', 'userId', 'status'])"
       }
     },
 
     "readings": {
       "$device_id": {
-        ".read": "auth != null && (root.child('device_assignments').child($device_id).child('userId').val() == auth.uid || root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
+        ".read": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('device_assignments').child($device_id).child('userId').val() == auth.uid || root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
         "latest": {
-          ".write": "auth != null && (root.child('device_assignments').child($device_id).child('userId').val() == auth.uid || root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
+          ".write": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('device_assignments').child($device_id).child('userId').val() == auth.uid || root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
           ".validate": "newData.hasChildren(['tds_ppm', 'voltage'])"
         },
         "logs": {
           ".indexOn": ["timestamp"],
           "$log_id": {
-            ".write": "auth != null && (root.child('device_assignments').child($device_id).child('userId').val() == auth.uid || root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
+            ".write": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('device_assignments').child($device_id).child('userId').val() == auth.uid || root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
             ".validate": "newData.hasChildren(['timestamp', 'tds_ppm'])"
           }
         }
@@ -84,23 +84,24 @@
 
     "commands": {
       "$device_id": {
-        ".read": "auth != null && (root.child('device_assignments').child($device_id).child('userId').val() == auth.uid || root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
-        ".write": "auth != null && (root.child('device_assignments').child($device_id).child('userId').val() == auth.uid || root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')"
+        ".read": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('device_assignments').child($device_id).child('userId').val() == auth.uid || root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
+        ".write": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('device_assignments').child($device_id).child('userId').val() == auth.uid || root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')"
       }
     },
 
     "audit-logs": {
-      ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
+      ".read": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
       "$log_id": {
-        ".write": "auth != null && (!data.exists() || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
+        ".write": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (!data.exists() || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
         ".validate": "newData.hasChildren(['adminEmail', 'action', 'createdAt'])"
       }
     },
 
     "otp-requests": {
-      "$userId": {
-        ".read": "auth != null && auth.uid == $userId",
-        ".write": "auth != null && (auth.uid == $userId || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
+      ".read": false,
+      "$transactionToken": {
+        ".read": "auth != null && (root.child('accounts').child(auth.uid).child('status').val() == 'active' || root.child('accounts').child(auth.uid).child('status').val() == 'disabled' || root.child('accounts').child(auth.uid).child('status').val() == 'suspended') && (root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false || root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == true) && (data.child('uid').val() == auth.uid || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
+        ".write": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (auth.uid == data.child('uid').val() || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
         ".validate": "newData.hasChildren(['code', 'createdAt', 'expiresAt'])"
       }
     },
@@ -113,14 +114,14 @@
     },
 
     "notifications": {
-      ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
+      ".read": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
       "admin": {
-        ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
-        ".write": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')"
+        ".read": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
+        ".write": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')"
       },
       "$uid": {
-        ".read": "auth != null && (auth.uid == $uid || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
-        ".write": "auth != null && (auth.uid == $uid || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')"
+        ".read": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (auth.uid == $uid || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
+        ".write": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (auth.uid == $uid || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')"
       }
     }
   }

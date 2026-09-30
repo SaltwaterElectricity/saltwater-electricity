@@ -32,6 +32,7 @@ const PrivateRoute = ({ requiredRole, children }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+
   // Mandatory internal system state check (Password reset)
   if (mustChangePassword && location.pathname !== "/force-password-change") {
     return <Navigate to="/force-password-change" replace />;

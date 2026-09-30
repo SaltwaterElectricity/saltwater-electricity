@@ -1,22 +1,20 @@
 /**
  * Environment Safety Guard
- * 
- * This helper ensures that tests only run against explicitly approved test environments.
- * It fails closed to prevent accidental mutation of production data.
  */
 function verifyEnvironment() {
+  const normalize = (url) => url ? url.replace(/\/+$/, '') : '';
+  
   const requiredEnv = {
     projectId: process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID,
-    databaseUrl: process.env.FIREBASE_DATABASE_URL || process.env.VITE_FIREBASE_DATABASE_URL,
-    apiBaseUrl: process.env.API_BASE_URL,
+    databaseUrl: normalize(process.env.FIREBASE_DATABASE_URL || process.env.VITE_FIREBASE_DATABASE_URL),
+    apiBaseUrl: normalize(process.env.API_BASE_URL),
     envMarker: process.env.VITE_ENV,
   };
 
-  // POSITIVE ALLOWLIST: These must match exactly.
   const approvedEnv = {
     projectId: process.env.APPROVED_TEST_PROJECT_ID,
-    databaseUrl: process.env.APPROVED_TEST_DATABASE_URL,
-    apiBaseUrl: process.env.APPROVED_TEST_API_BASE_URL,
+    databaseUrl: normalize(process.env.APPROVED_TEST_DATABASE_URL),
+    apiBaseUrl: normalize(process.env.APPROVED_TEST_API_BASE_URL),
     envMarker: 'test',
   };
 
