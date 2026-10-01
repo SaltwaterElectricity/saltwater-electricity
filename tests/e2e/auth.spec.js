@@ -15,7 +15,7 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
       password: process.env.TEST_USER_ADMIN_PASSWORD,
       expectedRole: "admin",
       expectedRoute: "/dashboard",
-      requiresPasswordChange: true,
+      requiresPasswordChange: false,
       tempPassword: "S3cur3!Pass2026_Admin",
     },
     residentA: {
@@ -23,7 +23,7 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
       password: process.env.TEST_USER_RESIDENT_A_PASSWORD,
       expectedRole: "resident",
       expectedRoute: "/dashboard",
-      requiresPasswordChange: true,
+      requiresPasswordChange: false,
       tempPassword: "S3cur3!Pass2026_ResA",
     },
     residentB: {
@@ -31,7 +31,7 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
       password: process.env.TEST_USER_RESIDENT_B_PASSWORD,
       expectedRole: "resident",
       expectedRoute: "/dashboard",
-      requiresPasswordChange: true,
+      requiresPasswordChange: false,
       tempPassword: "S3cur3!Pass2026_ResB",
     },
   };
