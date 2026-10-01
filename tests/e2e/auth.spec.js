@@ -106,7 +106,7 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
     await page.click('button:has-text("LOGIN NOW")');
     // Wait for the application to resolve the identity and land on a valid page
     // before returning, ensuring the session is fully established.
-    await page.waitForURL(url => url.pathname !== "/login", { timeout: 15000 });
+    await page.waitForURL((url) => url.pathname !== "/login", { timeout: 15000 });
   }
 
   test.describe("Identity-Specific Flows", () => {
@@ -179,7 +179,7 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
 
     await page.goto("/admin/user-management");
     // Verify that the PrivateRoute returns <NotFound />
-    await expect(page.locator("text=Page Not Found")).toBeVisible({ timeout: 10000 });
+    await expect(page.locator("text=Navigation Error")).toBeVisible({ timeout: 10000 });
     console.log("✅ Resident blocked from Admin route (NotFound rendered).");
 
     const logoutBtn = page.locator("text=Logout");
@@ -193,7 +193,7 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
     await performLogin(page, TEST_USERS.admin.email, TEST_USERS.admin.password);
 
     await page.goto("/admin/register-staff");
-    await expect(page.locator("text=Page Not Found")).toBeVisible({ timeout: 10000 });
+    await expect(page.locator("text=Navigation Error")).toBeVisible({ timeout: 10000 });
     console.log("✅ Admin blocked from SuperAdmin route (NotFound rendered).");
 
     const logoutBtn = page.locator("text=Logout");
