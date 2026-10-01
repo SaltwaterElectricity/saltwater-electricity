@@ -38,9 +38,9 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
 
   test.beforeEach(async ({ page }) => {
     const logs = [];
-    page.on('console', (msg) => {
+    page.on("console", (msg) => {
       const text = msg.text();
-      if (text.includes('[AUTH-FORENSICS]') || text.includes('[ROUTE-FORENSICS]')) {
+      if (text.includes("[AUTH-FORENSICS]") || text.includes("[ROUTE-FORENSICS]")) {
         logs.push({
           timestamp: new Date().toISOString(),
           type: msg.type(),
@@ -50,19 +50,19 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
       }
     });
 
-    page.on('requestfailed', (request) => {
+    page.on("requestfailed", (request) => {
       logs.push({
         timestamp: new Date().toISOString(),
-        type: 'REQUEST_FAILED',
+        type: "REQUEST_FAILED",
         text: `Request failed: ${request.url()} - ${request.failure()?.errorText}`,
         url: page.url(),
       });
     });
 
-    page.on('pageerror', (exception) => {
+    page.on("pageerror", (exception) => {
       logs.push({
         timestamp: new Date().toISOString(),
-        type: 'PAGE_ERROR',
+        type: "PAGE_ERROR",
         text: `Exception: ${exception.message}`,
         url: page.url(),
       });
@@ -93,7 +93,7 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
           console.log(`[${i}] ${log.timestamp} | ${log.type} | ${log.url} | ${log.text}`);
         });
       } else {
-        console.log('No forensic logs captured.');
+        console.log("No forensic logs captured.");
       }
       console.log(`--- END FORENSIC TIMELINE ---\n`);
     }
@@ -174,12 +174,6 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
     console.log("🚀 Testing Cross-role Isolation: Resident -> Admin...");
     await performLogin(page, TEST_USERS.residentA.email, TEST_USERS.residentA.password);
 
-    if (TEST_USERS.residentA.requiresPasswordChange) {
-      await page.locator('input[name="newPassword"]').fill(TEST_USERS.residentA.tempPassword);
-      await page.locator('input[name="confirmPassword"]').fill(TEST_USERS.residentA.tempPassword);
-      await page.click('button:has-text("Secure Account & Continue")');
-    }
-
     await page.goto("/admin/user-management");
     // Verify that the PrivateRoute returns <NotFound />
     await expect(page.locator("text=Page Not Found")).toBeVisible({ timeout: 10000 });
@@ -194,12 +188,6 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
   test("Cross-role Authorization: Admin cannot access SuperAdmin routes", async ({ page }) => {
     console.log("🚀 Testing Cross-role Isolation: Admin -> SuperAdmin...");
     await performLogin(page, TEST_USERS.admin.email, TEST_USERS.admin.password);
-
-    if (TEST_USERS.admin.requiresPasswordChange) {
-      await page.locator('input[name="newPassword"]').fill(TEST_USERS.admin.tempPassword);
-      await page.locator('input[name="confirmPassword"]').fill(TEST_USERS.admin.tempPassword);
-      await page.click('button:has-text("Secure Account & Continue")');
-    }
 
     await page.goto("/admin/register-staff");
     await expect(page.locator("text=Page Not Found")).toBeVisible({ timeout: 10000 });
