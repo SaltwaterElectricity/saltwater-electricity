@@ -216,18 +216,10 @@ export const loginUser = async (email, password) => {
       throw new appError(AUTH_ERROR_MESSAGES[code], true, code);
     }
 
-    //PERSISTENCE
+    // PERSISTENCE
     await setPersistence(auth, browserSessionPersistence);
     const userCredential = await signInWithEmailAndPassword(auth, cleanEmail, password);
     const uid = userCredential.user.uid;
-
-    // Reset attempts on successful login using consistent tracking ID
-    // DEPRECATED: Custom lockout retired. This call is kept for compatibility but the API should return 404.
-    fetch("/api/auth/record-attempt", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: "success" }),
-    }).catch((e) => logger.warn("[Auth Service] Legacy attempt reset called:", e));
 
     // Verify system status before allowing the session to continue
     const userData = await getFullUserData(uid, userCredential.user);
