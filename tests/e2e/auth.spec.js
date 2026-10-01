@@ -104,6 +104,9 @@ test.describe("Full Staging Authentication & Authorization Suite", () => {
     await page.locator('input[placeholder="name@example.com"]').fill(email);
     await page.locator('input[placeholder="••••••••"]').fill(password);
     await page.click('button:has-text("LOGIN NOW")');
+    // Wait for the application to resolve the identity and land on a valid page
+    // before returning, ensuring the session is fully established.
+    await page.waitForURL(url => url.pathname !== "/login", { timeout: 15000 });
   }
 
   test.describe("Identity-Specific Flows", () => {
