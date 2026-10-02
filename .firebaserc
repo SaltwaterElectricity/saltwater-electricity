@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "saltwater-electricity"
-  }
+    "default": "saltwater-electricity",
+    "staging": "saltwater-electricity-staging"
+  },
+  "targets": {},
+  "etags": {}
 }

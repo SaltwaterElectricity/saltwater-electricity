@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }) => {
       if (firebaseUser) {
         // Authoritative source: Decoded ID Token (optionally forced)
         const data = await getFullUserData(firebaseUser.uid, firebaseUser, forceRefresh);
+
         /* eslint-disable-next-line no-console */
         console.log(`[AUTH-FORENSICS][${traceId}] getFullUserData returned:`, { role: data?.role, status: data?.status, requiresPasswordChange: data?.requiresPasswordChange });
 
@@ -40,6 +41,7 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
       }
     } catch (error) {
+
       console.error(`[ROLE-PROBE][${traceId}] sync-user-context-error: ${error.message}`);
       logger.error("Auth Sync Error:", error);
       setCurrentUser(null);

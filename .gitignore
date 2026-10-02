@@ -3,7 +3,6 @@ logs
 *.log
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
@@ -21,15 +20,15 @@ cypress/downloads
 .idea
 .DS_Store
 *.suo
-*.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Environment Secrets
 .env
 .env.test
-.vercel
+.env.production
 .env*.local
-// Deployment Trigger - Sun, Sep 27, 2026 12:03:55 AM
-// Deployment Trigger - Sun, Sep 27, 2026 12:04:05 AM
-// Deployment Trigger - Sun, Sep 27, 2026 12:31:45 AM
-// Fresh Deployment Trigger - Sun, Sep 27, 2026 12:47:12 AM
+
+# Allow templates
+!.env.example

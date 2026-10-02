@@ -1,5 +1,6 @@
 import { Navigate, useLocation, Outlet } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
+import { auth } from "../firebaseConfig";
 import { ROLES } from "../constants/roles";
 import { LoadingSpinner } from "../components/ui";
 import NotFound from "../pages/NotFound"; // ENUMERATION PREVENTION: Use NotFound instead of Redirects
@@ -15,7 +16,7 @@ const PrivateRoute = ({ requiredRole, children }) => {
   const location = useLocation();
 
   // 1. LOADING STATE
-  if (loading) {
+  if (loading || (!currentUser && auth.currentUser)) {
     return (
       <div className="flex items-center justify-center h-screen bg-slate-50 font-sans antialiased">
         <LoadingSpinner message="Verifying System Context..." size="w-12 h-12" />
@@ -27,7 +28,7 @@ const PrivateRoute = ({ requiredRole, children }) => {
   // If not logged in OR role check fails, return <NotFound />
   // This prevents unprivileged users or scanners from discovering valid paths.
 
-  if (!currentUser && !isSessionExpired) {
+  if (!currentUser && !isSessionExpired && !auth.currentUser) {
     // Redirect to login if session has expired or user is unauthenticated
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
