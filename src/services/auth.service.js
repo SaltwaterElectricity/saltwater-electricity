@@ -17,6 +17,7 @@ import {
 import { ROLES } from "../constants/roles";
 import { appError } from "../utils/appError";
 import { logger } from "../utils/logger";
+import { getApiUrl } from "../utils/apiClient";
 import { generateDefaultPassword } from "../utils/passwordGenerator";
 import { sendOnboardingEmail } from "./email.service";
 import { logLoginSuccess, logLoginFailure, logLogout, logActivity } from "./audit.service";
@@ -429,7 +430,7 @@ export const getFullUserData = async (uid, firebaseUser = null, forceRefresh = f
  */
 export const resetUserPasswordWithOTP = async (email, newPassword, otp) => {
   try {
-    const response = await fetch("/api/resetPassword", {
+    const response = await fetch(getApiUrl("/api/resetPassword"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, newPassword, otp }),

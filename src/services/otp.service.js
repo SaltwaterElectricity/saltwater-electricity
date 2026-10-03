@@ -1,5 +1,6 @@
 import { appError } from "../utils/appError";
 import { logger } from "../utils/logger";
+import { getApiUrl } from "../utils/apiClient";
 
 /**
  * OTP SERVICE (Backend-Powered)
@@ -19,7 +20,7 @@ export const generateOTP = async (userId_not_used, email) => {
   }
 
   try {
-    const response = await fetch("/api/generateOTP", {
+    const response = await fetch(getApiUrl("/api/generateOTP"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
@@ -75,7 +76,7 @@ export const verifyOTP = async (trackingId, inputCode, shouldDelete = false) => 
   }
 
   try {
-    const response = await fetch("/api/verifyOTP", {
+    const response = await fetch(getApiUrl("/api/verifyOTP"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ trackingId, code: inputCode, shouldDelete }),

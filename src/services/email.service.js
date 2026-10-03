@@ -1,6 +1,7 @@
 import { appError } from "../utils/appError";
 import { logger } from "../utils/logger";
 import { auth } from "../firebaseConfig";
+import { getApiUrl } from "../utils/apiClient";
 
 /**
  * EMAIL SERVICE (Refactored for Vercel Serverless Functions)
@@ -35,7 +36,7 @@ const triggerSecureEmail = async (emailData) => {
       headers["Authorization"] = `Bearer ${token}`;
     }
 
-    const response = await fetch("/api/sendProvisioningEmail", {
+    const response = await fetch(getApiUrl("/api/sendProvisioningEmail"), {
       method: "POST",
       headers,
       body: JSON.stringify(emailData),
