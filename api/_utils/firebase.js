@@ -9,10 +9,10 @@ import { getDatabase } from "firebase-admin/database";
 export function initFirebaseAdmin() {
   if (!getApps().length) {
     // Strictly use non-prefixed variables for backend secrets
-    const projectId = process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID; // projectId is okay to have VITE_ as it's not a secret
+    const projectId = process.env.FIREBASE_PROJECT_ID;
     const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
     const privateKey = process.env.FIREBASE_PRIVATE_KEY;
-    const databaseURL = process.env.VITE_FIREBASE_DATABASE_URL; // databaseURL is also not a secret
+    const databaseURL = process.env.FIREBASE_DATABASE_URL;
 
     if (!projectId || !clientEmail || !privateKey) {
       console.error(
