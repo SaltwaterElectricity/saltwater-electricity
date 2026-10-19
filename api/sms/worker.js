@@ -26,6 +26,8 @@ export default async function handler(req, res) {
       batchSize: 3,
       maxDurationMs: 10000,
       deadlineBufferMs: 3000,
+      dryRun: req.headers["x-test-mode"] === "true",
+      targetMsgId: req.body.targetMsgId,
     });
 
     return sendSuccess(res, {

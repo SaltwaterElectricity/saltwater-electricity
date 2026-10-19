@@ -4,7 +4,10 @@ import { v4 as uuidv4 } from "uuid";
  * UniSMS Adapter
  * Isolated implementation of the external provider API.
  */
-export async function submitToUniSMS(_record) {
+export async function submitToUniSMS(_record, dryRun = false) {
+  if (dryRun) {
+    return { status: "dry_run_accepted", refId: `dry_${Math.random().toString(36).substr(2, 9)}` };
+  }
   if (process.env.UNISMS_LIVE_SEND_ENABLED !== "true") {
     // Mocked behavior for local testing/development
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -113,21 +116,33 @@ export async function finalizeMessage(db, msgId, claimToken, submissionResult, _
     });
 }
 
-export async function processQueueBatch(db, { cursor, batchSize, maxDurationMs, deadlineBufferMs }) {
+export async function processQueueBatch(db, { cursor, batchSize, maxDurationMs, deadlineBufferMs, dryRun = false, targetMsgId }) {
   const startTime = Date.now();
   const queueRef = db.ref("sms_queue_v2");
   let processedCount = 0;
 
-  // UNICITY INVARIANT: sortKey must be unique (e.g., timestamp_id) to prevent pagination loops.
-  const snapshot = await queueRef
-    .orderByChild("sortKey")
-    .startAt(cursor)
-    .endAt(Date.now().toString() + "_ZZZZ")
-    .limitToFirst(100)
-    .once("value");
+  let records = {};
+  let recordIds = [];
 
-  const records = snapshot.val() || {};
-  const recordIds = Object.keys(records);
+  if (targetMsgId) {
+    const snap = await queueRef.child(targetMsgId).once("value");
+    const record = snap.val();
+    if (record) {
+      records = { [targetMsgId]: record };
+      recordIds = [targetMsgId];
+    }
+  } else {
+    // UNICITY INVARIANT: sortKey must be unique (e.g., timestamp_id) to prevent pagination loops.
+    const snapshot = await queueRef
+      .orderByChild("sortKey")
+      .startAt(cursor)
+      .endAt(Date.now().toString() + "_ZZZZ")
+      .limitToFirst(100)
+      .once("value");
+
+    records = snapshot.val() || {};
+    recordIds = Object.keys(records);
+  }
 
   let index = 0;
   for (const msgId of recordIds) {
@@ -145,6 +160,16 @@ export async function processQueueBatch(db, { cursor, batchSize, maxDurationMs, 
     const isExpired = (record.status === "claimed" || record.status === "submitting") && record.leaseExpiresAt < now;
 
     if (!isPending && !isExpired) continue;
+
+    if (dryRun) {
+      // Dry run: Just verify the record is processable without claiming it
+      const isP = record.status === "pending";
+      const isE = (record.status === "claimed" || record.status === "submitting") && record.leaseExpiresAt < Date.now();
+      if (isP || isE) {
+        processedCount++;
+      }
+      continue;
+    }
 
     const claimToken = uuidv4();
     const leaseDuration = 90 * 1000;
@@ -167,7 +192,7 @@ export async function processQueueBatch(db, { cursor, batchSize, maxDurationMs, 
     if (!claimAndSubmitSuccess.committed) continue;
 
     try {
-      const submissionResult = await submitToUniSMS(record);
+      const submissionResult = await submitToUniSMS(record, dryRun);
       const finalizationSuccess = await finalizeMessage(db, msgId, claimToken, submissionResult, record);
 
       if (finalizationSuccess.committed) {
