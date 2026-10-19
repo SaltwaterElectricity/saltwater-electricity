@@ -15,7 +15,6 @@ import webhookHandler from "../sms/webhook.js";
 import triggerHandler from "../triggerHardwareAlert.js";
 
 describe("UniSMS Migration - Emulator Integration Tests", () => {
-
   let mockRes;
   let db;
 
@@ -40,8 +39,15 @@ describe("UniSMS Migration - Emulator Integration Tests", () => {
       if (db) {
         // Use a shorter timeout for the cleanup
         await Promise.race([
-          Promise.all([db.ref("sms_queue").remove(), db.ref("sms_queue_v2").remove(), db.ref("device_information").remove(), db.ref("device_assignments").remove(), db.ref("users").remove(), db.ref("system_metadata/alerts").remove()]),
-          new Promise((_, reject) => setTimeout(() => reject(new Error('CLEANUP_TIMEOUT')), 5000))
+          Promise.all([
+            db.ref("sms_queue").remove(),
+            db.ref("sms_queue_v2").remove(),
+            db.ref("device_information").remove(),
+            db.ref("device_assignments").remove(),
+            db.ref("users").remove(),
+            db.ref("system_metadata/alerts").remove(),
+          ]),
+          new Promise((_, reject) => setTimeout(() => reject(new Error("CLEANUP_TIMEOUT")), 5000)),
         ]);
       }
     } catch (e) {
@@ -61,15 +67,16 @@ describe("UniSMS Migration - Emulator Integration Tests", () => {
       await db.ref(`users/USER_TEST_UNIQUE`).set({ mobileNum: "639123456789" });
     }
 
-    it("should use legacy queue when ENABLE_SMS_V2 is absent", async () => {
+    it("should reject request when ENABLE_SMS_V2 is absent (legacy retired)", async () => {
       process.env.ENABLE_SMS_V2 = undefined;
       process.env.MASTER_GATEWAY_UID = "GW1";
       await setupProducerData();
 
       await triggerHandler(mockReq, mockRes);
 
+      expect(mockRes.status).toHaveBeenCalledWith(503);
       const legacySnapshot = await db.ref("sms_queue").once("value");
-      expect(legacySnapshot.exists()).toBe(true);
+      expect(legacySnapshot.exists()).toBe(false);
       const v2Snapshot = await db.ref("sms_queue_v2").once("value");
       expect(v2Snapshot.exists()).toBe(false);
     });
@@ -87,7 +94,7 @@ describe("UniSMS Migration - Emulator Integration Tests", () => {
       expect(legacySnapshot.exists()).toBe(false);
     });
 
-    it("should retain legacy behavior for invalid ENABLE_SMS_V2 values", async () => {
+    it("should reject request for invalid ENABLE_SMS_V2 values (legacy retired)", async () => {
       const invalidValues = ["false", "TRUE", "random", ""];
       for (const val of invalidValues) {
         process.env.ENABLE_SMS_V2 = val;
@@ -96,8 +103,9 @@ describe("UniSMS Migration - Emulator Integration Tests", () => {
 
         await triggerHandler(mockReq, mockRes);
 
+        expect(mockRes.status).toHaveBeenCalledWith(503);
         const legacySnapshot = await db.ref("sms_queue").once("value");
-        expect(legacySnapshot.exists()).toBe(true);
+        expect(legacySnapshot.exists()).toBe(false);
         const v2Snapshot = await db.ref("sms_queue_v2").once("value");
         expect(v2Snapshot.exists()).toBe(false);
         await db.ref().remove();
@@ -112,7 +120,7 @@ describe("UniSMS Migration - Emulator Integration Tests", () => {
       await db.ref(`sms_queue_v2/${msgId}`).set({
         status: "pending",
         sortKey: "100_msg1",
-        submissionCount: 0
+        submissionCount: 0,
       });
 
       const mockReq = {
@@ -123,12 +131,20 @@ describe("UniSMS Migration - Emulator Integration Tests", () => {
 
       // Run two worker calls in parallel
       await Promise.all([
-        handler(mockReq, { status: vi.fn().mockReturnThis(), json: vi.fn().mockReturnThis(), setHeader: vi.fn().mockReturnThis() }),
-        handler(mockReq, { status: vi.fn().mockReturnThis(), json: vi.fn().mockReturnThis(), setHeader: vi.fn().mockReturnThis() }),
+        handler(mockReq, {
+          status: vi.fn().mockReturnThis(),
+          json: vi.fn().mockReturnThis(),
+          setHeader: vi.fn().mockReturnThis(),
+        }),
+        handler(mockReq, {
+          status: vi.fn().mockReturnThis(),
+          json: vi.fn().mockReturnThis(),
+          setHeader: vi.fn().mockReturnThis(),
+        }),
       ]);
 
       // Allow async updates and UniSMS mock latency (100ms) to commit
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const finalRecord = await db.ref(`sms_queue_v2/${msgId}`).get();
       const val = finalRecord.val();
@@ -144,7 +160,7 @@ describe("UniSMS Migration - Emulator Integration Tests", () => {
         status: "claimed",
         leaseExpiresAt: Date.now() - 1000,
         sortKey: "100_exp",
-        submissionCount: 0
+        submissionCount: 0,
       });
 
       const mockReq = {
@@ -155,7 +171,7 @@ describe("UniSMS Migration - Emulator Integration Tests", () => {
 
       await handler(mockReq, mockRes);
       // Allow async updates and UniSMS mock latency (100ms) to commit
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const record = await db.ref(`sms_queue_v2/${msgId}`).get();
       const val = record.val();
 
@@ -172,7 +188,7 @@ describe("UniSMS Migration - Emulator Integration Tests", () => {
       await db.ref(`sms_queue_v2/${msgId}`).set({
         status: "pending",
         sortKey: "100_stale",
-        submissionCount: 0
+        submissionCount: 0,
       });
 
       // Worker A claims a pending record through the real implementation
@@ -204,7 +220,7 @@ describe("UniSMS Migration - Emulator Integration Tests", () => {
       await handler(mockReq, mockRes);
 
       // Allow mock latency to commit
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await new Promise((resolve) => setTimeout(resolve, 200));
 
       const stateB = (await db.ref(`sms_queue_v2/${msgId}`).get()).val();
       const tokenB = stateB.claimToken;
@@ -220,8 +236,10 @@ describe("UniSMS Migration - Emulator Integration Tests", () => {
       const { finalizeMessage } = await import("../sms/sms.service.js");
       const mockSubmission = { status: "accepted", refId: "uni_stale_test" };
       const admin = initFirebaseAdmin();
-      const finalizationResult = await finalizeMessage(admin.db, msgId, tokenA, mockSubmission, { submissionCount: 1 });
-      
+      const finalizationResult = await finalizeMessage(admin.db, msgId, tokenA, mockSubmission, {
+        submissionCount: 1,
+      });
+
       expect(finalizationResult.committed).toBe(false);
 
       // 5. Verify B's ownership remains intact
@@ -294,13 +312,18 @@ describe("UniSMS Migration - Emulator Integration Tests", () => {
       const msgId = "msg_rec";
       await db.ref(`sms_queue_v2/${msgId}`).set({
         providerRefId: "prov_rec",
-        status: "provider_accepted"
+        status: "provider_accepted",
       });
 
       const mockReq = {
         method: "POST",
         headers: { "x-unisms-signature": "sig" },
-        body: { eventId: "evt_rec", id: "prov_rec", event: "delivered", userId: "USER_TEST_UNIQUE" },
+        body: {
+          eventId: "evt_rec",
+          id: "prov_rec",
+          event: "delivered",
+          userId: "USER_TEST_UNIQUE",
+        },
       };
 
       db.ref.mockClear();
@@ -313,5 +336,4 @@ describe("UniSMS Migration - Emulator Integration Tests", () => {
       expect(indexSnap.exists()).toBe(false);
     });
   });
-
 });
