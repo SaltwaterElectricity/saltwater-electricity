@@ -1,6 +1,9 @@
-
 import { sendSuccess, sendError, handleOptions } from "./_utils/response.js";
-import { getPendingOutboxEntries, markOutboxSynced, updateOutboxAttempt } from "../_utils/outbox.js";
+import {
+  getPendingOutboxEntries,
+  markOutboxSynced,
+  updateOutboxAttempt,
+} from "../_utils/outbox.js";
 import axios from "axios";
 
 export default async function handler(req, res) {
@@ -23,15 +26,19 @@ export default async function handler(req, res) {
 
     for (const [eventId, entry] of entries) {
       try {
-        const response = await axios.post(process.env.SMS_API_INGEST_URL, {
-          number: entry.number,
-          message: entry.message,
-          deviceId: entry.deviceId,
-          eventId: eventId,
-        }, {
-          headers: { "x-api-key": process.env.SMS_API_KEY },
-          timeout: 5000,
-        });
+        const response = await axios.post(
+          process.env.SMS_API_INGEST_URL,
+          {
+            number: entry.number,
+            message: entry.message,
+            deviceId: entry.deviceId,
+            eventId: eventId,
+          },
+          {
+            headers: { "x-api-key": process.env.SMS_API_KEY },
+            timeout: 5000,
+          }
+        );
 
         if (response.status === 200 || response.status === 202) {
           await markOutboxSynced(eventId);

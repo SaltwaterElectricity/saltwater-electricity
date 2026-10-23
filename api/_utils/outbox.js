@@ -1,4 +1,3 @@
-
 import { initFirebaseAdmin } from "./firebase.js";
 
 /**
@@ -8,7 +7,7 @@ import { initFirebaseAdmin } from "./firebase.js";
 export async function saveToOutbox(deviceId, number, message, eventId) {
   const { db } = initFirebaseAdmin();
   const outboxRef = db.ref(`hardware_alert_outbox/${eventId}`);
-  
+
   await outboxRef.set({
     deviceId,
     number,
@@ -31,7 +30,8 @@ export async function markOutboxSynced(eventId) {
 
 export async function getPendingOutboxEntries(limit = 50) {
   const { db } = initFirebaseAdmin();
-  return await db.ref("hardware_alert_outbox")
+  return await db
+    .ref("hardware_alert_outbox")
     .orderByChild("status")
     .equalTo("pending")
     .limitToFirst(limit)
@@ -43,7 +43,7 @@ export async function updateOutboxAttempt(eventId, error = null) {
   const ref = db.ref(`hardware_alert_outbox/${eventId}`);
   const snap = await ref.get();
   if (!snap.exists()) return;
-  
+
   const current = snap.val();
   await ref.update({
     attempts: (current.attempts || 0) + 1,

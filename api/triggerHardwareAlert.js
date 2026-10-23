@@ -1,5 +1,6 @@
 import { initFirebaseAdmin } from "./_utils/firebase.js";
 import { sendSuccess, sendError, handleOptions } from "./_utils/response.js";
+import { saveToOutbox, markOutboxSynced } from "./_utils/outbox.js";
 
 /**
  * Vercel Serverless Function: triggerHardwareAlert
@@ -31,7 +32,6 @@ export default async function handler(req, res) {
     // 2. Dynamic Hardware Token Authentication (Device Isolation)
     const deviceRef = db.ref(`device_information/${deviceId}`);
     const deviceSnap = await deviceRef.get();
-    
 
     if (!deviceSnap.exists()) {
       return sendError(res, "Device not registered.", 404, "hw/unregistered");
@@ -94,7 +94,15 @@ export default async function handler(req, res) {
       );
     }
 
-    // 5. Dispatch via Standalone SMS API
+    const mobileNum = userSnap.val().mobileNum;
+    const alertTitle = "CRITICAL: Salinity Alert";
+    const alertMessage = `Unit ${deviceId} detected critical high TDS levels: ${tdsValue} PPM. Check dashboard now.`;
+
+    // 5. Durable Outbox Logging (Ensures delivery even if API call fails)
+    const eventId = `hw_${deviceId}_${now}`;
+    await saveToOutbox(deviceId, mobileNum, alertMessage, eventId);
+
+    // 6. Dispatch via Standalone SMS API
     const SMS_API_URL = process.env.SMS_API_URL;
 
     if (!SMS_API_URL) {
@@ -105,25 +113,27 @@ export default async function handler(req, res) {
     try {
       const apiResponse = await fetch(`${SMS_API_URL}/api/triggerHardwareAlert`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", "X-Parent-Auth": process.env.PARENT_AUTH_SECRET || '' },
+        headers: {
+          "Content-Type": "application/json",
+          "X-Parent-Auth": process.env.PARENT_AUTH_SECRET || "",
+        },
         body: JSON.stringify({ deviceId, tdsValue, secretKey }),
       });
 
-      if (!apiResponse.ok) {
+      if (apiResponse.ok) {
+        await markOutboxSynced(eventId);
+      } else {
         const errorData = await apiResponse.json().catch(() => ({}));
-        return sendError(res, errorData.message || "Standalone SMS API error", apiResponse.status, "hw/api-failure");
+        console.warn(`[triggerHardwareAlert] Standalone API returned ${apiResponse.status}: ${errorData.message}`);
       }
     } catch (error) {
       console.error("[triggerHardwareAlert] HTTP call to Standalone SMS API failed:", error);
-      return sendError(res, "Internal API communication error", 500, "hw/api-comm-fail");
     }
 
     const newSmsRef = { key: "standalone_api" };
 
-    // 6. Dispatch In-App Notifications (Unified Protocol)
+    // 7. Dispatch In-App Notifications (Unified Protocol)
     const notificationRef = db.ref("notifications");
-    const alertTitle = "CRITICAL: Salinity Alert";
-    const alertMessage = `Unit ${deviceId} detected critical high TDS levels: ${tdsValue} PPM. Check dashboard now.`;
 
     const notificationData = {
       title: alertTitle,
@@ -142,7 +152,7 @@ export default async function handler(req, res) {
       title: `${alertTitle} (${deviceId})`,
     });
 
-    // 7. Update Metadata
+    // 8. Update Metadata
     await alertMetaRef.set({
       lastSmsSent: now,
       lastTdsValue: tdsValue,
@@ -150,7 +160,7 @@ export default async function handler(req, res) {
       smsQueueId: newSmsRef.key,
     });
 
-    return sendSuccess(res, { message: "Alert queued for private gateway dispatch." });
+    return sendSuccess(res, { message: "Alert processed and queued for dispatch." });
   } catch (error) {
     return sendError(res, error, 500, "hw/process-failed");
   }
