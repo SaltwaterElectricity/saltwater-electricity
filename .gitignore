@@ -6,23 +6,28 @@ yarn-debug.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# Dependencies and Build
+node_modules/
+dist/
+dist-ssr/
 *.local
-cypress/videos
-cypress/screenshots
-cypress/downloads
+.vercel/
 
-# Editor directories and files
+# Cypress
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+
+# Editor and OS
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.njsproj
 *.sln
 *.sw?
+.obsidian/
 
 # Environment Secrets
 .env
@@ -32,3 +37,12 @@ cypress/downloads
 
 # Allow templates
 !.env.example
+
+# Generated Artifacts
+graphify-out/
+graphify_*/
+test-results/
+playwright-report/
+
+# Standalone SMS API
+sms-api-migration/

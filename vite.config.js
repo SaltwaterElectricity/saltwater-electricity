@@ -13,7 +13,7 @@ export default defineConfig(() => ({
     environment: "jsdom",
     globals: true,
     setupFiles: "./setupTests.js",
-    exclude: ["**/node_modules/**", "**/dist/**", "**/tests/**", "**/cypress/**"],
+    exclude: ["**/node_modules/**", "**/dist/**", "**/cypress/**"],
   },
 
   base: "/", // Root-resolved assets for SPA deployment on Vercel

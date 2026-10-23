@@ -31,6 +31,7 @@ export default async function handler(req, res) {
     // 2. Dynamic Hardware Token Authentication (Device Isolation)
     const deviceRef = db.ref(`device_information/${deviceId}`);
     const deviceSnap = await deviceRef.get();
+    
 
     if (!deviceSnap.exists()) {
       return sendError(res, "Device not registered.", 404, "hw/unregistered");
@@ -93,41 +94,31 @@ export default async function handler(req, res) {
       );
     }
 
-    const mobileNum = userSnap.val().mobileNum;
+    // 5. Dispatch via Standalone SMS API
+    const SMS_API_URL = process.env.SMS_API_URL;
 
-    // Format number for SMS (ensure 639... format)
-    let formattedNumber = mobileNum
-      .toString()
-      .trim()
-      .replace(/[^0-9]/g, "");
-    if (formattedNumber.startsWith("09")) {
-      formattedNumber = "63" + formattedNumber.substring(1);
-    } else if (formattedNumber.startsWith("9") && formattedNumber.length === 10) {
-      formattedNumber = "63" + formattedNumber;
+    if (!SMS_API_URL) {
+      console.error("[triggerHardwareAlert] SMS_API_URL not configured in environment.");
+      return sendError(res, "SMS API configuration error.", 500, "hw/api-missing");
     }
 
-    // 5. Dispatch to Private SMS Gateway Queue (CENTRALIZED PROTOCOL)
-    // All SMS alerts are routed to a single designated master device (gatewayUid).
-    const MASTER_GATEWAY_UID = process.env.MASTER_GATEWAY_UID;
+    try {
+      const apiResponse = await fetch(`${SMS_API_URL}/api/triggerHardwareAlert`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Parent-Auth": process.env.PARENT_AUTH_SECRET || '' },
+        body: JSON.stringify({ deviceId, tdsValue, secretKey }),
+      });
 
-    if (!MASTER_GATEWAY_UID) {
-      console.error("[triggerHardwareAlert] MASTER_GATEWAY_UID not configured in environment.");
-      return sendError(res, "SMS Gateway configuration error.", 500, "hw/gateway-missing");
+      if (!apiResponse.ok) {
+        const errorData = await apiResponse.json().catch(() => ({}));
+        return sendError(res, errorData.message || "Standalone SMS API error", apiResponse.status, "hw/api-failure");
+      }
+    } catch (error) {
+      console.error("[triggerHardwareAlert] HTTP call to Standalone SMS API failed:", error);
+      return sendError(res, "Internal API communication error", 500, "hw/api-comm-fail");
     }
 
-    const smsQueueRef = db.ref("sms_queue");
-    const message = `[SALT-ELEC] ALERT: Unit ${deviceId} detected critical TDS levels: ${tdsValue} PPM. Check dashboard now.`;
-
-    const queueEntry = {
-      number: formattedNumber,
-      message: message,
-      deviceId: deviceId,
-      gatewayUid: MASTER_GATEWAY_UID, // Route all messages to the master device
-      status: "pending",
-      createdAt: now,
-    };
-
-    const newSmsRef = await smsQueueRef.push(queueEntry);
+    const newSmsRef = { key: "standalone_api" };
 
     // 6. Dispatch In-App Notifications (Unified Protocol)
     const notificationRef = db.ref("notifications");

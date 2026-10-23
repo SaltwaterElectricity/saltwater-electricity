@@ -6,6 +6,11 @@ This document outlines the architectural blueprint, data flows, integration patt
 
 ## 1. High-Level System Topology
 
+
+---
+
+## 1. High-Level System Topology
+
 The Saltwater Electricity platform is an IoT monitoring and management dashboard designed to analyze and control salinity, voltage, and power usage. It consists of three primary architectural components:
 
 1.  **Frontend Dashboard (React 19 & Vite)**: Single Page Application (SPA) compiled to run as a web interface or wrapped in **Apache Cordova** for Android deployment.
@@ -232,3 +237,30 @@ Because Cordova applications run locally inside a browser-like Web View via the 
 - Vite config programmatically applies relative base rules for production releases:
   `base: command === "build" ? "./" : "/"`
 - This ensures all style, script, and image references resolve correctly on local Android file hosts.
+---
+
+## 6. Software Architecture Standards (ICM Extended)
+
+This section defines the governing rules for the project's software construction to ensure maintainability and security.
+
+### 6.1 Dependency Direction
+Dependencies must flow in one direction:
+`UI Components` -> `Custom Hooks` -> `Domain Services` -> `Infrastructure Adapters` -> `External APIs (Firebase/SendGrid)`.
+
+### 6.2 Frontend Layering
+1. **Primitives (`src/components/ui`)**: Stateless, reusable controls (Buttons, Gauges). No business logic.
+2. **Composites**: Higher-order reusable patterns (UserTable, RequestForm).
+3. **Features (`src/components/[domain]`)**: Components implementing a specific workflow (e.g., `ResidentManagement`).
+4. **Pages (`src/pages`)**: Composition of features and layouts; coordination of route parameters.
+5. **Hooks (`src/hooks`)**: Encapsulated state and asynchronous operations.
+
+### 6.3 Backend Layering (Vercel Serverless)
+1. **Route Handlers (`api/*.js`)**: HTTP contract, parameter parsing, and `SUEP` error mapping.
+2. **Use-Case Services (`src/services` or `api/services`)**: Orchestration of business operations.
+3. **Repositories (`api/_utils/firebase.js`)**: Concrete Firebase RTDB queries and transactions.
+4. **Adapters**: Wrappers for external APIs (e.g., `smsGateway.service.js`).
+
+### 6.4 Security Boundaries
+- **Client SDK**: Restricted to authenticated user paths via `database.rules.json`.
+- **Admin SDK**: Used exclusively in `/api` handlers; accessed via `initFirebaseAdmin()`.
+- **Authorization**: Role checks must occur at the API layer *before* service execution.

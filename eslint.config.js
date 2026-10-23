@@ -9,7 +9,7 @@ import prettierConfig from "eslint-config-prettier";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-  globalIgnores(["dist", "node_modules", "coverage", ".vercel"]),
+  globalIgnores(["dist", "node_modules", "coverage", ".vercel", "sms-api-migration", "tools/maintenance", "tests/verification", "graphify-out", "graphify_"]),
   {
     files: ["**/*.{js,jsx}"],
     plugins: {
@@ -64,7 +64,7 @@ export default defineConfig([
             "Do not hardcode Firebase API keys. Use environment variables (VITE_FIREBASE_API_KEY).",
         },
         {
-          selector: "Literal[value=/SG\\.[0-9A-Za-z-_]{22}\\.[0-9A-Za-z-_]{43}/]",
+          selector: "Literal[value=/SG.[0-9A-Za-z-_]{22}.[0-9A-Za-z-_]{43}/]",
           message:
             "Do not hardcode SendGrid API keys. Use environment variables (VITE_SENDGRID_API_KEY).",
         },

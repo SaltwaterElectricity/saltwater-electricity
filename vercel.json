@@ -25,7 +25,6 @@
     }
   },
   "rewrites": [
-
     {
       "source": "/((?!api|assets).*)",
       "destination": "/index.html"
