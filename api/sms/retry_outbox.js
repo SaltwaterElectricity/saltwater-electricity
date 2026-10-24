@@ -33,8 +33,8 @@ export default async function handler(req, res) {
     const lockId = crypto.randomUUID();
     const lockAcquired = await db.ref("system_metadata/sms_retry_lock").transaction((current) => {
       if (current === null) return { owner: lockId, timestamp: now };
-      
-      const timestamp = typeof current === 'number' ? current : current.timestamp;
+
+      const timestamp = typeof current === "number" ? current : current.timestamp;
       if (timestamp && now - timestamp > LOCK_TIMEOUT_MS) {
         return { owner: lockId, timestamp: now };
       }
