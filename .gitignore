@@ -27,16 +27,17 @@ cypress/downloads/
 *.njsproj
 *.sln
 *.sw?
+
 .obsidian/
 
-# Environment Secrets
-.env
-.env.test
-.env.production
-.env*.local
-
-# Allow templates
+# Environment files and secrets: ignore at root and in every nested directory.
+**/.env
+**/.env.*
+# Permit sanitized templates only.
 !.env.example
+!.env.*.example
+!**/.env.example
+!**/.env.*.example
 
 # Generated Artifacts
 graphify-out/
