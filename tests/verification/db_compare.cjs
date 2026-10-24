@@ -4,14 +4,22 @@ const dotenv = require('dotenv');
 
 dotenv.config({ path: '.env.test' });
 
+function requiredEnv(name) {
+  const value = process.env[name];
+  if (typeof value !== 'string' || value.trim() === '') {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value.trim();
+}
+
 const PROD_CONFIG = {
-  apiKey: 'AIzaSyCoivKDivjYhaNbUHzxhYxV4s-0wExfd4Y',
+  apiKey: requiredEnv('PRODUCTION_FIREBASE_API_KEY'),
   databaseURL: 'https://saltwater-electricity-default-rtdb.asia-southeast1.firebasedatabase.app/',
   projectId: 'saltwater-electricity',
 };
 
 const STAGING_CONFIG = {
-  apiKey: 'AIzaSyA2PgBgqI6-B0qczIknhwowp0iQklD4b00',
+  apiKey: requiredEnv('STAGING_FIREBASE_API_KEY'),
   databaseURL: 'https://saltwater-electricity-staging-default-rtdb.asia-southeast1.firebasedatabase.app/',
   projectId: 'saltwater-electricity-staging',
 };
