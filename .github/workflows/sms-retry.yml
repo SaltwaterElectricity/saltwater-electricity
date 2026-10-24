@@ -14,12 +14,18 @@ jobs:
         env:
           CRON_SECRET: ${{ secrets.SMS_RETRY_CRON_SECRET }}
         run: |
-          RESPONSE=$(curl -s -w "%{http_code}" -X POST "https://saltwater-electricity.vercel.app/api/sms/retry_outbox" \
+          RESPONSE=$(curl -s -S --connect-timeout 10 --max-time 30 -w "%{http_code}" -X POST "https://saltwater-electricity.vercel.app/api/sms/retry_outbox" \
             -H "x-cron-secret: $CRON_SECRET" \
             -H "Content-Type: application/json" \
             -d '{}' -o /dev/null)
+          CURL_EXIT=$?
           
           echo "HTTP Response Code: $RESPONSE"
+          
+          if [[ $CURL_EXIT -ne 0 ]]; then
+            echo "Error: Curl request failed with exit code $CURL_EXIT"
+            exit 1
+          fi
           
           if [[ "$RESPONSE" -lt 200 || "$RESPONSE" -ge 300 ]]; then
             echo "Error: Retry endpoint returned non-success status $RESPONSE"

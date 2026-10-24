@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import handler from '../api/sms/retry_outbox.js';
 import { initFirebaseAdmin } from '../api/_utils/firebase.js';
-import { isSmsDispatchPaused } from '../api/_utils/sms_control.js';
+import * as sms_control from '../api/_utils/sms_control.js';
 import { getPendingOutboxEntries } from '../api/_utils/outbox.js';
 
 vi.mock('../api/_utils/firebase.js');
@@ -33,7 +33,7 @@ describe('SMS Retry Lock Safety', () => {
     };
 
     initFirebaseAdmin.mockReturnValue({ db: mockDb });
-    isSmsDispatchPaused.mockResolvedValue(false);
+    sms_control.isSmsDispatchPaused.mockResolvedValue(false);
     getPendingOutboxEntries.mockResolvedValue({ val: () => null });
   });
 
@@ -66,7 +66,7 @@ describe('SMS Retry Lock Safety', () => {
   it('should recover from legacy numeric lock if expired', async () => {
     const res = createMockRes();
     const now = Date.now();
-    const expiredTimestamp = now - (6 * 60 * 1000); // 6 mins ago
+    const expiredTimestamp = now - 6 * 60 * 1000; // 6 mins ago
 
     mockLockRef.transaction.mockImplementation(async (fn) => {
       const result = fn(expiredTimestamp);
@@ -81,7 +81,7 @@ describe('SMS Retry Lock Safety', () => {
   it('should NOT acquire lock if legacy lock is not expired', async () => {
     const res = createMockRes();
     const now = Date.now();
-    const activeTimestamp = now - (1 * 60 * 1000); // 1 min ago
+    const activeTimestamp = now - 1 * 60 * 1000; // 1 min ago
 
     mockLockRef.transaction.mockImplementation(async (fn) => {
       const result = fn(activeTimestamp);
@@ -117,24 +117,59 @@ describe('SMS Retry Lock Safety', () => {
     expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ status: 'locked' }));
   });
 
-  it('should NOT release lock if owner has changed', async () => {
+  it('should protect lock ownership: A acquires, B steals, A cannot release', async () => {
     const res = createMockRes();
-    const lockId1 = 'owner-1';
-    const lockId2 = 'owner-2';
-
-    // 1. Acquire lock
+    
+    // 1. Simulate Owner A acquiring lock
     mockLockRef.transaction.mockImplementationOnce(async (fn) => {
-      return { committed: true, value: fn(null) };
+      const result = fn(null);
+      return { committed: true, value: result };
     });
     
-    // 2. Simulate another runner taking over before the first one releases
-    mockLockRef.get.mockResolvedValue({ val: () => ({ owner: lockId2, timestamp: Date.now() }) });
-
-    // Simulate the atomic release transaction
+    // 2. Simulate that by the time A tries to release, Owner B has taken over
+    const otherOwner = { owner: 'other-runner', timestamp: Date.now() };
+    let releaseResult = null;
+    
     mockLockRef.transaction.mockImplementation(async (fn) => {
-       return { committed: true, value: fn({ owner: lockId2 }) };
+      releaseResult = fn(otherOwner);
+      return { committed: true, value: releaseResult };
     });
 
     await handler(mockReq, res);
+    
+    // releaseResult must be undefined (meaning the transaction returned 'return;')
+    // and NOT null (which would mean 'return null' -> delete lock)
+    expect(releaseResult).toBeUndefined();
+    expect(releaseResult).not.toBeNull();
+  });
+
+  it('should NOT acquire lock or call API if dispatch is paused', async () => {
+    const res = createMockRes();
+    sms_control.isSmsDispatchPaused.mockResolvedValue(true);
+    
+    await handler(mockReq, res);
+    
+    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ status: 'paused' }));
+    expect(mockLockRef.transaction).not.toHaveBeenCalled();
+  });
+
+  it('should fail closed (paused) if isSmsDispatchPaused returns true', async () => {
+    const res = createMockRes();
+    sms_control.isSmsDispatchPaused.mockResolvedValue(true);
+    
+    await handler(mockReq, res);
+    
+    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ status: 'paused' }));
+    expect(mockLockRef.transaction).not.toHaveBeenCalled();
+  });
+
+  it('should fail closed (500) if isSmsDispatchPaused throws', async () => {
+    const res = createMockRes();
+    sms_control.isSmsDispatchPaused.mockRejectedValue(new Error('DB connection failed'));
+    
+    await handler(mockReq, res);
+    
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(mockLockRef.transaction).not.toHaveBeenCalled();
   });
 });
