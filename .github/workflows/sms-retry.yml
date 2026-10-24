@@ -11,8 +11,17 @@ jobs:
       contents: read
     steps:
       - name: Trigger Retry Endpoint
+        env:
+          CRON_SECRET: ${{ secrets.SMS_RETRY_CRON_SECRET }}
         run: |
-          curl -X POST \"https://saltwater-electricity.vercel.app/api/sms/retry_outbox\" \
-          -H \"x-cron-secret: \${{ secrets.SMS_RETRY_CRON_SECRET }}\" \
-          -H \"Content-Type: application/json\" \
-          -d '{}' -s -o /dev/null -w \"%{http_code}\"
+          RESPONSE=$(curl -s -w "%{http_code}" -X POST "https://saltwater-electricity.vercel.app/api/sms/retry_outbox" \
+            -H "x-cron-secret: $CRON_SECRET" \
+            -H "Content-Type: application/json" \
+            -d '{}' -o /dev/null)
+          
+          echo "HTTP Response Code: $RESPONSE"
+          
+          if [[ "$RESPONSE" -lt 200 || "$RESPONSE" -ge 300 ]]; then
+            echo "Error: Retry endpoint returned non-success status $RESPONSE"
+            exit 1
+          fi
