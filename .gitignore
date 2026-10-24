@@ -33,6 +33,7 @@ cypress/downloads/
 .env
 .env.test
 .env.production
+.env.parent-preview
 .env*.local
 
 # Allow templates

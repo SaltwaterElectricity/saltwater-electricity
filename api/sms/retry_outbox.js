@@ -6,6 +6,7 @@ import {
 } from "../_utils/outbox.js";
 import { isSmsDispatchPaused } from "../_utils/sms_control.js";
 import axios from "axios";
+import crypto from "crypto";
 import { initFirebaseAdmin } from "../_utils/firebase.js";
 
 export default async function handler(req, res) {
@@ -25,13 +26,17 @@ export default async function handler(req, res) {
 
     // --- Concurrency Control (Lease Lock) ---
     const { db } = initFirebaseAdmin();
-    const lockRef = db.ref("system_metadata/sms_retry_lock");
+
     const now = Date.now();
     const LOCK_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
 
+    const lockId = crypto.randomUUID();
     const lockAcquired = await db.ref("system_metadata/sms_retry_lock").transaction((current) => {
-      if (current === null || (now - current < 0 || now - current > LOCK_TIMEOUT_MS)) {
-        return now;
+      if (current === null) return { owner: lockId, timestamp: now };
+
+      const timestamp = typeof current === "number" ? current : current.timestamp;
+      if (timestamp && now - timestamp > LOCK_TIMEOUT_MS) {
+        return { owner: lockId, timestamp: now };
       }
       return;
     });
@@ -52,7 +57,7 @@ export default async function handler(req, res) {
 
       for (const [eventId, entry] of entries) {
         // --- Staleness Check ---
-        if (entry.createdAt && (now - entry.createdAt > STALE_THRESHOLD_MS)) {
+        if (entry.createdAt && now - entry.createdAt > STALE_THRESHOLD_MS) {
           console.warn(`[smsRetry] Alert ${eventId} is stale. Marking as expired.`);
           await db.ref(`hardware_alert_outbox/${eventId}`).update({ status: "expired" });
           continue;
@@ -85,8 +90,13 @@ export default async function handler(req, res) {
 
       return sendSuccess(res, { processed: processedCount, status: "batch_complete" });
     } finally {
-      // Release lock
-      await lockRef.remove();
+      // Atomic release: only remove if we are still the owner
+      await db.ref("system_metadata/sms_retry_lock").transaction((current) => {
+        if (current && current.owner === lockId) {
+          return null;
+        }
+        return;
+      });
     }
   } catch (error) {
     return sendError(res, error, 500, "sms/retry/internal-error");
