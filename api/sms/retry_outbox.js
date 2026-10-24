@@ -1,4 +1,4 @@
-import { sendSuccess, sendError, handleOptions } from "./_utils/response.js";
+import { sendSuccess, sendError, handleOptions } from "../_utils/response.js";
 import {
   getPendingOutboxEntries,
   markOutboxSynced,
