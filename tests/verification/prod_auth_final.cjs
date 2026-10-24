@@ -5,9 +5,17 @@ const dotenv = require('dotenv');
 
 dotenv.config({ path: '.env.test' });
 
+function requiredEnv(name) {
+  const value = process.env[name];
+  if (typeof value !== 'string' || value.trim() === '') {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value.trim();
+}
+
 // CORRECTED PROD_CONFIG using API key from .env.production
 const PROD_CONFIG = {
-  apiKey: 'AIzaSyCoivKDivjYhaNbUHzxhYxV4s-0wExfd4Y',
+  apiKey: requiredEnv('FIREBASE_API_KEY'),
   authDomain: 'saltwater-electricity.firebaseapp.com',
   databaseURL: 'https://saltwater-electricity-default-rtdb.asia-southeast1.firebasedatabase.app/',
   projectId: 'saltwater-electricity',
