@@ -1,6 +1,7 @@
 import { initFirebaseAdmin } from "./_utils/firebase.js";
 import { sendSuccess, sendError, handleOptions } from "./_utils/response.js";
 import { saveToOutbox, markOutboxSynced } from "./_utils/outbox.js";
+import { isSmsDispatchPaused } from "./_utils/sms_control.js";
 
 /**
  * Vercel Serverless Function: triggerHardwareAlert
@@ -110,24 +111,31 @@ export default async function handler(req, res) {
       return sendError(res, "SMS API configuration error.", 500, "hw/api-missing");
     }
 
-    try {
-      const apiResponse = await fetch(`${SMS_API_URL}/api/triggerHardwareAlert`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Parent-Auth": process.env.PARENT_AUTH_SECRET || "",
-        },
-        body: JSON.stringify({ deviceId, tdsValue, secretKey }),
-      });
+    const paused = await isSmsDispatchPaused();
+    if (paused) {
+      console.warn(`[triggerHardwareAlert] SMS dispatch is paused. Alert ${eventId} persisted as pending.`);
+    } else {
+      try {
+        const apiResponse = await fetch(`${SMS_API_URL}/api/triggerHardwareAlert`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Parent-Auth": process.env.PARENT_AUTH_SECRET || "",
+          },
+          body: JSON.stringify({ deviceId, tdsValue, secretKey }),
+        });
 
-      if (apiResponse.ok) {
-        await markOutboxSynced(eventId);
-      } else {
-        const errorData = await apiResponse.json().catch(() => ({}));
-        console.warn(`[triggerHardwareAlert] Standalone API returned ${apiResponse.status}: ${errorData.message}`);
+        if (apiResponse.ok) {
+          await markOutboxSynced(eventId);
+        } else {
+          const errorData = await apiResponse.json().catch(() => ({}));
+          console.warn(
+            `[triggerHardwareAlert] Standalone API returned ${apiResponse.status}: ${errorData.message}`
+          );
+        }
+      } catch (error) {
+        console.error("[triggerHardwareAlert] HTTP call to Standalone SMS API failed:", error);
       }
-    } catch (error) {
-      console.error("[triggerHardwareAlert] HTTP call to Standalone SMS API failed:", error);
     }
 
     const newSmsRef = { key: "standalone_api" };
