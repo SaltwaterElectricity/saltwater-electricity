@@ -5,13 +5,21 @@ const dotenv = require('dotenv');
 
 dotenv.config({ path: '.env.test' });
 
+function requiredEnv(name) {
+  const value = process.env[name];
+  if (typeof value !== 'string' || value.trim() === '') {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value.trim();
+}
+
 const PROD_CONFIG = {
-  apiKey: 'AIzaSyA2PgBgqI6-B0qczIknhwowp0iQklD4b00', // From .env.test (Production and Staging often share the same API key)
-  authDomain: 'saltwater-electricity.firebaseapp.com',
-  projectId: 'saltwater-electricity',
-  storageBucket: 'saltwater-electricity.appspot.com',
-  messagingSenderId: '71125560428',
-  appId: '1:71125560428:web:ae57f39c7d759c3ed9bc49',
+  apiKey: requiredEnv('PROD_FIREBASE_API_KEY'),
+  authDomain: requiredEnv('PROD_FIREBASE_AUTH_DOMAIN'),
+  projectId: requiredEnv('PROD_FIREBASE_PROJECT_ID'),
+  storageBucket: requiredEnv('PROD_FIREBASE_STORAGE_BUCKET'),
+  messagingSenderId: requiredEnv('PROD_FIREBASE_MESSAGING_SENDER_ID'),
+  appId: requiredEnv('PROD_FIREBASE_APP_ID'),
 };
 
 const PROD_API_BASE = 'https://saltwater-electricity.vercel.app';
