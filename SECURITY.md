@@ -1,6 +1,7 @@
 # Security Policy
 
 ## Reporting a Vulnerability
+
 Do not publish credentials or exploit details in issues or pull requests. Notify the repository maintainer privately and include the affected path and a redacted description.
 
 ## Environment Files and Secrets — Mandatory Repository Rules
@@ -13,6 +14,7 @@ Do not publish credentials or exploit details in issues or pull requests. Notify
 6. **Active Enforcement**: `.gitignore` is not sufficient by itself; verify prohibited files are not tracked and CI rejects them.
 7. **CI Guardrails**: CI must scan changed files for credential patterns, redact findings, and fail without printing secret values.
 8. **Zero-Credential Documentation**: Never use real credentials in Markdown, logs, examples, test fixtures, source code, commits, or generated reports.
+
 ## Safe Example
 
 Use placeholders such as `YOUR_FIREBASE_PROJECT_ID` and `REPLACE_WITH_SECRET_FROM_ENVIRONMENT`; do not use values copied from a real environment.

@@ -13,11 +13,6 @@ dist-ssr/
 *.local
 .vercel/
 
-# Cypress
-cypress/videos/
-cypress/screenshots/
-cypress/downloads/
-
 # Editor and OS
 .vscode/*
 !.vscode/extensions.json
