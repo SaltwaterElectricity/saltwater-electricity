@@ -113,7 +113,7 @@ describe("SMS Retry Outbox", () => {
 
     outbox.getPendingOutboxEntries.mockResolvedValue({
       val: () => ({
-        "evt1": { number: "123", message: "hi", deviceId: "d1", createdAt: Date.now() },
+        evt1: { number: "123", message: "hi", deviceId: "d1", createdAt: Date.now() },
       }),
     });
 
@@ -121,7 +121,9 @@ describe("SMS Retry Outbox", () => {
 
     await retryOutbox(req, res);
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ processed: 1, status: "batch_complete" }));
+    expect(res.json).toHaveBeenCalledWith(
+      expect.objectContaining({ processed: 1, status: "batch_complete" })
+    );
     expect(outbox.markOutboxSynced).toHaveBeenCalledWith("evt1");
   });
 
