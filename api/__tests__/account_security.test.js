@@ -23,6 +23,10 @@ vi.mock("../_utils/response.js", () => ({
   handleOptions: vi.fn(() => false),
 }));
 
+// Mock Environment for SendGrid
+vi.stubEnv('SENDGRID_API_KEY', 'mock-key');
+vi.stubEnv('SENDGRID_SENDER_EMAIL', 'mock@test.com');
+
 // Mock SendGrid
 vi.mock("@sendgrid/mail", () => ({
   default: {
