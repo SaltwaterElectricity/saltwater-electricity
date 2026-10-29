@@ -100,7 +100,10 @@ describe("Parent -> Standalone API Integration", () => {
         } else if (_path.includes("device_assignments")) {
           ref.get.mockResolvedValue({ exists: () => true, val: () => ({ userId: "user123" }) });
         } else if (_path.includes("users")) {
-          ref.get.mockResolvedValue({ exists: () => true, val: () => ({ mobileNum: "123456789" }) });
+          ref.get.mockResolvedValue({
+            exists: () => true,
+            val: () => ({ mobileNum: "123456789" }),
+          });
         }
         return ref;
       });
@@ -112,14 +115,17 @@ describe("Parent -> Standalone API Integration", () => {
 
       await triggerHardwareAlert(req, res);
 
-      expect(fetch).toHaveBeenCalledWith("https://standalone-api.test/api/triggerHardwareAlert", expect.objectContaining({
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Parent-Auth": "parent-secret",
-        },
-        body: JSON.stringify({ deviceId: "dev123", tdsValue: 100, secretKey: "token123" }),
-      }));
+      expect(fetch).toHaveBeenCalledWith(
+        "https://standalone-api.test/api/triggerHardwareAlert",
+        expect.objectContaining({
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Parent-Auth": "parent-secret",
+          },
+          body: JSON.stringify({ deviceId: "dev123", tdsValue: 100, secretKey: "token123" }),
+        })
+      );
       expect(res.status).toHaveBeenCalledWith(200);
     });
 
@@ -145,7 +151,10 @@ describe("Parent -> Standalone API Integration", () => {
         } else if (_path.includes("device_assignments")) {
           ref.get.mockResolvedValue({ exists: () => true, val: () => ({ userId: "user123" }) });
         } else if (_path.includes("users")) {
-          ref.get.mockResolvedValue({ exists: () => true, val: () => ({ mobileNum: "123456789" }) });
+          ref.get.mockResolvedValue({
+            exists: () => true,
+            val: () => ({ mobileNum: "123456789" }),
+          });
         }
         return ref;
       });
@@ -183,7 +192,10 @@ describe("Parent -> Standalone API Integration", () => {
         } else if (_path.includes("device_assignments")) {
           ref.get.mockResolvedValue({ exists: () => true, val: () => ({ userId: "user123" }) });
         } else if (_path.includes("users")) {
-          ref.get.mockResolvedValue({ exists: () => true, val: () => ({ mobileNum: "123456789" }) });
+          ref.get.mockResolvedValue({
+            exists: () => true,
+            val: () => ({ mobileNum: "123456789" }),
+          });
         }
         return ref;
       });
@@ -217,14 +229,19 @@ describe("Parent -> Standalone API Integration", () => {
         } else if (_path.includes("device_assignments")) {
           ref.get.mockResolvedValue({ exists: () => true, val: () => ({ userId: "user123" }) });
         } else if (_path.includes("users")) {
-          ref.get.mockResolvedValue({ exists: () => true, val: () => ({ mobileNum: "123456789" }) });
+          ref.get.mockResolvedValue({
+            exists: () => true,
+            val: () => ({ mobileNum: "123456789" }),
+          });
         }
         return ref;
       });
 
       fetch.mockResolvedValue({
         ok: true,
-        json: async () => { throw new Error("Unexpected token < in JSON"); },
+        json: async () => {
+          throw new Error("Unexpected token < in JSON");
+        },
       });
 
       await triggerHardwareAlert(req, res);
@@ -243,7 +260,7 @@ describe("Parent -> Standalone API Integration", () => {
 
       const mockPending = {
         val: () => ({
-          "evt1": { number: "123", message: "hello", deviceId: "dev1", createdAt: Date.now() },
+          evt1: { number: "123", message: "hello", deviceId: "dev1", createdAt: Date.now() },
         }),
       };
       outboxUtils.getPendingOutboxEntries.mockResolvedValue(mockPending);
@@ -278,7 +295,7 @@ describe("Parent -> Standalone API Integration", () => {
 
       const mockPending = {
         val: () => ({
-          "evt1": { number: "123", message: "hello", deviceId: "dev1", createdAt: Date.now() },
+          evt1: { number: "123", message: "hello", deviceId: "dev1", createdAt: Date.now() },
         }),
       };
       outboxUtils.getPendingOutboxEntries.mockResolvedValue(mockPending);

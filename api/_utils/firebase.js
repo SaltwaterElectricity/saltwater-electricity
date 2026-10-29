@@ -6,7 +6,9 @@ export function initFirebaseAdmin() {
   if (!getApps().length) {
     if (process.env.FIREBASE_DATABASE_EMULATOR_HOST) {
       const emulatorHost = process.env.FIREBASE_DATABASE_EMULATOR_HOST;
-      const emulatorUrl = process.env.FIREBASE_DATABASE_URL || `https://${process.env.FIREBASE_PROJECT_ID || 'test-project'}.firebaseio.com`;
+      const emulatorUrl =
+        process.env.FIREBASE_DATABASE_URL ||
+        `https://${process.env.FIREBASE_PROJECT_ID || "test-project"}.firebaseio.com`;
 
       initializeApp({
         projectId: process.env.FIREBASE_PROJECT_ID || "test-project",
@@ -23,7 +25,8 @@ export function initFirebaseAdmin() {
         if (projectId !== "saltwater-electricity-staging") {
           throw new Error("[SECURITY] Production project ID detected in Preview environment.");
         }
-        const expectedStagingUrl = "https://saltwater-electricity-staging-default-rtdb.asia-southeast1.firebasedatabase.app";
+        const expectedStagingUrl =
+          "https://saltwater-electricity-staging-default-rtdb.asia-southeast1.firebasedatabase.app";
         if (databaseURL !== expectedStagingUrl) {
           throw new Error("[SECURITY] Preview isolation failure: Database URL mismatch.");
         }
@@ -33,16 +36,14 @@ export function initFirebaseAdmin() {
         throw new Error("Missing Firebase Admin credentials (CLIENT_EMAIL or PRIVATE_KEY).");
       }
 
-
-        initializeApp({
-          credential: cert({
-            projectId,
-            clientEmail,
-            privateKey: privateKey.replace(/\\\\n/g, "\\n"),
-          }),
-          databaseURL,
-        });
-
+      initializeApp({
+        credential: cert({
+          projectId,
+          clientEmail,
+          privateKey: privateKey.replace(/\\\\n/g, "\\n"),
+        }),
+        databaseURL,
+      });
     }
   }
   if (process.env.FIREBASE_DATABASE_EMULATOR_HOST) {

@@ -3,15 +3,15 @@ import crypto from "crypto";
 
 async function generateToken(durationHours = 24) {
   const { db } = initFirebaseAdmin();
-  const token = crypto.randomBytes(16).toString('hex');
-  const hash = crypto.createHash('sha256').update(token).digest('hex');
-  const expiresAt = Date.now() + (durationHours * 60 * 60 * 1000);
+  const token = crypto.randomBytes(16).toString("hex");
+  const hash = crypto.createHash("sha256").update(token).digest("hex");
+  const expiresAt = Date.now() + durationHours * 60 * 60 * 1000;
 
   await db.ref(`enrollment_tokens/${hash}`).set({
     consumed: false,
     expiresAt: expiresAt,
     createdAt: Date.now(),
-    createdBy: "admin-tool"
+    createdBy: "admin-tool",
   });
 
   console.warn("--------------------------------------------------");
@@ -24,4 +24,3 @@ async function generateToken(durationHours = 24) {
 }
 
 generateToken().catch(console.error);
-

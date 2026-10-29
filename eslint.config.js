@@ -8,7 +8,17 @@ import prettierConfig from "eslint-config-prettier";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-  globalIgnores(["dist", "node_modules", "coverage", ".vercel", "sms-api-migration", "tools/maintenance", "tests/verification", "graphify-out", "graphify_"]),
+  globalIgnores([
+    "dist",
+    "node_modules",
+    "coverage",
+    ".vercel",
+    "sms-api-migration",
+    "tools/maintenance",
+    "tests/verification",
+    "graphify-out",
+    "graphify_",
+  ]),
   {
     files: ["**/*.{js,jsx}"],
     plugins: {
