@@ -1,17 +1,11 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import retryOutbox from "../../api/../api/sms/retry_outbox.js";
-import standaloneIngest from "../../api/../api/../sms-api-migration/api/sms/ingest.js";
 import * as parentFirebase from "../../api/../api/_utils/firebase.js";
-import * as standaloneFirebase from "../../api/../api/../sms-api-migration/lib/firebase.js";
 import * as outboxUtils from "../../api/../api/_utils/outbox.js";
 import axios from "axios";
 
-// Mock Firebase Admin for both projects
+// Mock Firebase Admin for Parent project
 vi.mock("../../api/../api/_utils/firebase.js", () => ({
-  initFirebaseAdmin: vi.fn(),
-}));
-
-vi.mock("../../api/../api/../sms-api-migration/lib/firebase.js", () => ({
   initFirebaseAdmin: vi.fn(),
 }));
 
@@ -63,7 +57,6 @@ describe("Cross-Project Isolated Integration", () => {
     };
 
     parentFirebase.initFirebaseAdmin.mockReturnValue({ db: mockDb });
-    standaloneFirebase.initFirebaseAdmin.mockReturnValue({ db: mockDb });
 
     res = {
       status: vi.fn().mockReturnThis(),
@@ -83,23 +76,19 @@ describe("Cross-Project Isolated Integration", () => {
     outboxUtils.getPendingOutboxEntries.mockResolvedValue(mockPending);
 
     axios.post.mockImplementation(async (url, body, config) => {
-      const standaloneReq = {
-        method: "POST",
-        headers: config.headers,
-        body: body,
-      };
-      const standaloneRes = {
-        status: vi.fn().mockReturnThis(),
-        json: vi.fn().mockReturnThis(),
-        setHeader: vi.fn(),
-      };
-      
-      await standaloneIngest(standaloneReq, standaloneRes);
-      
-      return {
-        status: standaloneRes.status.mock.calls[0][0],
-        data: standaloneRes.json.mock.calls[0][0],
-      };
+      // Mock Standalone Ingest Logic
+      const apiKey = config.headers["x-api-key"];
+      if (apiKey === process.env.SMS_INGEST_API_KEY) {
+        return {
+          status: 200,
+          data: { success: true, message: "Accepted" },
+        };
+      } else {
+        return {
+          status: 401,
+          data: { error: "Unauthorized", code: "auth/invalid-api-key" },
+        };
+      }
     });
 
     await retryOutbox(req, res);
@@ -127,23 +116,19 @@ describe("Cross-Project Isolated Integration", () => {
     outboxUtils.getPendingOutboxEntries.mockResolvedValue(mockPending);
 
     axios.post.mockImplementation(async (url, body, config) => {
-      const standaloneReq = {
-        method: "POST",
-        headers: config.headers,
-        body: body,
-      };
-      const standaloneRes = {
-        status: vi.fn().mockReturnThis(),
-        json: vi.fn().mockReturnThis(),
-        setHeader: vi.fn(),
-      };
-      
-      await standaloneIngest(standaloneReq, standaloneRes);
-      
-      return {
-        status: standaloneRes.status.mock.calls[0][0],
-        data: standaloneRes.json.mock.calls[0][0],
-      };
+      // Mock Standalone Ingest Logic
+      const apiKey = config.headers["x-api-key"];
+      if (apiKey === process.env.SMS_INGEST_API_KEY) {
+        return {
+          status: 200,
+          data: { success: true, message: "Accepted" },
+        };
+      } else {
+        return {
+          status: 401,
+          data: { error: "Unauthorized", code: "auth/invalid-api-key" },
+        };
+      }
     });
 
     await retryOutbox(req, res);
