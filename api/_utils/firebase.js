@@ -43,7 +43,7 @@ export function initFirebaseAdmin() {
         credential: cert({
           projectId,
           clientEmail,
-          privateKey: privateKey.replace(/\\\\n/g, "\\n"),
+          privateKey: privateKey.replace(/\\n/g, "\n"),
         }),
         databaseURL,
       });
