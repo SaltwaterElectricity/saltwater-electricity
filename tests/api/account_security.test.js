@@ -1,15 +1,15 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import resetPassword from "../resetPassword.js";
-import sendProvisioningEmail from "../sendProvisioningEmail.js";
-import { initFirebaseAdmin } from "../_utils/firebase.js";
+import resetPassword from "../../api/../api/resetPassword.js";
+import sendProvisioningEmail from "../../api/../api/sendProvisioningEmail.js";
+import { initFirebaseAdmin } from "../../api/../api/_utils/firebase.js";
 
 // Mock Firebase Admin
-vi.mock("../_utils/firebase.js", () => ({
+vi.mock("../../api/../api/_utils/firebase.js", () => ({
   initFirebaseAdmin: vi.fn(),
 }));
 
 // Mock Response Utils
-vi.mock("../_utils/response.js", () => ({
+vi.mock("../../api/../api/_utils/response.js", () => ({
   sendSuccess: vi.fn((res, data) => {
     res.status(200);
     res.json(data);

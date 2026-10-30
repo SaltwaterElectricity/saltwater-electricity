@@ -18,7 +18,7 @@ describe('SMS Retry Lock Safety', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    process.env.SMS_RETRY_CRON_SECRET = 'secret123';
+    process.env.CRON_SECRET = 'secret123';
     process.env.SMS_API_URL = 'http://api.sms.com';
     process.env.PARENT_AUTH_SECRET = 'parent_secret';
 
@@ -38,7 +38,7 @@ describe('SMS Retry Lock Safety', () => {
   });
 
   const mockReq = {
-    headers: { 'x-cron-secret': 'secret123' },
+    headers: { 'authorization': 'Bearer secret123' },
   };
   
   const createMockRes = () => {

@@ -1,24 +1,24 @@
-import { initFirebaseAdmin } from "./firebase.js";
+import { initFirebaseAdmin } from './firebase.js';
 
 function sanitizeError(error) {
   if (!error) return null;
   const msg = error.toString();
   return msg
-    .replace(/Authorization: (Bearer|Basic) [a-zA-Z0-9._/-]+/gi, "Authorization: [REDACTED]")
-    .replace(/x-api-key: [a-zA-Z0-9._/-]+/gi, "x-api-key: [REDACTED]")
-    .replace(/-----BEGIN PRIVATE KEY-----.*?-----END PRIVATE KEY-----/gs, "[PRIVATE KEY REDACTED]")
+    .replace(/Authorization: (Bearer|Basic) [a-zA-Z0-9._/-]+/gi, 'Authorization: [REDACTED]')
+    .replace(/x-api-key: [a-zA-Z0-9._/-]+/gi, 'x-api-key: [REDACTED]')
+    .replace(/-----BEGIN PRIVATE KEY-----.*?-----END PRIVATE KEY-----/gs, '[PRIVATE KEY REDACTED]')
     .substring(0, 255);
 }
 
 export function getOutboxPath(eventId) {
   const isE2E = process.env.E2E_MODE === 'true';
-  const root = isE2E ? "hardware_alert_outbox_e2e" : "hardware_alert_outbox";
+  const root = isE2E ? 'hardware_alert_outbox_e2e' : 'hardware_alert_outbox';
   return `${root}/${eventId}`;
 }
 
 function getOutboxRoot() {
   const isE2E = process.env.E2E_MODE === 'true';
-  return isE2E ? "hardware_alert_outbox_e2e" : "hardware_alert_outbox";
+  return isE2E ? 'hardware_alert_outbox_e2e' : 'hardware_alert_outbox';
 }
 
 export async function saveToOutbox(deviceId, number, message, eventId) {
@@ -30,7 +30,7 @@ export async function saveToOutbox(deviceId, number, message, eventId) {
     number,
     message,
     eventId,
-    status: "pending",
+    status: 'pending',
     createdAt: Date.now(),
     attempts: 0,
     lastAttemptAt: null,
@@ -40,7 +40,7 @@ export async function saveToOutbox(deviceId, number, message, eventId) {
 export async function markOutboxSynced(eventId) {
   const { db } = initFirebaseAdmin();
   await db.ref(getOutboxPath(eventId)).update({
-    status: "synced",
+    status: 'synced',
     syncedAt: Date.now(),
   });
 }
@@ -49,10 +49,10 @@ export async function getPendingOutboxEntries(limit = 50) {
   const { db } = initFirebaseAdmin();
   return await db
     .ref(getOutboxRoot())
-    .orderByChild("status")
-    .equalTo("pending")
+    .orderByChild('status')
+    .equalTo('pending')
     .limitToFirst(limit)
-    .once("value");
+    .once('value');
 }
 
 export async function updateOutboxAttempt(eventId, error = null) {

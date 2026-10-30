@@ -16,7 +16,6 @@
       ".read": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
       "$uid": {
         ".read": "auth != null && auth.uid == $uid",
-        // Allows SuperAdmin, self-updates, or Admin managing Residents
         ".write": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || auth.uid == $uid || (root.child('roles').child(auth.uid).child('role').val() == 'admin' && newData.parent().parent().child('roles').child($uid).child('role').val() == 'resident'))",
 
         "status": {
@@ -42,7 +41,7 @@
 
     "device_information": {
       ".indexOn": ["availability"],
-      ".read": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false",
+      ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
       "$device_id": {
         ".write": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
         ".validate": "newData.hasChildren(['device_id', 'availability'])"

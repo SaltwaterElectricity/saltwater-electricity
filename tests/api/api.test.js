@@ -1,9 +1,9 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import generateOTP from "../generateOTP.js";
-import verifyOTP from "../verifyOTP.js";
+import generateOTP from "../../api/../api/generateOTP.js";
+import verifyOTP from "../../api/../api/verifyOTP.js";
 
 // Mock shared utilities
-vi.mock("../_utils/firebase.js", () => ({
+vi.mock("../../api/../api/_utils/firebase.js", () => ({
   initFirebaseAdmin: vi.fn(() => ({
     auth: {
       getUserByEmail: vi.fn((email) => {

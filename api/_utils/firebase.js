@@ -3,6 +3,9 @@ import { getAuth } from "firebase-admin/auth";
 import { getDatabase } from "firebase-admin/database";
 
 export function initFirebaseAdmin() {
+  if (process.env.VERCEL_ENV === "production" && process.env.E2E_MODE === "true") {
+    throw new Error("[SECURITY] E2E mode cannot be enabled in Production environment.");
+  }
   if (!getApps().length) {
     if (process.env.FIREBASE_DATABASE_EMULATOR_HOST) {
       const emulatorHost = process.env.FIREBASE_DATABASE_EMULATOR_HOST;
@@ -23,7 +26,7 @@ export function initFirebaseAdmin() {
 
       if (process.env.VERCEL_ENV === "preview") {
         if (projectId !== "saltwater-electricity-staging") {
-          throw new Error("[SECURITY] Production project ID detected in Preview environment.");
+          throw new Error("[SECURITY] E2E mode must use the 'saltwater-electricity-staging' project.");
         }
         const expectedStagingUrl =
           "https://saltwater-electricity-staging-default-rtdb.asia-southeast1.firebasedatabase.app";

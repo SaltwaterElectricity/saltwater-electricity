@@ -1,16 +1,16 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import triggerHardwareAlert from "../triggerHardwareAlert.js";
-import retryOutbox from "../sms/retry_outbox.js";
-import { initFirebaseAdmin } from "../_utils/firebase.js";
-import * as outboxUtils from "../_utils/outbox.js";
+import triggerHardwareAlert from "../../api/../api/triggerHardwareAlert.js";
+import retryOutbox from "../../api/../api/sms/retry_outbox.js";
+import { initFirebaseAdmin } from "../../api/../api/_utils/firebase.js";
+import * as outboxUtils from "../../api/../api/_utils/outbox.js";
 
 // Mock Firebase Admin
-vi.mock("../_utils/firebase.js", () => ({
+vi.mock("../../api/../api/_utils/firebase.js", () => ({
   initFirebaseAdmin: vi.fn(),
 }));
 
 // Mock Response Utils
-vi.mock("../_utils/response.js", () => ({
+vi.mock("../../api/../api/_utils/response.js", () => ({
   sendSuccess: vi.fn((res, data) => {
     res.status(200);
     res.json(data);
@@ -25,7 +25,7 @@ vi.mock("../_utils/response.js", () => ({
 }));
 
 // Mock Outbox Utils
-vi.mock("../_utils/outbox.js", () => ({
+vi.mock("../../api/../api/_utils/outbox.js", () => ({
   saveToOutbox: vi.fn().mockResolvedValue({}),
   markOutboxSynced: vi.fn().mockResolvedValue({}),
   getPendingOutboxEntries: vi.fn(),
@@ -33,7 +33,7 @@ vi.mock("../_utils/outbox.js", () => ({
 }));
 
 // Mock SMS Control
-vi.mock("../_utils/sms_control.js", () => ({
+vi.mock("../../api/../api/_utils/sms_control.js", () => ({
   isSmsDispatchPaused: vi.fn().mockResolvedValue(false),
 }));
 
@@ -53,7 +53,7 @@ describe("Parent -> Standalone API Integration", () => {
     process.env.SMS_API_INGEST_URL = "https://standalone-api.test/ingest";
     process.env.PARENT_AUTH_SECRET = "parent-secret";
     process.env.SMS_API_KEY = "api-key";
-    process.env.SMS_RETRY_CRON_SECRET = "cron-secret";
+    process.env.CRON_SECRET = "cron-secret";
 
     mockDb = {
       ref: vi.fn((_path) => {
@@ -252,7 +252,7 @@ describe("Parent -> Standalone API Integration", () => {
 
   describe("retryOutbox Integration", () => {
     it("should call standalone ingest API with correct payload", async () => {
-      req = { headers: { "x-cron-secret": "cron-secret" } };
+      req = { headers: { "authorization": "Bearer cron-secret" } };
 
       mockDb.ref.mockImplementation((_path) => ({
         transaction: vi.fn().mockResolvedValue({ committed: true }),
@@ -285,7 +285,7 @@ describe("Parent -> Standalone API Integration", () => {
     });
 
     it("should handle standalone ingest API network failures by updating attempt count", async () => {
-      req = { headers: { "x-cron-secret": "cron-secret" } };
+      req = { headers: { "authorization": "Bearer cron-secret" } };
 
       mockDb.ref.mockImplementation((_path) => ({
         transaction: vi.fn().mockResolvedValue({ committed: true }),
