@@ -11,7 +11,7 @@
 - The Standalone project must maintain its own equivalent `AGENTS.md`/release policy in its own repository; do not add it to Parent Git through the ignored local directory.
 
 ## Release Process
-- Read and follow `docs/PRODUCTION_RELEASE_RULES.md` before any release-related work.
+- Read and follow `PRODUCTION_DEPLOYMENT_RULES.md` before any release-related work.
 - Read and follow `docs/GRAPHIFY_VERIFICATION.md` when that file exists; if missing, report the missing prerequisite rather than inventing its contents.
 - Run the full relevant test suite, Firebase rules tests/validation, lint, production build, and security checks. Inspect the full diff against the target branch.
 - Verify Parent and Standalone Preview E2E with dummy data and a mock provider before requesting merge. A local test pass or unauthenticated 401 is not deployed integration proof.
