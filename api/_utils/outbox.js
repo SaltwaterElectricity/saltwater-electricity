@@ -1,13 +1,23 @@
 import { initFirebaseAdmin } from './firebase.js';
 
-function sanitizeError(error) {
+export function sanitizeError(error) {
   if (!error) return null;
-  const msg = error.toString();
-  return msg
-    .replace(/Authorization: (Bearer|Basic) [a-zA-Z0-9._/-]+/gi, 'Authorization: [REDACTED]')
-    .replace(/x-api-key: [a-zA-Z0-9._/-]+/gi, 'x-api-key: [REDACTED]')
-    .replace(/-----BEGIN PRIVATE KEY-----.*?-----END PRIVATE KEY-----/gs, '[PRIVATE KEY REDACTED]')
-    .substring(0, 255);
+  let msg = error.toString();
+  
+  // Redact Authorization headers (Bearer, Basic, etc)
+  msg = msg.replace(/["']?Authorization["']?:\s*(?:["']\s*)?(Bearer|Basic)?\s*[a-zA-Z0-9._/-= ]+?["']?(\s*[,}]|$)/gi, "Authorization: ***");
+  
+  // Redact API Keys
+  msg = msg.replace(/x-api-key:\s*[a-zA-Z0-9._/-= ]+/gi, "x-api-key: ***");
+  
+  // Redact Private Keys
+  msg = msg.replace(/-----BEGIN\s+.*?\s+PRIVATE\s+KEY-----[\s\S]*?-----END\s+.*?\s+PRIVATE\s+KEY-----/gi, "[PRIVATE KEY REDACTED]");
+  msg = msg.replace(/\[REDACTED PRIVATE KEY\]/gi, '[PRIVATE KEY REDACTED]');
+  
+  // Redact generic key/token patterns often found in provider errors
+  msg = msg.replace(/(?:api_key|token|secret|password)\s*[:=]\s*[a-zA-Z0-9._/-= ]+/gi, ': [REDACTED]');
+  
+  return msg.substring(0, 255);
 }
 
 export function getOutboxPath(eventId) {
