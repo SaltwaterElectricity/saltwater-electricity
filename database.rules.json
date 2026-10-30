@@ -42,7 +42,7 @@
 
     "device_information": {
       ".indexOn": ["availability"],
-      ".read": "auth != null && (root.child('roles').child(auth.uid).child('role').val() == 'superAdmin' || root.child('roles').child(auth.uid).child('role').val() == 'admin')",
+      ".read": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false",
       "$device_id": {
         ".write": "auth != null && root.child('accounts').child(auth.uid).child('status').val() == 'active' && root.child('accounts').child(auth.uid).child('requiresPasswordChange').val() == false && (root.child('roles').child(auth.uid).child('role').val() == 'admin' || root.child('roles').child(auth.uid).child('role').val() == 'superAdmin')",
         ".validate": "newData.hasChildren(['device_id', 'availability'])"
