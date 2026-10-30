@@ -52,11 +52,14 @@ test.describe("Vercel Deployment Protection Bypass & Identity Proof", () => {
 
     // Ensure we start from a clean state for identity proof
     await page.context().clearCookies();
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+
     await page.evaluate(() => {
       localStorage.clear();
       sessionStorage.clear();
     });
 
+    await page.reload({ waitUntil: "domcontentloaded" });
     await page.goto("/", { waitUntil: "domcontentloaded" });
 
     // Runtime Proof: We will try to find the project ID in the window object
