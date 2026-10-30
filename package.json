@@ -18,7 +18,9 @@
     "coverage": "vitest run --coverage",
     "preview": "vite preview",
     "mobile-android": "npm run build:mobile && cd ../saltwaterelectricity && cordova run android",
-    "prepare": "husky"
+    "prepare": "husky",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run"
   },
   "dependencies": {
     "@sendgrid/mail": "^8.1.6",
@@ -61,7 +63,9 @@
     "playwright": "^1.63.0",
     "prettier": "^3.8.3",
     "vite": "^7.3.1",
-    "vitest": "^4.1.5"
+    "vitest": "^4.1.5",
+    "cypress": "^15.15.0",
+    "eslint-plugin-cypress": "^6.4.1"
   },
   "lint-staged": {
     "*.{js,jsx}": [
