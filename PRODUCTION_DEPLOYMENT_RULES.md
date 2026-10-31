@@ -4,6 +4,10 @@ These rules apply to the Parent application and its separately deployed Standalo
 
 ## Repository and release separation
 - Verify the repository, remote, branch, commit, Vercel project, and deployment environment before every release action.
+  - **Parent**: GitHub `SaltwaterElectricity/saltwater-electricity` $
+ightarrow$ Vercel Project `saltwater-electricity` (Team `salinity`).
+  - **Standalone**: GitHub `SaltwaterElectricity/sms-api-migration` $
+ightarrow$ Vercel Project `sms-api-migration` (Team `salinity`).
 - Never add `sms-api-migration/` to the Parent repository, its build context, Graphify index, or deployment artifact. Keep it Git-ignored in the Parent workspace and verify with `git check-ignore` and `git ls-files`.
 - Maintain and follow a separate deployment-rules file in the Standalone API repository. Parent instructions do not replace that repository's own rules.
 - Do not deploy, merge, change Production settings/data, or trigger real SMS without explicit user approval.

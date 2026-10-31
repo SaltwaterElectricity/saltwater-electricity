@@ -2,6 +2,21 @@
 
 ## Core Constraints
 - Verify repository root, remote, branch, commit, Vercel project, deployment environment, and Firebase target before acting.
+  - **Expected Parent Identity**: 
+    - GitHub: `SaltwaterElectricity/saltwater-electricity`
+    - Branch: `main` (or approved PR branch)
+    - Vercel Project: `saltwater-electricity`
+    - Vercel Team: `salinity`
+  - **Expected Standalone Identity**:
+    - GitHub: `SaltwaterElectricity/sms-api-migration`
+    - Vercel Project: `sms-api-migration`
+    - Vercel Team: `salinity`
+  - Fail closed on any identity mismatch.
+  - **Deployment Safety**: 
+    - To deploy to Preview: use `vercel deploy` (NO `--prod` flag).
+    - To deploy to Production: use `vercel deploy --prod` only after explicit user approval.
+    - **FORBIDDEN**: Never use `--prod=false`. The Vercel CLI interprets any `--prod` flag as a Production trigger; `--prod=false` is treated as a Production deployment of a path named "false".
+    - Always verify the active deployment ID and alias assignment after any Vercel operation.
 - Keep Parent and Standalone SMS API repositories/deployments separate. Never commit `sms-api-migration/` into the Parent repository; verify it is ignored and absent from the Git index.
 - Preserve strict Production/Preview Firebase and queue isolation. E2E is Preview-only, staging-only, and uses dedicated E2E namespaces. Production must fail closed if E2E mode is enabled.
 - Keep secrets server-side. Never print, commit, expose, or persist raw credentials, authorization headers, environment dumps, or unsanitized raw errors.

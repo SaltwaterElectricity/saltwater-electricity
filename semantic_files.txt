@@ -1,0 +1,31 @@
+C:\Users\Admin\testcode\.github\workflows\ci.yml
+C:\Users\Admin\testcode\.github\workflows\pr-checks.yml
+C:\Users\Admin\testcode\.github\workflows\sms-retry.yml
+C:\Users\Admin\testcode\AGENTS.md
+C:\Users\Admin\testcode\AUDIT_SMS_ALERTS.md
+C:\Users\Admin\testcode\CLAUDE.md
+C:\Users\Admin\testcode\DESIGN.md
+C:\Users\Admin\testcode\GEMINI.md
+C:\Users\Admin\testcode\README.md
+C:\Users\Admin\testcode\docs\ARCHITECTURE.md
+C:\Users\Admin\testcode\docs\FIREBASE_SECURITY.md
+C:\Users\Admin\testcode\docs\SECURITY_AUDIT_REPORT.md
+C:\Users\Admin\testcode\docs\VERCEL_SECURITY.md
+C:\Users\Admin\testcode\docs\legacy-designs\code.html
+C:\Users\Admin\testcode\docs\legacy-designs\code1.html
+C:\Users\Admin\testcode\docs\legacy-designs\dashboard.html
+C:\Users\Admin\testcode\docs\legacy-designs\landing-page.html
+C:\Users\Admin\testcode\docs\legacy-designs\monitor.html
+C:\Users\Admin\testcode\docs\legacy-designs\saltwater.realtime monitor.html
+C:\Users\Admin\testcode\docs\legacy-designs\user-alert-notifications.html
+C:\Users\Admin\testcode\docs\legacy-designs\user-dashboard.html
+C:\Users\Admin\testcode\docs\legacy-designs\user-device-request.html
+C:\Users\Admin\testcode\docs\legacy-designs\user-management- admin.html
+C:\Users\Admin\testcode\docs\legacy-designs\user-management.html
+C:\Users\Admin\testcode\docs\legacy-designs\user-real-time-monitor.html
+C:\Users\Admin\testcode\index.html
+C:\Users\Admin\testcode\tests\current-trust-boundary.md
+C:\Users\Admin\testcode\public\favicon.png
+C:\Users\Admin\testcode\src\assets\landing-page-img\pup-unisan-logo.png
+C:\Users\Admin\testcode\src\assets\landing-page-img\saltwater-electricity-logo.png
+C:\Users\Admin\testcode\src\assets\landing-page-img\san-andresQP-logo.png
